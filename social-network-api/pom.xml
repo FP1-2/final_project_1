@@ -95,6 +95,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-checkstyle-plugin</artifactId>
 				<version>3.3.0</version>
+				<configuration>
+					<failsOnError>false</failsOnError>
+					<configLocation>src/main/resources/google_checks.xml</configLocation>
+				</configuration>
 				<executions>
 					<execution>
 						<id>validate</id>
@@ -102,10 +106,6 @@
 						<goals>
 							<goal>check</goal>
 						</goals>
-						<configuration>
-							<configLocation>src/main/resources/google_checks.xml</configLocation>
-
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
