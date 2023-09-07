@@ -1,10 +1,10 @@
-package com.facebook.facebook;
+package com.facebook;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
-class FacebookApplicationTests {
+class LauncherTests {
 
 	@Test
 	void contextLoads() {
