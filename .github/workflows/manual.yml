@@ -47,10 +47,10 @@ jobs:
           node-version: 16.8.0
 
       - name: Install dependencies
-        run: npm install --prefix frontend
+        run: npm install --prefix social-network-ui
 
       - name: Run build
-        run: npm run build --prefix frontend
+        run: npm run build --prefix social-network-ui
   greet:
     # The type of runner that the job will run on
     runs-on: ubuntu-latest
