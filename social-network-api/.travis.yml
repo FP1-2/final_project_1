@@ -7,7 +7,7 @@ addons:
   sonarcloud:
     organization: "final-project-1"
     token:
-      secure: ${SONAR_TOKEN}
+      secure: $SONAR_TOKEN
 
 script:
   - mvn clean test jacoco:report coveralls:report
