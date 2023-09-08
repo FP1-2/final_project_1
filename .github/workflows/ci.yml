@@ -10,10 +10,9 @@ on:
 
 jobs:
 
-javascript-ci-checks:
+  javascript-ci-checks:
     name: Automated Javascript CI checks
     runs-on: ubuntu-latest
-
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -41,7 +40,7 @@ javascript-ci-checks:
       - name: Run build
         run: npm run build --prefix social-network-ui
 
-java-ci-checks:
+  java-ci-checks:
     name: Automated Java CI checks
     runs-on: ubuntu-latest
     steps:
