@@ -41,7 +41,7 @@ javascript-ci-checks:
       - name: Run build
         run: npm run build --prefix social-network-ui
 
-  java-ci-checks:
+java-ci-checks:
     name: Automated Java CI checks
     runs-on: ubuntu-latest
     steps:
