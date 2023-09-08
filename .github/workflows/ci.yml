@@ -55,4 +55,4 @@ jobs:
           cache: 'maven'
 
       - name: Compile and run tests with Maven
-        run: mvn -f social-network-api/ clean test jacoco:report coveralls:report
+        run: mvn -f social-network-api/pom.xml clean test
