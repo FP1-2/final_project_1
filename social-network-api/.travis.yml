@@ -1,10 +1,13 @@
 language: java
 
+jdk:
+  - oraclejdk20
+
 addons:
   sonarcloud:
     organization: "final-project-1"
     token:
-      secure:  96b9c170c2e0d211124fc70b5648f719bcdd2836
+      secure: 96b9c170c2e0d211124fc70b5648f719bcdd2836
 
 script:
   - mvn clean test jacoco:report coveralls:report
