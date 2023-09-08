@@ -7,7 +7,7 @@ addons:
   sonarcloud:
     organization: "final-project-1"
     token:
-      secure: "1ed5ec07d8fff7456fd2de639bc7420944d99b6d"
+      secure: "7cf7015bc8d2fef84c549a169100f1ab3645e322"
 
 script:
   - mvn -f social-network-api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=final-project-1_facebook-app
