@@ -10,5 +10,5 @@ addons:
       secure: "1ed5ec07d8fff7456fd2de639bc7420944d99b6d"
 
 script:
-  - mvn -f social_network_api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=final-project-1_facebook-app
-  - mvn -f social_network_api/ clean test jacoco:report coveralls:report
+  - mvn -f social-network-api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=final-project-1_facebook-app
+  - mvn -f social-network-api/ clean test jacoco:report coveralls:report
