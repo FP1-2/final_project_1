@@ -15,7 +15,7 @@
 	<description>Final project</description>
 	<properties>
 		<java.version>20</java.version>
-		<sonar.organization>final-project-1</sonar.organization>
+		<sonar.organization>fp1-2</sonar.organization>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
@@ -129,9 +129,15 @@
 				<version>0.7.8</version>
 				<executions>
 					<execution>
-						<id>prepare-agent</id>
 						<goals>
 							<goal>prepare-agent</goal>
+						</goals>
+					</execution>
+					<execution>
+						<id>report</id>
+						<phase>test</phase>
+						<goals>
+							<goal>report</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -144,6 +150,31 @@
 					<repoToken>FEBuv7CRh8zszGpdIQtj0dz3p3jehUbkL</repoToken>
 					<sourceEncoding>UTF-8</sourceEncoding>
 				</configuration>
+				<dependencies>
+					<dependency>
+						<groupId>javax.xml.bind</groupId>
+						<artifactId>jaxb-api</artifactId>
+						<version>2.3.1</version>
+					</dependency>
+				</dependencies>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.22.2</version>
+				<configuration>
+					<forkCount>1</forkCount>
+					<reuseForks>true</reuseForks>
+				</configuration>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<goals>
+							<goal>test</goal>
+						</goals>
+					</execution>
+				</executions>
 			</plugin>
 		</plugins>
 	</build>
