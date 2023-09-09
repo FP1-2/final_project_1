@@ -7,7 +7,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 public class Launcher {
 
     /**
-     * @param args Commad Line Arguments.
+     * @param args Command Line Arguments.
      */
     public static void main(final String[] args) {
         SpringApplication.run(Launcher.class, args);
