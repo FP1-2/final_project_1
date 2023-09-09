@@ -9,5 +9,5 @@ addons:
     token: ${SONAR_TOKEN}
 
 script:
-  - mvn -f social-network-api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=FP1-2_final_project_1 -e
+  - mvn -f social-network-api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=FP1-2_final_project_1 -X
   - mvn -f social-network-api/ clean test jacoco:report coveralls:report -e
