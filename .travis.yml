@@ -7,7 +7,7 @@ addons:
   sonarcloud:
     organization: "fp1-2"
     token:
-      secure: ${SONAR_TOKEN}
+      secure: "18513794c03ed4fbf79ea6541456e9110bb0d016"
 
 script:
   - mvn -f social-network-api/ clean org.jacoco:jacoco-maven-plugin:prepare-agent install sonar:sonar -Dsonar.projectKey=FP1-2_final_project_1
