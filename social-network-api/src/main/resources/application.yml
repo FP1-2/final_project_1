@@ -1,0 +1,74 @@
+logging:
+  level:
+    org:
+    # рівень журналювання на DEBUG для всього пакету
+#      springframework: DEBUG
+
+    # Це встановлює рівень журналювання на DEBUG специфічно для Spring Security
+#      springframework.security: DEBUG
+
+    #  Це встановлює рівень журналювання для кешування контексту тестування Spring.
+    #  Це може бути корисно при налаштуванні та виправленні тестів,
+    #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
+#    org.springframework.test.context.cache: DEBUG
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+  datasource:
+    url: jdbc:h2:mem:db
+    driver-class-name: org.h2.Driver
+    username: sa
+    password: sa
+  h2:
+    console:
+      enabled: true
+      path: /h2
+  jpa:
+    hibernate:
+
+#  Що робить update:
+#  Якщо таблиця відповідна сутності не існує, Hibernate створить її.
+#  Якщо таблиця вже існує, Hibernate спробує оновити її структуру, щоб вона відповідала поточному вигляду сутності.
+#  Якщо у сутності були додані нові поля, Hibernate додасть нові стовпці в таблицю.
+#  Він не видалятиме стовпці, які більше не існують у сутності, і не змінюватиме існуючі стовпці.
+#  для продакшена рекомендується використовувати системи міграції баз даних: Flyway, Liquibase та інші.
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+    jdbc:
+      time_zone: UTC
+
+#  open-in-view: true - сесія Hibernate залишається відкритою протягом HTTP-запиту,
+#                        дозволяючи автоматично виконувати "ліниве завантаження" даних.
+#                        Може призвести до проблем з продуктивністю.
+#  open-in-view: false - сесія Hibernate закривається після завершення транзакції.
+#                        Ліниве завантаження після цього викличе помилку.
+    open-in-view: false
+
+server:
+  port: ${SERVER_PORT:9000}
+
+---
+spring:
+  config:
+    activate:
+      on-profile: prod
+  datasource:
+    url: ${DB_URL}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: ${DB_USERNAME}
+    password: ${DB_PASSWORD}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQLDialect
+    jdbc:
+      time_zone: UTC
+    open-in-view: false
+
+server:
+  port: ${SERVER_PORT:9000}
+
+---
