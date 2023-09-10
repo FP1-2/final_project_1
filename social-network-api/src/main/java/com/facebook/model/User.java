@@ -25,7 +25,7 @@ public class User extends AbstractEntity {
 
     private String roles;
     @Transient
-    private final String delimiter = ":";
+    private static final String delimiter = ":";
 
     public void setRoles(String[] roles) {
         this.roles = String.join(delimiter, roles);
