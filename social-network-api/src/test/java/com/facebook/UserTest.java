@@ -1,14 +1,17 @@
 package com.facebook;
 
 import com.facebook.model.User;
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import java.time.LocalDateTime;
+import java.util.stream.Stream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
 public class UserTest {
@@ -21,12 +24,14 @@ public class UserTest {
         User user = new User();
         user.setName("John");
         user.setSurname("Doe");
+        user.setUsername("john.doe");
+        user.setEmail("john.doe@example.com");
         user.setPassword("secret");
 
         User savedUser = tem.persistAndFlush(user);
 
-        assertThat(savedUser.getCreatedDate()).isNotNull();
-        assertThat(savedUser.getLastModifiedDate()).isNotNull();
+        Stream.of(savedUser.getCreatedDate(), savedUser.getLastModifiedDate())
+                .forEach(date -> assertThat(date).isNotNull());
     }
 
     @Test
@@ -37,9 +42,10 @@ public class UserTest {
         user.setRoles(roles);
 
         String[] retrievedRoles = user.getRoles();
-        assertThat(retrievedRoles).containsExactly("ROLE_ADMIN", "ROLE_USER");
+        Stream.of(retrievedRoles, user.getRoles())
+                .forEach(roles0 -> assertThat(roles0)
+                        .containsExactly("ROLE_ADMIN", "ROLE_USER"));
 
-        assertThat(user.getRoles()).containsExactly("ROLE_ADMIN", "ROLE_USER");
     }
 
     @Test
@@ -47,6 +53,8 @@ public class UserTest {
         User user = new User();
         user.setName("John");
         user.setSurname("Doe");
+        user.setUsername("john.doe");
+        user.setEmail("john.doe@example.com");
         user.setPassword("secret");
 
         User savedUser = tem.persistAndFlush(user);
@@ -56,7 +64,31 @@ public class UserTest {
         savedUser.setName("Johnathan");
         tem.persistAndFlush(savedUser);
 
-        assertThat(savedUser.getLastModifiedDate()).isNotEqualTo(initialLastModifiedDate);
-        assertThat(savedUser.getLastModifiedDate()).isAfter(initialLastModifiedDate);
+        assertThat(savedUser.getLastModifiedDate()).satisfies(date -> {
+            assertThat(date).isNotEqualTo(initialLastModifiedDate);
+            assertThat(date).isAfter(initialLastModifiedDate);
+        });
+    }
+
+    @Test
+    public void usernameNotNull() {
+        User user = new User();
+        user.setSurname("Doe");
+        user.setPassword("secret");
+        user.setEmail("test@example.com");
+
+        assertThrows(ConstraintViolationException.class,
+                () -> tem.persistAndFlush(user));
+    }
+
+    @Test
+    public void emailNotNull() {
+        User user = new User();
+        user.setName("John");
+        user.setSurname("Doe");
+        user.setPassword("secret");
+
+        assertThrows(ConstraintViolationException.class,
+                () -> tem.persistAndFlush(user));
     }
 }
