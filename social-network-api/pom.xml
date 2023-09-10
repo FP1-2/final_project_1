@@ -16,7 +16,7 @@
 	<properties>
 		<java.version>20</java.version>
 		<sonar.organization>fp1-2</sonar.organization>
-		<sonar.projectKey>FP1-2_facehbook</sonar.projectKey>
+		<sonar.projectKey>FP1-2_facebook</sonar.projectKey>
 		<sonar.host.url>https://sonarcloud.io</sonar.host.url>
 	</properties>
 	<dependencies>
