@@ -25,14 +25,14 @@ public class User extends AbstractEntity {
 
     private String roles;
     @Transient
-    private final String DELIMITER = ":";
+    private final String delimiter = ":";
 
     public void setRoles(String[] roles) {
-        this.roles = String.join(DELIMITER, roles);
+        this.roles = String.join(delimiter, roles);
     }
 
     public String[] getRoles() {
-        return this.roles.split(DELIMITER);
+        return this.roles.split(delimiter);
     }
 
     @Override
