@@ -48,9 +48,9 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return String.format("Customer{id=%d, Name=%s, Surname=%s, Address=%s, Avatar=%s, " +
-                        "Header photo=%s, Age=%s, Password=%s, Roles=%s}",
-                getId(), name, surname, address,
+        return String.format("Customer{id=%d, Name=%s, Surname=%s, Username=%s, Email=%s, Address=%s, " +
+                        "Avatar=%s, Header photo=%s, Age=%s, Password=%s, Roles=%s}",
+                getId(), name, surname, username, email, address,
                 avatar, headerPhoto, dateOfBirth,
                 password, roles);
     }
