@@ -15,6 +15,8 @@ public class User extends AbstractEntity {
     private String name;
     @Column(nullable = false)
     private String surname;
+    private String username;
+    private String email;
     String address;
     String avatar;
     String headerPhoto;
