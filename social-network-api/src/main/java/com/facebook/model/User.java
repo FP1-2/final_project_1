@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
 public class User extends AbstractEntity {
+    private static final String DELIMITER = ":";
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
@@ -26,15 +27,13 @@ public class User extends AbstractEntity {
     String password;
 
     private String roles;
-    @Transient
-    private static final String delimiter = ":";
 
     public void setRoles(String[] roles) {
-        this.roles = String.join(delimiter, roles);
+        this.roles = String.join(DELIMITER, roles);
     }
 
     public String[] getRoles() {
-        return this.roles.split(delimiter);
+        return this.roles.split(DELIMITER);
     }
 
     @Override
