@@ -6,7 +6,7 @@ import org.springframework.context.annotation.Configuration;
 
 /**
  * Використовується в пакеті `facade` для перетворення
- * даних між шарами, (DTO) і шаром доменних моделей
+ * даних між шарами, (DTO) і шаром доменних моделей.
  */
 @Configuration
 public class AppConfig {

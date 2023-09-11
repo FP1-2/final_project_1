@@ -1,6 +1,8 @@
 package com.facebook.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -48,8 +50,9 @@ public class User extends AbstractEntity {
 
     @Override
     public String toString() {
-        return String.format("Customer{id=%d, Name=%s, Surname=%s, Username=%s, Email=%s, Address=%s, " +
-                        "Avatar=%s, Header photo=%s, Age=%s, Password=%s, Roles=%s}",
+        return String.format("Customer{id=%d, Name=%s, Surname=%s, Username=%s, Email=%s, "
+                        + "Address=%s, Avatar=%s, Header photo=%s, "
+                        + "Age=%s, Password=%s, Roles=%s}",
                 getId(), name, surname, username, email, address,
                 avatar, headerPhoto, dateOfBirth,
                 password, roles);
