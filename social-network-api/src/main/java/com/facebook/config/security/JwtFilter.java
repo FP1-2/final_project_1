@@ -5,6 +5,10 @@ import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpHeaders;
@@ -14,9 +18,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-
-import java.io.IOException;
-import java.util.Optional;
 
 @Log4j2
 @Component
@@ -56,11 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private boolean isRequestForProtectedResource(HttpServletRequest request) {
         String path = request.getRequestURI();
         return switch (path) {
-            case "/api/auth/signup",
-                    "/api/auth/token",
-                    "/api/auth/reset",
-                    "/h2" -> false;
-            default -> true;
+          case "/api/auth/signup",
+               "/api/auth/token",
+               "/api/auth/reset",
+               "/h2" -> false;
+          default -> true;
         };
     }
 

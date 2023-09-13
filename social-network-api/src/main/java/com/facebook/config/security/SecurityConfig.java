@@ -1,5 +1,7 @@
 package com.facebook.config.security;
 
+import java.util.Arrays;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +16,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
-import java.util.Arrays;
-
 @Log4j2
 @Configuration
 @EnableWebSecurity
@@ -27,9 +27,10 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http.csrf(AbstractHttpConfigurer::disable);
-        // Якщо профіль dev - h2 консоль в браузері використовує iframe - дозволяємо.
         // Захист від CSRF атак відключаємо.
+        http.csrf(AbstractHttpConfigurer::disable);
+
+        // Якщо профіль dev - h2 консоль в браузері використовує iframe - дозволяємо.
         if (Arrays.asList(env.getActiveProfiles()).contains("dev")) {
 
             http.headers(headers -> headers

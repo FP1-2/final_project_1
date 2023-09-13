@@ -2,15 +2,16 @@ package com.facebook.config.security;
 
 import com.facebook.model.AppUser;
 import com.facebook.service.AppUserService;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.stream.Collectors;
+
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.stream.Collectors;
 
 @Data
 public class JwtAppUserDetails implements UserDetails {

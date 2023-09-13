@@ -1,8 +1,8 @@
-package com.facebook.dto.app_user;
-
-import lombok.Data;
+package com.facebook.dto.appuser;
 
 import java.time.LocalDateTime;
+
+import lombok.Data;
 
 @Data
 public class AppUserResponse {

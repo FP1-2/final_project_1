@@ -1,7 +1,7 @@
 package com.facebook.facade;
 
-import com.facebook.dto.app_user.AppUserRequest;
-import com.facebook.dto.app_user.AppUserResponse;
+import com.facebook.dto.appuser.AppUserRequest;
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.model.AppUser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
