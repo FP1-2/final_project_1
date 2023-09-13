@@ -5,7 +5,6 @@ import com.facebook.service.AppUserService;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
@@ -38,7 +37,7 @@ public class JwtAppUserDetails implements UserDetails {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return Arrays.stream(roles)
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role))
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
