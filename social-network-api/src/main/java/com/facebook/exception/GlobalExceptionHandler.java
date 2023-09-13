@@ -33,8 +33,7 @@ public class GlobalExceptionHandler {
         );
         return error;
     }
-
-    //
+    
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDatabaseSaveException(DataIntegrityViolationException ex) {
         //Стек-трейс помилки при збереженні.
@@ -48,8 +47,7 @@ public class GlobalExceptionHandler {
         body.put("message", errorMessage.contains("Duplicate entry")
                 ? errorMessage
                 //Обрізаємо все зайве залишаємо "Duplicate entry <'введений рядок'>".
-                .replaceAll(".*Duplicate entry '(.*?)' for key.*",
-                        "Duplicate entry '$1'")
+                .replaceAll("^.*?Duplicate entry '(.*?)'.*$", "Duplicate entry '$1'")
                 //Інші помилки які не стосуються унікальних полів.
                 : "Error occurred while saving the record.");
 
