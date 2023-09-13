@@ -5,6 +5,7 @@ import static org.springframework.security.crypto.password.Pbkdf2PasswordEncoder
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.argon2.Argon2PasswordEncoder;
@@ -15,6 +16,7 @@ import org.springframework.security.crypto.password.Pbkdf2PasswordEncoder;
 import org.springframework.security.crypto.scrypt.SCryptPasswordEncoder;
 
 @Configuration
+@RequiredArgsConstructor
 public class DelegatedEncoder {
 
     private static final String ALGORITHM = "pbkdf2";
