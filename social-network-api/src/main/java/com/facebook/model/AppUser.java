@@ -12,7 +12,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "users")
 @EqualsAndHashCode(callSuper = true)
-public class User extends AbstractEntity {
+public class AppUser extends AbstractEntity {
 
     private static final String DELIMITER = ":";
 
@@ -27,6 +27,7 @@ public class User extends AbstractEntity {
 
     @Column(nullable = false, unique = true)
     private String email;
+
     String address;
 
     String avatar;

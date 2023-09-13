@@ -1,6 +1,6 @@
 package com.facebook;
 
-import com.facebook.model.User;
+import com.facebook.model.AppUser;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,14 +21,14 @@ public class UserTest {
 
     @Test
     public void dateSetting() {
-        User user = new User();
+        AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
         user.setUsername("john.doe");
         user.setEmail("john.doe@example.com");
         user.setPassword("secret");
 
-        User savedUser = tem.persistAndFlush(user);
+        AppUser savedUser = tem.persistAndFlush(user);
 
         Stream.of(savedUser.getCreatedDate(), savedUser.getLastModifiedDate())
                 .forEach(date -> assertThat(date).isNotNull());
@@ -36,7 +36,7 @@ public class UserTest {
 
     @Test
     public void getSetRoles() {
-        User user = new User();
+        AppUser user = new AppUser();
         String[] roles = {"ROLE_ADMIN", "ROLE_USER"};
 
         user.setRoles(roles);
@@ -50,14 +50,14 @@ public class UserTest {
 
     @Test
     public void dateModification() {
-        User user = new User();
+        AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
         user.setUsername("john.doe");
         user.setEmail("john.doe@example.com");
         user.setPassword("secret");
 
-        User savedUser = tem.persistAndFlush(user);
+        AppUser savedUser = tem.persistAndFlush(user);
 
         LocalDateTime initialLastModifiedDate = savedUser.getLastModifiedDate();
 
@@ -72,7 +72,7 @@ public class UserTest {
 
     @Test
     public void usernameNotNull() {
-        User user = new User();
+        AppUser user = new AppUser();
         user.setSurname("Doe");
         user.setPassword("secret");
         user.setEmail("test@example.com");
@@ -83,7 +83,7 @@ public class UserTest {
 
     @Test
     public void emailNotNull() {
-        User user = new User();
+        AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
         user.setPassword("secret");
