@@ -36,20 +36,25 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(DataIntegrityViolationException.class)
     public ResponseEntity<Object> handleDatabaseSaveException(DataIntegrityViolationException ex) {
-        //Стек-трейс помилки при збереженні.
-        //log.error("Handling database save error", ex);
         Map<String, Object> body = new LinkedHashMap<>();
 
         body.put("timestamp", LocalDateTime.now());
 
         String errorMessage = ex.getMessage();
 
-        body.put("message", errorMessage.contains("Duplicate entry")
-                ? errorMessage
-                //Обрізаємо все зайве залишаємо "Duplicate entry <'введений рядок'>".
-                .replaceAll("^.*Duplicate entry '([^']+)'.*$", "Duplicate entry '$1'")
-                //Інші помилки які не стосуються унікальних полів.
-                : "Error occurred while saving the record.");
+        if (errorMessage.contains("Duplicate entry")) {
+            int start = errorMessage.indexOf("Duplicate entry '") + "Duplicate entry '".length();
+            int end = errorMessage.indexOf("'", start);
+            if (end != -1) {
+                errorMessage = "Duplicate entry '" + errorMessage.substring(start, end) + "'";
+            } else {
+                errorMessage = "Error occurred while interpreting the duplicate entry message.";
+            }
+        } else {
+            errorMessage = "Error occurred while saving the record.";
+        }
+
+        body.put("message", errorMessage);
 
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
