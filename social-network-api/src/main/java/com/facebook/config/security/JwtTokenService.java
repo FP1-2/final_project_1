@@ -59,4 +59,11 @@ public class JwtTokenService {
                 .map(Claims::getSubject)
                 .map(Integer::parseInt);
     }
+
+    public Date getExpirationDateFromToken(String token) {
+        return parseTokenToClaims(token)
+                .map(Jwt::getBody)
+                .map(Claims::getExpiration)
+                .orElse(null);
+    }
 }

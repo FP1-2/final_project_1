@@ -1,36 +1,35 @@
 package com.facebook.config.security;
 
-import com.facebook.model.AppUser;
-import com.facebook.service.AppUserService;
-
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Date;
 
 import lombok.Data;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 @Data
 public class JwtAppUserDetails implements UserDetails {
 
-    private transient final AppUserService service;
-
     private final Integer id;
-
     private final String[] roles;
+    private final String username;
+    private final String password;
+    private final Date expirationDate;
 
-    public JwtAppUserDetails(int id, AppUserService service) {
-        this.service = service;
+    public JwtAppUserDetails(int id, String[] roles, String username,
+                             String password, Date expirationDate) {
         this.id = id;
-        this.roles = fetchRoles(id, service);
+        this.roles = roles;
+        this.username = username;
+        this.password = password;
+        this.expirationDate = expirationDate;
     }
 
-    private static String[] fetchRoles(int id, AppUserService service) {
-        return service.findById((long) id)
-                .map(AppUser::getRoles)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with id: " + id));
+    public static JwtAppUserDetails of(int id, String[] roles, String username,
+                                       String password, Date expirationDate){
+        return new JwtAppUserDetails(id, roles, username, password, expirationDate);
     }
 
     @Override
@@ -42,32 +41,32 @@ public class JwtAppUserDetails implements UserDetails {
 
     @Override
     public String getPassword() {
-        return null;
+        return password;
     }
 
     @Override
     public String getUsername() {
-        return null;
+        return username;
     }
-
+    //Перевіряє, термін дії облікового запису.
     @Override
     public boolean isAccountNonExpired() {
-        return false;
+        return expirationDate.after(new Date());
     }
 
     @Override
     public boolean isAccountNonLocked() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isCredentialsNonExpired() {
-        return false;
+        return isAccountNonExpired();
     }
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 
 }

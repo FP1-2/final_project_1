@@ -57,11 +57,11 @@ public class JwtFilter extends OncePerRequestFilter {
     private boolean isRequestForProtectedResource(HttpServletRequest request) {
         String path = request.getRequestURI();
         return switch (path) {
-          case "/api/auth/signup",
-               "/api/auth/token",
-               "/api/auth/reset",
-               "/h2" -> false;
-          default -> true;
+            case "/api/auth/signup",
+                    "/api/auth/token",
+                    "/api/auth/reset",
+                    "/h2" -> false;
+            default -> true;
         };
     }
 
@@ -72,13 +72,25 @@ public class JwtFilter extends OncePerRequestFilter {
     }
 
     private void processTokenAndSetupAuthentication(HttpServletRequest request) {
-        extractTokenFromRequest(request)
-                .flatMap(tokenService::parseToken)
-                .map(id -> new JwtAppUserDetails(id, appUserService))
-                .map(ud -> new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities()))
-                .ifPresentOrElse(at -> {
-                    at.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                    SecurityContextHolder.getContext().setAuthentication(at);
-                }, () -> log.error("Failed to process setup authentication in filter"));
+        String token = extractTokenFromRequest(request).orElse(null);
+
+        if (token != null) {
+            Optional<Integer> maybeId = tokenService.parseToken(token);
+            maybeId.map(id -> JwtAppUserDetails.of(id,
+                     appUserService.findRolesById((long) id),
+                     appUserService.findUsernameById((long) id),
+                     appUserService.findPasswordById((long) id),
+
+                     // Тут встановлюємо термін дії облікового запису використовуючи час життя токена,
+                     // правильно буде створити поле в AppUser та відповідні методи управління
+                     // та зробити доступ адміну відповідними контролерами
+                     tokenService.getExpirationDateFromToken(token)
+                    ))
+                    .map(ud -> new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities()))
+                    .ifPresentOrElse(at -> {
+                        at.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+                        SecurityContextHolder.getContext().setAuthentication(at);
+                    }, () -> log.error("Failed to process setup authentication in filter"));
+        }
     }
 }
