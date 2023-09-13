@@ -22,7 +22,14 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+    private static final String API = "/api/**";
+
+    private static final String ADMIN = "ADMIN";
+
+    private static final String USER = "USER";
+
     private final JwtFilter jwtFilter;
+
     private final Environment env;
 
     @Bean
@@ -50,15 +57,15 @@ public class SecurityConfig {
                         ).permitAll()
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/user/**")
-                        ).hasAnyRole("ADMIN", "USER")
+                        ).hasAnyRole(ADMIN, USER)
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/adm/**")
-                        ).hasRole("ADMIN")
+                        ).hasRole(ADMIN)
                         .requestMatchers(
-                                AntPathRequestMatcher.antMatcher(HttpMethod.PUT, "/api/**"),
-                                AntPathRequestMatcher.antMatcher(HttpMethod.POST, "/api/**"),
-                                AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, "/api/**")
-                        ).hasAnyRole("ADMIN", "USER")
+                                AntPathRequestMatcher.antMatcher(HttpMethod.PUT, API),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.POST, API),
+                                AntPathRequestMatcher.antMatcher(HttpMethod.DELETE, API)
+                        ).hasAnyRole(ADMIN, USER)
                         .anyRequest().authenticated()
                 )
                 .addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);

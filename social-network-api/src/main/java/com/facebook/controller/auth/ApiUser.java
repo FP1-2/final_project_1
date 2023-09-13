@@ -40,7 +40,7 @@ public class ApiUser {
     private final JwtTokenService tokenService;
 
     @PostMapping(value = "/auth/signup", consumes = "application/json")
-    public ResponseEntity<?> createAppUser(@Valid @RequestBody AppUserRequest appUserRequest) {
+    public ResponseEntity<SignupResponse> createAppUser(@Valid @RequestBody AppUserRequest appUserRequest) {
         AppUser user = facade.convertToAppUser(appUserRequest);
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(new String[]{"USER"});
@@ -48,7 +48,7 @@ public class ApiUser {
         return Optional.of(user)
                 .flatMap(service::save)
                 .map(facade::convertToAppUserResponse)
-                .<ResponseEntity<?>>map(ResponseEntity::ok)
+                .<ResponseEntity<SignupResponse>>map(ResponseEntity::ok)
                 .orElse(ResponseEntity.badRequest().body(new ValidationErrorResponse()));
     }
 

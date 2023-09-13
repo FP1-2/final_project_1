@@ -18,6 +18,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+    private static final String DUPLICATE_ENTRY = "Duplicate entry '";
+
     // Повертає клієнту JSON з не валідними полями, якщо такі є.
     // Обробляє контролер реєстрації /auth/signup інструкцією @Valid.
     // Змінити параметри валідації можна у DTO AppUserRequest
@@ -43,10 +45,10 @@ public class GlobalExceptionHandler {
         String errorMessage = ex.getMessage();
 
         if (errorMessage.contains("Duplicate entry")) {
-            int start = errorMessage.indexOf("Duplicate entry '") + "Duplicate entry '".length();
+            int start = errorMessage.indexOf(DUPLICATE_ENTRY) + DUPLICATE_ENTRY.length();
             int end = errorMessage.indexOf("'", start);
             if (end != -1) {
-                errorMessage = "Duplicate entry '" + errorMessage.substring(start, end) + "'";
+                errorMessage = DUPLICATE_ENTRY + errorMessage.substring(start, end) + "'";
             } else {
                 errorMessage = "Error occurred while interpreting the duplicate entry message.";
             }

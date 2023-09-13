@@ -23,13 +23,13 @@ public class JwtTokenService {
     @Value("${jwt.secret}")
     private String secret;
 
-    private static final Long day = 60 * 60 * 24 * 1000L;
+    private static final Long DAY = 60 * 60 * 24 * 1000L;
 
-    private static final Long week = day * 7;
+    private static final Long WEEK = DAY * 7;
 
     public String generateToken(Integer userId, boolean rememberMe) {
         Date now = new Date();
-        Date expiry = new Date(now.getTime() + (rememberMe ? week : day));
+        Date expiry = new Date(now.getTime() + (rememberMe ? WEEK : DAY));
         return Jwts.builder()
                 .setSubject(userId.toString()) // ANY string / JSON / whatever
                 .setIssuedAt(now)

@@ -1,12 +1,13 @@
 package com.facebook.exception;
 
+import com.facebook.controller.auth.SignupResponse;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Data
-public class ValidationErrorResponse {
+public class ValidationErrorResponse implements SignupResponse {
     private List<Violation> violations = new ArrayList<>();
 
     public void addViolation(String fieldName, String message) {

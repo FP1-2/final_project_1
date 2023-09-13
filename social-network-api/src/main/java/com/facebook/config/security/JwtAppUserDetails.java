@@ -16,7 +16,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 @Data
 public class JwtAppUserDetails implements UserDetails {
 
-    private final AppUserService service;
+    private transient final AppUserService service;
 
     private final Integer id;
 

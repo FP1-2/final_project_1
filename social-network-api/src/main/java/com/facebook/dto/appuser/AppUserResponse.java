@@ -2,10 +2,11 @@ package com.facebook.dto.appuser;
 
 import java.time.LocalDateTime;
 
+import com.facebook.controller.auth.SignupResponse;
 import lombok.Data;
 
 @Data
-public class AppUserResponse {
+public class AppUserResponse implements SignupResponse {
 
     private Long id;
 
