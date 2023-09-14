@@ -1,0 +1,48 @@
+package com.facebook.service;
+
+import lombok.extern.log4j.Log4j2;
+import org.simplejavamail.MailException;
+import org.simplejavamail.api.email.Email;
+import org.simplejavamail.api.mailer.Mailer;
+import org.simplejavamail.api.mailer.config.TransportStrategy;
+import org.simplejavamail.email.EmailBuilder;
+import org.simplejavamail.mailer.MailerBuilder;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+@Log4j2
+@Service
+public class EmailService {
+    @Value("${email.host}")
+    private String host;
+
+    @Value("${email.port}")
+    private int port;
+
+    @Value("${email.username}")
+    private String username;
+
+    @Value("${email.password}")
+    private String password;
+
+    public void sendEmail(String to, String subject, String messageContent) throws Exception {
+        Email email = EmailBuilder.startingBlank()
+                .from(username)
+                .to(to)
+                .withSubject(subject)
+                .withPlainText(messageContent)
+                .buildEmail();
+
+        try (Mailer mailer = MailerBuilder
+                .withSMTPServer(host, port, username, password)
+                .withTransportStrategy(TransportStrategy.SMTPS)  // SMTPS = SMTP + SSL
+                .buildMailer()) {
+
+            mailer.sendMail(email);
+        } catch (MailException e) {
+            log.error("Ошибка при отправке письма: ", e);
+            // Для повторної спроби надсилання листа:
+            // retrySendEmail(to, subject, messageContent);
+        }
+    }
+}

@@ -1,6 +1,7 @@
 package com.facebook.config.security;
 
 import com.facebook.service.AppUserService;
+import com.facebook.service.JwtTokenService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -76,17 +77,20 @@ public class JwtFilter extends OncePerRequestFilter {
 
         if (token != null) {
             Optional<Integer> maybeId = tokenService.parseToken(token);
-            maybeId.map(id -> JwtAppUserDetails.of(id,
+            maybeId.map(id -> AppUserDetails.of(id,
                      appUserService.findRolesById((long) id),
                      appUserService.findUsernameById((long) id),
                      appUserService.findPasswordById((long) id),
 
-                     // Тут встановлюємо термін дії облікового запису використовуючи час життя токена,
-                     // правильно буде створити поле в AppUser та відповідні методи управління
+                     // Тут встановлюємо термін дії облікового запису
+                     // використовуючи час життя токена,
+                     // правильно буде створити поле в AppUser
+                     // та відповідні методи управління
                      // та зробити доступ адміну відповідними контролерами
                      tokenService.getExpirationDateFromToken(token)
                     ))
-                    .map(ud -> new UsernamePasswordAuthenticationToken(ud, null, ud.getAuthorities()))
+                    .map(ud -> new UsernamePasswordAuthenticationToken(ud,
+                            null, ud.getAuthorities()))
                     .ifPresentOrElse(at -> {
                         at.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                         SecurityContextHolder.getContext().setAuthentication(at);

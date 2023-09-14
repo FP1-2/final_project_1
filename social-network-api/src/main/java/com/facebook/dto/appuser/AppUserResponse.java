@@ -1,8 +1,9 @@
 package com.facebook.dto.appuser;
 
+import com.facebook.controller.SignupResponse;
+
 import java.time.LocalDateTime;
 
-import com.facebook.controller.auth.SignupResponse;
 import lombok.Data;
 
 @Data

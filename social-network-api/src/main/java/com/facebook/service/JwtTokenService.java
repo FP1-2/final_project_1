@@ -1,4 +1,4 @@
-package com.facebook.config.security;
+package com.facebook.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;

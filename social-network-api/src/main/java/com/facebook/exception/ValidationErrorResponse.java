@@ -1,10 +1,11 @@
 package com.facebook.exception;
 
-import com.facebook.controller.auth.SignupResponse;
-import lombok.Data;
+import com.facebook.controller.SignupResponse;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import lombok.Data;
 
 @Data
 public class ValidationErrorResponse implements SignupResponse {

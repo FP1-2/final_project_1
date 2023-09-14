@@ -10,7 +10,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 @Data
-public class JwtAppUserDetails implements UserDetails {
+public class AppUserDetails implements UserDetails {
 
     private final Integer id;
     private final String[] roles;
@@ -18,8 +18,8 @@ public class JwtAppUserDetails implements UserDetails {
     private final String password;
     private final Date expirationDate;
 
-    public JwtAppUserDetails(int id, String[] roles, String username,
-                             String password, Date expirationDate) {
+    public AppUserDetails(int id, String[] roles, String username,
+                          String password, Date expirationDate) {
         this.id = id;
         this.roles = roles;
         this.username = username;
@@ -27,9 +27,9 @@ public class JwtAppUserDetails implements UserDetails {
         this.expirationDate = expirationDate;
     }
 
-    public static JwtAppUserDetails of(int id, String[] roles, String username,
-                                       String password, Date expirationDate){
-        return new JwtAppUserDetails(id, roles, username, password, expirationDate);
+    public static AppUserDetails of(int id, String[] roles, String username,
+                                    String password, Date expirationDate){
+        return new AppUserDetails(id, roles, username, password, expirationDate);
     }
 
     @Override

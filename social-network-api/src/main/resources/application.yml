@@ -1,3 +1,9 @@
+email:
+  host: ${EMAIL_HOST}
+  port: ${EMAIL_PORT}
+  username: ${EMAIL}
+  password: ${EMAIL_PASSWORD}
+
 logging:
   level:
     org:
@@ -72,5 +78,4 @@ spring:
       hibernate.format_sql: "true"
 server:
   port: ${SERVER_PORT:9000}
-
 ---
