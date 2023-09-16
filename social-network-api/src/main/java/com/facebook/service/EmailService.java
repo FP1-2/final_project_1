@@ -13,9 +13,9 @@ import org.springframework.stereotype.Service;
 @Log4j2
 @Service
 public class EmailService {
+
     @Value("${email.host}")
     private String host;
-
     @Value("${email.port}")
     private int port;
 
@@ -30,9 +30,8 @@ public class EmailService {
                 .from(username)
                 .to(to)
                 .withSubject(subject)
-                .withPlainText(messageContent)
+                .withHTMLText(messageContent)
                 .buildEmail();
-
         try (Mailer mailer = MailerBuilder
                 .withSMTPServer(host, port, username, password)
                 .withTransportStrategy(TransportStrategy.SMTPS)  // SMTPS = SMTP + SSL
@@ -44,5 +43,15 @@ public class EmailService {
             // Для повторної спроби надсилання листа:
             // retrySendEmail(to, subject, messageContent);
         }
+    }
+
+    public void sendResetPasswordEmail(String email, String token, String url) throws Exception {
+        String RESET_PASSWORD_LETTER_SUBJECT = "Reset password";
+        String RESET_PASSWORD_LETTER_Content ="<p>Click the link below to reset your password:<br>"
+                +"<a href=%s>Reset password</a>"
+                +"<br>This link is valid for 15 minutes.<br>"
+                +"If you didn't request password change just ignore this letter.</div>";
+        sendEmail(email, RESET_PASSWORD_LETTER_SUBJECT,
+                String.format(RESET_PASSWORD_LETTER_Content, url +"/"+ token +"?em=" + email));
     }
 }

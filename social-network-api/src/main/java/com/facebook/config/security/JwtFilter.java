@@ -61,6 +61,8 @@ public class JwtFilter extends OncePerRequestFilter {
             case "/api/auth/signup",
                     "/api/auth/token",
                     "/api/auth/reset",
+                    "/api/users/reset-password/**",
+                    "/api/users/update-password/**",
                     "/h2" -> false;
             default -> true;
         };
