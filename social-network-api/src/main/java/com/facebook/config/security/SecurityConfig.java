@@ -53,7 +53,8 @@ public class SecurityConfig {
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/api/auth/token"),
                                 AntPathRequestMatcher.antMatcher("/api/auth/signup"),
-                                AntPathRequestMatcher.antMatcher("/api/auth/reset")
+                                AntPathRequestMatcher.antMatcher("/api/users/reset-password/**"),
+                                AntPathRequestMatcher.antMatcher("/api/users/update-password/**")
                         ).permitAll()
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/user/**")
