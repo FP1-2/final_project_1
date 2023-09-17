@@ -8,10 +8,10 @@ logging:
   level:
     org:
     # рівень журналювання на DEBUG для всього пакету
-#      springframework: DEBUG
+    #      springframework: DEBUG
 
     # Це встановлює рівень журналювання на DEBUG специфічно для Spring Security
-#      springframework.security: DEBUG
+    #      springframework.security: DEBUG
 
     #  Це встановлює рівень журналювання для кешування контексту тестування Spring.
     #  Це може бути корисно при налаштуванні та виправленні тестів,
@@ -34,25 +34,27 @@ spring:
       path: /h2
   jpa:
     show-sql: true
+    properties:
+      hibernate.format_sql: "true"
     hibernate:
 
-#  Що робить update:
-#  Якщо таблиця відповідна сутності не існує, Hibernate створить її.
-#  Якщо таблиця вже існує, Hibernate спробує оновити її структуру, щоб вона відповідала поточному вигляду сутності.
-#  Якщо у сутності були додані нові поля, Hibernate додасть нові стовпці в таблицю.
-#  Він не видалятиме стовпці, які більше не існують у сутності, і не змінюватиме існуючі стовпці.
-#  для продакшена рекомендується використовувати системи міграції баз даних: Flyway, Liquibase та інші.
+      #  Що робить update:
+      #  Якщо таблиця відповідна сутності не існує, Hibernate створить її.
+      #  Якщо таблиця вже існує, Hibernate спробує оновити її структуру, щоб вона відповідала поточному вигляду сутності.
+      #  Якщо у сутності були додані нові поля, Hibernate додасть нові стовпці в таблицю.
+      #  Він не видалятиме стовпці, які більше не існують у сутності, і не змінюватиме існуючі стовпці.
+      #  для продакшена рекомендується використовувати системи міграції баз даних: Flyway, Liquibase та інші.
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
     defer-datasource-initialization: true
     jdbc:
       time_zone: UTC
 
-#  open-in-view: true - сесія Hibernate залишається відкритою протягом HTTP-запиту,
-#                        дозволяючи автоматично виконувати "ліниве завантаження" даних.
-#                        Може призвести до проблем з продуктивністю.
-#  open-in-view: false - сесія Hibernate закривається після завершення транзакції.
-#                        Ліниве завантаження після цього викличе помилку.
+    #  open-in-view: true - сесія Hibernate залишається відкритою протягом HTTP-запиту,
+    #                        дозволяючи автоматично виконувати "ліниве завантаження" даних.
+    #                        Може призвести до проблем з продуктивністю.
+    #  open-in-view: false - сесія Hibernate закривається після завершення транзакції.
+    #                        Ліниве завантаження після цього викличе помилку.
     open-in-view: false
 
 server:
@@ -72,6 +74,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+    defer-datasource-initialization: true
     jdbc:
       time_zone: UTC
     open-in-view: false
