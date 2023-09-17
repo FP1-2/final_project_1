@@ -46,12 +46,12 @@ public class EmailService {
     }
 
     public void sendResetPasswordEmail(String email, String token, String url) throws Exception {
-        String RESET_PASSWORD_LETTER_SUBJECT = "Reset password";
-        String RESET_PASSWORD_LETTER_Content ="<p>Click the link below to reset your password:<br>"
+        String resetPasswordLetterSubject = "Reset password";
+        String resetPasswordLetterContent ="<p>Click the link below to reset your password:<br>"
                 +"<a href=%s>Reset password</a>"
                 +"<br>This link is valid for 15 minutes.<br>"
                 +"If you didn't request password change just ignore this letter.</div>";
-        sendEmail(email, RESET_PASSWORD_LETTER_SUBJECT,
-                String.format(RESET_PASSWORD_LETTER_Content, url +"/"+ token +"?em=" + email));
+        sendEmail(email, resetPasswordLetterSubject,
+                String.format(resetPasswordLetterContent, url +"/"+ token +"?em=" + email));
     }
 }

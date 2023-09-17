@@ -28,7 +28,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc
 @WithMockUser
 @Import(TestConfig.class)
-public class AppUserControllerTest {
+class AppUserControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -40,7 +40,7 @@ public class AppUserControllerTest {
     private final String EMAIL = "test@example.com";
     private final String TOKEN = "validToken";
     @Test
-    public void resetPasswordTest() throws Exception {
+    void resetPasswordTest() throws Exception {
 
         doNothing().when(resetPasswordService).sendResetPasswordLink(any(String.class), any(String.class));
 
@@ -51,7 +51,7 @@ public class AppUserControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
-    public void checkResetTokenValidTest() throws Exception {
+    void checkResetTokenValidTest() throws Exception {
         when(resetPasswordService.isResetTokenValid(any(String.class), any(String.class))).thenReturn(true);
 
         mockMvc.perform(get("/api/users/reset-password/{token}", TOKEN)
@@ -59,7 +59,7 @@ public class AppUserControllerTest {
                 .andExpect(status().isOk());
     }
     @Test
-    public void checkResetTokenInvalidTest() throws Exception {
+    void checkResetTokenInvalidTest() throws Exception {
         when(resetPasswordService.isResetTokenValid(any(String.class), any(String.class))).thenReturn(false);
 
         mockMvc.perform(get("/api/users/reset-password/{token}", TOKEN)
@@ -68,7 +68,7 @@ public class AppUserControllerTest {
                 .andExpect(result -> assertTrue(result.getResolvedException() instanceof InvalidTokenException));
     }
 //    @Test
-//    public void updatePasswordTest() throws Exception {
+//    void updatePasswordTest() throws Exception {
 //        UserNewPasswordRequest user = new UserNewPasswordRequest(EMAIL, "Password123!");
 //        doNothing().when(resetPasswordService).resetUserPassword(any(String.class), any(UserNewPasswordRequest.class));
 //

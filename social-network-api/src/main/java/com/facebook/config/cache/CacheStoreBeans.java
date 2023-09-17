@@ -9,7 +9,7 @@ import java.util.concurrent.TimeUnit;
 public class CacheStoreBeans {
     @Bean
     public CacheStore<String> resetPasswordTokenCache() {
-        return new CacheStore<String>(15, TimeUnit.MINUTES);
+        return new CacheStore<>(15, TimeUnit.MINUTES);
     }
 
 }
