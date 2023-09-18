@@ -111,7 +111,7 @@ public class RegistrationAndAuthService {
 
     }
 
-    private void sendRegistrationEmail(String email, String url) throws Exception {
+    private void sendRegistrationEmail(String email, String url) throws EmailSendingException {
         emailHandler.sendEmail(email, "Confirm registration",
                 String.format("Please click the following link "
                         + "to confirm your registration: %s", url));
