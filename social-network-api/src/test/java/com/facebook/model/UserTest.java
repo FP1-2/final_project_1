@@ -19,7 +19,7 @@ public class UserTest {
     private TestEntityManager tem;
 
     @Test
-    public void dateSetting() {
+    void dateSetting() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
@@ -34,7 +34,7 @@ public class UserTest {
     }
 
     @Test
-    public void getSetRoles() {
+    void getSetRoles() {
         AppUser user = new AppUser();
         String[] roles = {"ROLE_ADMIN", "ROLE_USER"};
 
@@ -48,7 +48,7 @@ public class UserTest {
     }
 
     @Test
-    public void dateModification() {
+    void dateModification() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
@@ -70,7 +70,7 @@ public class UserTest {
     }
 
     @Test
-    public void usernameNotNull() {
+    void usernameNotNull() {
         AppUser user = new AppUser();
         user.setSurname("Doe");
         user.setPassword("secret");
@@ -81,7 +81,7 @@ public class UserTest {
     }
 
     @Test
-    public void emailNotNull() {
+    void emailNotNull() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
