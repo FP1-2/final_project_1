@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AbstractEntityTest {
+class AbstractEntityTest {
     @Test
     void testEqualsAndHashCode() {
         AbstractEntity entity1 = new AbstractEntity() {};
