@@ -31,8 +31,11 @@ public class EmailHandlerService {
     @Value("${email.password}")
     private String password;
 
-    @Retryable(retryFor = MailException.class, maxAttempts = MAX_ATTEMPTS, backoff = @Backoff(delay = 10000))
-    public void sendEmail(String to, String subject, String messageContent) throws Exception {
+    @Retryable(retryFor = MailException.class,
+            maxAttempts = MAX_ATTEMPTS,
+            backoff = @Backoff(delay = 1000))
+    public void sendEmail(String to, String subject,
+                          String messageContent) throws Exception {
         Email email = EmailBuilder.startingBlank()
                 .from(username)
                 .to(to)
@@ -52,7 +55,10 @@ public class EmailHandlerService {
     // Метод автоматично викликається після того,
     // як досягнуто максимальної кількості спроб надсилання листа.
     @Recover
-    public void handleMailException(MailException e, String to, String subject, String messageContent) {
+    public void handleMailException(MailException e,
+                                    String to,
+                                    String subject,
+                                    String messageContent) {
         log.error("Не вдалося надіслати листа після {} спроб: ", MAX_ATTEMPTS, e);
 
     }

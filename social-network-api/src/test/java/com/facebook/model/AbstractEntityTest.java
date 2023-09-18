@@ -1,6 +1,5 @@
-package com.facebook;
+package com.facebook.model;
 
-import com.facebook.model.AbstractEntity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;

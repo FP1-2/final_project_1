@@ -12,6 +12,7 @@ import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -32,9 +33,9 @@ public class JwtFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            FilterChain chain) throws ServletException, IOException {
+            @NotNull HttpServletRequest request,
+            @NotNull HttpServletResponse response,
+            @NotNull FilterChain chain) throws ServletException, IOException {
         if (isRequestForProtectedResource(request)) {
             try {
                 processTokenAndSetupAuthentication(request);
@@ -59,8 +60,8 @@ public class JwtFilter extends OncePerRequestFilter {
         String path = request.getRequestURI();
         return switch (path) {
             case "/api/auth/signup",
+                    "/api/auth/confirm/**",
                     "/api/auth/token",
-                    "/api/auth/reset",
                     "/api/users/reset-password/**",
                     "/api/users/update-password/**",
                     "/h2" -> false;
