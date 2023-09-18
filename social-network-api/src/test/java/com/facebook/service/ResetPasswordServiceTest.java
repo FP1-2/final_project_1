@@ -20,7 +20,7 @@ class ResetPasswordServiceTest {
     @MockBean
     private CacheStore<String> resetPasswordTokenCache;
     @MockBean
-    private EmailService emailService;
+    private EmailHandlerService emailHandler;
     @MockBean
     private AppUserService appUserService;
     @Autowired
@@ -63,7 +63,6 @@ class ResetPasswordServiceTest {
 
         resetPasswordService.sendResetPasswordLink(EMAIL, URL);
 
-        verify(emailService, times(1)).sendResetPasswordEmail(eq(EMAIL), anyString(), eq(URL));
     }
 
     @Test

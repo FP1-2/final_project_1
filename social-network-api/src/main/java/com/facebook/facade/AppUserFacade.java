@@ -28,9 +28,10 @@ public class AppUserFacade {
         return modelMapper.map(customerRequest, AppUser.class);
     }
 
-    public void updateToCustomer(AppUser existingCustomer, AppUserRequest customerRequest) {
-        existingCustomer.setName(customerRequest.getName());
-        existingCustomer.setEmail(customerRequest.getEmail());
+    public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {
+        existingAppUser.setName(appUserRequest.getName());
+        existingAppUser.setEmail(appUserRequest.getEmail());
         //TODO інші поля для оновлення AppUser
     }
+
 }

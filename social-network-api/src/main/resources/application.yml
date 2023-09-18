@@ -7,16 +7,16 @@ email:
 logging:
   level:
     org:
-    # рівень журналювання на DEBUG для всього пакету
-#      springframework: DEBUG
+# рівень журналювання на DEBUG для всього пакету
+#       springframework: DEBUG
 
-    # Це встановлює рівень журналювання на DEBUG специфічно для Spring Security
-#      springframework.security: DEBUG
+# Це встановлює рівень журналювання на DEBUG специфічно для Spring Security
+#       springframework.security: DEBUG
 
-    #  Це встановлює рівень журналювання для кешування контексту тестування Spring.
-    #  Це може бути корисно при налаштуванні та виправленні тестів,
-    #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
-#    org.springframework.test.context.cache: DEBUG
+#  Це встановлює рівень журналювання для кешування контексту тестування Spring.
+#  Це може бути корисно при налаштуванні та виправленні тестів,
+#  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
+#       org.springframework.test.context.cache: DEBUG
 
 ---
 spring:
@@ -34,6 +34,8 @@ spring:
       path: /h2
   jpa:
     show-sql: true
+    properties:
+      hibernate.format_sql: "true"
     hibernate:
 
 #  Що робить update:
@@ -72,6 +74,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+    defer-datasource-initialization: true
     jdbc:
       time_zone: UTC
     open-in-view: false

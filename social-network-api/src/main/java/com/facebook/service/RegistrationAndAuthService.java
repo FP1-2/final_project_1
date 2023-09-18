@@ -23,7 +23,7 @@ public class RegistrationAndAuthService {
     private final AppUserService appUserService;
     private final AppUserFacade appUserFacade;
     private final PasswordEncoder passwordEncoder;
-    private final EmailService emailService;
+    private final EmailHandlerService emailHandler;
     private final JwtTokenService tokenService;
 
     public SignupResponse createAppUser(AppUserRequest appUserRequest) throws Exception {
@@ -58,15 +58,16 @@ public class RegistrationAndAuthService {
     }
 
     private void sendWelcomeEmail(AppUser user) throws Exception {
-        emailService.sendEmail(user.getEmail(), "Реєстрацію завершено",
+        emailHandler.sendEmail(user.getEmail(), "Реєстрацію завершено",
                 String.format("Ласкаво просимо, %s! Ваша реєстрація пройшла успішно.",
                         user.getUsername()));
     }
 
     private void sendErrorEmail(AppUser user) throws Exception {
-        emailService.sendEmail(user.getEmail(), "Помилка реєстрації",
+        emailHandler.sendEmail(user.getEmail(), "Помилка реєстрації",
                 String.format("Сталася помилка під час реєстрації користувача: %s",
                         user.getUsername()));
     }
+
 }
 
