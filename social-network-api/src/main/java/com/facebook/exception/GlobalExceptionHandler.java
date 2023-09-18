@@ -90,4 +90,11 @@ public class GlobalExceptionHandler {
         log.warn(ex.getMessage());
         return new ResponseEntity<>("Invalid or expired reset token", HttpStatus.BAD_REQUEST);
     }
+
+    @ExceptionHandler(EmailSendingException.class)
+    public ResponseEntity<String> handleMailException(EmailSendingException ex) {
+        log.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body("Failed to send email: " + ex.getMessage());
+    }
 }

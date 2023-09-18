@@ -55,7 +55,7 @@ public class RegistrationAndAuthController {
     }
 
     @GetMapping("/confirm")
-    public ResponseEntity<?> confirmRegistration(@RequestParam String token,
+    public ResponseEntity<String> confirmRegistration(@RequestParam String token,
                                                  @RequestParam String em) {
         try {
             registrationAndAuthService.confirmRegistration(token, em);

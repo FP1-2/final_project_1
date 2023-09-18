@@ -1,5 +1,6 @@
 package com.facebook.service;
 
+import com.facebook.exception.EmailSendingException;
 import lombok.extern.log4j.Log4j2;
 import org.simplejavamail.MailException;
 import org.simplejavamail.api.email.Email;
@@ -35,7 +36,7 @@ public class EmailHandlerService {
             maxAttempts = MAX_ATTEMPTS,
             backoff = @Backoff(delay = 1000))
     public void sendEmail(String to, String subject,
-                          String messageContent) throws Exception {
+                          String messageContent) throws EmailSendingException {
         Email email = EmailBuilder.startingBlank()
                 .from(username)
                 .to(to)
@@ -49,6 +50,8 @@ public class EmailHandlerService {
                 .buildMailer()) {
 
             mailer.sendMail(email);
+        } catch (Exception e){
+            throw new EmailSendingException("Failed to send email", e);
         }
     }
 

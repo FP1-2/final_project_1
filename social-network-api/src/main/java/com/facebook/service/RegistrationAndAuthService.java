@@ -6,6 +6,7 @@ import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.dto.appuser.CreateAppUserResponse;
 import com.facebook.dto.appuser.LoginRequest;
 import com.facebook.dto.appuser.LoginResponse;
+import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
@@ -72,7 +73,7 @@ public class RegistrationAndAuthService {
                 saved -> {
                     try {
                         sendWelcomeEmail(saved);
-                    } catch (Exception e) {
+                    } catch (EmailSendingException e) {
                         log.error("An error occurred while "
                                 + "sending the welcome email ", e);
                     }
@@ -124,7 +125,7 @@ public class RegistrationAndAuthService {
                 .orElseThrow(() -> new IllegalArgumentException("wrong user/password combination"));
     }
 
-    private void sendWelcomeEmail(AppUser user) throws Exception {
+    private void sendWelcomeEmail(AppUser user) throws EmailSendingException {
         emailHandler.sendEmail(user.getEmail(), "Registration is complete.",
                 String.format("Welcome, %s! Your registration was successful.",
                         user.getUsername()));

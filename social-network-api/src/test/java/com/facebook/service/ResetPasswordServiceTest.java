@@ -2,6 +2,7 @@ package com.facebook.service;
 
 import com.facebook.config.cache.CacheStore;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
+import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
@@ -59,11 +60,13 @@ class ResetPasswordServiceTest {
     }
 
     @Test
-    void testSendResetPasswordLinkWithExistingUser() {
+    void testSendResetPasswordLinkWithExistingUser() throws EmailSendingException {
         AppUser user = new AppUser();
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
         resetPasswordService.sendResetPasswordLink(EMAIL, URL);
+
+        verify(emailHandler, times(1)).sendEmail(anyString(), anyString(), anyString());
 
     }
 
