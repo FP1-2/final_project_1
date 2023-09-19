@@ -2,11 +2,13 @@ package com.facebook.service;
 
 import com.facebook.config.cache.CacheStore;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
+import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 
@@ -18,6 +20,7 @@ import static org.mockito.Mockito.*;
 @SpringBootTest(classes = ResetPasswordService.class)
 class ResetPasswordServiceTest {
     @MockBean
+    @Qualifier("resetPasswordTokenCache")
     private CacheStore<String> resetPasswordTokenCache;
     @MockBean
     private EmailHandlerService emailHandler;
@@ -57,11 +60,13 @@ class ResetPasswordServiceTest {
     }
 
     @Test
-    void testSendResetPasswordLinkWithExistingUser() throws Exception {
+    void testSendResetPasswordLinkWithExistingUser() throws EmailSendingException {
         AppUser user = new AppUser();
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
         resetPasswordService.sendResetPasswordLink(EMAIL, URL);
+
+        verify(emailHandler, times(1)).sendEmail(anyString(), anyString(), anyString());
 
     }
 
@@ -79,7 +84,7 @@ class ResetPasswordServiceTest {
         resetPasswordService.resetUserPassword(TOKEN, user);
 
         verify(appUserService, times(1)).updatePassword(user.getEmail(), user.getNewPassword());
-        verify(resetPasswordTokenCache, times(1)).removeToken(EMAIL);
+        verify(resetPasswordTokenCache, times(1)).remove(EMAIL);
     }
 
     @Test

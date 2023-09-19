@@ -1,15 +1,14 @@
-package com.facebook;
+package com.facebook.model;
 
-import com.facebook.model.AbstractEntity;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AbstractEntityTest {
+class AbstractEntityTest {
     @Test
-    public void testEqualsAndHashCode() {
+    void testEqualsAndHashCode() {
         AbstractEntity entity1 = new AbstractEntity() {};
         entity1.setId(1L);
         entity1.setCreatedDate(LocalDateTime.now());
@@ -35,7 +34,7 @@ public class AbstractEntityTest {
     }
 
     @Test
-    public void testEntityIsNotEqualToNullOrOtherTypes() {
+    void testEntityIsNotEqualToNullOrOtherTypes() {
         AbstractEntity entity = new AbstractEntity() {};
         entity.setId(1L);
         entity.setCreatedDate(LocalDateTime.now());
