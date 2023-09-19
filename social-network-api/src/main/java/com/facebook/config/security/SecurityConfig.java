@@ -35,12 +35,12 @@ public class SecurityConfig {
 
     private final Environment env;
 
-    @Value("${frontend.url:http://localhost:3000}")
+    @Value("${frontend.url}")
     private String clientUrl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        //дозволяти основні запити із програми на FRONTEND_URL
+        //дозволяти основні запити із програми на clientUrl
         http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
             configuration.setAllowedOrigins(Collections.singletonList(clientUrl));
