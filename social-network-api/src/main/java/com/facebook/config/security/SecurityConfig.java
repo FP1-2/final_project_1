@@ -1,6 +1,7 @@
 package com.facebook.config.security;
 
 import java.util.Arrays;
+import java.util.Collections;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -15,13 +16,14 @@ import org.springframework.security.config.annotation.web.configurers.HeadersCon
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Log4j2
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-
+    private static final String FRONTEND_URL = "http://localhost:3000";
     private static final String API = "/api/**";
 
     private static final String ADMIN = "ADMIN";
@@ -34,6 +36,16 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
+        //дозволяти основні запити із програми на FRONTEND_URL
+        http.cors(cors -> cors.configurationSource(request -> {
+            CorsConfiguration configuration = new CorsConfiguration();
+            configuration.setAllowedOrigins(Collections.singletonList(FRONTEND_URL));
+            configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+            configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+            configuration.setAllowCredentials(true);
+            return configuration;
+        }));
+
         // Захист від CSRF атак відключаємо.
         http.csrf(AbstractHttpConfigurer::disable);
 
