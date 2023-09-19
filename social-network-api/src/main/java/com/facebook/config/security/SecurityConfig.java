@@ -5,6 +5,7 @@ import java.util.Collections;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import jakarta.annotation.PostConstruct;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -23,7 +24,7 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @RequiredArgsConstructor
 public class SecurityConfig {
-    private static final String FRONTEND_URL = "http://localhost:3000";
+
     private static final String API = "/api/**";
 
     private static final String ADMIN = "ADMIN";
@@ -33,6 +34,13 @@ public class SecurityConfig {
     private final JwtFilter jwtFilter;
 
     private final Environment env;
+
+    private String FRONTEND_URL;
+
+    @PostConstruct
+    public void init() {
+        FRONTEND_URL = env.getProperty("frontend.url", "http://localhost:3000");
+    }
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
