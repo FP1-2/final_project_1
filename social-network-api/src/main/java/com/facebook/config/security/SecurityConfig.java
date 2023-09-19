@@ -5,7 +5,7 @@ import java.util.Collections;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.env.Environment;
@@ -35,19 +35,15 @@ public class SecurityConfig {
 
     private final Environment env;
 
-    private String FRONTEND_URL;
-
-    @PostConstruct
-    public void init() {
-        FRONTEND_URL = env.getProperty("frontend.url", "http://localhost:3000");
-    }
+    @Value("${frontend.url:http://localhost:3000}")
+    private String clientUrl;
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //дозволяти основні запити із програми на FRONTEND_URL
         http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Collections.singletonList(FRONTEND_URL));
+            configuration.setAllowedOrigins(Collections.singletonList(clientUrl));
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
             configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
             configuration.setAllowCredentials(true);
