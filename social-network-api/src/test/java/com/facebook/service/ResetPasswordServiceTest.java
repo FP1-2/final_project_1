@@ -98,10 +98,13 @@ class ResetPasswordServiceTest {
 
     @Test
     void testSendResetPasswordEmail() throws Exception {
-        String URL = "https://localhost:3000/change_password/"+TOKEN +"?em="+EMAIL;
+        String URL = "http://localhost:3000/change_password/"+TOKEN +"?em="+EMAIL;
         resetPasswordService.sendResetPasswordEmail(EMAIL, TOKEN);
-
-        verify(emailHandler).sendEmail(eq(EMAIL), eq("Reset password"), contains(URL));
+        String content ="<p>Click the link below to reset your password:<br>"
+                +"<a href="+URL+">Reset password</a>"
+                +"<br>This link is valid for 15 minutes.<br>"
+                +"If you didn't request password change just ignore this letter.</div>";
+        verify(emailHandler).sendEmail(eq(EMAIL), eq("Reset password"), contains(content));
 
     }
 }
