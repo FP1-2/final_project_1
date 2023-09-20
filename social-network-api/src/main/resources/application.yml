@@ -19,7 +19,9 @@ logging:
 #  Це може бути корисно при налаштуванні та виправленні тестів,
 #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
 #       org.springframework.test.context.cache: DEBUG
-
+spring:
+  profiles:
+    active: prod
 ---
 spring:
   config:
@@ -48,6 +50,7 @@ spring:
 #  для продакшена рекомендується використовувати системи міграції баз даних: Flyway, Liquibase та інші.
       ddl-auto: update
     database-platform: org.hibernate.dialect.H2Dialect
+    defer-datasource-initialization: true
     jdbc:
       time_zone: UTC
 
@@ -75,6 +78,7 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQLDialect
+    defer-datasource-initialization: true
     jdbc:
       time_zone: UTC
     open-in-view: false
