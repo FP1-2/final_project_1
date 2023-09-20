@@ -87,6 +87,4 @@ spring:
       hibernate.format_sql: "true"
 server:
   port: ${SERVER_PORT:9000}
-frontend:
-  url: ${FRONTEND_URL:http://localhost:3000}
 ---

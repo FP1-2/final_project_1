@@ -2,7 +2,6 @@ package com.facebook.service;
 
 import com.facebook.config.cache.CacheStore;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
-import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
@@ -23,10 +22,9 @@ public class ResetPasswordService {
     private final AppUserService appUserService;
     @Value("${frontend.url}")
     private String clientUrl;
-    String generateToken(){
 
     @Autowired
-    public ResetPasswordService(@Qualifier("resetPasswordTokenCache")
+    public ResetPasswordService(@Qualifier("resetPasswordTokenCache" )
                                 CacheStore<String> resetPasswordTokenCache,
                                 EmailHandlerService emailHandlerService,
                                 AppUserService appUserService) {
