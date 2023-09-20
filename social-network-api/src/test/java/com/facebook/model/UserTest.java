@@ -1,6 +1,5 @@
-package com.facebook;
+package com.facebook.model;
 
-import com.facebook.model.AppUser;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,13 +13,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @DataJpaTest
-public class UserTest {
+class UserTest {
 
     @Autowired
     private TestEntityManager tem;
 
     @Test
-    public void dateSetting() {
+    void dateSetting() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
@@ -35,7 +34,7 @@ public class UserTest {
     }
 
     @Test
-    public void getSetRoles() {
+    void getSetRoles() {
         AppUser user = new AppUser();
         String[] roles = {"ROLE_ADMIN", "ROLE_USER"};
 
@@ -49,7 +48,7 @@ public class UserTest {
     }
 
     @Test
-    public void dateModification() {
+    void dateModification() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");
@@ -71,7 +70,7 @@ public class UserTest {
     }
 
     @Test
-    public void usernameNotNull() {
+    void usernameNotNull() {
         AppUser user = new AppUser();
         user.setSurname("Doe");
         user.setPassword("secret");
@@ -82,7 +81,7 @@ public class UserTest {
     }
 
     @Test
-    public void emailNotNull() {
+    void emailNotNull() {
         AppUser user = new AppUser();
         user.setName("John");
         user.setSurname("Doe");

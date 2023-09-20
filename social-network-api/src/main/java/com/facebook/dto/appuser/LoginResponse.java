@@ -13,12 +13,12 @@ public class LoginResponse {
     private String token;
     private String[] role;
 
-    public static LoginResponse Ok(long id, String token, String[] role) {
+    public static LoginResponse ok(long id, String token, String[] role) {
         return new LoginResponse(id, true, null, token, role);
 
     }
 
-    public static LoginResponse Error(String message) {
+    public static LoginResponse error(String message) {
         return new LoginResponse(null, false, message, null, null);
 
     }

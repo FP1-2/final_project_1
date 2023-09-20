@@ -1,3 +1,5 @@
+frontend:
+  url: ${FRONTEND_URL:http://localhost:3000}
 email:
   host: ${EMAIL_HOST}
   port: ${EMAIL_PORT}
@@ -11,7 +13,7 @@ logging:
 #       springframework: DEBUG
 
 # Це встановлює рівень журналювання на DEBUG специфічно для Spring Security
-#       springframework.security: DEBUG
+       springframework.security: DEBUG
 
 #  Це встановлює рівень журналювання для кешування контексту тестування Spring.
 #  Це може бути корисно при налаштуванні та виправленні тестів,

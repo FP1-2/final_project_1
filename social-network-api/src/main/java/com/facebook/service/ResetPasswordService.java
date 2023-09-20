@@ -2,11 +2,13 @@ package com.facebook.service;
 
 import com.facebook.config.cache.CacheStore;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
+import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +17,6 @@ import java.util.UUID;
 
 @Log4j2
 @Service
-@RequiredArgsConstructor
 public class ResetPasswordService {
     private final CacheStore<String> resetPasswordTokenCache;
     private final EmailHandlerService emailHandlerService;
@@ -23,6 +24,18 @@ public class ResetPasswordService {
     @Value("${frontend.url}")
     private String clientUrl;
     String generateToken(){
+
+    @Autowired
+    public ResetPasswordService(@Qualifier("resetPasswordTokenCache")
+                                CacheStore<String> resetPasswordTokenCache,
+                                EmailHandlerService emailHandlerService,
+                                AppUserService appUserService) {
+        this.resetPasswordTokenCache = resetPasswordTokenCache;
+        this.emailHandlerService = emailHandlerService;
+        this.appUserService = appUserService;
+    }
+
+    String generateToken() {
         return UUID.randomUUID().toString();
     }
     String createAndAddResetPasswordToken(String email){
@@ -31,9 +44,9 @@ public class ResetPasswordService {
         return newToken;
     }
 
-    public boolean isResetTokenValid(String token, String email){
+    public boolean isResetTokenValid(String token, String email) {
         String tokenFromCache = resetPasswordTokenCache.get(email);
-        if(tokenFromCache == null) throw new InvalidTokenException();
+        if (tokenFromCache == null) throw new InvalidTokenException();
         return tokenFromCache.equals(token);
     }
     public void sendResetPasswordLink(String email) {
@@ -47,11 +60,12 @@ public class ResetPasswordService {
             log.error("Error sending reset password email", e);
         }
     }
-    public void resetUserPassword(String token, UserNewPasswordRequest user){
-        if(!isResetTokenValid(token, user.getEmail())) throw new InvalidTokenException();
+
+    public void resetUserPassword(String token, UserNewPasswordRequest user) {
+        if (!isResetTokenValid(token, user.getEmail())) throw new InvalidTokenException();
 
         appUserService.updatePassword(user.getEmail(), user.getNewPassword());
-        resetPasswordTokenCache.removeToken(user.getEmail());
+        resetPasswordTokenCache.remove(user.getEmail());
     }
 
     void sendResetPasswordEmail(String email, String token) throws Exception {
