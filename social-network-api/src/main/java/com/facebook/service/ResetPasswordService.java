@@ -2,6 +2,7 @@ package com.facebook.service;
 
 import com.facebook.config.cache.CacheStore;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
+import com.facebook.exception.EmailSendingException;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
@@ -66,7 +67,7 @@ public class ResetPasswordService {
         resetPasswordTokenCache.remove(user.getEmail());
     }
 
-    void sendResetPasswordEmail(String email, String token) throws Exception {
+    void sendResetPasswordEmail(String email, String token) throws EmailSendingException {
         String resetPasswordLetterSubject = "Reset password";
         String resetPasswordLetterContent ="<p>Click the link below to reset your password:<br>"
                 +"<a href=%s>Reset password</a>"
