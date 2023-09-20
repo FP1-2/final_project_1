@@ -19,9 +19,7 @@ logging:
 #  Це може бути корисно при налаштуванні та виправленні тестів,
 #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
 #       org.springframework.test.context.cache: DEBUG
-spring:
-  profiles:
-    active: prod
+
 ---
 spring:
   config:
