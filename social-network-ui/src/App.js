@@ -5,7 +5,7 @@ import {Route,Router,Routes} from "react-router-dom";
 function App() {
   return (
     <Routes>
-      <Route path='user/registration' element={<RegistrationForm/>}/>
+      <Route path='registration' element={<RegistrationForm/>}/>
     </Routes>
   );
 }
