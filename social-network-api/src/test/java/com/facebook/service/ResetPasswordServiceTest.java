@@ -28,7 +28,7 @@ class ResetPasswordServiceTest {
     private final String EMAIL = "test@example.com";
     private final String TOKEN = "validToken";
     private final String INVALID_TOKEN = "invalidToken";
-    private final String URL = "https://example.com/reset-password";
+
     @Test
     void testGenerateToken() {
         String token = resetPasswordService.generateToken();
@@ -61,14 +61,14 @@ class ResetPasswordServiceTest {
         AppUser user = new AppUser();
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
-        resetPasswordService.sendResetPasswordLink(EMAIL, URL);
+        resetPasswordService.sendResetPasswordLink(EMAIL);
 
     }
 
     @Test
     void testSendResetPasswordLinkWithNonExistingUser() {
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> resetPasswordService.sendResetPasswordLink(EMAIL, URL));
+        assertThrows(UserNotFoundException.class, () -> resetPasswordService.sendResetPasswordLink(EMAIL));
     }
 
     @Test
@@ -89,5 +89,14 @@ class ResetPasswordServiceTest {
         when(resetPasswordTokenCache.get(EMAIL)).thenReturn(TOKEN);
 
         assertThrows(InvalidTokenException.class, () -> resetPasswordService.resetUserPassword(INVALID_TOKEN, user));
+    }
+
+    @Test
+    void testSendResetPasswordEmail() throws Exception {
+        String URL = "https://localhost:3000/change_password/"+TOKEN +"?em="+EMAIL;
+        resetPasswordService.sendResetPasswordEmail(EMAIL, TOKEN);
+
+        verify(emailHandler).sendEmail(eq(EMAIL), eq("Reset password"), contains(URL));
+
     }
 }
