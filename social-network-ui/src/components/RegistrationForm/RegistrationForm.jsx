@@ -4,7 +4,7 @@ import Input from "../Input/Input";
 import style from "./RegistrationForm.module.scss";
 import {object, string, ref} from "yup";
 import { useDispatch, useSelector} from "react-redux";
-import {registrationThunkRequest} from "../../redux toolkit/registration/thunks";
+import {registrationThunkRequest} from "../../redux-toolkit/registration/thunks";
 
 
 const validationSchema = object({
