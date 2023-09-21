@@ -1,9 +1,8 @@
 const initialValue={
-    registration:{
-        user:{},
-        status:"",
-        error:"",
-        token:{}
-    },
+        registrationMassage:{
+                obj:{},
+                status:"",
+                error:"",
+        }
 }
 export default initialValue;

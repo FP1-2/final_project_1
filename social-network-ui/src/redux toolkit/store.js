@@ -1,6 +1,15 @@
-import { configureStore } from "@reduxjs/toolkit";
-import appReducer from "./appReducer";
+import {configureStore,  combineReducers} from "@reduxjs/toolkit";
+import registrationReducer from "./registration/slice"
 
-const store=configureStore({reducer:appReducer});
+const rootReducer = (state, action) => {
+    return combineReducers({
+        registration: registrationReducer,
+
+    })(state, action);
+}
+
+const store = configureStore({
+    reducer: rootReducer,
+});
 
 export default store;
