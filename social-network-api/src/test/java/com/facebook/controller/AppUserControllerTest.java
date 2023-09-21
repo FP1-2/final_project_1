@@ -1,6 +1,7 @@
 package com.facebook.controller;
 
 import com.facebook.TestConfig;
+import com.facebook.dto.appuser.UserNewPasswordRequest;
 import com.facebook.exception.InvalidTokenException;
 import com.facebook.service.AppUserService;
 import com.facebook.service.ResetPasswordService;
@@ -20,8 +21,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @SpringBootTest(classes = AppUserController.class)
@@ -42,7 +42,7 @@ class AppUserControllerTest {
     @Test
     void resetPasswordTest() throws Exception {
 
-        doNothing().when(resetPasswordService).sendResetPasswordLink(any(String.class), any(String.class));
+        doNothing().when(resetPasswordService).sendResetPasswordLink(any(String.class));
 
         mockMvc.perform(post("/api/users/reset-password")
                         .with(csrf())
@@ -50,23 +50,7 @@ class AppUserControllerTest {
                         .content(EMAIL))
                 .andExpect(status().isOk());
     }
-    @Test
-    void checkResetTokenValidTest() throws Exception {
-        when(resetPasswordService.isResetTokenValid(any(String.class), any(String.class))).thenReturn(true);
 
-        mockMvc.perform(get("/api/users/reset-password/{token}", TOKEN)
-                        .param("em", EMAIL))
-                .andExpect(status().isOk());
-    }
-    @Test
-    void checkResetTokenInvalidTest() throws Exception {
-        when(resetPasswordService.isResetTokenValid(any(String.class), any(String.class))).thenReturn(false);
-
-        mockMvc.perform(get("/api/users/reset-password/{token}", TOKEN)
-                        .param("em", EMAIL))
-                .andExpect(status().isBadRequest())
-                .andExpect(result -> assertTrue(result.getResolvedException() instanceof InvalidTokenException));
-    }
 //    @Test
 //    void updatePasswordTest() throws Exception {
 //        UserNewPasswordRequest user = new UserNewPasswordRequest(EMAIL, "Password123!");

@@ -9,6 +9,7 @@ import com.facebook.model.AppUser;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,9 +21,11 @@ public class ResetPasswordService {
     private final CacheStore<String> resetPasswordTokenCache;
     private final EmailHandlerService emailHandlerService;
     private final AppUserService appUserService;
+    @Value("${frontend.url}")
+    private String clientUrl;
 
     @Autowired
-    public ResetPasswordService(@Qualifier("resetPasswordTokenCache")
+    public ResetPasswordService(@Qualifier("resetPasswordTokenCache" )
                                 CacheStore<String> resetPasswordTokenCache,
                                 EmailHandlerService emailHandlerService,
                                 AppUserService appUserService) {
@@ -34,8 +37,7 @@ public class ResetPasswordService {
     String generateToken() {
         return UUID.randomUUID().toString();
     }
-
-    String createAndAddResetPasswordToken(String email) {
+    String createAndAddResetPasswordToken(String email){
         String newToken = generateToken();
         resetPasswordTokenCache.add(email, newToken);
         return newToken;
@@ -46,15 +48,14 @@ public class ResetPasswordService {
         if (tokenFromCache == null) throw new InvalidTokenException();
         return tokenFromCache.equals(token);
     }
-
-    public void sendResetPasswordLink(String email, String url) {
+    public void sendResetPasswordLink(String email) {
         Optional<AppUser> user = appUserService.findByEmail(email);
-        if (user.isEmpty()) throw new UserNotFoundException();
-        try {
+        if(user.isEmpty()) throw new UserNotFoundException();
+        try{
             String resetPasswordToken = createAndAddResetPasswordToken(email);
             log.info("token " + resetPasswordToken);
-            sendResetPasswordEmail(email, resetPasswordToken, url);
-        } catch (Exception e) {
+            sendResetPasswordEmail(email, resetPasswordToken);
+        } catch (Exception e){
             log.error("Error sending reset password email", e);
         }
     }
@@ -66,15 +67,15 @@ public class ResetPasswordService {
         resetPasswordTokenCache.remove(user.getEmail());
     }
 
-    public void sendResetPasswordEmail(String email, String token, String url)
-            throws EmailSendingException {
+    void sendResetPasswordEmail(String email, String token) throws EmailSendingException {
         String resetPasswordLetterSubject = "Reset password";
-        String resetPasswordLetterContent = "<p>Click the link below to reset your password:<br>"
-                + "<a href=%s>Reset password</a>"
-                + "<br>This link is valid for 15 minutes.<br>"
-                + "If you didn't request password change just ignore this letter.</div>";
+        String resetPasswordLetterContent ="<p>Click the link below to reset your password:<br>"
+                +"<a href=%s>Reset password</a>"
+                +"<br>This link is valid for 15 minutes.<br>"
+                +"If you didn't request password change just ignore this letter.</div>";
+        String url = clientUrl + "/change_password/";
         emailHandlerService.sendEmail(email, resetPasswordLetterSubject,
-                String.format(resetPasswordLetterContent, url + "/" + token + "?em=" + email));
+                String.format(resetPasswordLetterContent, url + token +"?em=" + email));
     }
 
 }
