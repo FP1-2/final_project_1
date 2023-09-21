@@ -4,7 +4,7 @@ import {Route,Routes} from "react-router-dom";
 function App() {
   return (
     <Routes>
-      <Route path='registration' element={<RegistrationForm/>}/>
+      <Route path='/registration' element={<RegistrationForm/>}/>
     </Routes>
   );
 }
