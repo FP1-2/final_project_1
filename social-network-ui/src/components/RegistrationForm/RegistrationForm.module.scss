@@ -1,0 +1,102 @@
+@import "../../styles/mixin.scss";
+
+.formWrapper{
+    top: 0;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1;
+
+    .form{
+        position: absolute;
+        z-index: 2;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, .2), 0 8px 16px rgba(0, 0, 0, .1);
+        padding: 40px 50px;
+        width: 480px;
+        text-align: center;
+        box-sizing: border-box;
+
+        @include width_768{
+            padding: 40px 60px;
+            width: 430px;
+        }
+
+        @include width_576{
+            width: 100%;
+            box-shadow: none;
+            padding: 30px 60px;
+        }
+    
+        .formTitle{
+            font-size: 35px;
+            margin-top: 0; 
+
+            @include width_768{
+                font-size: 25px;
+            }
+        }
+        .wrapperInputs{
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            box-sizing: border-box; 
+
+            @include width_576{
+                display: block;
+            }
+        }
+    
+        .wrapperLink{
+            margin-top: 20px;
+            @include width_768{
+                margin-top: 15px;
+            }
+        }
+    
+        .btnSubmit{
+            margin-top: 35px;
+            border: none;
+            border-radius: 5px;
+            padding: 10px 20px;
+            background-color: #00a000;
+            color:white;
+            font-weight: bold;
+            font-size: 18px;
+
+            @include width_768{
+                padding: 8px 15px;
+                font-size: 15px;
+            }
+
+            @include width_576{
+                margin-top: 0;
+            }
+    
+            &:hover{
+                cursor: pointer;
+            }
+            &:disabled{
+                background-color: grey;
+            }
+        }
+    }
+    .error{
+        font-size: 14px;
+        color: red;
+        display: block;
+        position: relative;
+        margin-top: 370px;
+        margin-bottom: 0;
+
+        @include width_768{
+            margin-top: 350px;
+        }
+
+        @include width_576{
+            margin-top: 390px;
+        }
+    }
+}
