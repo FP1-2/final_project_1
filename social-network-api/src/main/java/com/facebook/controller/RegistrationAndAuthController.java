@@ -55,13 +55,17 @@ public class RegistrationAndAuthController {
     }
 
     @PostMapping("/confirm")
-    public ResponseEntity<ConfirmMessageResponse> confirmRegistration(@RequestParam String token, @RequestParam String em) {
+    public ResponseEntity<ConfirmMessageResponse> confirmRegistration(@RequestParam String token,
+                                                                      @RequestParam String em) {
         try {
             registrationAndAuthService.confirmRegistration(token, em);
-            return ResponseEntity.ok(new ConfirmMessageResponse("Registration has been successfully confirmed!"));
+            return ResponseEntity
+                    .ok(new ConfirmMessageResponse("Registration has been successfully confirmed!"));
         } catch (InvalidTokenException | UserNotFoundException e) {
-            log.error("Error confirming registration", e);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ConfirmMessageResponse("Invalid token or user not found"));
+            log.warn("Error confirming registration: {}", e.getMessage());
+            return ResponseEntity
+                    .status(HttpStatus.BAD_REQUEST)
+                    .body(new ConfirmMessageResponse("Invalid token or user not found"));
         }
     }
 
