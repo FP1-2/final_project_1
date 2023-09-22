@@ -53,7 +53,7 @@ public class RegistrationAndAuthService {
         this.appUserRequestCache = appUserRequestCache;
     }
 
-    private static final String BASE_URL = "http://localhost:9000";
+    private static final String BASE_URL = "http://localhost:3000";
 
     public void confirmRegistration(String token, String email) {
         // Отримати дані з кешу та перевірити їх
@@ -93,7 +93,7 @@ public class RegistrationAndAuthService {
         String token = UUID.randomUUID().toString();
         appUserRequestCache.add(token, appUserRequest);
 
-        String url = BASE_URL + "/api/auth/confirm?token="
+        String url = BASE_URL + "/registration/confirm?token="
                 + token + "&em=" + appUserRequest.getEmail();
         registrationAndAuthTokenCache.add(token, url);
 

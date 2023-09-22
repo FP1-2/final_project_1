@@ -1,6 +1,7 @@
 package com.facebook.controller;
 
 import com.facebook.dto.appuser.AppUserRequest;
+import com.facebook.dto.appuser.ConfirmMessageResponse;
 import com.facebook.dto.appuser.LoginRequest;
 import com.facebook.dto.appuser.LoginResponse;
 import com.facebook.exception.InvalidTokenException;
@@ -12,7 +13,6 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,19 +54,14 @@ public class RegistrationAndAuthController {
         }
     }
 
-    @GetMapping("/confirm")
-    public ResponseEntity<String> confirmRegistration(@RequestParam String token,
-                                                 @RequestParam String em) {
+    @PostMapping("/confirm")
+    public ResponseEntity<ConfirmMessageResponse> confirmRegistration(@RequestParam String token, @RequestParam String em) {
         try {
             registrationAndAuthService.confirmRegistration(token, em);
-            return ResponseEntity
-                    .ok()
-                    .body("Registration has been successfully confirmed!");
+            return ResponseEntity.ok(new ConfirmMessageResponse("Registration has been successfully confirmed!"));
         } catch (InvalidTokenException | UserNotFoundException e) {
             log.error("Error confirming registration", e);
-            return ResponseEntity
-                    .status(HttpStatus.BAD_REQUEST)
-                    .body("Invalid token or user not found");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ConfirmMessageResponse("Invalid token or user not found"));
         }
     }
 
