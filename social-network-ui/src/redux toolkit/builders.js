@@ -1,14 +1,10 @@
-const builders = (builder, extraReducer, atState, obj) => {
+const builders = (builder, extraReducer, atState) => {
     builder
         .addCase(extraReducer.pending, state => {
             state[atState].status = 'pending';
         })
         .addCase(extraReducer.fulfilled, (state, action) => {
-            
-            if (atState==='registration'){
-                state[atState][obj] = action.meta.arg;
-            }
-            
+            state[atState] = action.payload; 
             state[atState].status = 'fulfilled';
             state[atState].error = '';
         })

@@ -1,11 +1,10 @@
-import React, { useState } from "react";
+import React from "react";
 import { Formik, Form } from 'formik';
 import Input from "../Input/Input";
 import style from "./RegistrationForm.module.scss";
 import { object, string, ref } from "yup";
 import { useDispatch, useSelector } from "react-redux";
-import { registrationThunkRequest, getTokenRequest } from "../../redux toolkit/registration/thunks";
-import { userGetToken } from "../../redux toolkit/registration/slice";
+import { registrationThunkRequest} from "../../redux toolkit/registration/thunks";
 
 
 const validationSchema = object({
@@ -30,16 +29,8 @@ const validationSchema = object({
 
 const RegistrationForm = () => {
 
-    const [obj, setObj] = useState({});
-    const user = useSelector(state => state.registration.registration.user);
     const error = useSelector(state => state.registration.registration.error.message);
     const dispatch = useDispatch();
-
-    if (user.name) {
-        getTokenRequest(obj).then((response) => dispatch(userGetToken(response.data.token)));
-    }
-
-
 
     const initialValues = {
         name: "",
@@ -57,13 +48,6 @@ const RegistrationForm = () => {
 
         delete newObject.repeatPassword;
         newObject.username = newObject.email;
-
-        const objForToken = {
-            username: newObject.username,
-            password: newObject.password,
-        }
-
-        setObj(objForToken);
 
         dispatch(registrationThunkRequest(newObject));
     }
