@@ -10,7 +10,16 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
+import java.util.Optional;
 
+/**
+ *  Клас Gen призначений для генерації даних та заповнення
+ *  БД цими даними. За замовчуванням запускається з профілем Dev.
+ *  Генерує 14 користувачів AppUser.
+ *  Містить тестового користувача з відомими авторизаційними даними з
+ *  username "test",
+ *  password "Password1!".
+ */
 @Log4j2
 @RequiredArgsConstructor
 public class Gen {
@@ -19,6 +28,9 @@ public class Gen {
 
     private static final String HEADER_PHOTO = "https://source.unsplash.com/random?wallpapers";
 
+    private static final String DEFAULT_PASSWORD = "Password1!";
+
+    private static final String DEFAULT_USERNAME = "test";
 
     public final ApplicationContext context;
 
@@ -124,7 +136,15 @@ public class Gen {
                     "Random Address 11",
                     AVATAR,
                     HEADER_PHOTO,
-                    51)
+                    51),
+            new GenAppUser("Julius",
+                    "Caesar",
+                    "GaiusJuliusCaesar",
+                    "J_Caesar@roma.republic",
+                    "Suburra, Ancient Rome",
+                    AVATAR,
+                    HEADER_PHOTO,
+                    55)
     );
 
     public final String[] password = new String[]{"568D!6s", "S06i7*378", "Ff063?82@",
@@ -136,11 +156,33 @@ public class Gen {
         PasswordEncoder encoder = context.getBean(PasswordEncoder.class);
 
         for (GenAppUser dto : appUsers) {
-            AppUser appUser = facade.convertToAppUser(dto);
-            appUser.setRoles(new String[]{"USER"});
-            appUser.setPassword(encoder.encode(password[MathUtils.random(0, 12)]));
-            service.save(appUser);
+            createAppUser(dto, service, encoder);
         }
+        //Окремо додаємо дефолтного користувача.
+        createAppUser(new GenAppUser("Clementina DuBuque",
+                "test",
+                DEFAULT_USERNAME,
+                "test@test.biz",
+                "Address 11",
+                AVATAR,
+                HEADER_PHOTO,
+                51), service, encoder);
+    }
+
+    private void createAppUser(GenAppUser dto,
+                               AppUserService service,
+                               PasswordEncoder encoder
+                               ){
+        AppUser appUser = facade.convertToAppUser(dto);
+        appUser.setRoles(new String[]{"USER"});
+
+        String encodedPassword = Optional.of(dto)
+                .filter(user -> DEFAULT_USERNAME.equals(user.getUsername()))
+                .map(user -> encoder.encode(DEFAULT_PASSWORD))
+                .orElse(encoder.encode(password[MathUtils.random(0, 12)]));
+
+        appUser.setPassword(encodedPassword);
+        service.save(appUser);
     }
 }
 
