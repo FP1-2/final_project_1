@@ -49,18 +49,6 @@ public class AppUser extends AbstractEntity {
         return this.roles.split(DELIMITER);
     }
 
-    //Використовується дата генератором
-    public AppUser(String name, String surname, String username, String email, String address, String avatar, String headerPhoto, Integer dateOfBirth) {
-        this.name = name;
-        this.surname = surname;
-        this.username = username;
-        this.email = email;
-        this.address = address;
-        this.avatar = avatar;
-        this.headerPhoto = headerPhoto;
-        this.dateOfBirth = dateOfBirth;
-    }
-
     @Override
     public String toString() {
         return String.format("Customer{id=%d, Name=%s, Surname=%s, Username=%s, Email=%s, "
