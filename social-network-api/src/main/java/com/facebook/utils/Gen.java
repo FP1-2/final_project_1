@@ -20,7 +20,9 @@ import java.util.Optional;
  *  username "test",
  *  password "Password1!".
  */
+
 @Log4j2
+@SuppressWarnings("all")
 @RequiredArgsConstructor
 public class Gen {
 
