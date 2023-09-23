@@ -136,9 +136,7 @@ public class Gen {
         PasswordEncoder encoder = context.getBean(PasswordEncoder.class);
 
         for (GenAppUser dto : appUsers) {
-            log.info("Saving AppUser with details: {}", dto.toString());
             AppUser appUser = facade.convertToAppUser(dto);
-            log.info("Saving AppUser with details: {}", appUser.toString());
             appUser.setRoles(new String[]{"USER"});
             appUser.setPassword(encoder.encode(password[MathUtils.random(0, 12)]));
             service.save(appUser);
