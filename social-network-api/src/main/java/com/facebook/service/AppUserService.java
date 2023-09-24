@@ -9,6 +9,8 @@ import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,10 @@ public class AppUserService {
     private final AppUserRepository repo;
 
     private final PasswordEncoder passwordEncoder;
+
+    public Page<AppUser> findAllAppUsers(Pageable pageable) {
+        return repo.findAll(pageable);
+    }
 
     public String[] findRolesById(Long id) {
         return repo.findById(id)
