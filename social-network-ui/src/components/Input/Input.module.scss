@@ -1,78 +1,66 @@
 @import "../../styles/mixin.scss";
 
-.inputWrapper{
-    margin-bottom: 25px;
-    width: 380px;
+.inputWrapper {
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
 
-    &:nth-last-child(-n + 2){
+    &:nth-last-child(-n + 2) {
         margin-bottom: 0;
     }
 
-    @include width_768{
-        width: 310px;
-    }
 
-    @include width_576{
-        width: 100%
-    }
-
-
-    .input{
+    .input {
+        width: 100%;
+        margin-bottom: 0;
         border-radius: 5px;
-        border: 2px solid rgba(0,0,0,0.3);
-        background-color: rgba(0,0,0,0.05);
-        padding: 5px 10px; 
-        width: 380px;       
+        border: 1px solid #ccd0d5;
+        background-color: #f5f6f7;
+        padding: 11px;
         box-sizing: border-box;
+        height: 40px;
+        font-size: 15px;
+        line-height: 16px;
+        
 
-        &::placeholder{
-            color: rgba(0,0,0,0.7);
-        }
-
-        @include width_768{
-            padding: 5px 10px; 
-            width: 310px;     
-        }
-
-        @include width_576{
-            width: 100%;
+        &::placeholder {
+            color: #8d949e;
         }
     }
 
-    .passworslInputWrapper{
+    .textlInputWrapper {
 
         position: relative;
         display: flex;
         align-items: center;
+        justify-content: center;
 
-        @include width_576{
-            width: 100%;    
+        @include width_576 {
+            width: 100%;
             justify-content: space-between;
-            margin-bottom: 25px ;
+            margin-bottom: 25px;
         }
 
-        .passwordInput{
-            width: 150px;  
+        .textInput {
+            width: 100%;
             margin-bottom: 0;
             border-radius: 5px;
-            border: 2px solid rgba(0,0,0,0.3);
-            background-color: rgba(0,0,0,0.05);
-            padding: 5px 10px;   
+            border: 1px solid #ccd0d5;
+            background-color: #f5f6f7;
+            padding: 11px;
             box-sizing: border-box;
-    
-            &::placeholder{
-                color: rgba(0,0,0,0.7);;
+            height: 40px;
+            font-size: 15px;
+            line-height: 16px;
+
+            &::placeholder {
+                color: #8d949e;
+                ;
             }
 
-            @include width_768{
-                width: 120px;    
-            }
-
-            @include width_576{
-                width: 85% ;    
-            }
         }
-        .btnEye{
+
+        .btnEye {
 
             background-color: transparent;
             border: none;
@@ -82,61 +70,69 @@
             align-items: center;
             justify-content: center;
 
-            .btnOpenEye{
+            .btnOpenEye {
                 width: 20px;
                 height: 20px;
                 display: none;
-                
+
             }
-            
-            .btnCloseEye{
+
+            .btnCloseEye {
                 width: 20px;
                 height: 20px;
             }
         }
     }
-    
-    .error{
+
+    .passworslInputWrapper {
+        position: relative;
+        display: flex;
+
+        .btnEye {
+
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .btnOpenEye {
+                width: 20px;
+                height: 20px;
+                display: none;
+
+            }
+
+            .btnCloseEye {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .errorNames {
         font-size: 10px;
         color: red;
-        margin-top: 5px;
-        margin-bottom: 0;
-        .inputWrapper{
-            margin-bottom: 0;
-        }
+        margin: 0;
+        bottom: -15px;
+        left: 0;
         display: block;
         position: absolute;
     }
 
-    .errorDisplayNone{
+    .errorDisplayNone {
         display: none;
     }
 
-    .errorPassword{
+    .error {
         font-size: 10px;
         color: red;
-        top: 25px;
+        top: 35px;
         margin-bottom: 0;
-        .inputWrapper{
-            margin-bottom: 0;
-        }
         display: block;
         position: absolute;
     }
 
-    .dateOfBirth{
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        font-size: 12px;
-    }
-
-    .labelFile{
-        width: 185px;
-        display: flex;
-        flex-direction: column;
-        align-items: start;
-        font-size: 12px;
-        text-align: center;
-    }
 }

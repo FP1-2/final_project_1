@@ -31,7 +31,7 @@ class ResetPasswordServiceTest {
     private final String EMAIL = "test@example.com";
     private final String TOKEN = "validToken";
     private final String INVALID_TOKEN = "invalidToken";
-    private final String URL = "https://example.com/reset-password";
+
     @Test
     void testGenerateToken() {
         String token = resetPasswordService.generateToken();
@@ -64,7 +64,7 @@ class ResetPasswordServiceTest {
         AppUser user = new AppUser();
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.of(user));
 
-        resetPasswordService.sendResetPasswordLink(EMAIL, URL);
+        resetPasswordService.sendResetPasswordLink(EMAIL);
 
         verify(emailHandler, times(1)).sendEmail(anyString(), anyString(), anyString());
 
@@ -73,7 +73,7 @@ class ResetPasswordServiceTest {
     @Test
     void testSendResetPasswordLinkWithNonExistingUser() {
         when(appUserService.findByEmail(EMAIL)).thenReturn(Optional.empty());
-        assertThrows(UserNotFoundException.class, () -> resetPasswordService.sendResetPasswordLink(EMAIL, URL));
+        assertThrows(UserNotFoundException.class, () -> resetPasswordService.sendResetPasswordLink(EMAIL));
     }
 
     @Test
@@ -94,5 +94,17 @@ class ResetPasswordServiceTest {
         when(resetPasswordTokenCache.get(EMAIL)).thenReturn(TOKEN);
 
         assertThrows(InvalidTokenException.class, () -> resetPasswordService.resetUserPassword(INVALID_TOKEN, user));
+    }
+
+    @Test
+    void testSendResetPasswordEmail() throws Exception {
+        String URL = "http://localhost:3000/change_password/"+TOKEN +"?em="+EMAIL;
+        resetPasswordService.sendResetPasswordEmail(EMAIL, TOKEN);
+        String content ="<p>Click the link below to reset your password:<br>"
+                +"<a href="+URL+">Reset password</a>"
+                +"<br>This link is valid for 15 minutes.<br>"
+                +"If you didn't request password change just ignore this letter.</div>";
+        verify(emailHandler).sendEmail(eq(EMAIL), eq("Reset password"), contains(content));
+
     }
 }

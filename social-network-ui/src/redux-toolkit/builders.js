@@ -4,7 +4,7 @@ const builders = (builder, extraReducer, atState) => {
             state[atState].status = 'pending';
         })
         .addCase(extraReducer.fulfilled, (state, action) => {
-            state[atState] = action.payload; 
+            state[atState].obj = action.payload;
             state[atState].status = 'fulfilled';
             state[atState].error = '';
         })
