@@ -10,10 +10,10 @@ const registrationReducer = createSlice({
 
     },
     extraReducers:(builder)=>{
-        builders(builder, registrationThunkRequest,'registrationMassage'),
-        builders(builder, confirmRegistrationRequest,'confirmRegistrationMessage')
+        builders(builder, registrationThunkRequest,'registrationMassage');
+        builders(builder, confirmRegistrationRequest,'confirmRegistrationMessage');
     }
-})
+});
 
 export const {
 
