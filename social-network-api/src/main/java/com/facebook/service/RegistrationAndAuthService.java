@@ -90,6 +90,14 @@ public class RegistrationAndAuthService {
     }
 
     public SignupResponse createAppUser(AppUserRequest appUserRequest) {
+        // Перевірка, чи існує вже користувач із таким email у базі даних
+        if (appUserService.findByEmail(appUserRequest.getEmail()).isPresent()) {
+            log.warn("Attempt to register with an already existing email: "
+                    + appUserRequest.getEmail());
+            return CreateAppUserResponse.error("Email is already registered. "
+                    + "Please try a different email or log in.");
+        }
+
         String token = UUID.randomUUID().toString();
         appUserRequestCache.add(token, appUserRequest);
 
@@ -105,8 +113,7 @@ public class RegistrationAndAuthService {
             log.error("An error occurred when sending "
                     + "an email to confirm registration ", e);
             return CreateAppUserResponse.error("There was an error sending "
-                            + "the confirmation email.",
-                    "The error is unknown.");
+                            + "the confirmation email.");
         }
 
     }
