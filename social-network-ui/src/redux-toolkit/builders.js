@@ -6,10 +6,10 @@ const builders = (builder, extraReducer, atState) => {
         .addCase(extraReducer.fulfilled, (state, action) => {
             state[atState].obj = action.payload;
             state[atState].status = 'fulfilled';
-            state[atState].err = '';
+            state[atState].error = '';
         })
         .addCase(extraReducer.rejected, (state, action) => {
-            state[atState].err = action.payload;
+            state[atState].error = action.payload;
             state[atState].status = 'rejected';
         })
 }

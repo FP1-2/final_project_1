@@ -1,6 +1,6 @@
 @import "../../styles/mixin.scss";
 
-.formWrapper{
+.formWrapper {
     top: 0;
     position: absolute;
     width: 100%;
@@ -10,80 +10,124 @@
     align-items: center;
     z-index: 1;
 
-    .form{
-        position: absolute;
-        z-index: 2;
-        box-shadow: 2px 2px 4px rgba(0, 0, 0, .2), 0 8px 16px rgba(0, 0, 0, .1);
-        padding: 40px 50px;
-        width: 480px;
+    .confirmMessage {
+        font-size: 25px;
+        font-weight: 700;
         text-align: center;
-        box-sizing: border-box;
 
-        @include width_768{
-            padding: 40px 60px;
+        @include width_768 {
             width: 430px;
         }
 
-        @include width_576{
+        @include width_576 {
+            padding: 5px 10px;
+            width: 320px;
+        }
+    }
+
+    .form {
+        position: absolute;
+        z-index: 2;
+        box-shadow: 2px 2px 4px rgba(0, 0, 0, .2), 0 8px 16px rgba(0, 0, 0, .1);
+        padding: 15px;
+        width: 422px;
+        text-align: center;
+        box-sizing: border-box;
+        background-color: transparent;
+
+        @include width_576 {
             width: 100%;
             box-shadow: none;
-            padding: 30px 60px;
+            padding: 20px 35px;
         }
-    
-        .formTitle{
-            font-size: 35px;
-            margin-top: 0; 
 
-            @include width_768{
-                font-size: 25px;
+        &::after{
+            content: "";
+            position: absolute;
+            top:80px;
+            width: 100%;
+            left: 0;
+            border-top: 1px solid #dadde1;
+
+            @include width_768 {
+                top:85px;
+            }
+            @include width_576 {
+                top: 95px;
+            }
+    
+        }
+
+        .formTitleWrapper {
+            text-align: left;
+            margin-bottom: 25px;
+
+            .formTitle {
+                margin-top: 0;
+                color: #1c1e21;
+                font-size: 32px;
+                line-height: 38px;
+                margin-bottom: 0;
+
+                @include width_768 {
+                    font-size: 25px;
+                }
+            }
+
+            .formSubtitle {
+                margin: 0;
+                color: #606770;
+                font-size: 15px;
+                line-height: 24px;
             }
         }
-        .wrapperInputs{
+
+
+        .wrapperInputs {
             display: flex;
             justify-content: center;
-            gap: 10px;
-            box-sizing: border-box; 
+            gap: 8px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
 
-            @include width_576{
+            @include width_576 {
                 display: block;
             }
         }
-    
-        .wrapperLink{
+
+        .wrapperLink {
             margin-top: 20px;
-            @include width_768{
+
+            @include width_768 {
                 margin-top: 15px;
             }
         }
-    
-        .btnSubmit{
+
+        .btnSubmit {
             margin-top: 35px;
             border: none;
-            border-radius: 5px;
-            padding: 10px 20px;
-            background-color: #00a000;
-            color:white;
             font-weight: bold;
+            background-color: #00a400;
+            border-radius: 6px;
+            box-shadow: none;
+            color: #fff;
             font-size: 18px;
+            height: 36px;
+            overflow: hidden;
+            padding: 0 32px;
 
-            @include width_768{
-                padding: 8px 15px;
-                font-size: 15px;
-            }
 
-            @include width_576{
-                margin-top: 0;
-            }
-    
-            &:hover{
+            &:hover {
                 cursor: pointer;
             }
-            &:disabled{
+
+            &:disabled {
                 background-color: grey;
             }
         }
     }
-    .error{
+
+    .error {
         font-size: 14px;
         color: red;
         display: block;
@@ -91,11 +135,11 @@
         margin-top: 370px;
         margin-bottom: 0;
 
-        @include width_768{
+        @include width_768 {
             margin-top: 350px;
         }
 
-        @include width_576{
+        @include width_576 {
             margin-top: 390px;
         }
     }
