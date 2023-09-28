@@ -2,6 +2,7 @@ package com.facebook.facade;
 
 import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.dto.appuser.AppUserResponse;
+import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.model.AppUser;
 import com.facebook.service.AppUserService;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,10 @@ public class AppUserFacade {
         response.setCreated_date(appUser.getCreatedDate());
         response.setLast_modified_date(appUser.getLastModifiedDate());
         return response;
+    }
+
+    public AppUser convertToAppUser(GenAppUser dto) {
+        return modelMapper.map(dto, AppUser.class);
     }
 
     public AppUserRequest convertToCustomerRequest(AppUser customer) {

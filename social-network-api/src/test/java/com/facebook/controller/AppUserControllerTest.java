@@ -1,8 +1,7 @@
 package com.facebook.controller;
 
 import com.facebook.TestConfig;
-import com.facebook.dto.appuser.UserNewPasswordRequest;
-import com.facebook.exception.InvalidTokenException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.service.AppUserService;
 import com.facebook.service.ResetPasswordService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -16,10 +15,8 @@ import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doNothing;
-import static org.mockito.Mockito.when;
 import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -35,6 +32,9 @@ class AppUserControllerTest {
     private ResetPasswordService resetPasswordService;
     @MockBean
     private AppUserService userService;
+    @MockBean
+    private AppUserFacade appUserFacade;
+
     @Autowired
     private ObjectMapper mapper;
     private final String EMAIL = "test@example.com";
