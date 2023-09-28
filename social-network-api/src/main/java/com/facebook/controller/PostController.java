@@ -27,7 +27,7 @@ public class PostController {
     private final PostService postService;
     private final PostFacade postFacade;
 
-    @GetMapping("/byUser/{userId}")
+    @GetMapping("/by_user_id/{userId}")
     public ResponseEntity<Page<PostResponse>> getPostsByUserId(
             @PathVariable Long userId,
             @RequestParam(defaultValue = "0") int page,
@@ -36,7 +36,9 @@ public class PostController {
 
         String[] sortParts = sort.split(",");
         String property = sortParts[0];
+
         String direction = sortParts.length > 1 ? sortParts[1] : "asc";
+
         Sort sorting = direction.equalsIgnoreCase("desc") ?
                 Sort.by(Sort.Order.desc(property)) : Sort.by(Sort.Order.asc(property));
         Pageable pageable = PageRequest.of(page, size, sorting);
