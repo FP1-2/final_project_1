@@ -32,16 +32,14 @@ const Input = (props) => {
   return (
     <div className={style.inputWrapper}>
 
-      {props.type === "date" ?
-        <label className={style.dateOfBirth}>
-          {props.text}:
-          <input className={style.input} {...field} {...props} />
-          <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
-        </label>
+      {props.type === "text" ?
+        <div className={style.textlInputWrapper}>
+          <input className={style.textInput} {...field} {...props} />
+          <p className={error && touched ? style.errorNames : style.errorDisplayNone} >{error}</p>
+        </div>
         : props.type === "password" ?
           <div className={style.passworslInputWrapper}>
-
-            <input className={style.passwordInput} {...field} {...props} type={inputType} />
+            <input className={style.input} {...field} {...props} type={inputType} />
             <button onClick={handleClickOpenEyeBtn} type="button" className={style.btnEye}>
               <OpenEye className={openEyeState ? style.btnCloseEye : style.btnOpenEye} />
             </button>
@@ -49,7 +47,7 @@ const Input = (props) => {
             <button onClick={handleClickCloseEyeBtn} type="button" className={style.btnEye}>
               <CloseEye className={closeEyeState ? style.btnCloseEye : style.btnOpenEye} />
             </button>
-            <p className={error && touched ? style.errorPassword : style.errorDisplayNone} >{error}</p>
+            <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
           </div>
           : <>
             <input className={style.input} {...field} {...props} />

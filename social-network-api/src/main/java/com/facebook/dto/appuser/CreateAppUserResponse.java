@@ -8,8 +8,8 @@ public record CreateAppUserResponse(String massage,
         return new CreateAppUserResponse(massage, null);
     }
 
-    public static CreateAppUserResponse error(String massage, String error) {
-        return new CreateAppUserResponse(massage, error);
+    public static CreateAppUserResponse error(String error) {
+        return new CreateAppUserResponse(null, error);
     }
 
 }

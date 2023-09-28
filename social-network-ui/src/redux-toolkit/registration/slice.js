@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import { registrationThunkRequest } from "./thunks";
+import { registrationThunkRequest,confirmRegistrationRequest } from "./thunks";
 import builders from "../builders";
 
 const registrationReducer = createSlice({
@@ -10,9 +10,10 @@ const registrationReducer = createSlice({
 
     },
     extraReducers:(builder)=>{
-        builders(builder, registrationThunkRequest,'registrationMassage')
+        builders(builder, registrationThunkRequest,'registrationMassage');
+        builders(builder, confirmRegistrationRequest,'confirmRegistrationMessage');
     }
-})
+});
 
 export const {
 

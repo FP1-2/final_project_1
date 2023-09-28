@@ -53,7 +53,7 @@ public class RegistrationAndAuthService {
         this.appUserRequestCache = appUserRequestCache;
     }
 
-    private static final String BASE_URL = "http://localhost:9000";
+    private static final String BASE_URL = "http://localhost:3000";
 
     public void confirmRegistration(String token, String email) {
         // Отримати дані з кешу та перевірити їх
@@ -90,10 +90,18 @@ public class RegistrationAndAuthService {
     }
 
     public SignupResponse createAppUser(AppUserRequest appUserRequest) {
+        // Перевірка, чи існує вже користувач із таким email у базі даних
+        if (appUserService.findByEmail(appUserRequest.getEmail()).isPresent()) {
+            log.warn("Attempt to register with an already existing email: "
+                    + appUserRequest.getEmail());
+            return CreateAppUserResponse.error("Email is already registered. "
+                    + "Please try a different email or log in.");
+        }
+
         String token = UUID.randomUUID().toString();
         appUserRequestCache.add(token, appUserRequest);
 
-        String url = BASE_URL + "/api/auth/confirm?token="
+        String url = BASE_URL + "/registration/confirm?token="
                 + token + "&em=" + appUserRequest.getEmail();
         registrationAndAuthTokenCache.add(token, url);
 
@@ -105,8 +113,7 @@ public class RegistrationAndAuthService {
             log.error("An error occurred when sending "
                     + "an email to confirm registration ", e);
             return CreateAppUserResponse.error("There was an error sending "
-                            + "the confirmation email.",
-                    "The error is unknown.");
+                            + "the confirmation email.");
         }
 
     }
