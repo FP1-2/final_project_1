@@ -1,5 +1,7 @@
-package com.facebook.model;
+package com.facebook.model.posts;
 
+import com.facebook.model.AbstractEntity;
+import com.facebook.model.AppUser;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
