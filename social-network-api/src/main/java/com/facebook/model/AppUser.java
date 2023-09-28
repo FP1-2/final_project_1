@@ -1,11 +1,12 @@
 package com.facebook.model;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
@@ -58,5 +59,15 @@ public class AppUser extends AbstractEntity {
                 avatar, headerPhoto, dateOfBirth,
                 password, roles);
     }
+//    @ManyToMany(mappedBy = "users")
+//    private Set<Chat> chats = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+//    private Set<Message> sentMessages = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
+//    private Set<Message> receivedMessages = new HashSet<>();
+
+
 
 }
