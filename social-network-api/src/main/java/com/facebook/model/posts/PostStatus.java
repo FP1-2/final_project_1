@@ -1,5 +1,5 @@
 package com.facebook.model.posts;
 
-enum PostStatus {
+public enum PostStatus {
     DRAFT, PUBLISHED, ARCHIVED, REJECTED
 }

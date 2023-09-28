@@ -35,4 +35,5 @@ public class Repost extends AbstractCreatedDate {
         return String.format("Repost{id=%d, User=%s, Post=%s, CreatedDate=%s}",
                 getId(), repostingUser, repostedPost, getCreatedDate());
     }
+
 }
