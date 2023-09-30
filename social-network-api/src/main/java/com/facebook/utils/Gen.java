@@ -3,14 +3,21 @@ package com.facebook.utils;
 import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
+import com.facebook.model.posts.Post;
+import com.facebook.model.posts.PostStatus;
 import com.facebook.service.AppUserService;
+import com.facebook.service.PostService;
+import com.github.javafaker.Faker;
+
+import java.util.List;
+import java.util.Optional;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.List;
-import java.util.Optional;
+
 
 /**
  *  Клас Gen призначений для генерації даних та заповнення
@@ -186,6 +193,34 @@ public class Gen {
         appUser.setPassword(encodedPassword);
         service.save(appUser);
     }
+
+    public static PostStatus getRandomPostStatus() {
+        return PostStatus
+                .values()[MathUtils.random(0, PostStatus.values().length - 1)];
+    }
+
+
+    public void genPosts() {
+        PostService postService = context.getBean(PostService.class);
+        AppUserService appUserService = context.getBean(AppUserService.class);
+        List<AppUser> appUsers1 = appUserService.findAll();
+
+        Faker faker = new Faker();
+
+        for (AppUser user : appUsers1) {
+            // Для кожного користувача генеруємо від 1 до 10 постів
+            for (int i = 0; i < MathUtils.random(1, 10); i++) {
+                Post post = new Post();
+                post.setStatus(getRandomPostStatus());
+                post.setImageUrl(HEADER_PHOTO);
+                post.setUser(user);
+                post.setTitle(String.join(" ", faker.lorem().words(MathUtils.random(1, 5))));
+                post.setBody(faker.lorem().paragraph()); // Lorem Ipsum
+                postService.save(post);
+            }
+        }
+    }
+
 }
 
 

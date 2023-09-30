@@ -26,12 +26,12 @@ public class AppUserFacade {
         return modelMapper.map(dto, AppUser.class);
     }
 
-    public AppUserRequest convertToCustomerRequest(AppUser customer) {
-        return modelMapper.map(customer, AppUserRequest.class);
+    public AppUser convertToAppUser(AppUserRequest appUserRequest) {
+        return modelMapper.map(appUserRequest, AppUser.class);
     }
 
-    public AppUser convertToAppUser(AppUserRequest customerRequest) {
-        return modelMapper.map(customerRequest, AppUser.class);
+    public AppUserRequest convertToAppUserRequest(AppUser appUser) {
+        return modelMapper.map(appUser, AppUserRequest.class);
     }
 
     public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {

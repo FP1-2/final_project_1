@@ -24,6 +24,7 @@ public class DataGenerator implements CommandLineRunner {
         log.info("Data generation is starting...");
         Gen gen = Gen.of(context, facade);
         gen.genAppUser();
+        gen.genPosts();
     }
 
 }

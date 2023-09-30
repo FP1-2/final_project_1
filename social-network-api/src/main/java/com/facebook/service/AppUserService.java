@@ -4,6 +4,7 @@ import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
+import java.util.List;
 import java.util.Optional;
 
 import lombok.RequiredArgsConstructor;
@@ -25,6 +26,11 @@ public class AppUserService {
     private final AppUserRepository repo;
 
     private final PasswordEncoder passwordEncoder;
+
+    //Тільки для генерації.
+    public List<AppUser> findAll() {
+        return repo.findAll();
+    }
 
     public Page<AppUser> findAllAppUsers(Pageable pageable) {
         return repo.findAll(pageable);
