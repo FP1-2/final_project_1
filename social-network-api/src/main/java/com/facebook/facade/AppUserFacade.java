@@ -1,5 +1,6 @@
 package com.facebook.facade;
 
+import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
@@ -7,6 +8,7 @@ import com.facebook.model.AppUser;
 import com.facebook.service.AppUserService;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -39,7 +41,11 @@ public class AppUserFacade {
         existingAppUser.setEmail(appUserRequest.getEmail());
         //TODO інші поля для оновлення AppUser
     }
-//    public AppUser convertToAppUser(String username){
-//        return service.findByUsername(username);
-//    }
+    public AppUser convertToAppUser(String username){
+        return service.findByUsername(username).map(i-> i).orElseThrow(() -> new UsernameNotFoundException("user not found"));
+    }
+
+    public AppUserChatResponse convertToAppUserChatResponse(AppUser appUser) {
+        return modelMapper.map(appUser, AppUserChatResponse.class);
+    }
 }

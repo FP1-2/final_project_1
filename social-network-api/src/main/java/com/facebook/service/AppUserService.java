@@ -4,6 +4,7 @@ import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
+import java.security.Principal;
 import java.util.List;
 import java.util.Optional;
 
@@ -12,6 +13,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -87,4 +89,9 @@ public class AppUserService {
         );
     }
 
+    public AppUser getAuthUser(){
+        Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        return findByUsername(principal.getName())
+                .orElseThrow(UserNotFoundException::new);
+    }
 }

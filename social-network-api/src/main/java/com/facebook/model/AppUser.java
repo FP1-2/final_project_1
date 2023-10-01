@@ -59,15 +59,10 @@ public class AppUser extends AbstractEntity {
                 avatar, headerPhoto, dateOfBirth,
                 password, roles);
     }
-//    @ManyToMany(mappedBy = "users")
-//    private Set<Chat> chats = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-//    private Set<Message> sentMessages = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-//    private Set<Message> receivedMessages = new HashSet<>();
+    @ManyToMany(mappedBy = "chatParticipants")
+    private Set<Chat> chats = new HashSet<>();
 
-
+    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
+    private Set<Message> sentMessages = new HashSet<>();
 
 }

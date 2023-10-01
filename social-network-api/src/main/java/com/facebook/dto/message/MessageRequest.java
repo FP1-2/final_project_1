@@ -10,5 +10,5 @@ public class MessageRequest {
     @NotNull()
     private Long chatId;
     @NotNull()
-    private String content;
+    private String text;
 }
