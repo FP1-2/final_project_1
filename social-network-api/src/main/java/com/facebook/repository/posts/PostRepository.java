@@ -28,9 +28,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             SELECT
                 p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
                 u.id as user_id, u.name, u.surname, u.username, u.avatar,
-                CAST(GROUP_CONCAT(DISTINCT c.id) AS CHAR) AS comment_ids,
-                CAST(GROUP_CONCAT(DISTINCT l.id) AS CHAR) AS like_ids,
-                CAST(GROUP_CONCAT(DISTINCT r.id) AS CHAR) AS repost_ids
+                  GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
+                  GROUP_CONCAT(DISTINCT l.id) AS like_ids,
+                  GROUP_CONCAT(DISTINCT r.id) AS repost_ids
             FROM
                 posts p
             LEFT JOIN

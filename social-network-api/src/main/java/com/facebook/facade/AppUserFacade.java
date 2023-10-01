@@ -15,7 +15,10 @@ public class AppUserFacade {
     private final ModelMapper modelMapper;
 
     public AppUserResponse convertToAppUserResponse(AppUser appUser) {
-        return modelMapper.map(appUser, AppUserResponse.class);
+        AppUserResponse response = modelMapper.map(appUser, AppUserResponse.class);
+        response.setCreated_date(appUser.getCreatedDate());
+        response.setLast_modified_date(appUser.getLastModifiedDate());
+        return response;
     }
 
     public AppUser convertToAppUser(GenAppUser dto) {
