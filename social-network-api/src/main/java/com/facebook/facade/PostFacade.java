@@ -38,6 +38,17 @@ public class PostFacade {
         return response;
     }
 
+    /**
+     * Перетворює рядкове представлення списку ID (розділених комами) у список Long.
+     * <p>
+     * Використовується для перетворення рядків,
+     * що містять список ID "comments", "likes", "reposts",
+     * отриманих з бази даних, у список об'єктів Long для подальшого використання у DTO.
+     * </p>
+     *
+     * @param source Рядкове представлення списку ID.
+     * @return Список ID як об'єкти Long.
+     */
     private List<Long> stringToList(String source) {
         return Optional.ofNullable(source)
                 .filter(input -> !input.isEmpty())

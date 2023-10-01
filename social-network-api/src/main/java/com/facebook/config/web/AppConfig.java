@@ -20,6 +20,12 @@ public class AppConfig {
         ModelMapper mapper = new ModelMapper();
 
         Converter<Timestamp, LocalDateTime> timestampToLocalDateTime = new AbstractConverter<>() {
+            /**
+             * Перетворює Timestamp у LocalDateTime.
+             *
+             * @param source Об'єкт Timestamp.
+             * @return Об'єкт LocalDateTime.
+             */
             @Override
             protected LocalDateTime convert(Timestamp source) {
                 return source != null ? source.toLocalDateTime() : null;
