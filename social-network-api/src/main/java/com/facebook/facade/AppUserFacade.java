@@ -15,10 +15,7 @@ public class AppUserFacade {
     private final ModelMapper modelMapper;
 
     public AppUserResponse convertToAppUserResponse(AppUser appUser) {
-        AppUserResponse response = modelMapper.map(appUser, AppUserResponse.class);
-        response.setCreated_date(appUser.getCreatedDate());
-        response.setLast_modified_date(appUser.getLastModifiedDate());
-        return response;
+        return modelMapper.map(appUser, AppUserResponse.class);
     }
 
     public AppUser convertToAppUser(GenAppUser dto) {
@@ -27,16 +24,6 @@ public class AppUserFacade {
 
     public AppUser convertToAppUser(AppUserRequest appUserRequest) {
         return modelMapper.map(appUserRequest, AppUser.class);
-    }
-
-    public AppUserRequest convertToAppUserRequest(AppUser appUser) {
-        return modelMapper.map(appUser, AppUserRequest.class);
-    }
-
-    public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {
-        existingAppUser.setName(appUserRequest.getName());
-        existingAppUser.setEmail(appUserRequest.getEmail());
-        //TODO інші поля для оновлення AppUser
     }
 
 }

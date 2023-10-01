@@ -3,22 +3,23 @@ package com.facebook.utils;
 import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
-import com.facebook.model.posts.*;
+import com.facebook.model.posts.Comment;
+import com.facebook.model.posts.Like;
+import com.facebook.model.posts.Post;
+import com.facebook.model.posts.PostStatus;
+import com.facebook.model.posts.Repost;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.RepostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.PostService;
 import com.github.javafaker.Faker;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
 
 /**
  * Клас Gen призначений для генерації даних та заповнення

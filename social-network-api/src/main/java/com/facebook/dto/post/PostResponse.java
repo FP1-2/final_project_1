@@ -1,9 +1,9 @@
 package com.facebook.dto.post;
 
 import com.facebook.dto.appuser.AppUserForPost;
-import lombok.Data;
-
 import java.time.LocalDateTime;
+import java.util.List;
+import lombok.Data;
 
 @Data
 public class PostResponse {
@@ -21,5 +21,11 @@ public class PostResponse {
     private String status;
 
     private AppUserForPost user;
+
+    private List<Long> comments;
+
+    private List<Long> likes;
+
+    private List<Long> reposts;
 
 }
