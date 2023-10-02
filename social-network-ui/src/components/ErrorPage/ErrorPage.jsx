@@ -3,16 +3,15 @@ import style from "./ErrorPage.module.scss";
 import PropTypes from "prop-types";
 
 const ErrorPage = ({ message }) => {
-
-    return (
-        <div className={style.messageWrapper}>
-            <p className={style.message}>{message}</p>
-        </div>
-    );
+  return (
+    <div className={style.messageWrapper}>
+      <p className={style.message}>{message}</p>
+    </div>
+  );
 };
 
 ErrorPage.propTypes = {
-    message: PropTypes.string.isRequired,
+  message: PropTypes.string.isRequired,
 };
 
 
