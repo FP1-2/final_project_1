@@ -80,6 +80,26 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Unauthorized Access Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleNotFoundException(NotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Not Found Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(UserNotFoundException.class)
     public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
         log.warn(ex.getMessage());
