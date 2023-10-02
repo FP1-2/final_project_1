@@ -1,6 +1,5 @@
 package com.facebook.dto.post;
 
-import java.sql.Clob;
 import java.sql.Timestamp;
 import lombok.Data;
 
@@ -15,7 +14,7 @@ public class PostSqlResult {
 
     private String title;
 
-    private Clob body;
+    private String body;
 
     private String status;
 
