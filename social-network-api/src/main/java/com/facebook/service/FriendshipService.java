@@ -1,5 +1,5 @@
-package com.facebook.service;
-
-
-public class FriendshipService {
-}
+//package com.facebook.service;
+//
+//
+//public class FriendshipService {
+//}

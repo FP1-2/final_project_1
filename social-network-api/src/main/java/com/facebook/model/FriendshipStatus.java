@@ -1,7 +1,7 @@
-package com.facebook.model;
-
-public enum FriendshipStatus {
-    ACCEPTED,
-    PENDING,
-    REJECTED
-}
+//package com.facebook.model;
+//
+//public enum FriendshipStatus {
+//    ACCEPTED,
+//    PENDING,
+//    REJECTED
+//}
