@@ -18,6 +18,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Set;
+
 @Log4j2
 @RestController
 @RequestMapping("api/users")
@@ -60,6 +62,30 @@ public class AppUserController {
                                                  @Valid @RequestBody UserNewPasswordRequest user) {
         resetPasswordService.resetUserPassword(token, user);
         return ResponseEntity.ok("Password reset successful");
+    }
+
+    @PostMapping("/{userId}/subscribe/{targetUserId}")
+    public ResponseEntity<?> subscribeToUser(
+            @PathVariable Long userId,
+            @PathVariable Long targetUserId
+    ) {
+        // TODO логіка для підписки користувача на іншого користувача
+        appUserService.subscribe(userId, targetUserId);
+        return ResponseEntity.ok("Subscribed successfully");
+    }
+
+    @GetMapping("/{userId}/subscriptions")
+    public ResponseEntity<?> getUserSubscriptions(@PathVariable Long userId) {
+        // TODO Логіка для отримання списку підписок користувача
+        Set<AppUser> subscriptions = appUserService.getUserSubscriptions(userId);
+        return ResponseEntity.ok(subscriptions);
+    }
+
+    @DeleteMapping
+    public ResponseEntity<?> deleteSubscription(@PathVariable Long targetUserId) {
+    // TODO логіка видалення підписки чи друга
+        appUserService.deleteSubscription(targetUserId);
+        return ResponseEntity.ok("Unsubscribed successfully");
     }
 
 }
