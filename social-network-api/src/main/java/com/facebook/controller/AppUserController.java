@@ -68,5 +68,5 @@ public class AppUserController {
         appUserService.updateUserById(id, userReq);
         return ResponseEntity.ok("Information update successfully");
     }
-
+    
 }
