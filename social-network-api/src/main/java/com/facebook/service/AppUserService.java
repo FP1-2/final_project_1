@@ -1,14 +1,13 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
-import com.facebook.utils.EX;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -89,20 +88,23 @@ public class AppUserService {
         );
     }
 
-    public void subscribe(Long userId, Long targetUserId) {
-//        repo.findById(userId).map(u -> )
+    public void updateUserById(Long id, AppUserRequest userReq) {
 
-        // TODO Логіка для підписки користувача на іншого користувача
-        throw EX.NI;
-    }
-
-    public Set<AppUser> getUserSubscriptions(Long userId) {
-        // TODO Логіка для отримання списку підписок користувача
-        throw EX.NI;
-    }
-
-    public void deleteSubscription(Long targetUserId) {
-        throw EX.NI;
+        findById(id).ifPresentOrElse(u -> {
+            u.setName(userReq.getName());
+            u.setSurname(userReq.getSurname());
+            u.setUsername(userReq.getUsername());
+            u.setEmail(userReq.getEmail());
+            u.setAddress(userReq.getAddress());
+            u.setAvatar(userReq.getAvatar());
+            u.setHeaderPhoto(userReq.getHeaderPhoto());
+            u.setDateOfBirth(userReq.getDateOfBirth());
+            save(u);
+        },
+            () -> {
+                throw new UserNotFoundException();
+            }
+        );
     }
 
 }

@@ -1,5 +1,6 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
 import com.facebook.exception.UserNotFoundException;
@@ -16,15 +17,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.Set;
+import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @RestController
@@ -70,28 +63,10 @@ public class AppUserController {
         return ResponseEntity.ok("Password reset successful");
     }
 
-    @PostMapping("/{userId}/subscribe/{targetUserId}")
-    public ResponseEntity<?> subscribeToUser(
-            @PathVariable Long userId,
-            @PathVariable Long targetUserId
-    ) {
-        // TODO логіка для підписки користувача на іншого користувача
-        appUserService.subscribe(userId, targetUserId);
-        return ResponseEntity.ok("Subscribed successfully");
-    }
-
-    @GetMapping("/{userId}/subscriptions")
-    public ResponseEntity<?> getUserSubscriptions(@PathVariable Long userId) {
-        // TODO Логіка для отримання списку підписок користувача
-        Set<AppUser> subscriptions = appUserService.getUserSubscriptions(userId);
-        return ResponseEntity.ok(subscriptions);
-    }
-
-    @DeleteMapping
-    public ResponseEntity<?> deleteSubscription(@PathVariable Long targetUserId) {
-    // TODO логіка видалення підписки чи друга
-        appUserService.deleteSubscription(targetUserId);
-        return ResponseEntity.ok("Unsubscribed successfully");
+    @PutMapping("/update/{id}")
+    public ResponseEntity<String> updateUser(@PathVariable Long id, @Valid @RequestBody AppUserRequest userReq) {
+        appUserService.updateUserById(id, userReq);
+        return ResponseEntity.ok("Information update successfully");
     }
 
 }
