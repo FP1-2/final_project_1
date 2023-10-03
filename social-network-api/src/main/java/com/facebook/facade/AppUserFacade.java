@@ -25,18 +25,8 @@ public class AppUserFacade {
         return modelMapper.map(dto, AppUser.class);
     }
 
-    public AppUserRequest convertToCustomerRequest(AppUser customer) {
-        return modelMapper.map(customer, AppUserRequest.class);
-    }
-
-    public AppUser convertToAppUser(AppUserRequest customerRequest) {
-        return modelMapper.map(customerRequest, AppUser.class);
-    }
-
-    public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {
-        existingAppUser.setName(appUserRequest.getName());
-        existingAppUser.setEmail(appUserRequest.getEmail());
-        //TODO інші поля для оновлення AppUser
+    public AppUser convertToAppUser(AppUserRequest appUserRequest) {
+        return modelMapper.map(appUserRequest, AppUser.class);
     }
 
 }
