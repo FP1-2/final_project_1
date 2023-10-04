@@ -11,14 +11,14 @@ import FavoritsIcon from "../../assets/favoriteIcon.png";
 import Cookie from "js-cookie";
 import LogInForm from "../LogInForm/LogInForm";
 
-  function logout() {
-    localStorage.clear();
-    Cookie.remove("token");
-    }
+function logout() {
+  localStorage.clear();
+  Cookie.remove("token");
+}
 function Header() {
-    const isAuthorized =  localStorage.getItem('token');
+  const isAuthorized =  localStorage.getItem('token');
   if (isAuthorized){
-      return (
+    return (
       <header className={styles.header}>
         <div>
           <img src={facebookIcon} alt="" />
@@ -34,13 +34,13 @@ function Header() {
             </li>
             <li>
               <NavLink to="/messages">
-                  <img src={MessagesIcon} alt="" />
+                <img src={MessagesIcon} alt="" />
                   Messages</NavLink>
             </li>
             <li>
-              <NavLink to="/favorits">
-                  <img src={FavoritsIcon} alt="" />
-                  Favorits</NavLink>
+              <NavLink to="/favorites">
+                <img src={FavoritsIcon} alt="" />
+                  Favorites</NavLink>
             </li>
             <li>
               <NavLink to="/notifications">
@@ -50,17 +50,17 @@ function Header() {
             </li>
             <li>
               <NavLink to="/profile">
-                  <img src={ProfileIcon} alt="" />
+                <img src={ProfileIcon} alt="" />
                   Profile</NavLink>
             </li>
           </ul>
         </nav>
         <button className={styles.logOut}onClick={() => logout()}>Log out</button>
-           </header>
+      </header>
     );
   } return(
     <>
-  <header className={styles.header}>
+      <header className={styles.header}>
         <div>
           <img src={facebookIcon} alt="" />
           <input type="text" name="search" placeholder="Search on Facebook" />
@@ -74,14 +74,14 @@ function Header() {
                 Posts
               </NavLink>
             </li>
-           </ul>
-           </nav>
+          </ul>
+        </nav>
            
            
-           </header>
-           <LogInForm/>
-           </>
-    )
+      </header>
+      <LogInForm/>
+    </>
+  );
 }
 
 export default Header;

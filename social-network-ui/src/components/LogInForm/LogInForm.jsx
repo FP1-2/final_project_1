@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./LogInForm.module.scss"
+import styles from "./LogInForm.module.scss";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";
@@ -7,15 +7,15 @@ import { string } from 'yup';
 
 const validationSchema = Yup.object().shape({
   email: string()
-            .required('Email is required')
-            .email('Invalid email format'),
+    .required('Email is required')
+    .email('Invalid email format'),
 
   password: Yup.string().required("Enter the password"),
 });
 
 const LoginForm = () => {
   const handleSubmit = (values) => {
-    console.log(values);
+    values;
   };
 
   return (
