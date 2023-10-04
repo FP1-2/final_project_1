@@ -2,6 +2,7 @@ package com.facebook.service;
 
 import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.exception.UserNotFoundException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
@@ -27,6 +28,8 @@ public class AppUserService {
     private final AppUserRepository repo;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final AppUserFacade facade;
 
     //Тільки для генерації.
     public List<AppUser> findAll() {
@@ -88,9 +91,11 @@ public class AppUserService {
         );
     }
 
-    public void updateUserById(Long id, AppUserRequest userReq) {
-
-        findById(id).ifPresentOrElse(u -> {
+    public Optional<AppUser> updateUserById(Long id, AppUserRequest userReq) {
+        Optional<AppUser> user = findById(id);
+        if(user.isPresent()) {
+            AppUser u = facade.convertToAppUser(userReq);
+            u.setId(id);
             u.setName(userReq.getName());
             u.setSurname(userReq.getSurname());
             u.setUsername(userReq.getUsername());
@@ -99,12 +104,10 @@ public class AppUserService {
             u.setAvatar(userReq.getAvatar());
             u.setHeaderPhoto(userReq.getHeaderPhoto());
             u.setDateOfBirth(userReq.getDateOfBirth());
-            save(u);
-        },
-            () -> {
-                throw new UserNotFoundException();
-            }
-        );
+            return save(u);
+        } else {
+            return Optional.empty();
+        }
     }
 
 }

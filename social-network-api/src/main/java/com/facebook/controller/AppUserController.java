@@ -64,9 +64,11 @@ public class AppUserController {
     }
 
     @PutMapping("/update/{id}")
-    public ResponseEntity<String> updateUser(@PathVariable Long id, @Valid @RequestBody AppUserRequest userReq) {
-        appUserService.updateUserById(id, userReq);
-        return ResponseEntity.ok("Information update successfully");
+    public ResponseEntity<AppUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody AppUserRequest userReq) {
+        return appUserService.updateUserById(id, userReq)
+                .map(appUserFacade::convertToAppUserResponse)
+                .map(ResponseEntity::ok)
+                .orElseThrow(UserNotFoundException::new);
     }
     
 }
