@@ -4,6 +4,7 @@ import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.chat.ChatResponse;
 import com.facebook.model.AppUser;
 import com.facebook.model.Chat;
+import com.facebook.model.MessageStatus;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -15,4 +16,5 @@ public class MessageResponse {
     private AppUserChatResponse sender;
     private ChatResponse chat;
     private LocalDateTime createdAt;
+    private MessageStatus status;
 }

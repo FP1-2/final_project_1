@@ -64,6 +64,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     "/api/auth/token",
                     "/api/users/reset-password/**",
                     "/api/users/update-password/**",
+                    "/ws/**",
                     "/h2" -> false;
             default -> true;
         };

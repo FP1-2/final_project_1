@@ -1,16 +1,13 @@
 package com.facebook.controller;
 
-import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.chat.ChatResponse;
 import com.facebook.dto.chat.ChatResponseList;
-import com.facebook.model.Chat;
-import com.facebook.service.AppUserService;
 import com.facebook.service.ChatService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -23,14 +20,17 @@ public class ChatController {
     private final ChatService chatService;
 
     @GetMapping
-    public ResponseEntity<List<ChatResponseList>> getAllChats(){
-        List<ChatResponseList> allUserChats = chatService.getAllUserChats();
+    public ResponseEntity<List<ChatResponseList>> getAllChats(
+                                        @RequestParam(defaultValue = "0") int page,
+                                        @RequestParam(defaultValue = "10") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        List<ChatResponseList> allUserChats = chatService.getAllUserChats(pageable);
         return ResponseEntity.ok(allUserChats);
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ChatResponse> getChatById(@PathVariable long id){
-        ChatResponse chatResponse = chatService.chatById(id);
+        ChatResponse chatResponse = chatService.getChatById(id);
         log.info("Get Chat with ID: "+ id);
         return ResponseEntity.ok(chatResponse);
     }

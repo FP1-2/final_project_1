@@ -9,5 +9,5 @@ import java.util.Set;
 @Data
 public class ChatResponse {
     private Long id;
-    private List<AppUserChatResponse> chatParticipants;
+    private List<AppUserChatResponse> chatParticipant;
 }

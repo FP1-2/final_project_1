@@ -97,4 +97,9 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<String> handleNotFoundException(NotFoundException ex){
+        log.warn(ex.getMessage());
+        return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+    }
 }

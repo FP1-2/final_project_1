@@ -10,6 +10,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Log4j2
 @Component
 @RequiredArgsConstructor
@@ -22,11 +28,13 @@ public class ChatFacade {
     public ChatResponseList convertToChatResponseList(Chat chat) {
         ChatResponseList chatR = modelMapper.map(chat, ChatResponseList.class);
 
-//        if(!chat.getMessages().isEmpty()) {
-//            Message message = chat.getMessages().get(0);
-//            MessageResponseList messageResponse = messageFacade.convertToMessageResponseList(message);
-//            chatR.setLastMessage(messageResponse);
-//        }
+        if(!chat.getMessages().isEmpty()) {
+            List<MessageResponseList> list = chat.getMessages().stream()
+                    .sorted(Comparator.comparing(Message::getCreatedDate).reversed())
+                    .map(messageFacade::convertToMessageResponseList)
+                    .limit(1).toList();
+            chatR.setLastMessage(list.get(0));
+        }
         chatR.setLastMessage(null);
         return chatR;
     }

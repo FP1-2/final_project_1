@@ -11,6 +11,6 @@ import java.util.List;
 import java.util.Set;
 @Repository
 public interface ChatRepository extends JpaRepository<Chat, Long> {
-    List<Chat> findByChatParticipantsContaining(AppUser user);
+    Page<Chat> findByChatParticipantsContainingOrderByLastModifiedDateDesc(AppUser user, Pageable pageable);
     List<Chat> findChatsByChatParticipantsContainsAndChatParticipantsContains(AppUser user, AppUser user2);
 }

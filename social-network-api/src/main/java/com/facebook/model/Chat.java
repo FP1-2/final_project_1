@@ -22,17 +22,11 @@ public class Chat extends AbstractEntity {
     )
     List<AppUser> chatParticipants = new ArrayList<>();
 
-    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "chat", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     List<Message> messages = new ArrayList<>();
-
-    public List<AppUser> addChatParticipants(AppUser user1, AppUser user2){
-        chatParticipants.add(user1);
-        chatParticipants.add(user2);
-        return chatParticipants;
-    }
-    public List<Message>  addMess(AppUser u, Chat ch, MessageStatus ms){
-        Message message = new Message("Hello", u,ch, ms);
-        messages.add(message);
-        return messages;
+    public static Chat of(AppUser user1, AppUser user2){
+        Chat chat = new Chat();
+        chat.setChatParticipants(List.of(user1, user2));
+        return chat;
     }
 }
