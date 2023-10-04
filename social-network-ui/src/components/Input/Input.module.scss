@@ -1,0 +1,138 @@
+@import "../../styles/mixin.scss";
+
+.inputWrapper {
+    margin-bottom: 20px;
+    width: 100%;
+    position: relative;
+
+    &:nth-last-child(-n + 2) {
+        margin-bottom: 0;
+    }
+
+
+    .input {
+        width: 100%;
+        margin-bottom: 0;
+        border-radius: 5px;
+        border: 1px solid #ccd0d5;
+        background-color: #f5f6f7;
+        padding: 11px;
+        box-sizing: border-box;
+        height: 40px;
+        font-size: 15px;
+        line-height: 16px;
+        
+
+        &::placeholder {
+            color: #8d949e;
+        }
+    }
+
+    .textlInputWrapper {
+
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        @include width_576 {
+            width: 100%;
+            justify-content: space-between;
+            margin-bottom: 25px;
+        }
+
+        .textInput {
+            width: 100%;
+            margin-bottom: 0;
+            border-radius: 5px;
+            border: 1px solid #ccd0d5;
+            background-color: #f5f6f7;
+            padding: 11px;
+            box-sizing: border-box;
+            height: 40px;
+            font-size: 15px;
+            line-height: 16px;
+
+            &::placeholder {
+                color: #8d949e;
+                ;
+            }
+
+        }
+
+        .btnEye {
+
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .btnOpenEye {
+                width: 20px;
+                height: 20px;
+                display: none;
+
+            }
+
+            .btnCloseEye {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .passworslInputWrapper {
+        position: relative;
+        display: flex;
+
+        .btnEye {
+
+            background-color: transparent;
+            border: none;
+            cursor: pointer;
+            padding: 0 2px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+
+            .btnOpenEye {
+                width: 20px;
+                height: 20px;
+                display: none;
+
+            }
+
+            .btnCloseEye {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .errorNames {
+        font-size: 10px;
+        color: red;
+        margin: 0;
+        bottom: -15px;
+        left: 0;
+        display: block;
+        position: absolute;
+    }
+
+    .errorDisplayNone {
+        display: none;
+    }
+
+    .error {
+        font-size: 10px;
+        color: red;
+        top: 35px;
+        margin-bottom: 0;
+        display: block;
+        position: absolute;
+    }
+
+}

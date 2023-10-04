@@ -1,24 +1,21 @@
 package com.facebook.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.EntityListeners;
+import jakarta.persistence.MappedSuperclass;
+import java.time.LocalDateTime;
+
 import lombok.Data;
-import org.springframework.data.annotation.CreatedDate;
+import lombok.EqualsAndHashCode;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.LocalDateTime;
 
 @Data
 @MappedSuperclass
+@EqualsAndHashCode(callSuper = true)
 @EntityListeners(AuditingEntityListener.class)
-public abstract class AbstractEntity {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
-
-    @CreatedDate
-    private LocalDateTime createdDate;
-
+public abstract class AbstractEntity extends AbstractCreatedDate {
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
+
 }
