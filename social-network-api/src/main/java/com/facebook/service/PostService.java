@@ -1,6 +1,11 @@
 package com.facebook.service;
 
-import com.facebook.dto.post.*;
+import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.LikeResponse;
+import com.facebook.dto.post.RepostResponse;
+import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.CommentRequest;
+import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.PostFacade;
 import com.facebook.model.posts.Comment;
@@ -123,12 +128,15 @@ public class PostService {
                 .findById(postId)
                 .orElseThrow(() -> new NotFoundException("Post not found!"));
 
-        return appUserRepository.findById(userId).map(user -> {
+        return appUserRepository.findById(userId).flatMap(user -> {
+            if (likeRepository.findByUserAndPost(user, post).isPresent()) {
+                throw new AlreadyExistsException("You've already liked this post!");
+            }
             Like like = new Like();
             like.setUser(user);
             like.setPost(post);
             Like savedLike = likeRepository.save(like);
-            return postFacade.convertToLikeResponse(savedLike);
+            return Optional.of(postFacade.convertToLikeResponse(savedLike));
         });
     }
 
@@ -137,13 +145,17 @@ public class PostService {
                 .findById(postId)
                 .orElseThrow(() -> new NotFoundException("Post not found!"));
 
-        return appUserRepository.findById(userId).map(user -> {
+        return appUserRepository.findById(userId).flatMap(user -> {
+            if (repostRepository.findByUserAndPost(user, post).isPresent()) {
+                throw new AlreadyExistsException("You've already reposted this post!");
+            }
             Repost repost = new Repost();
             repost.setUser(user);
             repost.setPost(post);
             Repost savedRepost = repostRepository.save(repost);
-            return postFacade.convertToRepostResponse(savedRepost);
+            return Optional.of(postFacade.convertToRepostResponse(savedRepost));
         });
+
     }
 
     public Optional<CommentResponse> addComment(Long userId, CommentRequest request) {
