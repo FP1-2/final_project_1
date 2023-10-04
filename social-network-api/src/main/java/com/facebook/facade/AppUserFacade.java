@@ -41,11 +41,5 @@ public class AppUserFacade {
         existingAppUser.setEmail(appUserRequest.getEmail());
         //TODO інші поля для оновлення AppUser
     }
-    public AppUser convertToAppUser(String username){
-        return service.findByUsername(username).map(i-> i).orElseThrow(() -> new UsernameNotFoundException("user not found"));
-    }
 
-    public AppUserChatResponse convertToAppUserChatResponse(AppUser appUser) {
-        return modelMapper.map(appUser, AppUserChatResponse.class);
-    }
 }

@@ -73,8 +73,9 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(RuntimeException.class)
     public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
+        log.warn(ex.getMessage());
         body.put("type", "Internal Server Error");
-        body.put("message", ex.getMessage());
+        body.put("message", "An internal error occurred. Please try again later.");
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
