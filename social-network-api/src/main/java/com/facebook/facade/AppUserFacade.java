@@ -29,14 +29,4 @@ public class AppUserFacade {
         return modelMapper.map(appUserRequest, AppUser.class);
     }
 
-    public AppUserRequest convertToAppUserRequest(AppUser appUser) {
-        return modelMapper.map(appUser, AppUserRequest.class);
-    }
-
-    public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {
-        existingAppUser.setName(appUserRequest.getName());
-        existingAppUser.setEmail(appUserRequest.getEmail());
-        //TODO інші поля для оновлення AppUser
-    }
-
 }
