@@ -1,6 +1,8 @@
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm"
 import { Route, Routes } from "react-router-dom";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
+import Messenger from "./pages/Messanger/Messenger";
+
 
 function App() {
   return (
@@ -13,6 +15,7 @@ function App() {
         </div>
       } />
       <Route path='/registration/confirm' element={<ConfirmRegistration/>}/>
+      <Route path='/messages' element={<Messenger/>}/>
     </Routes>
   );
 }
