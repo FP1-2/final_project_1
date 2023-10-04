@@ -1,10 +1,11 @@
 import React from "react";
-import {Formik, Form} from 'formik';
+import { Formik, Form } from 'formik';
 import Input from "../Input/Input";
 import style from "./RegistrationForm.module.scss";
-import {object, string, ref} from "yup";
-import {useDispatch, useSelector} from "react-redux";
-import {registrationThunkRequest} from "../../redux-toolkit/registration/thunks";
+import { object, string, ref } from "yup";
+import { useDispatch, useSelector } from "react-redux";
+import { registrationThunkRequest } from "../../redux-toolkit/registration/thunks";
+import ErrorPage from "../ErrorPage/ErrorPage";
 
 
 const validationSchema = object({
@@ -27,6 +28,9 @@ const validationSchema = object({
 });
 
 const RegistrationForm = () => {
+
+  const registrationStatus = useSelector(state => state.registration.registrationMassage.status);
+
   const {
     registrationMassage: {
       obj,
@@ -46,39 +50,44 @@ const RegistrationForm = () => {
   };
 
   const onSubmit = async (values) => {
-    const newObject = {...values};
+    const newObject = { ...values };
 
     delete newObject.repeatPassword;
     newObject.username = newObject.email;
     dispatch(registrationThunkRequest(newObject));
+
+
   };
 
   return (
-    <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({isValid}) => (
-        <div className={style.formWrapper}>
-          {status === "fulfilled" ? (
-            <p className={style.confirmMessage}>{obj.massage || obj.error}</p>
-          ) : (<>
-            <Form className={style.form}>
-              <div className={style.formTitleWrapper}>
-                <h2 className={style.formTitle}>Registration</h2>
-                <p className={style.formSubtitle}>It`s quick and easy.</p>
-              </div>
-              <div className={style.wrapperInputs}>
-                <Input name='name' placeholder="Enter your name" type="text"/>
-                <Input name="surname" placeholder="Enter your surname" type="text"/>
-              </div>
-              <Input name="email" placeholder="Enter your e-mail" type='email'/>
-              <Input name="password" placeholder="Enter password" type="password"/>
-              <Input name="repeatPassword" placeholder="Repeat password" type="password"/>
-              <button className={style.btnSubmit} disabled={!isValid} type="submit">Registration</button>
-            </Form>
-            {error ? <p className={style.error}>{error}</p> : null}
-          </>)}
-        </div>
-      )}
-    </Formik>
+    <>{registrationStatus==="rejected"?<ErrorPage message="Oops, something went wrong!"/>:
+      <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
+        {({ isValid }) => (
+          <div className={style.formWrapper}>
+            {status === "fulfilled" ? (
+              <p className={style.confirmMessage}>{obj.massage || obj.error}</p>
+            ) : (<>
+              <Form className={style.form}>
+                <div className={style.formTitleWrapper}>
+                  <h2 className={style.formTitle}>Registration</h2>
+                  <p className={style.formSubtitle}>It`s quick and easy.</p>
+                </div>
+                <div className={style.wrapperInputs}>
+                  <Input name='name' placeholder="Enter your name" type="text" />
+                  <Input name="surname" placeholder="Enter your surname" type="text" />
+                </div>
+                <Input name="email" placeholder="Enter your e-mail" type='email' />
+                <Input name="password" placeholder="Enter password" type="password" />
+                <Input name="repeatPassword" placeholder="Repeat password" type="password" />
+                <button className={style.btnSubmit} disabled={!isValid} type="submit">Registration</button>
+              </Form>
+              {error ? <p className={style.error}>{error}</p> : null}
+            </>)}
+          </div>
+        )}
+      </Formik>}
+    </>
+
   );
 };
 export default RegistrationForm;
