@@ -19,15 +19,23 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = ResetPasswordService.class)
 class ResetPasswordServiceTest {
+
     @MockBean
     @Qualifier("resetPasswordTokenCache")
     private CacheStore<String> resetPasswordTokenCache;
+
     @MockBean
     private EmailHandlerService emailHandler;
+
     @MockBean
     private AppUserService appUserService;
+
+    @MockBean
+    private CurrentUserService CurrentUserService;
+
     @Autowired
     private ResetPasswordService resetPasswordService;
+
     private final String EMAIL = "test@example.com";
     private final String TOKEN = "validToken";
     private final String INVALID_TOKEN = "invalidToken";
