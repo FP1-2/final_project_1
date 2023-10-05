@@ -1,12 +1,13 @@
 package com.facebook.controller;
 
-import com.facebook.dto.appuser.AppUserRequest;
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.service.AppUserService;
+import com.facebook.service.CurrentUserService;
 import com.facebook.service.ResetPasswordService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,8 @@ public class AppUserController {
     private final ResetPasswordService resetPasswordService;
 
     private final AppUserService appUserService;
+
+    private final CurrentUserService currentUserService;
 
     private final AppUserFacade appUserFacade;
 
@@ -63,9 +66,10 @@ public class AppUserController {
         return ResponseEntity.ok("Password reset successful");
     }
 
-    @PutMapping("/update/{id}")
-    public ResponseEntity<AppUserResponse> updateUser(@PathVariable Long id, @Valid @RequestBody AppUserRequest userReq) {
-        return appUserService.updateUserById(id, userReq)
+    @PutMapping("/edit")
+    public ResponseEntity<AppUserResponse> editUserInfo(@Valid @RequestBody AppUserEditRequest userEditReq) {
+        Long id = currentUserService.getCurrentUserId();
+        return appUserService.editUser(id, userEditReq)
                 .map(appUserFacade::convertToAppUserResponse)
                 .map(ResponseEntity::ok)
                 .orElseThrow(UserNotFoundException::new);

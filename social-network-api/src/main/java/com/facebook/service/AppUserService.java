@@ -1,8 +1,7 @@
 package com.facebook.service;
 
-import com.facebook.dto.appuser.AppUserRequest;
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.exception.UserNotFoundException;
-import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
@@ -29,7 +28,6 @@ public class AppUserService {
 
     private final PasswordEncoder passwordEncoder;
 
-    private final AppUserFacade facade;
 
     //Тільки для генерації.
     public List<AppUser> findAll() {
@@ -91,20 +89,21 @@ public class AppUserService {
         );
     }
 
-    public Optional<AppUser> updateUserById(Long id, AppUserRequest userReq) {
+    public Optional<AppUser> editUser(Long id, AppUserEditRequest userEditReq) {
         Optional<AppUser> user = findById(id);
         if(user.isPresent()) {
-            AppUser u = facade.convertToAppUser(userReq);
-            u.setId(id);
-            u.setName(userReq.getName());
-            u.setSurname(userReq.getSurname());
-            u.setUsername(userReq.getUsername());
-            u.setEmail(userReq.getEmail());
-            u.setAddress(userReq.getAddress());
-            u.setAvatar(userReq.getAvatar());
-            u.setHeaderPhoto(userReq.getHeaderPhoto());
-            u.setDateOfBirth(userReq.getDateOfBirth());
-            return save(u);
+            user.map(u -> {
+                u.setName(userEditReq.getName());
+                u.setSurname(userEditReq.getSurname());
+                u.setUsername(userEditReq.getUsername());
+                u.setEmail(userEditReq.getEmail());
+                u.setAddress(userEditReq.getAddress());
+                u.setAvatar(userEditReq.getAvatar());
+                u.setHeaderPhoto(userEditReq.getHeaderPhoto());
+                u.setDateOfBirth(userEditReq.getDateOfBirth());
+                return save(u);
+            });
+            return user;
         } else {
             return Optional.empty();
         }
