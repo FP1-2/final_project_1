@@ -1,17 +1,22 @@
 package com.facebook.service;
 
 import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.LikeResponse;
+import com.facebook.dto.post.RepostResponse;
+import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.CommentRequest;
+import com.facebook.exception.AlreadyExistsException;
+import com.facebook.exception.NotFoundException;
 import com.facebook.facade.PostFacade;
-import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.Repost;
+import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
 import com.facebook.repository.posts.RepostRepository;
-import com.facebook.utils.EX;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -45,6 +50,8 @@ public class PostService {
     private final CommentRepository commentRepository;
 
     private final RepostRepository repostRepository;
+
+    private final AppUserRepository appUserRepository;
 
     private final PostFacade postFacade;
 
@@ -116,30 +123,54 @@ public class PostService {
         return new PageImpl<>(postResponses, pageable, totalElements);
     }
 
+    public Optional<LikeResponse> likePost(Long userId, Long postId) {
+        Post post = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found!"));
 
-    // Logic for liking a post
-    public void likePost(AppUser user, Post post) {
-        Like like = new Like();
-        like.setUser(user);
-        like.setPost(post);
-        likeRepository.save(like);
+        return appUserRepository.findById(userId).flatMap(user -> {
+            if (likeRepository.findByUserAndPost(user, post).isPresent()) {
+                throw new AlreadyExistsException("You've already liked this post!");
+            }
+            Like like = new Like();
+            like.setUser(user);
+            like.setPost(post);
+            Like savedLike = likeRepository.save(like);
+            return Optional.of(postFacade.convertToLikeResponse(savedLike));
+        });
     }
 
-    // Logic for commenting on a post
-    public void addComment(AppUser user, Post post, String commentText) {
-        Comment comment = new Comment();
-        comment.setUser(user);
-        comment.setPost(post);
-        comment.setContent(commentText);
-        commentRepository.save(comment);
+    public Optional<RepostResponse> repost(Long userId, Long postId) {
+        Post post = postRepository
+                .findById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found!"));
+
+        return appUserRepository.findById(userId).flatMap(user -> {
+            if (repostRepository.findByUserAndPost(user, post).isPresent()) {
+                throw new AlreadyExistsException("You've already reposted this post!");
+            }
+            Repost repost = new Repost();
+            repost.setUser(user);
+            repost.setPost(post);
+            Repost savedRepost = repostRepository.save(repost);
+            return Optional.of(postFacade.convertToRepostResponse(savedRepost));
+        });
+
     }
 
-    // Logic for reposting a post
-    public void repost(AppUser user, Post originalPost) {
-        Repost repost = new Repost();
-        repost.setUser(user);
-        repost.setPost(originalPost);
-        repostRepository.save(repost);
+    public Optional<CommentResponse> addComment(Long userId, CommentRequest request) {
+        Post post = postRepository
+                .findById(request.getPostId())
+                .orElseThrow(() -> new NotFoundException("Post not found!"));
+
+        return appUserRepository.findById(userId).map(user -> {
+            Comment comment = new Comment();
+            comment.setUser(user);
+            comment.setPost(post);
+            comment.setContent(request.getContent());
+            Comment savedComment = commentRepository.save(comment);
+            return postFacade.convertToCommentResponse(savedComment);
+        });
     }
 
 }
