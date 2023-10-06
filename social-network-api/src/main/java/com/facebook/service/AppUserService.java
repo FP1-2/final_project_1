@@ -91,14 +91,30 @@ public class AppUserService {
 
     public Optional<AppUser> editUser(Long id, AppUserEditRequest userEditReq) {
         return findById(id).flatMap(u -> {
-            u.setName(userEditReq.getName());
-            u.setSurname(userEditReq.getSurname());
-            u.setUsername(userEditReq.getUsername());
-            u.setEmail(userEditReq.getEmail());
-            u.setAddress(userEditReq.getAddress());
-            u.setAvatar(userEditReq.getAvatar());
-            u.setHeaderPhoto(userEditReq.getHeaderPhoto());
-            u.setDateOfBirth(userEditReq.getDateOfBirth());
+            Optional
+                    .ofNullable(userEditReq.getName())
+                    .ifPresent(u::setName);
+            Optional
+                    .ofNullable(userEditReq.getSurname())
+                    .ifPresent(u::setSurname);
+            Optional
+                    .ofNullable(userEditReq.getUsername())
+                    .ifPresent(u::setUsername);
+            Optional
+                    .ofNullable(userEditReq.getEmail())
+                    .ifPresent(u::setEmail);
+            Optional
+                    .ofNullable(userEditReq.getAddress())
+                    .ifPresent(u::setAddress);
+            Optional
+                    .ofNullable(userEditReq.getAvatar())
+                    .ifPresent(u::setAvatar);
+            Optional
+                    .ofNullable(userEditReq.getHeaderPhoto())
+                    .ifPresent(u::setHeaderPhoto);
+            Optional
+                    .ofNullable(userEditReq.getDateOfBirth())
+                    .ifPresent(u::setDateOfBirth);
             return save(u);
         });
     }
