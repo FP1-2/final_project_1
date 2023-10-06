@@ -90,23 +90,34 @@ public class AppUserService {
     }
 
     public Optional<AppUser> editUser(Long id, AppUserEditRequest userEditReq) {
-        Optional<AppUser> user = findById(id);
-        if(user.isPresent()) {
-            user.map(u -> {
-                u.setName(userEditReq.getName());
-                u.setSurname(userEditReq.getSurname());
-                u.setUsername(userEditReq.getUsername());
-                u.setEmail(userEditReq.getEmail());
-                u.setAddress(userEditReq.getAddress());
-                u.setAvatar(userEditReq.getAvatar());
-                u.setHeaderPhoto(userEditReq.getHeaderPhoto());
-                u.setDateOfBirth(userEditReq.getDateOfBirth());
-                return save(u);
-            });
-            return user;
-        } else {
-            return Optional.empty();
-        }
+        return findById(id).flatMap(u -> {
+            u.setName(userEditReq.getName());
+            u.setSurname(userEditReq.getSurname());
+            u.setUsername(userEditReq.getUsername());
+            u.setEmail(userEditReq.getEmail());
+            u.setAddress(userEditReq.getAddress());
+            u.setAvatar(userEditReq.getAvatar());
+            u.setHeaderPhoto(userEditReq.getHeaderPhoto());
+            u.setDateOfBirth(userEditReq.getDateOfBirth());
+            return save(u);
+        });
+//        Optional<AppUser> user = findById(id);
+//        if(user.isPresent()) {
+//            user.map(u -> {
+//                u.setName(userEditReq.getName());
+//                u.setSurname(userEditReq.getSurname());
+//                u.setUsername(userEditReq.getUsername());
+//                u.setEmail(userEditReq.getEmail());
+//                u.setAddress(userEditReq.getAddress());
+//                u.setAvatar(userEditReq.getAvatar());
+//                u.setHeaderPhoto(userEditReq.getHeaderPhoto());
+//                u.setDateOfBirth(userEditReq.getDateOfBirth());
+//                return save(u);
+//            });
+//            return user;
+//        } else {
+//            return Optional.empty();
+//        }
     }
 
 }
