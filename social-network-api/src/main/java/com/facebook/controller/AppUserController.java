@@ -1,11 +1,13 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.service.AppUserService;
+import com.facebook.service.CurrentUserService;
 import com.facebook.service.ResetPasswordService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -16,13 +18,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @Log4j2
 @RestController
@@ -34,6 +30,8 @@ public class AppUserController {
     private final ResetPasswordService resetPasswordService;
 
     private final AppUserService appUserService;
+
+    private final CurrentUserService currentUserService;
 
     private final AppUserFacade appUserFacade;
 
@@ -68,4 +66,13 @@ public class AppUserController {
         return ResponseEntity.ok("Password reset successful");
     }
 
+    @PutMapping("/edit")
+    public ResponseEntity<AppUserResponse> editUserInfo(@Valid @RequestBody AppUserEditRequest userEditReq) {
+        Long id = currentUserService.getCurrentUserId();
+        return appUserService.editUser(id, userEditReq)
+                .map(appUserFacade::convertToAppUserResponse)
+                .map(ResponseEntity::ok)
+                .orElseThrow(UserNotFoundException::new);
+    }
+    
 }

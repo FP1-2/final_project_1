@@ -3,6 +3,7 @@ package com.facebook.controller;
 import com.facebook.TestConfig;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.service.AppUserService;
+import com.facebook.service.CurrentUserService;
 import com.facebook.service.ResetPasswordService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Test;
@@ -34,6 +35,8 @@ class AppUserControllerTest {
     private AppUserService userService;
     @MockBean
     private AppUserFacade appUserFacade;
+    @MockBean
+    private CurrentUserService currentUserService;
 
     @Autowired
     private ObjectMapper mapper;
