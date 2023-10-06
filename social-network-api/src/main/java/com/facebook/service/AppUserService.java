@@ -2,6 +2,7 @@ package com.facebook.service;
 
 import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.exception.UserNotFoundException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
@@ -27,6 +28,8 @@ public class AppUserService {
     private final AppUserRepository repo;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final AppUserFacade facade;
 
 
     //Тільки для генерації.
@@ -91,30 +94,7 @@ public class AppUserService {
 
     public Optional<AppUser> editUser(Long id, AppUserEditRequest userEditReq) {
         return findById(id).flatMap(u -> {
-            Optional
-                    .ofNullable(userEditReq.getName())
-                    .ifPresent(u::setName);
-            Optional
-                    .ofNullable(userEditReq.getSurname())
-                    .ifPresent(u::setSurname);
-            Optional
-                    .ofNullable(userEditReq.getUsername())
-                    .ifPresent(u::setUsername);
-            Optional
-                    .ofNullable(userEditReq.getEmail())
-                    .ifPresent(u::setEmail);
-            Optional
-                    .ofNullable(userEditReq.getAddress())
-                    .ifPresent(u::setAddress);
-            Optional
-                    .ofNullable(userEditReq.getAvatar())
-                    .ifPresent(u::setAvatar);
-            Optional
-                    .ofNullable(userEditReq.getHeaderPhoto())
-                    .ifPresent(u::setHeaderPhoto);
-            Optional
-                    .ofNullable(userEditReq.getDateOfBirth())
-                    .ifPresent(u::setDateOfBirth);
+            facade.updateAppUserFromEditRequest(u, userEditReq);
             return save(u);
         });
     }
