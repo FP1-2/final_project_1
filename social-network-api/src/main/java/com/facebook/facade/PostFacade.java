@@ -1,14 +1,9 @@
 package com.facebook.facade;
 
 import com.facebook.dto.appuser.AppUserForPost;
-import com.facebook.dto.post.CommentResponse;
-import com.facebook.dto.post.LikeResponse;
-import com.facebook.dto.post.PostResponse;
-import com.facebook.dto.post.PostSqlResult;
-import com.facebook.dto.post.RepostResponse;
-import com.facebook.model.posts.Comment;
-import com.facebook.model.posts.Like;
-import com.facebook.model.posts.Repost;
+import com.facebook.dto.post.*;
+import com.facebook.model.AppUser;
+import com.facebook.model.posts.*;
 import com.facebook.repository.posts.PostRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -31,6 +26,40 @@ import org.springframework.stereotype.Component;
 public class PostFacade {
 
     private final ModelMapper modelMapper;
+
+    /**
+     * Конвертує об'єкт {@link Comment} у відповідний DTO {@link CommentDTO}.
+     *
+     * @param comment об'єкт коментаря, який потрібно конвертувати
+     * @return об'єкт DTO, що представляє коментар
+     */
+    public CommentDTO convertToCommentDTO(Comment comment) {
+        CommentDTO commentDTO = modelMapper.map(comment, CommentDTO.class);
+        AppUserForPost appUserForPost = modelMapper.map(comment.getUser(), AppUserForPost.class);
+        commentDTO.setAppUser(appUserForPost);
+        return commentDTO;
+    }
+
+    /**
+     * Конвертує {@link PostRequest} в об'єкт {@link Post}
+     * використовуючи заданого користувача.
+     *
+     * @param request об'єкт типу {@link PostRequest},
+     *                що містить дані для створення поста.
+     * @param user    об'єкт типу {@link AppUser},
+     *                який стане власником поста.
+     * @return об'єкт типу {@link Post}, створений на основі
+     *                {@link PostRequest} та {@link AppUser}.
+     */
+    public Post convertPostRequestToPost(PostRequest request, AppUser user) {
+        Post post = new Post();
+        post.setImageUrl(request.getImageUrl());
+        post.setTitle(request.getTitle());
+        post.setBody(request.getBody());
+        post.setStatus(PostStatus.PUBLISHED);
+        post.setUser(user);
+        return post;
+    }
 
     /**
      * Конвертує об'єкт {@link Like} у відповідний DTO {@link LikeResponse}.
@@ -94,11 +123,13 @@ public class PostFacade {
 
         modelMapper.map(sqlResult, response);
 
+        AppUserForPost userForPost = modelMapper.map(sqlResult, AppUserForPost.class);
+        userForPost.setId(sqlResult.getUser_id());
+
+        response.setUser(userForPost);
         response.setComments(stringToList(sqlResult.getComment_ids()));
         response.setLikes(stringToList(sqlResult.getLike_ids()));
         response.setReposts(stringToList(sqlResult.getRepost_ids()));
-
-        response.setUser(modelMapper.map(sqlResult, AppUserForPost.class));
 
         return response;
     }
