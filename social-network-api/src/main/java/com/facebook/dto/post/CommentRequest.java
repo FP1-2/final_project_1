@@ -18,13 +18,14 @@ public class CommentRequest {
     /**
      * Поле не може бути null.
      */
-    @NotNull(message = "postId не може бути null")
+    @NotNull(message = "postId cannot be null.")
     private Long postId;
 
     /**
      * Зміст коментаря.
      * Поле не може бути порожнім або містити тільки пробіли.
      */
-    @NotBlank(message = "Зміст коментаря не може бути порожнім")
+    @NotBlank(message = "Comment content cannot be empty.")
     private String content;
+
 }

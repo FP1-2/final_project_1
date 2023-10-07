@@ -20,9 +20,17 @@ public class GlobalExceptionHandler {
 
     private static final String DUPLICATE_ENTRY = "Duplicate entry '";
 
-    // Повертає клієнту JSON з не валідними полями, якщо такі є.
-    // Обробляє контролер реєстрації /auth/signup інструкцією @Valid.
-    // Змінити параметри валідації можна у DTO AppUserRequest
+    /**
+     * Оброблює винятки валідації для запитів,
+     * де дані проходять валідацію за допомогою @Valid.
+     * Якщо з'являються невалідні поля, повертає клієнту JSON
+     * з інформацією про ці поля.
+     *
+     * @param ex - виняток, що містить інформацію
+     *             про помилки валідації.
+     * @return ValidationErrorResponse - об'єкт,
+     *         який містить інформацію про невалідні поля.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -130,4 +138,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
+
 }
