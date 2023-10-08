@@ -1,9 +1,19 @@
 package com.facebook.facade;
 
 import com.facebook.dto.appuser.AppUserForPost;
-import com.facebook.dto.post.*;
+import com.facebook.dto.post.CommentDTO;
+import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.LikeResponse;
+import com.facebook.dto.post.PostRequest;
+import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.PostSqlResult;
+import com.facebook.dto.post.RepostResponse;
 import com.facebook.model.AppUser;
-import com.facebook.model.posts.*;
+import com.facebook.model.posts.Comment;
+import com.facebook.model.posts.Like;
+import com.facebook.model.posts.Post;
+import com.facebook.model.posts.PostStatus;
+import com.facebook.model.posts.Repost;
 import com.facebook.repository.posts.PostRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +24,6 @@ import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
-
 
 /**
  * Фасад для обробки та перетворення даних поста.
