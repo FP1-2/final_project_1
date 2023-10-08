@@ -12,12 +12,21 @@ import java.util.stream.Stream;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
+/**
+ * Тести для класу {@link AppUser}.
+ */
 @DataJpaTest
 class UserTest {
 
     @Autowired
     private TestEntityManager tem;
 
+    /**
+     * Тестує правильність встановлення дат
+     * при створенні користувача.
+     * Переконується, що поля createdDate та
+     * lastModifiedDate встановлюються і не є null.
+     */
     @Test
     void dateSetting() {
         AppUser user = new AppUser();
@@ -33,6 +42,9 @@ class UserTest {
                 .forEach(date -> assertThat(date).isNotNull());
     }
 
+    /**
+     * Тестує логіку отримання та встановлення ролей користувача.
+     */
     @Test
     void getSetRoles() {
         AppUser user = new AppUser();
@@ -47,6 +59,9 @@ class UserTest {
 
     }
 
+    /**
+     * Тестує оновлення дати модифікації при зміні даних користувача.
+     */
     @Test
     void dateModification() {
         AppUser user = new AppUser();
@@ -69,6 +84,11 @@ class UserTest {
         });
     }
 
+    /**
+     * Тестує обмеження: ім'я користувача не повинно бути null.
+     * Очікується виключення ConstraintViolationException
+     * при спробі збереження.
+     */
     @Test
     void usernameNotNull() {
         AppUser user = new AppUser();
@@ -80,6 +100,10 @@ class UserTest {
                 () -> tem.persistAndFlush(user));
     }
 
+    /**
+     * Тестує обмеження: електронна адреса користувача не повинна бути null.
+     * Очікується виключення ConstraintViolationException при спробі збереження.
+     */
     @Test
     void emailNotNull() {
         AppUser user = new AppUser();
@@ -90,4 +114,5 @@ class UserTest {
         assertThrows(ConstraintViolationException.class,
                 () -> tem.persistAndFlush(user));
     }
+
 }
