@@ -58,7 +58,7 @@ import static org.mockito.ArgumentMatchers.eq;
  */
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
-public class PostServiceTest {
+class PostServiceTest {
 
     @Autowired
     private PostService postService;
