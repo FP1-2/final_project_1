@@ -1,0 +1,38 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+.container {
+    padding-top: 72px;
+    padding-bottom: 112px;
+    height: 720px;
+    background-color: #f0f2f5;
+}
+
+.wrapper {
+    display: flex;
+    margin: 0 auto;
+    width: 820px;
+}
+
+.slogan__wrapper {
+    width: 580px;
+    font-size: 34px;
+}
+
+.logo-slogan__wrapper {
+    position: relative;
+    padding-top: 160px;
+}
+
+.facebookLogo__wrapper {
+    position: absolute;
+    left: -38px;
+    bottom: 145px;
+}
+
+.facebookLogo {
+    width: 320px;
+    height: 160px;
+}
