@@ -1,8 +1,18 @@
-import styles from './LoginPage.module.scss';
+import React from "react";
+import { useDispatch} from "react-redux";
+import { loginThunk } from '../../redux-toolkit/login/thunks';
+import styles from "./LoginPage.module.scss";
 import LoginForm from '../../components/SignInForm/SignInForm.jsx';
-import { ReactComponent as FacebookLogo } from '../../img/Facebook-Logo.wine.svg';
+import {ReactComponent as FacebookLogo} from '../../img/FacebookLogo.svg';
 
 const LoginPage = () => {
+  const dispatch = useDispatch();
+
+  const handleSubmit = (values) => {
+
+    dispatch(loginThunk(values));
+  };
+
   return (
     <section className={styles.container}>
       <div className={styles.wrapper}>
@@ -10,15 +20,17 @@ const LoginPage = () => {
           <div className={styles['facebookLogo__wrapper']}>
             <FacebookLogo className={styles.facebookLogo} />
           </div>
-          <div className={styles.slogan__wrapper}>
+          <h2 className={styles.slogan__wrapper}>
             Facebook helps you connect and share with the people in your life.
-          </div>
+          </h2>
         </div>
         <div className={styles['login-form__wrapper']}>
-          <LoginForm />
+          <LoginForm handleSubmit={handleSubmit} />
         </div>
       </div>
     </section>
   );
 };
+
 export default LoginPage;
+

@@ -12,7 +12,7 @@ import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistr
 function AppRoutes() {
   return (
     <Routes>
-      <Route path="login" element={<LoginPage/>} />
+      <Route path="/login" element={<LoginPage/>} />
       <Route path="/" element={<PostsPage/>} />
       <Route path="/messages" element={<MessagesPage/>} />
       <Route path="/favorites" element={<FavoritsPage/>}/>
