@@ -3,7 +3,6 @@ package com.facebook.controller.posts;
 import com.facebook.controller.PostController;
 import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
-import com.facebook.model.AppUser;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.PostRepository;
@@ -115,7 +114,6 @@ class PostControllerTest {
         log.info("token: " + token);
     }
 
-
     /**
      * Тестує отримання коментарів за ID поста
      * з використанням пагінації.
@@ -135,9 +133,6 @@ class PostControllerTest {
      */
     @Test
     void testGetCommentsByPostIdWithPagination() {
-        // Отримання списку всіх користувачів
-        List<AppUser> allUsers = appUserService.findAll();
-
         Post targetPost = postRepository
                 .findPostWithMoreThanFourComments()
                 .orElse(null);
@@ -225,19 +220,23 @@ class PostControllerTest {
         // 3. Сценарій з неіснуючим постом
         try {
             restTemplate.exchange(
+                    //Неіснуючий пост
                     baseUrl + "api/posts/like/999",
                     HttpMethod.POST,
                     new HttpEntity<>(authHeaders),
-                    ActionResponse.class);
-            fail("Очікувалося виключення HttpClientErrorException.NotFound");
+                    ActionResponse.class
+            ).getBody();
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-                    {"type":"Not Found Error","message":"Post not found!"}
-                    """
-                    .strip();
+                        {"type":"Not Found Error","message":"Post not found!"}
+                    """.strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
             assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
+            return;
         }
+        // Якщо виключення не відбувається то виконання досягає рядка fail(),
+        // і тест вважається невдалим
+        fail("Очікувалося виключення HttpClientErrorException.NotFound");
     }
 
 }
