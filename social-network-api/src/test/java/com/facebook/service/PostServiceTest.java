@@ -93,7 +93,9 @@ class PostServiceTest {
     @Test
     void testFindAll() {
         List<Post> posts = Arrays.asList(new Post(), new Post());
-        Mockito.when(postRepository.findAll()).thenReturn(posts);
+        Mockito
+                .when(postRepository.findAll())
+                .thenReturn(posts);
 
         List<Post> result = postService.findAll();
 
@@ -108,11 +110,15 @@ class PostServiceTest {
     @Test
     void testSave() {
         Post post = new Post();
-        Mockito.when(postRepository.save(any(Post.class))).thenReturn(post);
+        Mockito
+                .when(postRepository.save(any(Post.class)))
+                .thenReturn(post);
 
         postService.save(post);
 
-        Mockito.verify(postRepository).save(any(Post.class));
+        Mockito
+                .verify(postRepository)
+                .save(any(Post.class));
     }
 
     /**
@@ -169,7 +175,9 @@ class PostServiceTest {
                 .thenReturn(postResponse1)
                 .thenReturn(postResponse2);
 
-        Mockito.when(postRepository.countPostsByUserId(userId)).thenReturn(2L);
+        Mockito
+                .when(postRepository.countPostsByUserId(userId))
+                .thenReturn(2L);
 
         Page<PostResponse> result = postService
                 .findPostDetailsByUserId(userId, 0, 2, "id,asc");
@@ -191,15 +199,22 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void testLikePostWhenNoExistingLike() {
+    void testLikePostWhenNoExistingLike()
+    {
         Long userId = 1L;
         Long postId = 1L;
         AppUser user = new AppUser();
         Post post = new Post();
 
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(user));
-        Mockito.when(postRepository.findById(postId)).thenReturn(Optional.of(post));
-        Mockito.when(likeRepository.findByUserAndPost(user, post)).thenReturn(Optional.empty());
+        Mockito
+                .when(appUserRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+        Mockito
+                .when(postRepository.findById(postId))
+                .thenReturn(Optional.of(post));
+        Mockito
+                .when(likeRepository.findByUserAndPost(user, post))
+                .thenReturn(Optional.empty());
 
         Optional<ActionResponse> result = postService.likePost(userId, postId);
 
@@ -232,16 +247,25 @@ class PostServiceTest {
         Post post = new Post();
         Like existingLike = new Like();
 
-        Mockito.when(appUserRepository.findById(userId)).thenReturn(Optional.of(user));
-        Mockito.when(postRepository.findById(postId)).thenReturn(Optional.of(post));
-        Mockito.when(likeRepository.findByUserAndPost(user, post)).thenReturn(Optional.of(existingLike));
+        Mockito
+                .when(appUserRepository.findById(userId))
+                .thenReturn(Optional.of(user));
+        Mockito
+                .when(postRepository.findById(postId))
+                .thenReturn(Optional.of(post));
+        Mockito
+                .when(likeRepository.findByUserAndPost(user, post))
+                .thenReturn(Optional.of(existingLike));
 
-        Optional<ActionResponse> result = postService.likePost(userId, postId);
+        Optional<ActionResponse> result = postService
+                .likePost(userId, postId);
 
         assertTrue(result.isPresent());
         assertFalse(result.get().added());
         assertEquals("Action removed", result.get().message());
-        Mockito.verify(likeRepository).delete(existingLike);
+        Mockito
+                .verify(likeRepository)
+                .delete(existingLike);
     }
 
     /**
@@ -325,7 +349,9 @@ class PostServiceTest {
         assertTrue(result.isPresent());
         assertFalse(result.get().added());
         assertEquals("Action removed", result.get().message());
-        Mockito.verify(repostRepository).delete(existingRepost);
+        Mockito
+                .verify(repostRepository)
+                .delete(existingRepost);
     }
 
     /**
