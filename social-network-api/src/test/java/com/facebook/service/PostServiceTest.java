@@ -1,6 +1,34 @@
 package com.facebook.service;
 
-import com.facebook.dto.post.*;
+import java.time.LocalDateTime;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Optional;
+
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mockito;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+
+import com.facebook.dto.post.ActionResponse;
+import com.facebook.dto.post.CommentDTO;
+import com.facebook.dto.post.CommentRequest;
+import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostResponse;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.PostFacade;
 import com.facebook.model.AppUser;
@@ -13,26 +41,7 @@ import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
 import com.facebook.repository.posts.RepostRepository;
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import java.time.LocalDateTime;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Optional;
-
-import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
 
 /**
  * Тестовий клас для {@link PostService}.
@@ -199,8 +208,7 @@ class PostServiceTest {
      * </p>
      */
     @Test
-    void testLikePostWhenNoExistingLike()
-    {
+    void testLikePostWhenNoExistingLike(){
         Long userId = 1L;
         Long postId = 1L;
         AppUser user = new AppUser();
@@ -221,7 +229,9 @@ class PostServiceTest {
         assertTrue(result.isPresent());
         assertTrue(result.get().added());
         assertEquals("Action added", result.get().message());
-        Mockito.verify(likeRepository).save(any());
+        Mockito
+                .verify(likeRepository)
+                .save(any());
     }
 
     /**

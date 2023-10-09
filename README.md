@@ -52,7 +52,7 @@ React,Redux Toolkit, Git, ESLint, Stylelint, HTML, CSS, SASS, npm, formik[social
 ```json
 {
   "postId": 4,
-  "commentText": "Great post!"
+  "content": "Great post!"
 }
 ```
 
