@@ -54,7 +54,7 @@ public class CommentTest {
      * при спробі збереження.
      */
     @Test
-    public void userNotNull() {
+    void userNotNull() {
         Comment comment = new Comment();
         comment.setPost(createAndSaveTestPost(createAndSaveTestUser()));
         comment.setContent("Test comment content.");
@@ -70,7 +70,7 @@ public class CommentTest {
      * при спробі збереження.
      */
     @Test
-    public void postNotNull() {
+    void postNotNull() {
         Comment comment = new Comment();
         comment.setUser(createAndSaveTestUser());
         comment.setContent("Test comment content.");
@@ -85,7 +85,7 @@ public class CommentTest {
      * при спробі збереження.
      */
     @Test
-    public void contentNotNull() {
+    void contentNotNull() {
         AppUser user = createAndSaveTestUser();
         Comment comment = new Comment();
         comment.setUser(user);
@@ -101,7 +101,7 @@ public class CommentTest {
      * Переконується, що поле createdDate встановлене та не є null.
      */
     @Test
-    public void createdDateNotNull() {
+    void createdDateNotNull() {
         AppUser user = createAndSaveTestUser();
         Comment comment = new Comment();
         comment.setUser(user);

@@ -91,7 +91,7 @@ public class PostServiceTest {
      * всі пости з репозиторію.</p>
      */
     @Test
-    public void testFindAll() {
+    void testFindAll() {
         List<Post> posts = Arrays.asList(new Post(), new Post());
         Mockito.when(postRepository.findAll()).thenReturn(posts);
 
@@ -106,7 +106,7 @@ public class PostServiceTest {
      * <p>Перевіряє, чи сервіс правильно зберігає пост в репозиторії.</p>
      */
     @Test
-    public void testSave() {
+    void testSave() {
         Post post = new Post();
         Mockito.when(postRepository.save(any(Post.class))).thenReturn(post);
 
@@ -122,7 +122,7 @@ public class PostServiceTest {
      * з репозиторію та конвертує їх у DTO.</p>
      */
     @Test
-    public void testGetCommentsByPostId() {
+    void testGetCommentsByPostId() {
         Long postId = 1L;
         Comment comment1 = new Comment();
         Comment comment2 = new Comment();
@@ -154,7 +154,7 @@ public class PostServiceTest {
      * та конвертує їх у відповідь для користувача.</p>
      */
     @Test
-    public void testFindPostDetailsByUserId() {
+    void testFindPostDetailsByUserId() {
         Long userId = 1L;
         PostResponse postResponse1 = new PostResponse();
         PostResponse postResponse2 = new PostResponse();
@@ -191,7 +191,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testLikePostWhenNoExistingLike() {
+    void testLikePostWhenNoExistingLike() {
         Long userId = 1L;
         Long postId = 1L;
         AppUser user = new AppUser();
@@ -225,7 +225,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testLikePostWhenExistingLike() {
+    void testLikePostWhenExistingLike() {
         Long userId = 2L;
         Long postId = 2L;
         AppUser user = new AppUser();
@@ -259,7 +259,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testAddRepostIfNotExists() {
+    void testAddRepostIfNotExists() {
         Long userId = 1L;
         Long postId = 2L;
 
@@ -302,7 +302,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testRemoveRepostIfExists() {
+    void testRemoveRepostIfExists() {
         Long userId = 1L;
         Long postId = 2L;
 
@@ -338,7 +338,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testAddComment() {
+    void testAddComment() {
         // Ініціалізація даних для тесту
         Long userId = 1L;
         CommentRequest request = new CommentRequest();
@@ -421,7 +421,7 @@ public class PostServiceTest {
      * </p>
      */
     @Test
-    public void testAddCommentWithMissingUser() {
+    void testAddCommentWithMissingUser() {
         Long userId = 1L;
         Long postId = 2L;
 

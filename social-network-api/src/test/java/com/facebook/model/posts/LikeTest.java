@@ -54,7 +54,7 @@ public class LikeTest {
      * при спробі збереження.
      */
     @Test
-    public void userNotNull() {
+    void userNotNull() {
         AppUser user = createAndSaveTestUser();
         Like like = new Like();
         like.setPost(createAndSaveTestPost(user));
@@ -70,7 +70,7 @@ public class LikeTest {
      * при спробі збереження.
      */
     @Test
-    public void postNotNull() {
+    void postNotNull() {
         AppUser user = createAndSaveTestUser();
         Like like = new Like();
         like.setUser(user);
@@ -85,7 +85,7 @@ public class LikeTest {
      * Переконується, що поле createdDate встановлене та не є null.
      */
     @Test
-    public void createdDateNotNull() {
+    void createdDateNotNull() {
         AppUser user = createAndSaveTestUser();
         Like like = new Like();
         like.setUser(user);
@@ -103,7 +103,7 @@ public class LikeTest {
      * при спробі збереження.
      */
     @Test
-    public void likeShouldBeUnique() {
+    void likeShouldBeUnique() {
         AppUser user = createAndSaveTestUser();
         Post post = createAndSaveTestPost(user);
 

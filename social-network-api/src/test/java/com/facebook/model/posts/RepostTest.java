@@ -54,7 +54,7 @@ public class RepostTest {
      * при спробі збереження.
      */
     @Test
-    public void userNotNull() {
+    void userNotNull() {
         AppUser user = createAndSaveTestUser();
         Repost repost = new Repost();
         repost.setPost(createAndSaveTestPost(user));
@@ -70,7 +70,7 @@ public class RepostTest {
      * при спробі збереження.
      */
     @Test
-    public void postNotNull() {
+    void postNotNull() {
         AppUser user = createAndSaveTestUser();
         Repost repost = new Repost();
         repost.setUser(user);
@@ -85,7 +85,7 @@ public class RepostTest {
      * Переконується, що поле createdDate встановлене та не є null.
      */
     @Test
-    public void createdDateNotNull() {
+    void createdDateNotNull() {
         AppUser user = createAndSaveTestUser();
         Repost repost = new Repost();
         repost.setUser(user);
@@ -103,7 +103,7 @@ public class RepostTest {
      * при спробі збереження.
      */
     @Test
-    public void repostShouldBeUnique() {
+    void repostShouldBeUnique() {
         AppUser user = createAndSaveTestUser();
         Post post = createAndSaveTestPost(user);
 
