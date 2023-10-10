@@ -3,11 +3,16 @@ package com.facebook.controller.posts;
 import com.facebook.controller.PostController;
 import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
+import com.facebook.dto.post.CommentRequest;
+import com.facebook.dto.post.CommentResponse;
+import com.facebook.exception.ValidationErrorResponse;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.PostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.EmailHandlerService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.MethodOrderer;
@@ -48,6 +53,8 @@ import static org.junit.jupiter.api.Assertions.fail;
  * <ul>
  *     <li>{@link PostControllerTest#testGetCommentsByPostIdWithPagination() Перевірка отримання коментарів до поста з використанням пагінації}</li>
  *     <li>{@link PostControllerTest#testLikeAndUnlikePost() Перевірка логіки "лайкання" та "дизлайкання" постів}</li>
+ *     <li>{@link PostControllerTest#testRepost() Перевірка логіки репостування поста (створення та видалення репоста)}</li>
+ *     <li>{@link PostControllerTest#testAddComment() Перевірка додавання коментаря до публікації та обробки помилок валідації}</li>
  * </ul>
  * </p>
  * <p>
@@ -133,6 +140,7 @@ class PostControllerTest {
      */
     @Test
     void testGetCommentsByPostIdWithPagination() {
+        // Знаходження поста з понад 4 коментарями
         Post targetPost = postRepository
                 .findPostWithMoreThanFourComments()
                 .orElse(null);
@@ -177,25 +185,17 @@ class PostControllerTest {
      * <p>
      * Сценарій тесту:
      * <ul>
-     * <li>1. Знаходження поста, який має понад 4 коментарі.</li>
-     * <li>2. Перше "лайкання" поста.</li>
-     * <li>3. Друге "лайкання" поста (повинно відмінити попереднє "лайкання").</li>
-     * <li>4. Спроба "лайкання" неіснуючого поста.</li>
+     * <li>1. Перше "лайкання" поста.</li>
+     * <li>2. Друге "лайкання" поста (має змінити стан попереднього "лайкання").</li>
+     * <li>3. Спроба "лайкання" неіснуючого поста.</li>
      * </ul>
      * </p>
      */
     @Test
     void testLikeAndUnlikePost() {
-        // Знаходження поста з понад 4 коментарями
-        Post targetPost = postRepository
-                .findPostWithMoreThanFourComments()
-                .orElse(null);
-        assertNotNull(targetPost,
-                "Пост із понад 4 коментарями не знайдений.");
-
         // 1. Перше "лайкання" поста
         ResponseEntity<ActionResponse> firstResponse = restTemplate.exchange(
-                baseUrl + "api/posts/like/" + targetPost.getId(),
+                baseUrl + "api/posts/like/1",
                 HttpMethod.POST,
                 new HttpEntity<>(authHeaders),
                 ActionResponse.class
@@ -206,7 +206,7 @@ class PostControllerTest {
 
         // 2. Друге "лайкання" поста (повинно дати протилежний результат)
         ResponseEntity<ActionResponse> secondResponse = restTemplate.exchange(
-                baseUrl + "api/posts/like/" + targetPost.getId(),
+                baseUrl + "api/posts/like/1",
                 HttpMethod.POST,
                 new HttpEntity<>(authHeaders),
                 ActionResponse.class
@@ -229,7 +229,8 @@ class PostControllerTest {
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
                         {"type":"Not Found Error","message":"Post not found!"}
-                    """.strip();
+                    """
+                    .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
             assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
             return;
@@ -237,6 +238,151 @@ class PostControllerTest {
         // Якщо виключення не відбувається то виконання досягає рядка fail(),
         // і тест вважається невдалим
         fail("Очікувалося виключення HttpClientErrorException.NotFound");
+    }
+
+    /**
+     * Тест для перевірки функціональності репостування постів.
+     * <p>
+     * Сценарій тесту:
+     * <ul>
+     * <li>1. Спроба репостити існуючий пост. Незалежно від того,
+     *        чи був пост репостнутий раніше, сервіс має або створити репост,
+     *        або видалити його, в залежності від поточного стану.</li>
+     * <li>2. Спроба репостити той же пост знову. Сервіс має зреагувати
+     *         протилежним чином, порівняно з попередньою дією (або видалити репост,
+     *         якщо він був створений, або створити його знову,
+     *         якщо він був видалений).</li>
+     * <li>3. Порівняння результатів першого та другого репостування. Очікується,
+     *        що статус репосту зміниться на протилежний.</li>
+     * <li>4. Спроба репостити неіснуючий пост.
+     *        Очікується отримання помилки "Post not found".</li>
+     * </ul>
+     * </p>
+     * <p>
+     * Таким чином, цей тест перевіряє поведінку функції репостування без конкретного припущення
+     * про первинний стан репосту.
+     * </p>
+     */
+    @Test
+    void testRepost() {
+        // 1. Сценарій з існуючим postId
+        ResponseEntity<ActionResponse> firstRepostResponse = restTemplate.exchange(
+                baseUrl + "api/posts/repost/1",
+                HttpMethod.POST,
+                new HttpEntity<>(authHeaders),
+                ActionResponse.class
+        );
+
+        assertEquals(HttpStatus.OK, firstRepostResponse.getStatusCode());
+        assertNotNull(firstRepostResponse.getBody());
+
+        ResponseEntity<ActionResponse> secondRepostResponse = restTemplate.exchange(
+                baseUrl + "api/posts/repost/1",
+                HttpMethod.POST,
+                new HttpEntity<>(authHeaders),
+                ActionResponse.class
+        );
+
+        assertEquals(HttpStatus.OK, secondRepostResponse.getStatusCode());
+        assertNotNull(secondRepostResponse.getBody());
+        assertNotEquals(firstRepostResponse.getBody().added(), secondRepostResponse.getBody().added());
+
+        // 2. Сценарій з неіснуючим postId
+
+        try {
+            restTemplate.exchange(
+                    baseUrl + "api/posts/repost/999",
+                    HttpMethod.POST,
+                    new HttpEntity<>(authHeaders),
+                    ActionResponse.class
+            );
+        } catch (HttpClientErrorException.NotFound e) {
+            String expectedErrorMessage = """
+                        {"type":"Not Found Error","message":"Post not found!"}
+                    """
+                    .strip();
+            log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
+            assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
+            return;
+        }
+
+        fail("Очікувалося виключення HttpClientErrorException.NotFound");
+    }
+
+    /**
+     * Тестує додавання коментаря до публікації.
+     * <p>
+     * Сценарії тестування:
+     * <ol>
+     * <li>Відправлення коректного запиту на додавання коментаря
+     *     до існуючої публікації та перевірка отриманої відповіді.</li>
+     * <li>Відправлення запиту з невалідними даними коментаря
+     *     та перевірка помилки валідації.</li>
+     * </ol>
+     * </p>
+     */
+    @Test
+    void testAddComment() {
+        // 1. Сценарій з коректним запитом
+        CommentRequest validRequest = new CommentRequest();
+        validRequest.setPostId(1L);
+        validRequest.setContent("Це дуже цікава публікація!");
+
+        ResponseEntity<CommentResponse> response = restTemplate.exchange(
+                baseUrl + "api/posts/comment",
+                HttpMethod.POST,
+                new HttpEntity<>(validRequest, authHeaders),
+                CommentResponse.class
+        );
+
+        // Перевірка відповіді сервера
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(validRequest.getContent(), response.getBody().getContent());
+
+        // 2. Сценарій з невалідним запитом
+        CommentRequest invalidRequest = new CommentRequest();
+        invalidRequest.setPostId(null);
+        invalidRequest.setContent("    "); // Запит містить лише пробіли
+
+        try {
+            restTemplate.exchange(
+                    baseUrl + "api/posts/comment",
+                    HttpMethod.POST,
+                    new HttpEntity<>(invalidRequest, authHeaders),
+                    CommentResponse.class
+            );
+        } catch (HttpClientErrorException.BadRequest e) {
+            log.info("Отримано очікувану помилку: " + e.getResponseBodyAsString());
+
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                ValidationErrorResponse actualError = mapper
+                        .readValue(e.getResponseBodyAsString(),
+                                ValidationErrorResponse.class);
+
+                ValidationErrorResponse
+                        .Violation expectedContentError = new ValidationErrorResponse
+                        .Violation("content",
+                        "Comment content cannot be empty.");
+                ValidationErrorResponse
+                        .Violation expectedPostIdError = new ValidationErrorResponse
+                        .Violation("postId",
+                        "postId cannot be null.");
+
+                assertTrue(actualError.getViolations()
+                                .contains(expectedContentError),
+                        "Помилка валідації для поля 'content' не знайдена");
+                assertTrue(actualError.getViolations()
+                                .contains(expectedPostIdError),
+                        "Помилка валідації для поля 'postId' не знайдена");
+
+                return;
+            } catch (JsonProcessingException ex) {
+                fail("Помилка при обробці JSON-відповіді: " + ex.getMessage());
+            }
+        }
+        fail("Має викидатися виключення HttpClientErrorException.BadRequest");
     }
 
 }
