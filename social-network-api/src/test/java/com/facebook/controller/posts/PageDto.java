@@ -13,7 +13,7 @@ import java.util.List;
  */
 @Data
 @NoArgsConstructor
-public class PageDtoForComment<T> {
+public class PageDto<T> {
     /** Список даних на поточній сторінці. */
     private List<T> content;
     /** Загальна кількість елементів. */

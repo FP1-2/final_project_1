@@ -5,6 +5,7 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostResponse;
 import com.facebook.exception.ValidationErrorResponse;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.posts.CommentRepository;
@@ -55,6 +56,7 @@ import static org.junit.jupiter.api.Assertions.fail;
  *     <li>{@link PostControllerTest#testLikeAndUnlikePost() Перевірка логіки "лайкання" та "дизлайкання" постів}</li>
  *     <li>{@link PostControllerTest#testRepost() Перевірка логіки репостування поста (створення та видалення репоста)}</li>
  *     <li>{@link PostControllerTest#testAddComment() Перевірка додавання коментаря до публікації та обробки помилок валідації}</li>
+ *     <li>{@link PostControllerTest#testGetPostsByUserId() Перевірка отримання постів користувача з використанням пагінації}</li>
  * </ul>
  * </p>
  * <p>
@@ -153,7 +155,7 @@ class PostControllerTest {
         String sort = "createdDate,desc";
 
         // Виконання запиту до API
-        ResponseEntity<PageDtoForComment<CommentDTO>> response = restTemplate
+        ResponseEntity<PageDto<CommentDTO>> response = restTemplate
                 .exchange(
                         baseUrl + "api/posts/"
                                 + targetPost.getId()
@@ -163,7 +165,7 @@ class PostControllerTest {
                                 + sort,
                         HttpMethod.GET,
                         new HttpEntity<>(authHeaders),
-                        new ParameterizedTypeReference<PageDtoForComment<CommentDTO>>() {
+                        new ParameterizedTypeReference<PageDto<CommentDTO>>() {
                         });
 
         // Перевірка результату
@@ -383,6 +385,46 @@ class PostControllerTest {
             }
         }
         fail("Має викидатися виключення HttpClientErrorException.BadRequest");
+    }
+
+    /**
+     * Тест для перевірки отримання постів користувача
+     * з використанням пагінації.
+     * <p>
+     * Сценарії тестування:
+     * <ol>
+     * <li> Метод відправляє запит до API для отримання постів
+     *      користувача з певним ідентифікатором (user ID).</li>
+     * <li> За допомогою пагінації тест перевіряє, що API повертає
+     *      хоча б 4 пости цього користувача.</li>
+     * <li> Також перевіряється, що всі отримані пости дійсно
+     *      належать вказаному користувачу.</li>
+     * </ol>
+     * </p>
+     */
+    @Test
+    void testGetPostsByUserId() {
+        // Відправляємо запит до API для отримання постів користувача
+        ResponseEntity<PageDto<PostResponse>> response = restTemplate.exchange(
+                baseUrl + "api/posts/by_user_id/1?page=0&size=4&sort=id,asc",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                new ParameterizedTypeReference<PageDto<PostResponse>>() {
+                });
+
+        // Перевіряємо, що відповідь успішна і містить дані
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        PageDto<PostResponse> pageData = response.getBody();
+        assertNotNull(pageData.getContent());
+        // Перевіряємо, що є хоча б 4 пости
+        assertTrue(pageData.getContent().size() >= 4);
+
+        // Перевіряємо, що всі пости належать вказаному користувачу
+        for (PostResponse postResponse : pageData.getContent()) {
+            assertEquals(1L, postResponse.getUser().getId());
+        }
     }
 
 }
