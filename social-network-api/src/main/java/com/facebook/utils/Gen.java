@@ -1,6 +1,7 @@
 package com.facebook.utils;
 
 import com.facebook.dto.appuser.GenAppUser;
+import com.facebook.dto.post.CommentRequest;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
@@ -268,9 +269,9 @@ public class Gen {
     private List<Like> genLikes() {
         posts.forEach(post -> {
             appUsers1.forEach(user -> {
-                // 50% шанс поставити лайк
+                // 50% шанс поставить лайк
                 if (MathUtils.random(0, 1) == 0) {
-                    postService.likePost(user, post);
+                    postService.likePost(user.getId(), post.getId());
                 }
             });
         });
@@ -283,11 +284,11 @@ public class Gen {
         posts.forEach(post -> {
             IntStream.range(1, MathUtils.random(1, 5) + 1)
                     .forEach(ignored -> {
-                        postService.addComment(
-                                appUsers1.get(MathUtils.random(0, appUsers1.size() - 1)),
-                                post,
-                                faker.lorem().sentence()
-                        );
+                        Long randomUserId = appUsers1.get(MathUtils.random(0, appUsers1.size() - 1)).getId();
+                        CommentRequest request = new CommentRequest();
+                        request.setPostId(post.getId());
+                        request.setContent(faker.lorem().sentence());
+                        postService.addComment(randomUserId, request);
                     });
         });
 
@@ -297,15 +298,16 @@ public class Gen {
     private List<Repost> genReposts() {
         posts.forEach(post -> {
             appUsers1.forEach(user -> {
-                // 33% шанс зробити репост
+                // 33% шанс сделать репост
                 if (MathUtils.random(0, 2) == 0) {
-                    postService.repost(user, post);
+                    postService.repost(user.getId(), post.getId());
                 }
             });
         });
 
         return repostRepository.findAll();
     }
+
 
 }
 

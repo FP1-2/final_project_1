@@ -1,10 +1,13 @@
 package com.facebook.repository.posts;
 
 import com.facebook.model.posts.Repost;
-import java.util.List;
-import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-public interface RepostRepository extends JpaRepository<Repost, Long> {
+import java.util.List;
+
+@Repository
+public interface RepostRepository extends UserAndPostRepository<Repost, Long> {
     // Отримати всі репости певного користувача.
     List<Repost> findByUserId(Long userId);
+
 }

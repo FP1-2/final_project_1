@@ -1,6 +1,8 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.exception.UserNotFoundException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.repository.AppUserRepository;
 
@@ -26,6 +28,9 @@ public class AppUserService {
     private final AppUserRepository repo;
 
     private final PasswordEncoder passwordEncoder;
+
+    private final AppUserFacade facade;
+
 
     //Тільки для генерації.
     public List<AppUser> findAll() {
@@ -85,6 +90,13 @@ public class AppUserService {
                     throw new UserNotFoundException();
                 }
         );
+    }
+
+    public Optional<AppUser> editUser(Long id, AppUserEditRequest userEditReq) {
+        return findById(id).flatMap(u -> {
+            facade.updateAppUserFromEditRequest(u, userEditReq);
+            return save(u);
+        });
     }
 
 }
