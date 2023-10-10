@@ -1,13 +1,14 @@
-import "./App.scss";
-import React from "react";
-import Header from "./components/Header/Header";
-import AppRoutes from "./AppRoutes";
+import React from 'react';
+import Header from './components/Header/Header';
+import AppRoutes from './AppRoutes';
 
 function App() {
+  const isLoginPage = window.location.pathname.includes('/login');
+
   return (
     <div className="App">
-      <Header/>
-      <AppRoutes></AppRoutes>
+      {!isLoginPage && <Header />}
+      <AppRoutes />
     </div>
   );
 }
