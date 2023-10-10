@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see DataJpaTest
  */
 @DataJpaTest
-public class RepostTest {
+class RepostTest {
 
     @Autowired
     private TestEntityManager tem;

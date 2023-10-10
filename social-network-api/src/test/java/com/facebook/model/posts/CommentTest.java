@@ -22,7 +22,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see DataJpaTest
  */
 @DataJpaTest
-public class CommentTest {
+class CommentTest {
 
     @Autowired
     private TestEntityManager tem;
