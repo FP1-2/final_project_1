@@ -165,9 +165,8 @@ public class PostController {
      */
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable Long postId) {
-        return postService.findPostDetailsById(postId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
+        PostResponse postResponse = postService.findPostDetailsById(postId);
+        return ResponseEntity.ok(postResponse);
     }
 
     /**

@@ -1,6 +1,7 @@
 package com.facebook.repository.posts;
 
 import com.facebook.model.posts.Post;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -11,27 +12,36 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+/**
+ * Репозиторій для роботи з постами.
+ * <p>
+ * Надає методи для доступу до даних постів у базі даних,
+ * таких як отримання постів за певними критеріями,
+ * підрахунок кількості постів
+ * та інші додаткові операції.
+ * </p>
+ */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
     String POST_DETAILS_SELECT = """
-        SELECT
-            p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
-            u.id as user_id, u.name, u.surname, u.username, u.avatar,
-            GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-            GROUP_CONCAT(DISTINCT l.id) AS like_ids,
-            GROUP_CONCAT(DISTINCT r.id) AS repost_ids
-        FROM
-            posts p
-        LEFT JOIN
-            users u ON p.user_id = u.id
-        LEFT JOIN
-            comments c ON p.id = c.post_id
-        LEFT JOIN
-            likes l ON p.id = l.post_id
-        LEFT JOIN
-            reposts r ON p.id = r.post_id
-    """;
+                SELECT
+                    p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
+                    u.id as user_id, u.name, u.surname, u.username, u.avatar,
+                    GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
+                    GROUP_CONCAT(DISTINCT l.id) AS like_ids,
+                    GROUP_CONCAT(DISTINCT r.id) AS repost_ids
+                FROM
+                    posts p
+                LEFT JOIN
+                    users u ON p.user_id = u.id
+                LEFT JOIN
+                    comments c ON p.id = c.post_id
+                LEFT JOIN
+                    likes l ON p.id = l.post_id
+                LEFT JOIN
+                    reposts r ON p.id = r.post_id
+            """;
 
     /**
      * Знаходить деталі постів за ідентифікатором користувача.
@@ -43,16 +53,16 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * які відносяться до цього поста.
      * </p>
      *
-     * @param userId    Ідентифікатор користувача для якого потрібно знайти деталі постів.
-     * @param pageable  Об'єкт, що містить інформацію про сторінковість
-     *                  (наприклад, номер сторінки та розмір сторінки).
+     * @param userId   Ідентифікатор користувача для якого потрібно знайти деталі постів.
+     * @param pageable Об'єкт, що містить інформацію про сторінковість
+     *                 (наприклад, номер сторінки та розмір сторінки).
      * @return Список мап, де кожна мапа представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
         WHERE
             p.user_id = :userId
         GROUP BY
-            p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
+            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
             u.id, u.name, u.surname, u.username, u.avatar
         """,
             countQuery = "SELECT count(*) FROM posts WHERE user_id = :userId",
@@ -71,17 +81,18 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * які відносяться до цього поста.
      * </p>
      *
-     * @param postId    Ідентифікатор посту, деталі якого потрібно отримати.
+     * @param postId Ідентифікатор посту, деталі якого потрібно отримати.
      * @return Мапа, що представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
         WHERE
             p.id = :postId
         GROUP BY
-            p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
+            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
             u.id, u.name, u.surname, u.username, u.avatar
         """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("postId") Long postId);
+
 
     /**
      * Отримує загальну кількість постів для конкретного користувача в базі даних.
@@ -91,6 +102,24 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = "SELECT count(*) FROM posts WHERE user_id = :userId", nativeQuery = true)
     Long countPostsByUserId(@Param("userId") Long userId);
+
+    /**
+     * Знаходить перший пост, який має більше ніж 4 коментарі.
+     * <p>
+     * Метод використовує нативний SQL-запит для пошуку поста,
+     * до якого додано понад 4 коментарі. Якщо такий пост знайдено,
+     * він повертається. Якщо ні - повертається пусте значення.
+     * </p>
+     *
+     * @return Опціональний об'єкт Post,
+     * який може містити знайдений пост або бути пустим.
+     */
+    @Query(value = """
+            SELECT p.* FROM posts p
+            WHERE (SELECT COUNT(c.id) FROM comments c
+            WHERE c.post_id = p.id) > 4 LIMIT 1
+            """, nativeQuery = true)
+    Optional<Post> findPostWithMoreThanFourComments();
 
 }
 
