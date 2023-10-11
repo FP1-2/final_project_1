@@ -49,6 +49,10 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class PostService {
 
+    private static final String USER_NOT_FOUND = "User not found!";
+
+    private static final String POST_NOT_FOUND = "Post not found!";
+
     private final PostRepository postRepository;
 
     private final LikeRepository likeRepository;
@@ -179,7 +183,7 @@ public class PostService {
         return postRepository.findPostDetailsById(postId)
                 .filter(map -> map.get("id") != null)
                 .map(postFacade::convertToPostResponse)
-                .orElseThrow(() -> new NotFoundException("Post not found!"));
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
     }
 
     /**
@@ -199,9 +203,9 @@ public class PostService {
             BiFunction<AppUser, Post, T> entitySupplier) {
 
         AppUser user = appUserRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
         Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException("Post not found!"));
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
 
         Optional<T> existingEntityOpt = repository.findByUserAndPost(user, post);
 
@@ -261,7 +265,7 @@ public class PostService {
     public Optional<CommentResponse> addComment(Long userId, CommentRequest request) {
         Post post = postRepository
                 .findById(request.getPostId())
-                .orElseThrow(() -> new NotFoundException("Post not found!"));
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
 
         return appUserRepository.findById(userId).map(user -> {
             Comment comment = new Comment();
@@ -284,7 +288,7 @@ public class PostService {
      */
     public PostResponse createPost(PostRequest request, Long userId) {
         AppUser user = appUserRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found!"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
 
         Post savedPost = postRepository
                 .save(postFacade.convertPostRequestToPost(request, user));

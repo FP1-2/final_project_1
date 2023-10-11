@@ -5,6 +5,7 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.exception.ValidationErrorResponse;
 import com.facebook.model.posts.Post;
@@ -455,8 +456,8 @@ class PostControllerTest {
             );
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-            {"type":"Not Found Error","message":"Post not found!"}
-        """
+                        {"type":"Not Found Error","message":"Post not found!"}
+                    """
                     .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
             assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
@@ -464,6 +465,122 @@ class PostControllerTest {
         }
 
         fail("Очікувалося виключення HttpClientErrorException.NotFound");
+    }
+
+    /**
+     * Тестує створення нового поста.
+     * <p>
+     * Сценарії:
+     * 1. Позитивний сценарій: створення нового поста
+     *    з коректними даними.
+     * 2. Негативний сценарій: створення поста без заголовка.
+     * 3. Негативний сценарій: створення поста без зображення.
+     * 4. Негативний сценарій: створення поста з заголовком,
+     *    що перевищує 200 символів.
+     * 5. Негативний сценарій: створення поста без тіла.
+     * </p>
+     */
+    @Test
+    void testCreatePost() {
+        // Позитивний сценарій
+        PostRequest validPostRequest = new PostRequest();
+        validPostRequest.setImageUrl("valid-image-url.jpg");
+        validPostRequest.setTitle("Valid title");
+        validPostRequest.setBody("Valid body content");
+
+        ResponseEntity<PostResponse> validResponse = restTemplate.postForEntity(
+                baseUrl + "api/posts/",
+                new HttpEntity<>(validPostRequest, authHeaders),
+                PostResponse.class
+        );
+
+        assertEquals(HttpStatus.OK, validResponse.getStatusCode());
+        assertNotNull(validResponse.getBody());
+        assertEquals("Valid title", validResponse.getBody().getTitle());
+
+        // Отримання створеного поста
+        Long createdPostId = validResponse.getBody().getId();
+        ResponseEntity<PostResponse> getResponse = restTemplate.exchange(
+                baseUrl + "api/posts/" + createdPostId,
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                PostResponse.class
+        );
+
+        // Перевірка відповіді сервера
+        assertEquals(HttpStatus.OK, getResponse.getStatusCode());
+        PostResponse retrievedPost = getResponse.getBody();
+        assertNotNull(retrievedPost);
+        log.info("retrievedPost: " + retrievedPost);
+        // Перевірка полів на відповідність
+        assertEquals(validPostRequest.getImageUrl(), retrievedPost.getImageUrl());
+        assertEquals(validPostRequest.getTitle(), retrievedPost.getTitle());
+        assertEquals(validPostRequest.getBody(), retrievedPost.getBody());
+
+        // Негативний сценарій: відсутність заголовка
+        PostRequest noTitleRequest = new PostRequest();
+        noTitleRequest.setImageUrl("valid-image-url.jpg");
+        noTitleRequest.setBody("Valid body content");
+        assertBadRequestWithMessage(noTitleRequest, """
+                {"violations":[{"fieldName":"title","message":"The post title cannot be empty."}]}
+                """
+                .strip());
+
+        // Негативний сценарій: відсутність зображення
+        PostRequest noImageUrlRequest = new PostRequest();
+        noImageUrlRequest.setTitle("Valid title");
+        noImageUrlRequest.setBody("Valid body content");
+        assertBadRequestWithMessage(noImageUrlRequest, """
+                {"violations":[{"fieldName":"imageUrl","message":"Post image is mandatory."}]}
+                """
+                .strip());
+
+        // Негативний сценарій: заголовок перевищує 200 символів
+        PostRequest longTitleRequest = new PostRequest();
+        longTitleRequest.setImageUrl("valid-image-url.jpg");
+        longTitleRequest.setTitle("A".repeat(201)); // 201 символ
+        longTitleRequest.setBody("Valid body content");
+        assertBadRequestWithMessage(longTitleRequest, """
+                {"violations":[{"fieldName":"title","message":"The title of the post should not exceed 200 characters."}]}
+                """
+                .strip());
+
+        // Негативний сценарій: відсутність тіла поста
+        PostRequest noBodyRequest = new PostRequest();
+        noBodyRequest.setImageUrl("valid-image-url.jpg");
+        noBodyRequest.setTitle("Valid title");
+        assertBadRequestWithMessage(noBodyRequest, """
+                {"violations":[{"fieldName":"body","message":"The text of the post cannot be empty"}]}
+                """
+                .strip());
+
+    }
+
+    /**
+     * Допоміжний метод для перевірки відповіді
+     * сервера на некоректний запит.
+     * <p>
+     * Якщо сервер відповідає помилкою 400 (Bad Request),
+     * метод перевіряє чи міститься очікуване
+     * повідомлення про помилку
+     * в тілі відповіді.
+     * </p>
+     *
+     * @param request          запит, який буде відправлено на сервер.
+     * @param expectedMessage  очікуване повідомлення про помилку.
+     */
+    private void assertBadRequestWithMessage(PostRequest request, String expectedMessage) {
+        try {
+            restTemplate.postForEntity(
+                    baseUrl + "api/posts/",
+                    new HttpEntity<>(request, authHeaders),
+                    PostResponse.class
+            );
+            fail("Expected HttpClientErrorException.BadRequest");
+        } catch (HttpClientErrorException.BadRequest e) {
+            log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
+            assertTrue(e.getResponseBodyAsString().contains(expectedMessage));
+        }
     }
 
 }

@@ -26,7 +26,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     String POST_DETAILS_SELECT = """
                 SELECT
-                    p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
+                    p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
                     u.id as user_id, u.name, u.surname, u.username, u.avatar,
                     GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
                     GROUP_CONCAT(DISTINCT l.id) AS like_ids,
@@ -59,12 +59,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список мап, де кожна мапа представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-            WHERE
-                p.user_id = :userId
-            GROUP BY
-                p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
-                u.id, u.name, u.surname, u.username, u.avatar
-            """,
+        WHERE
+            p.user_id = :userId
+        GROUP BY
+            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
+            u.id, u.name, u.surname, u.username, u.avatar
+        """,
             countQuery = "SELECT count(*) FROM posts WHERE user_id = :userId",
             nativeQuery = true)
     List<Map<String, Object>> findPostDetailsByUserId(@Param("userId")
@@ -85,13 +85,14 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Мапа, що представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-            WHERE
-                p.id = :postId
-            GROUP BY
-                p.id, p.created_date, p.last_modified_date, p.title, p.body, p.status,
-                u.id, u.name, u.surname, u.username, u.avatar
-            """, nativeQuery = true)
+        WHERE
+            p.id = :postId
+        GROUP BY
+            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
+            u.id, u.name, u.surname, u.username, u.avatar
+        """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("postId") Long postId);
+
 
     /**
      * Отримує загальну кількість постів для конкретного користувача в базі даних.
