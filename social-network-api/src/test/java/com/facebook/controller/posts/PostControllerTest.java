@@ -576,11 +576,13 @@ class PostControllerTest {
                     new HttpEntity<>(request, authHeaders),
                     PostResponse.class
             );
-            fail("Expected HttpClientErrorException.BadRequest");
         } catch (HttpClientErrorException.BadRequest e) {
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
             assertTrue(e.getResponseBodyAsString().contains(expectedMessage));
+            return;
         }
+        fail("Expected HttpClientErrorException.BadRequest");
+
     }
 
 }
