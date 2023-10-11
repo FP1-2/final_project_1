@@ -427,4 +427,43 @@ class PostControllerTest {
         }
     }
 
+    @Test
+    void testGetPostById() {
+        // 1. Сценарій з існуючим postId
+        Long existingPostId = 1L;
+
+        ResponseEntity<PostResponse> responseForExistingPost = restTemplate.exchange(
+                baseUrl + "api/posts/" + existingPostId,
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                PostResponse.class
+        );
+        log.info(responseForExistingPost);
+
+        // Перевірка відповіді сервера для існуючого postId
+        assertEquals(HttpStatus.OK, responseForExistingPost.getStatusCode());
+        assertNotNull(responseForExistingPost.getBody());
+        assertEquals(existingPostId, responseForExistingPost.getBody().getId());
+
+        // 2. Сценарій з неіснуючим postId
+        try {
+            restTemplate.exchange(
+                    baseUrl + "api/posts/9999",
+                    HttpMethod.GET,
+                    new HttpEntity<>(authHeaders),
+                    PostResponse.class
+            );
+        } catch (HttpClientErrorException.NotFound e) {
+            String expectedErrorMessage = """
+            {"type":"Not Found Error","message":"Post not found!"}
+        """
+                    .strip();
+            log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
+            assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
+            return;
+        }
+
+        fail("Очікувалося виключення HttpClientErrorException.NotFound");
+    }
+
 }

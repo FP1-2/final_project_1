@@ -165,14 +165,21 @@ public class PostService {
 
     /**
      * Отримує інформацію про пост за його ID.
+     * <p>
+     * Якщо пост з вказаним ID не знайдено або відсутній ID у відповіді репозиторію,
+     * метод генерує виключення {@link NotFoundException}.
+     * </p>
      *
      * @param postId ID поста, деталі якого потрібно отримати.
      * @return Деталізована інформація про пост
      *         у формі {@link PostResponse}.
+     * @throws NotFoundException якщо пост з вказаним ID не знайдено.
      */
-    public Optional<PostResponse> findPostDetailsById(Long postId) {
+    public PostResponse findPostDetailsById(Long postId) {
         return postRepository.findPostDetailsById(postId)
-                .map(postFacade::convertToPostResponse);
+                .filter(map -> map.get("id") != null)
+                .map(postFacade::convertToPostResponse)
+                .orElseThrow(() -> new NotFoundException("Post not found!"));
     }
 
     /**
