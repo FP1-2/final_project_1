@@ -41,4 +41,5 @@ public class Comment extends AbstractCreatedDate {
         return String.format("Comment{id=%d, User=%s, Post=%s, Content='%s'}",
                 getId(), commentingUser, commentedPost, displayedContent);
     }
+
 }

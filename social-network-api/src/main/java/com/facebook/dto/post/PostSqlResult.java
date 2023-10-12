@@ -12,6 +12,8 @@ public class PostSqlResult {
 
     private Timestamp last_modified_date;
 
+    private String imageUrl;
+
     private String title;
 
     private String body;

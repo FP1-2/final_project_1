@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;
@@ -14,16 +15,25 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "likes")
+@Table(
+        name = "likes",
+        uniqueConstraints = @UniqueConstraint(
+                columnNames = {"user_id", "post_id"}
+        )
+)
 @EqualsAndHashCode(callSuper = true)
 public class Like extends AbstractCreatedDate {
 
     @ManyToOne
-    @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "user_id",
+            referencedColumnName = "id",
+            nullable = false)
     private AppUser user;
 
     @ManyToOne
-    @JoinColumn(name = "post_id", referencedColumnName = "id", nullable = false)
+    @JoinColumn(name = "post_id",
+            referencedColumnName = "id",
+            nullable = false)
     private Post post;
 
     @Override

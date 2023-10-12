@@ -19,5 +19,16 @@ public class ValidationErrorResponse implements SignupResponse {
     public static class Violation {
         private final String fieldName;
         private final String message;
+
+        public Violation() {
+            this.fieldName = null;
+            this.message = null;
+        }
+
+        public Violation(String fieldName, String message) {
+            this.fieldName = fieldName;
+            this.message = message;
+        }
     }
+
 }

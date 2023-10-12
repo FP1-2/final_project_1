@@ -20,9 +20,17 @@ public class GlobalExceptionHandler {
 
     private static final String DUPLICATE_ENTRY = "Duplicate entry '";
 
-    // Повертає клієнту JSON з не валідними полями, якщо такі є.
-    // Обробляє контролер реєстрації /auth/signup інструкцією @Valid.
-    // Змінити параметри валідації можна у DTO AppUserRequest
+    /**
+     * Оброблює винятки валідації для запитів,
+     * де дані проходять валідацію за допомогою @Valid.
+     * Якщо з'являються невалідні поля, повертає клієнту JSON
+     * з інформацією про ці поля.
+     *
+     * @param ex - виняток, що містить інформацію
+     *             про помилки валідації.
+     * @return ValidationErrorResponse - об'єкт,
+     *         який містить інформацію про невалідні поля.
+     */
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ResponseBody
@@ -61,8 +69,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleAlreadyExistsException(AlreadyExistsException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Conflict Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<Map<String, Object>> handleRegistrationException(RegistrationException ex) {
+    public ResponseEntity<Map<String, Object>>
+    handleRegistrationException(RegistrationException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("type", "Registration Error");
         body.put("message", ex.getMessage());
@@ -71,13 +90,34 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<Map<String, Object>>
+    handleRuntimeException(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         log.warn(ex.getMessage());
         body.put("type", "Internal Server Error");
         body.put("message", "An internal error occurred. Please try again later.");
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Unauthorized Access Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleNotFoundException(NotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Not Found Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
@@ -98,4 +138,5 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
+
 }
