@@ -52,4 +52,19 @@ public class FriendsService {
                 });
     }
 
+    public void deleteFriend(Long userId, Long friendId) {
+        friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
+                friendsRepository::delete,
+                () -> {
+                    throw new NotFoundException("Friends pair not found");
+                }
+        );
+        friendsRepository.findFriendsByUserIdAndFriendId(friendId, userId).ifPresentOrElse(
+                friendsRepository::delete,
+                () -> {
+                    throw new NotFoundException("Friends pair not found");
+                }
+        );
+    }
+
 }

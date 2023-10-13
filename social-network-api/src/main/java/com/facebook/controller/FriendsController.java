@@ -39,4 +39,14 @@ public class FriendsController {
         return ResponseEntity.ok().build();
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<FriendsResponse> deleteFriend(@RequestBody FriendsRequest request) {
+        Long userId = currentUserService.getCurrentUserId();
+        friendsService.deleteFriend(
+                userId,
+                request.getFriendId()
+        );
+        return ResponseEntity.ok().build();
+    }
+
 }
