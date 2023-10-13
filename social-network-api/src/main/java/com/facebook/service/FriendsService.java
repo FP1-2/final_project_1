@@ -38,10 +38,13 @@ public class FriendsService {
                 (f) -> {
                     if (status) {
                         f.setStatus(FriendsStatus.APPROVED);
+                        friendsRepository.save(f);
+
                         friendsRepository.save(new Friends(f.getFriend(), f.getUser(),FriendsStatus.APPROVED));
                     }
                     else {
                         f.setStatus(FriendsStatus.REJECTED);
+                        friendsRepository.save(f);
                     }
                 },
                 () -> {

@@ -37,12 +37,6 @@ public class FriendsController {
                 request.getStatus()
         );
         return ResponseEntity.ok().build();
-//        FriendsResponse response = facade.toFriendsResponse(
-//        );
-//        friendsService.friendsStatus(userId, friendId, status)
-//                .map(ResponseEntity::ok)
-//                .orElse(ResponseEntity.notFound().build());
     }
 
-    //TODO check updateStatus and create deleteFriend
 }
