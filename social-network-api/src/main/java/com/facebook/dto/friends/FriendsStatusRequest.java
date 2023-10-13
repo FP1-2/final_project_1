@@ -1,6 +1,5 @@
 package com.facebook.dto.friends;
 
-import com.facebook.model.friends.FriendsStatus;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
@@ -11,5 +10,5 @@ public class FriendsStatusRequest {
     private Long userId;
 
     @NotNull
-    private FriendsStatus status;
+    private Boolean status;
 }

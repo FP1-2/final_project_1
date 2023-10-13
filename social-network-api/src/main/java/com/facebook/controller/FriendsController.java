@@ -6,7 +6,6 @@ import com.facebook.dto.friends.FriendsStatusRequest;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.FriendsService;
-import com.facebook.utils.EX;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,15 +25,24 @@ public class FriendsController {
     public ResponseEntity<FriendsResponse> sendFriendRequest(@RequestBody FriendsRequest request) {
         Long userId = currentUserService.getCurrentUserId();
         FriendsResponse response = facade.toFriendsResponse(friendsService.sendFriendRequest(userId, request.getFriendId()));
-        return ResponseEntity.ok().build();
+        return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/{userId}/{status}")
-    public ResponseEntity<?> friendsStatus(@RequestBody FriendsStatusRequest request) {
+    @PutMapping("/update-status")
+    public ResponseEntity<FriendsResponse> friendsStatus(@RequestBody FriendsStatusRequest request) {
         Long friendId = currentUserService.getCurrentUserId();
+        friendsService.changeFriendsStatus(
+                request.getUserId(),
+                friendId,
+                request.getStatus()
+        );
+        return ResponseEntity.ok().build();
+//        FriendsResponse response = facade.toFriendsResponse(
+//        );
 //        friendsService.friendsStatus(userId, friendId, status)
 //                .map(ResponseEntity::ok)
 //                .orElse(ResponseEntity.notFound().build());
-        throw EX.NI;
     }
+
+    //TODO check updateStatus and create deleteFriend
 }

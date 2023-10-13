@@ -7,7 +7,6 @@ import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
-import com.facebook.utils.EX;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,15 +27,26 @@ public class FriendsService {
                 .orElseThrow(() -> new NotFoundException("Friend not found!"));
         Optional<Friends> duplicates = friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId);
         if(duplicates.isPresent()) {
-            throw new AlreadyExistsException("This pair of friends already exist");
+            throw new AlreadyExistsException("Friend request already sent");
         }
         Friends friendRequest = new Friends(user, friend, FriendsStatus.PENDING);
         return friendsRepository.save(friendRequest);
     }
 
-    public Friends changeFriendsStatus(Long userId, Long friendId, FriendsStatus status) {
-        //TODO maybe status should be boolean
-        throw EX.NI;
+    public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {
+        friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
+                (f) -> {
+                    if (status) {
+                        f.setStatus(FriendsStatus.APPROVED);
+                        friendsRepository.save(new Friends(f.getFriend(), f.getUser(),FriendsStatus.APPROVED));
+                    }
+                    else {
+                        f.setStatus(FriendsStatus.REJECTED);
+                    }
+                },
+                () -> {
+                    throw new NotFoundException("Friends pair not found");
+                });
     }
 
 }

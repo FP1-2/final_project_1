@@ -1,10 +1,14 @@
 package com.facebook.facade;
 
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.dto.friends.*;
+import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
