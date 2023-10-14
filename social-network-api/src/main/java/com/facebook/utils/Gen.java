@@ -247,7 +247,7 @@ public class Gen {
         appUsers1.forEach(user -> {
             // Для кожного користувача генеруємо від 1 до 10 постів
             IntStream
-                    .rangeClosed(1, MathUtils.random(1, 10))
+                    .rangeClosed(1, MathUtils.random(4, 10))
                     .forEach(ignored -> {
                         Post post = new Post();
                         post.setStatus(getRandomPostStatus());

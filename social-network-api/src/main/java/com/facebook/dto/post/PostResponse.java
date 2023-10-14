@@ -14,6 +14,8 @@ public class PostResponse {
 
     private LocalDateTime last_modified_date;
 
+    private String imageUrl;
+
     private String title;
 
     private String body;
