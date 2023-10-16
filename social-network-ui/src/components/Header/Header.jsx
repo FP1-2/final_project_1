@@ -1,5 +1,6 @@
 import React from "react";
-
+import { useState } from "react";
+import { useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styles from "./Header.module.scss";
 import facebookIcon from "../../assets/facebook_icon.png";
@@ -9,14 +10,27 @@ import MessagesIcon from "../../assets/messagesIcon.png";
 import ProfileIcon from "../../assets/profileIcon.png";
 import FavoritsIcon from "../../assets/favoriteIcon.png";
 import Cookie from "js-cookie";
-import LogInForm from "../LogInForm/LogInForm";
+import LoginForm from "../LoginForm/LoginForm";
 
-function logout() {
-  localStorage.clear();
-  Cookie.remove("token");
-}
+import { loginThunk } from "../../redux-toolkit/login/thunks";
+import {isTokenInLocalStorage, deleteTokenFromLocalStorage, deleteUserFromLocalStorage} from '../../utils/localStorageHelper';
+
+
 function Header() {
-  const isAuthorized =  localStorage.getItem('token');
+  const [isAuthorized, setIsAuthorized] = useState(isTokenInLocalStorage());
+  const dispatch = useDispatch();
+  const logout=()=> {
+    deleteTokenFromLocalStorage();
+    deleteUserFromLocalStorage();
+    Cookie.remove("authToken");
+    setIsAuthorized(false);
+  };
+  
+  const handleSubmit = (values) => {
+
+    dispatch(loginThunk(values));
+    setIsAuthorized(true);
+  };
   if (isAuthorized){
     return (
       <header className={styles.header}>
@@ -79,7 +93,9 @@ function Header() {
            
            
       </header>
-      <LogInForm/>
+      <div className={styles.loginFormContainer}>
+        <LoginForm handleSubmit={handleSubmit} />
+      </div>
     </>
   );
 }
