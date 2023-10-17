@@ -34,7 +34,6 @@ class PostTest {
 
     static final String IMAGE = "image.jpg";
 
-
     @Autowired
     private TestEntityManager tem;
 
@@ -96,12 +95,8 @@ class PostTest {
      */
     @Test
     void dateSetting() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.DRAFT);
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -124,12 +119,8 @@ class PostTest {
     @Test
     void dateModification() {
         // 1. Створення і збереження поста
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.DRAFT);
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -162,6 +153,7 @@ class PostTest {
         post.setStatus(PostStatus.DRAFT);
         post.setUser(createAndSaveTestUser());
         post.setImageUrl(IMAGE);
+        post.setType(PostType.POST);
 
         assertThrows(ConstraintViolationException.class,
                 () -> tem.persistAndFlush(post));
@@ -172,12 +164,8 @@ class PostTest {
      */
     @Test
     void testPostStatusDraft() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.DRAFT);
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -190,12 +178,8 @@ class PostTest {
      */
     @Test
     void testPostStatusPublished() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.PUBLISHED);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.PUBLISHED);
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -208,12 +192,8 @@ class PostTest {
      */
     @Test
     void testPostStatusArchived() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.ARCHIVED);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.ARCHIVED);
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -226,17 +206,31 @@ class PostTest {
      */
     @Test
     void testPostStatusRejected() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.REJECTED);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
+        Post post = createPost(createAndSaveTestUser(),
+                PostStatus.REJECTED);
 
         Post savedPost = tem.persistAndFlush(post);
 
         assertThat(savedPost.getStatus())
                 .isEqualTo(PostStatus.REJECTED);
+    }
+
+    /**
+     * Створює та повертає новий об'єкт типу "Post".
+     *
+     * @param user користувач, який створює повідомлення
+     * @param postStatus статус повідомлення
+     * @return новий об'єкт типу "Post"
+     */
+    private Post createPost(AppUser user, PostStatus postStatus){
+        Post post = new Post();
+        post.setTitle(TITLE);
+        post.setBody(BODY);
+        post.setStatus(postStatus);
+        post.setUser(user);
+        post.setImageUrl(IMAGE);
+        post.setType(PostType.POST);
+        return post;
     }
 
 }

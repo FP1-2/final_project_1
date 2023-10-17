@@ -9,6 +9,7 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Data;
@@ -21,7 +22,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "posts")
 @EqualsAndHashCode(callSuper = true)
 public class Post extends AbstractEntity {
-    @NotBlank
+
     @Column(name = "image_url")
     private String imageUrl;
 
@@ -43,6 +44,21 @@ public class Post extends AbstractEntity {
     @JoinColumn(name = "user_id", referencedColumnName = "id", nullable = false)
     private AppUser user;
 
+    @NotNull
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private PostType type;
+
+    @Column(name = "original_post_id")
+    private Long originalPostId;
+
+    @AssertTrue(message = "Invalid combination of type and originalPostId")
+    public boolean isValidCombination() {
+        if (type == PostType.POST && originalPostId != null) return false;
+        if (type == PostType.REPOST && originalPostId == null) return false;
+        return true;
+    }
+
     @Override
     public String toString() {
         String text = body == null ? null :
@@ -51,8 +67,8 @@ public class Post extends AbstractEntity {
                 String.format("User{id=%d, Name=%s, Surname=%s, Username=%s, Avatar=%s}",
                         user.getId(), user.getName(), user.getSurname(),
                         user.getUsername(), user.getAvatar());
-        return String.format("Post{id=%d, ImageUrl=%s, Title=%s, Body=%s, Status=%s, %s}",
-                getId(), imageUrl, title, text, status, userFieldsForPost);
+        return String.format("Post{id=%d, ImageUrl=%s, Title=%s, Body=%s, Status=%s, Type=%s, OriginalPostId=%s, %s}",
+                getId(), imageUrl, title, text, status, type, originalPostId, userFieldsForPost);
     }
 
 }

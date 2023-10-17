@@ -13,17 +13,18 @@ import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.Repost;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-import com.facebook.repository.posts.RepostRepository;
 import com.facebook.repository.posts.UserAndPostRepository;
+import com.facebook.utils.EX;
+
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.function.BiFunction;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -40,9 +41,8 @@ import org.springframework.stereotype.Service;
  * коментування та репости.
  * <p>
  * Цей клас використовує {@link PostRepository}, {@link LikeRepository},
- * {@link CommentRepository}, {@link RepostRepository} .
+ * {@link CommentRepository}.
  * </p>
- *
  */
 @Log4j2
 @Service
@@ -58,8 +58,6 @@ public class PostService {
     private final LikeRepository likeRepository;
 
     private final CommentRepository commentRepository;
-
-    private final RepostRepository repostRepository;
 
     private final AppUserRepository appUserRepository;
 
@@ -114,9 +112,9 @@ public class PostService {
      * з пагінацією та сортуванням.
      *
      * @param postId ID поста, для якого потрібно отримати коментарі.
-     * @param page номер сторінки пагінації.
-     * @param size розмір сторінки пагінації.
-     * @param sort рядок сортування.
+     * @param page   номер сторінки пагінації.
+     * @param size   розмір сторінки пагінації.
+     * @param sort   рядок сортування.
      * @return сторінка коментарів у форматі DTO.
      */
     public Page<CommentDTO> getCommentsByPostId(Long postId,
@@ -144,10 +142,10 @@ public class PostService {
      * </p>
      *
      * @param userId ID користувача, публікації якого потрібно отримати.
-     * @param page Номер сторінки для пагінації.
-     * @param size Кількість елементів на одній сторінці.
-     * @param sort Критерії сортування у форматі "property,direction"
-     *             (наприклад, "date,desc").
+     * @param page   Номер сторінки для пагінації.
+     * @param size   Кількість елементів на одній сторінці.
+     * @param sort   Критерії сортування у форматі "property,direction"
+     *               (наприклад, "date,desc").
      * @return Сторінка з деталізованою інформацією про публікації користувача.
      */
     public Page<PostResponse> findPostDetailsByUserId(Long userId,
@@ -176,12 +174,16 @@ public class PostService {
      *
      * @param postId ID поста, деталі якого потрібно отримати.
      * @return Деталізована інформація про пост
-     *         у формі {@link PostResponse}.
+     * у формі {@link PostResponse}.
      * @throws NotFoundException якщо пост з вказаним ID не знайдено.
      */
     public PostResponse findPostDetailsById(Long postId) {
+        Optional<Map<String, Object>> result = postRepository.findPostDetailsById(postId);
+        result.ifPresent(map -> {
+            log.info("SQL Result: " + map);
+        });
         return postRepository.findPostDetailsById(postId)
-                .filter(map -> map.get("id") != null)
+                .filter(map -> map.get("post_id") != null)
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
     }
@@ -190,9 +192,9 @@ public class PostService {
      * Здійснює взаємодію користувача із постом (наприклад, лайк чи репост).
      * Якщо взаємодія вже існує, вона видаляється, інакше - створюється нова.
      *
-     * @param userId Ідентифікатор користувача, який здійснює взаємодію.
-     * @param postId Ідентифікатор поста, над яким здійснюється взаємодія.
-     * @param repository Репозиторій для взаємодії (може бути для лайків, репостів тощо).
+     * @param userId         Ідентифікатор користувача, який здійснює взаємодію.
+     * @param postId         Ідентифікатор поста, над яким здійснюється взаємодія.
+     * @param repository     Репозиторій для взаємодії (може бути для лайків, репостів тощо).
      * @param entitySupplier Функція для створення нової взаємодії.
      * @return Інформація про статус взаємодії: чи було додано чи видалено дію.
      */
@@ -246,18 +248,13 @@ public class PostService {
      * @return Інформація про статус репосту: чи було зроблено чи видалено репост.
      */
     public Optional<ActionResponse> repost(Long userId, Long postId) {
-        return handleAction(userId, postId, repostRepository, (user, post) -> {
-            Repost repost = new Repost();
-            repost.setUser(user);
-            repost.setPost(post);
-            return repost;
-        });
+        throw EX.NI;
     }
 
     /**
      * Додає коментар до посту від імені користувача.
      *
-     * @param userId Ідентифікатор користувача, який залишає коментар.
+     * @param userId  Ідентифікатор користувача, який залишає коментар.
      * @param request Запит на додавання коментаря,
      *                який містить ідентифікатор поста та текст коментаря.
      * @return Інформація про доданий коментар у формі {@link CommentResponse}.
@@ -282,7 +279,7 @@ public class PostService {
      *
      * @param request запит на створення поста,
      *                що містить всю необхідну інформацію для створення поста.
-     * @param userId ідентифікатор користувача, який створює пост.
+     * @param userId  ідентифікатор користувача, який створює пост.
      * @return об'єкт {@link PostResponse} з даними створеного поста.
      * @throws NotFoundException якщо користувач або деталі поста не знайдені.
      */

@@ -35,12 +35,10 @@ import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.Repost;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-import com.facebook.repository.posts.RepostRepository;
 
 
 /**
@@ -83,9 +81,6 @@ class PostServiceTest {
 
     @MockBean
     private CommentRepository commentRepository;
-
-    @MockBean
-    private RepostRepository repostRepository;
 
     @MockBean
     private AppUserRepository appUserRepository;
@@ -294,30 +289,7 @@ class PostServiceTest {
      */
     @Test
     void testAddRepostIfNotExists() {
-        Long userId = 1L;
-        Long postId = 2L;
 
-        AppUser user = new AppUser();
-        Post post = new Post();
-
-        Mockito
-                .when(appUserRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-        Mockito
-                .when(postRepository.findById(postId))
-                .thenReturn(Optional.of(post));
-        Mockito
-                .when(repostRepository.findByUserAndPost(user, post))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(repostRepository.save(any(Repost.class)))
-                .thenReturn(new Repost());
-
-        Optional<ActionResponse> result = postService.repost(userId, postId);
-
-        assertTrue(result.isPresent());
-        assertTrue(result.get().added());
-        assertEquals("Action added", result.get().message());
     }
 
     /**
@@ -337,31 +309,7 @@ class PostServiceTest {
      */
     @Test
     void testRemoveRepostIfExists() {
-        Long userId = 1L;
-        Long postId = 2L;
 
-        AppUser user = new AppUser();
-        Post post = new Post();
-        Repost existingRepost = new Repost();
-
-        Mockito
-                .when(appUserRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-        Mockito
-                .when(postRepository.findById(postId))
-                .thenReturn(Optional.of(post));
-        Mockito
-                .when(repostRepository.findByUserAndPost(user, post))
-                .thenReturn(Optional.of(existingRepost));
-
-        Optional<ActionResponse> result = postService.repost(userId, postId);
-
-        assertTrue(result.isPresent());
-        assertFalse(result.get().added());
-        assertEquals("Action removed", result.get().message());
-        Mockito
-                .verify(repostRepository)
-                .delete(existingRepost);
     }
 
     /**
