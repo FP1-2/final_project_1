@@ -1,5 +1,6 @@
 import React from 'react';
 import {Route, Routes} from 'react-router-dom';
+import LoginPage from "./pages/LoginPage/LoginPage";
 import FavoritsPage from './pages/FavoritsPage/FavoritsPage';
 import MessagesPage from './pages/MessagesPage/MessagesPage';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
@@ -11,6 +12,7 @@ import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistr
 function AppRoutes() {
   return (
     <Routes>
+      <Route path="/login" element={<LoginPage/>} />
       <Route path="/" element={<PostsPage/>} />
       <Route path="/messages" element={<MessagesPage/>} />
       <Route path="/favorites" element={<FavoritsPage/>}/>
