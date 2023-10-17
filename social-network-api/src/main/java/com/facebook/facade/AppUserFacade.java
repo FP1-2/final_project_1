@@ -1,5 +1,6 @@
 package com.facebook.facade;
 
+import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.dto.appuser.AppUserRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
@@ -7,6 +8,8 @@ import com.facebook.model.AppUser;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
@@ -25,18 +28,18 @@ public class AppUserFacade {
         return modelMapper.map(dto, AppUser.class);
     }
 
-    public AppUserRequest convertToCustomerRequest(AppUser customer) {
-        return modelMapper.map(customer, AppUserRequest.class);
+    public AppUser convertToAppUser(AppUserRequest appUserRequest) {
+        return modelMapper.map(appUserRequest, AppUser.class);
     }
 
-    public AppUser convertToAppUser(AppUserRequest customerRequest) {
-        return modelMapper.map(customerRequest, AppUser.class);
+    public void updateAppUserFromEditRequest(AppUser appUser, AppUserEditRequest userEditReq) {
+        Optional.ofNullable(userEditReq.getName()).ifPresent(appUser::setName);
+        Optional.ofNullable(userEditReq.getSurname()).ifPresent(appUser::setSurname);
+        Optional.ofNullable(userEditReq.getUsername()).ifPresent(appUser::setUsername);
+        Optional.ofNullable(userEditReq.getEmail()).ifPresent(appUser::setEmail);
+        Optional.ofNullable(userEditReq.getAddress()).ifPresent(appUser::setAddress);
+        Optional.ofNullable(userEditReq.getAvatar()).ifPresent(appUser::setAvatar);
+        Optional.ofNullable(userEditReq.getHeaderPhoto()).ifPresent(appUser::setHeaderPhoto);
+        Optional.ofNullable(userEditReq.getDateOfBirth()).ifPresent(appUser::setDateOfBirth);
     }
-
-    public void updateToAppUser(AppUser existingAppUser, AppUserRequest appUserRequest) {
-        existingAppUser.setName(appUserRequest.getName());
-        existingAppUser.setEmail(appUserRequest.getEmail());
-        //TODO інші поля для оновлення AppUser
-    }
-
 }

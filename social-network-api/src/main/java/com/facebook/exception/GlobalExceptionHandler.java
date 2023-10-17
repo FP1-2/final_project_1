@@ -61,8 +61,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    @ExceptionHandler(AlreadyExistsException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleAlreadyExistsException(AlreadyExistsException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Conflict Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
     @ExceptionHandler(RegistrationException.class)
-    public ResponseEntity<Map<String, Object>> handleRegistrationException(RegistrationException ex) {
+    public ResponseEntity<Map<String, Object>>
+    handleRegistrationException(RegistrationException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("type", "Registration Error");
         body.put("message", ex.getMessage());
@@ -71,12 +82,34 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<Map<String, Object>> handleRuntimeException(RuntimeException ex) {
+    public ResponseEntity<Map<String, Object>>
+    handleRuntimeException(RuntimeException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
+        log.warn(ex.getMessage());
         body.put("type", "Internal Server Error");
-        body.put("message", ex.getMessage());
+        body.put("message", "An internal error occurred. Please try again later.");
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(UnauthorizedAccessException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Unauthorized Access Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleNotFoundException(NotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Not Found Error");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(UserNotFoundException.class)
