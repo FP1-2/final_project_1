@@ -64,7 +64,7 @@ const ProfilePage = () => {
           </div>
           <div className={style.infoNameWrapper}>
             <h2 className={style.infoName}>Ірина Надточий</h2>
-            <Link to='friends' className={style.infoFriends} href="">Friends: </Link>
+            <Link to='friends' onClick={clickLinkFriends} className={style.infoFriends} href="">Friends: </Link>
           </div>
           <button className={style.infoBtnEdit}>
             <Pencil className={style.infoBtnPencil} />

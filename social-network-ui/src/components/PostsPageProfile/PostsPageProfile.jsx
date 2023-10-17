@@ -1,31 +1,8 @@
 import React from "react";
 import style from "./PostsPageProfile.module.scss";
-// import classnames from "classnames";
-// import PropTypes from "prop-types";
 import PostProfile from "../PostProfile/PostProfile";
 
 const PostPageProfile = () => {
-  // const [fixed, setFixed] = useState(false);
-
-  // const posts = useRef();
-  
-  // const handleScroll = () => {
-  //   const postsTop=posts.current.offsetTop;
-  //   const scrollTop=Math.round(window.scrollY);
-
-  //   if(scrollTop>postsTop){
-  //     setFixed(true);
-  //   }else{
-  //     setFixed(false);
-  //   }
-  // };
-
-  // useEffect(() => {
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => window.removeEventListener('scroll', handleScroll);
-  // }, []);
-
-  // const classNames=classnames(style.profileBodyWrapper,{[style.fix]:fixed });
 
   return (
     <div className={style.profileBodyWrapper}>
@@ -46,19 +23,13 @@ const PostPageProfile = () => {
             <button className={style.profileAddPostBtn} >Add post</button>
           </div>
           <ul className={style.profilePosts}>
-            <li className={style.profilePost}><PostProfile /></li>
-            <li className={style.profilePost}><PostProfile /></li>
-            <li className={style.profilePost}><PostProfile /></li>
+            <li className={style.profilePost}><PostProfile/></li>
+            <li className={style.profilePost}><PostProfile/></li>
+            <li className={style.profilePost}><PostProfile/></li>
           </ul>
         </div>
       </div>
     </div>
   );
 };
-// FriendProfile.propTypes = {
-// //   file: PropTypes.object
-// };
-// FriendProfile.defaultProps = {
-// //   file: {}
-// };
 export default PostPageProfile;
