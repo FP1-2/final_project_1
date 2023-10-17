@@ -1,0 +1,359 @@
+.profilePage {
+    position: relative;
+
+    .headerImgWrapper {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        box-sizing: border-box;
+        position: relative;
+
+        .headerImg {
+            width: 940px;
+            height: 350px;
+            object-fit: cover;
+            border-bottom-left-radius: 5px;
+            border-bottom-right-radius: 5px;
+        }
+
+        .headerBtn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 5px;
+            height: 35px;
+            font-size: 15px;
+            font-weight: 600;
+            color: white;
+            line-height: 1.3333;
+            background-color: rgba(0, 0, 0, 0.4);
+            border: none;
+            border-radius: 5px;
+            position: absolute;
+            top: 300px;
+            right: 330px;
+            padding: 0 30px;
+
+            &:hover {
+                cursor: pointer;
+                background-color: rgba(0, 0, 0, 0.6);
+            }
+
+            .headerBtnCamera {
+                width: 20px;
+                height: 20px;
+            }
+        }
+    }
+
+    .infoWrapper {
+        box-sizing: border-box;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        .info {
+            width: 940px;
+            display: flex;
+            align-items: flex-end;
+            height: 160px;
+
+            &::after {
+                content: "";
+                width: 940px;
+                border-bottom: 1px solid #ccced2;
+                position: absolute;
+            }
+
+            .infoAvatarWrapper {
+                position: absolute;
+                top: 320px;
+                left: 340px;
+
+                .infoAvatar {
+                    width: 168px;
+                    height: 168px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                    border: 5px solid white;
+                }
+
+                .infoAvatarBtn {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    width: 36px;
+                    height: 36px;
+                    border: none;
+                    border-radius: 50%;
+                    background-color: #E4E6EB;
+                    position: absolute;
+                    top: 120px;
+                    right: 5px;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d5d8de;
+                    }
+
+                    .infoAvatarBtnCamera {
+                        width: 20px;
+                        height: 20px;
+                    }
+                }
+            }
+
+            .infoNameWrapper {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+
+                padding: 32px 10px 35px 270px;
+
+                .infoName {
+                    font-weight: 700;
+                    font-size: 32px;
+                    color: #050505;
+                    width: 300px;
+                    flex-wrap: wrap;
+                    margin: 0;
+                }
+
+                .infoFriends {
+                    padding-top: 13px;
+                    text-decoration: none;
+                    font-weight: 400;
+                    font-size: 15px;
+                    line-height: 1.3333;
+                    color: #65676B;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .infoBtnEdit {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                padding: 0 15px;
+                height: 36px;
+                min-width: 217px;
+                font-size: 15px;
+                line-height: 1.3333;
+                font-weight: 600;
+                color: #050505;
+                background-color: #E4E6EB;
+                border: none;
+                border-radius: 5px;
+                margin-left: 100px;
+                margin-bottom: 65px;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #d5d8de;
+                }
+
+                .infoBtnPencil {
+                    width: 20px;
+                    height: 20px;
+                }
+            }
+        }
+    }
+
+    .linksListWrapper {
+        display: flex;
+        justify-content: center;
+        box-sizing: border-box;
+        margin-top: 5px;
+
+        .linksList {
+            display: flex;
+            justify-content: flex-start;
+            width: 940px;
+            margin: 0;
+            padding: 0;
+
+            .linksListElem {
+                list-style: none;
+                height: 45px;
+                padding-left: 16px;
+                padding-right: 16px;
+                min-width: 120px;
+                border-radius: 5px;
+
+                &:hover {
+                    background-color: #f2f2f2;
+                }
+
+
+                .linksListElemLink {
+                    text-decoration: none;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    font-size: 15px;
+                    color: #65676B;
+                }
+            }
+
+            .linksListElemClick {
+                list-style: none;
+                height: 45px;
+                padding-left: 16px;
+                padding-right: 16px;
+                min-width: 120px;
+                border-radius: 5px;
+                position: relative;
+
+                &::after {
+                    content: "";
+                    position: absolute;
+                    left: 0;
+                    border-bottom: 3px solid #0866FF;
+                    width: 100%;
+                }
+
+                .linksListElemLinkClick {
+                    text-decoration: none;
+                    width: 100%;
+                    height: 100%;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    font-size: 15px;
+                    color: #0866FF;
+                }
+            }
+        }
+    }
+
+    .profileBodyWrapper {
+        background-color: #F0F2F5;
+        height: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding-top: 15px;
+        box-sizing: border-box;
+
+        .profileBody {
+            display: grid;
+            grid-auto-flow: column;
+            justify-content: center;
+            gap: 16px;
+            width: 940px;
+
+            .profileInformation {
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                width: 360px;
+                min-height: 200px;
+                max-height: 250px;
+                background-color: white;
+                border-radius: 5px;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+                padding: 20px 16px 15px;
+
+                .profileInformationTitile {
+                    font-weight: 700;
+                    font-size: 20px;
+                    color: #050505;
+                }
+
+                .profileInformationList {
+                    padding: 0;
+
+                    .profileInformationElem {
+                        list-style: none;
+                        margin-bottom: 16px;
+                    }
+                }
+
+                .profileInformationBtn {
+                    width: 100%;
+                    text-align: center;
+                    padding: 8px 0;
+                    font-size: 15px;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    color: #050505;
+                    background-color: #E4E6EB;
+                    border: none;
+                    border-radius: 5px;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d5d8de;
+                    }
+
+                }
+
+            }
+
+            .profileBodyPostsWrapper {
+                width: 500px;
+
+
+                .profileAddPost {
+                    padding: 12px 16px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    gap: 8px;
+                    background-color: white;
+                    width: 100%;
+                    height: 64px;
+                    border-radius: 5px;
+                    box-sizing: border-box;
+                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+                    .profileAddPostImg {
+                        width: 40px;
+                        height: 40px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                    }
+
+                    .profileAddPostBtn {
+                        width: 100%;
+                        padding: 8px 12px;
+                        border: none;
+                        border-radius: 20px;
+                        font-size: 17px;
+                        line-height: 1.3333;
+                        color: #65676B;
+                        background-color: #E4E6EB;
+                        text-align: left;
+
+                        &:hover {
+                            cursor: pointer;
+                            background-color: #d5d8de;
+                        }
+                    }
+                }
+
+                .profilePosts {
+                    padding: 0;
+                    box-sizing: border-box;
+
+                    .profilePost {
+                        list-style: none;
+                        margin-bottom: 16px;
+                    }
+                }
+            }
+        }
+    }
+}

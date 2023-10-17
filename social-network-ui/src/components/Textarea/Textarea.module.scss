@@ -1,0 +1,36 @@
+.textareaWrapper{
+    position: relative;
+
+    .textarea {
+        box-sizing: border-box;
+        max-height: 210px;
+        padding: 0 16px;
+        border: none;
+        text-align: left;
+        font-size: 24px;
+        resize: none;
+    
+        &::placeholder {
+            font-size: 24px;
+        }
+    
+        &:focus {
+            outline: none;
+        }
+    }
+    .errorNames {
+        font-size: 10px;
+        color: red;
+        margin: 0;
+        bottom: 5px;
+        left: 16px;
+        display: block;
+        position: absolute;
+    }
+    
+    .errorDisplayNone {
+        display: none;
+    }
+    
+
+}

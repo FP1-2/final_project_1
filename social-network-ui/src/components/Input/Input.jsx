@@ -32,27 +32,33 @@ const Input = (props) => {
   return (
     <div className={style.inputWrapper}>
 
-      {props.type === "text" ?
+      {props.type === "text" && props.modal === "editProfile" ?
         <div className={style.textlInputWrapper}>
-          <input className={style.textInput} {...field} {...props} />
-          <p className={error && touched ? style.errorNames : style.errorDisplayNone} >{error}</p>
+          <input className={style.modalMainInputEditProfile} {...field} {...props} />
+          <p className={error ? style.errorNames : style.errorDisplayNone} >{error}</p>
         </div>
-        : props.type === "password" ?
-          <div className={style.passworslInputWrapper}>
-            <input className={style.input} {...field} {...props} type={inputType} />
-            <button onClick={handleClickOpenEyeBtn} type="button" className={style.btnEye}>
-              <OpenEye className={openEyeState ? style.btnCloseEye : style.btnOpenEye} />
-            </button>
-
-            <button onClick={handleClickCloseEyeBtn} type="button" className={style.btnEye}>
-              <CloseEye className={closeEyeState ? style.btnCloseEye : style.btnOpenEye} />
-            </button>
-            <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
+        : props.type === "text" && props.modal === "" ?
+          <div className={style.textlInputWrapper}>
+            <input className={style.textInput} {...field} {...props} />
+            <p className={error && touched ? style.errorNames : style.errorDisplayNone} >{error}</p>
           </div>
-          : <>
-            <input className={style.input} {...field} {...props} />
-            <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
-          </>}
+          : props.type === "password" ?
+            <div className={style.passworslInputWrapper}>
+              <input className={style.input} {...field} {...props} type={inputType} />
+              <button onClick={handleClickOpenEyeBtn} type="button" className={style.btnEye}>
+                <OpenEye className={openEyeState ? style.btnCloseEye : style.btnOpenEye} />
+              </button>
+
+              <button onClick={handleClickCloseEyeBtn} type="button" className={style.btnEye}>
+                <CloseEye className={closeEyeState ? style.btnCloseEye : style.btnOpenEye} />
+              </button>
+              <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
+            </div>
+
+            : <>
+              <input className={style.input} {...field} {...props} />
+              <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
+            </>}
     </div>
   );
 };
@@ -60,11 +66,13 @@ const Input = (props) => {
 Input.propTypes = {
   name: PropTypes.string.isRequired,
   text: PropTypes.string,
-  type: PropTypes.string.isRequired
+  type: PropTypes.string.isRequired,
+  modal: PropTypes.string,
 };
 
 Input.defaultProps = {
   text: "",
+  modal: ""
 };
 
 export default memo(Input);

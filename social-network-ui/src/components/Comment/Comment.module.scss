@@ -1,0 +1,35 @@
+.commentWrapper{
+    box-sizing: border-box;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 6px;
+
+    .commentImg{
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+    }
+
+    .commentWrapperText{
+        padding: 8px 12px;
+        border-radius: 18px;
+        background-color: #F0F2F5;
+
+        .commentTextTitle{
+            color: #050505;
+            font-size: 13px;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .commentText{
+            margin-bottom: 0;
+            margin-top: 4px;
+            color: #050505;
+            line-height: 1.3333;
+            font-weight: 400;
+            font-size: 15px;
+        }
+    }
+}

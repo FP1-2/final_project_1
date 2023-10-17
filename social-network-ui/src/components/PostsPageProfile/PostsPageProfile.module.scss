@@ -1,0 +1,116 @@
+.profileBodyWrapper {
+    background-color: #F0F2F5;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+    box-sizing: border-box;
+
+    .profileBody {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        width: 895px;
+
+        .profileInformation {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 360px;
+            min-height: 200px;
+            max-height: 250px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            padding: 20px 16px 15px;
+
+            .profileInformationTitile {
+                font-weight: 700;
+                font-size: 20px;
+                color: #050505;
+            }
+
+            .profileInformationList {
+                padding: 0;
+
+                .profileInformationElem {
+                    list-style: none;
+                    margin-bottom: 16px;
+                }
+            }
+
+            .profileInformationBtn {
+                width: 100%;
+                text-align: center;
+                padding: 8px 0;
+                font-size: 15px;
+                line-height: 1.3333;
+                font-weight: 600;
+                color: #050505;
+                background-color: #E4E6EB;
+                border: none;
+                border-radius: 5px;
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #d5d8de;
+                }
+
+            }
+
+        }
+
+        .profileBodyPostsWrapper {
+            width: 500px;
+            position: relative;
+            .profileAddPost {
+                padding: 12px 16px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 8px;
+                background-color: white;
+                width: 100%;
+                height: 64px;
+                border-radius: 5px;
+                box-sizing: border-box;
+                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+                .profileAddPostImg {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .profileAddPostBtn {
+                    width: 100%;
+                    padding: 8px 12px;
+                    border: none;
+                    border-radius: 20px;
+                    font-size: 17px;
+                    line-height: 1.3333;
+                    color: #65676B;
+                    background-color: #E4E6EB;
+                    text-align: left;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d5d8de;
+                    }
+                }
+            }
+
+            .profilePosts {
+                overflow: auto;
+                padding: 0;
+                box-sizing: border-box;
+
+                .profilePost{
+                    list-style: none;
+                    margin-bottom: 16px;
+                }
+            }
+        }
+    }
+}

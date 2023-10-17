@@ -1,0 +1,275 @@
+.modalWrapper {
+    position: absolute;
+    width: 100%;
+    min-height: 100vh;
+    padding: 56px 0;
+    background-color: rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+
+    .modal {
+        width: 700px;
+        border-radius: 5px;
+        box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        .errorNames {
+            font-size: 10px;
+            color: red;
+            margin: 0;
+            bottom: -15px;
+            left: 0;
+            display: block;
+            position: absolute;
+        }
+
+        .errorDisplayNone {
+            display: none;
+        }
+
+        .modalHeader {
+            .modalHeaderTitleWrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 60px;
+
+                .modalHeaderTitle {
+                    color: #050505;
+                    font-weight: 700;
+                    font-size: 20px;
+                    line-height: 1.2;
+                }
+
+                .modalHeaderCloseBtn {
+                    width: 36px;
+                    height: 36px;
+                    background-color: #E4E6EB;
+                    border: none;
+                    border-radius: 50%;
+                    position: absolute;
+                    right: 16px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .modalHeaderCloseBtnImg {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d5d8de;
+                    }
+                }
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    border-bottom: 1px solid #ced0d4;
+                    position: absolute;
+                    top: 60px;
+                }
+            }
+
+            .modalHeaderInfo {
+                display: flex;
+                justify-content: start;
+                align-items: center;
+                padding: 16px;
+                gap: 10px;
+
+
+                .modalHeaderInfoImg {
+                    width: 40px;
+                    height: 40px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .modalHeaderInfoLink {
+                    text-decoration: none;
+                    color: #050505;
+                    line-height: 1.3333;
+                    font-size: 15px;
+                    font-weight: 600;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+
+        .modalMain{
+            padding: 20px 10px 20px 16px ;
+
+            .modalMainAvatar{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .modalMainAvatarWrapper{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+
+                    .modalMainAvatarTitle{
+                        color: #050505;
+                        font-weight: 700;
+                        font-size: 20px;
+                        line-height: 1.2;
+                        padding-top: 8px;
+                        padding-bottom: 8px;
+                    }
+                    .modalMainAvatarBtn{
+                        padding: 8px;
+                        border: none;
+                        border-radius: 5px;
+                        min-width: 115px;
+                        color: #0064D1;
+                        font-weight: 400;
+                        font-size: 17px;
+                        line-height: 1.1765;
+                        background-color: transparent;
+
+                        &:hover{
+                            background-color: rgba(0, 0, 0, 0.05);
+                        }
+                    }
+                }
+                .modalMainAvatarImg{
+                    width: 168px;
+                    min-height: 168px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+            }
+
+            .modalMainHeaderPhoto{
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+
+                .modalMainHeaderPhotoWrapper{
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    width: 100%;
+
+                    .modalMainHeaderPhotoTitle{
+                        color: #050505;
+                        font-weight: 700;
+                        font-size: 20px;
+                        line-height: 1.2;
+                        padding-top: 8px;
+                        padding-bottom: 8px;
+                    }
+                    .modalMainHeaderPhotoBtn{
+                        padding: 8px;
+                        border: none;
+                        border-radius: 5px;
+                        min-width: 115px;
+                        color: #0064D1;
+                        font-weight: 400;
+                        font-size: 17px;
+                        line-height: 1.1765;
+                        background-color: transparent;
+
+                        &:hover{
+                            background-color: rgba(0, 0, 0, 0.05);
+                        }
+                    }
+                }
+                .modalMainHeaderPhotoImg{
+                    min-width: 500px;
+                    max-height: 185px;
+                    object-fit: cover;
+                    border-radius: 8px;
+                }
+            }
+
+            .modalMainBtnAddInform{
+                margin-top: 20px;
+                padding: 0;
+                width: 100%;
+                min-height: 40px;
+                color: #0064D1;
+                font-weight: 600;
+                font-size: 17px;
+                line-height: 1.1765;
+                background-color: #EBF5FF;
+                border: none;
+                border-radius: 5px;
+
+                &:hover{
+                    background-color: #dfe9f2;
+                    cursor: pointer;
+                }
+            }
+            .modalMainInputsWrapper{
+
+                width: 674px;
+                padding: 16px 0;
+                display: flex;
+                flex-direction: column;
+                gap: 12px;
+                justify-content: space-between;
+
+                .modalMainInputEditProfile{
+                    padding: 18px 16px;
+                    color: #050505;
+                    font-size: 16px;
+                    line-height: 1.25;
+                    border-radius: 5px;
+                    border: 2px solid #ced0d4;
+
+                    &::placeholder{
+                        color: #65676B;
+                    }
+
+                    &:hover{
+                        border-color: #65676b;
+                    }
+
+                    &:focus{
+                        border: 2px solid #0866ff;
+                        outline: none;
+                    }
+
+                    .displayNone {
+                        display: none;
+                    }
+                }
+                .modalMainSaveProfileBtn{
+                    margin-top: 20px;
+                    border: none;
+                    border-radius: 5px;
+                    line-height: 1.3333;
+                    color: white;
+                    font-weight: 600;
+                    font-size: 17px;
+                    background-color: #0866FF;
+                    min-height: 36px;
+
+                    &:hover{
+                        cursor: pointer;
+                    }
+                }
+            }
+
+            .displayNone {
+                display: none;
+            }
+        }
+
+    }
+}

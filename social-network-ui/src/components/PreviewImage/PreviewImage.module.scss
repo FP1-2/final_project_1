@@ -1,0 +1,12 @@
+.imgWrapper{
+    display: flex;
+    justify-content: center;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+
+        .img{
+        max-height: 260px;
+        object-fit: cover;
+    }
+}
