@@ -53,9 +53,9 @@ public class FriendsController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FriendsResponse>> getUserFriends() {
+    public ResponseEntity<List<FriendsResponse>> getFriendsByUserId() {
         Long userId = currentUserService.getCurrentUserId();
-        return ResponseEntity.ok(friendsService.userFriends(userId));
+        return ResponseEntity.ok(friendsService.getFriendsByUserId(userId));
     }
 
 }

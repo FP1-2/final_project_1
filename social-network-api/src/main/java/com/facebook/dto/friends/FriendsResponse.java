@@ -10,9 +10,9 @@ public class FriendsResponse {
 
     private Long id;
 
-    private LocalDateTime created_date;
+    private LocalDateTime createdDate;
 
-    private LocalDateTime last_modified_date;
+    private LocalDateTime lastModifiedDate;
 
     private Long userId;
 

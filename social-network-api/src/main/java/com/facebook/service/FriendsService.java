@@ -80,7 +80,7 @@ public class FriendsService {
         );
     }
 
-    public List<FriendsResponse> userFriends(Long id) {
+    public List<FriendsResponse> getFriendsByUserId(Long id) {
         return friendsRepository.findFriendsByUserId(id)
                 .stream()
                 .map(facade::toFriendsResponse)

@@ -22,8 +22,8 @@ public class FriendsFacade {
 
     public FriendsResponse toFriendsResponse(Friends f) {
         FriendsResponse response = modelMapper.map(f, FriendsResponse.class);
-        response.setCreated_date(f.getCreatedDate());
-        response.setLast_modified_date(f.getLastModifiedDate());
+        response.setCreatedDate(f.getCreatedDate());
+        response.setLastModifiedDate(f.getLastModifiedDate());
         return response;
     }
 
