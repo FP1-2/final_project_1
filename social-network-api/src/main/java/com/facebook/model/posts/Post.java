@@ -55,8 +55,7 @@ public class Post extends AbstractEntity {
     @AssertTrue(message = "Invalid combination of type and originalPostId")
     public boolean isValidCombination() {
         if (type == PostType.POST && originalPostId != null) return false;
-        if (type == PostType.REPOST && originalPostId == null) return false;
-        return true;
+        return type != PostType.REPOST || originalPostId != null;
     }
 
     @Override

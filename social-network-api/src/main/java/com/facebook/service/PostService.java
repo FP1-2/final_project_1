@@ -179,9 +179,6 @@ public class PostService {
      */
     public PostResponse findPostDetailsById(Long postId) {
         Optional<Map<String, Object>> result = postRepository.findPostDetailsById(postId);
-        result.ifPresent(map -> {
-            log.info("SQL Result: " + map);
-        });
         return postRepository.findPostDetailsById(postId)
                 .filter(map -> map.get("post_id") != null)
                 .map(postFacade::convertToPostResponse)
