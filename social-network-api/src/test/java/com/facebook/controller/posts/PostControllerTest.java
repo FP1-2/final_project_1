@@ -9,7 +9,6 @@ import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.exception.ValidationErrorResponse;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.PostType;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.PostRepository;
 import com.facebook.service.AppUserService;
