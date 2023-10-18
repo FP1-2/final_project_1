@@ -14,7 +14,6 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -25,6 +24,8 @@ public class FriendsService {
     private final AppUserRepository appUserRepository;
 
     private final FriendsFacade facade;
+
+    private final String message = "Friends pair not found";
 
     public Friends sendFriendRequest(Long userId, Long friendId) {
         AppUser user = appUserRepository.findById(userId)
@@ -48,8 +49,8 @@ public class FriendsService {
 
     public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
-                (f) -> {
-                    if (status) {
+                f -> {
+                    if (Boolean.TRUE.equals(status)) {
                         f.setStatus(FriendsStatus.APPROVED);
                         friendsRepository.save(f);
 
@@ -61,21 +62,22 @@ public class FriendsService {
                     }
                 },
                 () -> {
-                    throw new NotFoundException("Friends pair not found");
-                });
+                    throw new NotFoundException(message);
+                }
+        );
     }
 
     public void deleteFriend(Long userId, Long friendId) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
                 friendsRepository::delete,
                 () -> {
-                    throw new NotFoundException("Friends pair not found");
+                    throw new NotFoundException(message);
                 }
         );
         friendsRepository.findFriendsByUserIdAndFriendId(friendId, userId).ifPresentOrElse(
                 friendsRepository::delete,
                 () -> {
-                    throw new NotFoundException("Friends pair not found");
+                    throw new NotFoundException(message);
                 }
         );
     }
@@ -84,7 +86,7 @@ public class FriendsService {
         return friendsRepository.findFriendsByUserId(id)
                 .stream()
                 .map(facade::toFriendsResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
 }
