@@ -25,7 +25,7 @@ public class FriendsService {
 
     private final FriendsFacade facade;
 
-    private final String message = "Friends pair not found";
+    private static final String message = "Friends pair not found";
 
     public Friends sendFriendRequest(Long userId, Long friendId) {
         AppUser user = appUserRepository.findById(userId)
