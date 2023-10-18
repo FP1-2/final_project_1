@@ -1,14 +1,14 @@
 .modalWrapper {
     position: absolute;
-    // top: ;
     left: 0;
     width: 100%;
     height: 100vh;
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(255,255,255, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
+    z-index: 2;
 
     .modal {
         width: 500px;
@@ -92,7 +92,7 @@
 
             .modalHeaderInfo {
                 display: flex;
-                justify-content: start;
+                justify-content: flex-start;
                 align-items: center;
                 padding: 16px;
                 gap: 10px;
@@ -183,4 +183,8 @@
             }
         }
     }
+}
+
+.displayNone{
+    display:none;
 }

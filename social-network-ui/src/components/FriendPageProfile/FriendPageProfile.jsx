@@ -3,10 +3,11 @@ import style from "./FriendPageProfile.module.scss";
 // import PropTypes from "prop-types";
 import { ReactComponent as MagnifyingGlass} from "../../img/magnifyingGlass.svg";
 import FriendCardProfile from "../FriendCardProfile/FriendCardProfile";
-// import ModalDeleteFriend from "../ModalDeleteFriend/ModalDeleteFriend";
+import ModalDeleteFriend from "../ModalDeleteFriend/ModalDeleteFriend";
 
 const FriendProfile = () => {
-  return (
+  return (<>
+    <ModalDeleteFriend/>
     <div className={style.profileBodyWrapper}>
       <div className={style.profileBody}>
         <div className={style.profileFriendsWrapper}>
@@ -28,6 +29,8 @@ const FriendProfile = () => {
         </div>
       </div>
     </div>
+  </>
+    
   );
 };
 export default FriendProfile;

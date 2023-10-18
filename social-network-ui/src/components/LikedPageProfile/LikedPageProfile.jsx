@@ -1,6 +1,5 @@
 import React from "react";
 import style from "./LikedPageProfile.module.scss";
-// import PropTypes from "prop-types";
 import LikeCardProfile from "../LikeCardProfile/LikeCardProfile";
 
 const LikedPageProfile = () => {

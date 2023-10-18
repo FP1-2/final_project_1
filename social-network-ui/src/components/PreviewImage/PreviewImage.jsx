@@ -10,7 +10,7 @@ const PreviewImage = ({ file }) => {
     reader.onload = () => {
       setPreview(reader.result);
     };
-}
+  }
   return (
     <div className={style.imgWrapper}>
       <img className={style.img} src={preview} alt="" />
