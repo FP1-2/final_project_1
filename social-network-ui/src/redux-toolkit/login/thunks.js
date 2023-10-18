@@ -3,10 +3,10 @@ import { basicAx } from '../ax.js';
 import {
   saveTokenToLocalStorage,
   getTokenFromLocalStorage,
-  saveUserToLocalStorage
+  saveUserToLocalStorage,
+  deleteTokenFromLocalStorage,
+  deleteUserFromLocalStorage,
 } from '../../utils/localStorageHelper';
-
-
 
 export const loginThunk = createAsyncThunk(
   'auth/data',
@@ -25,10 +25,13 @@ export const loginThunk = createAsyncThunk(
       const userInfo = responseUser.data;
       saveUserToLocalStorage(userInfo);
 
+      setTimeout(() => {
+        deleteTokenFromLocalStorage();
+        deleteUserFromLocalStorage();
+      }, 24 * 60 * 60 * 1000);
       return responseToken;
     } catch (err) {
       return rejectWithValue(err.response.data);
     }
   }
 );
-

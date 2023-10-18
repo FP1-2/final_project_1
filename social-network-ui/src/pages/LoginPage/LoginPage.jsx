@@ -2,7 +2,7 @@ import React from "react";
 import { useDispatch} from "react-redux";
 import { loginThunk } from '../../redux-toolkit/login/thunks';
 import styles from "./LoginPage.module.scss";
-import LoginForm from '../../components/LoginForm/LoginForm.jsx';
+import LoginForm from '../../components/LogInForm/LogInForm.jsx';
 import {ReactComponent as FacebookLogo} from '../../img/FacebookLogo.svg';
 
 const LoginPage = () => {

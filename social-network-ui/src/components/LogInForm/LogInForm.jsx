@@ -1,5 +1,5 @@
 import React from "react";
-import styles from "./LoginForm.module.scss";
+import styles from "./LogInForm.module.scss";
 import { Formik, Form } from "formik";
 import { NavLink } from "react-router-dom";
 import * as Yup from "yup";

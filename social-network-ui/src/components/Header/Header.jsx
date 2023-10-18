@@ -10,7 +10,7 @@ import MessagesIcon from "../../assets/messagesIcon.png";
 import ProfileIcon from "../../assets/profileIcon.png";
 import FavoritsIcon from "../../assets/favoriteIcon.png";
 import Cookie from "js-cookie";
-import LoginForm from "../LoginForm/LoginForm";
+import LoginForm from "../LogInForm/LogInForm";
 
 import { loginThunk } from "../../redux-toolkit/login/thunks";
 import {isTokenInLocalStorage, deleteTokenFromLocalStorage, deleteUserFromLocalStorage} from '../../utils/localStorageHelper';
