@@ -25,7 +25,7 @@ public class FriendsService {
 
     private final FriendsFacade facade;
 
-    private static final String message = "Friends pair not found";
+    private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
 
     public Friends sendFriendRequest(Long userId, Long friendId) {
         AppUser user = appUserRepository.findById(userId)
@@ -62,7 +62,7 @@ public class FriendsService {
                     }
                 },
                 () -> {
-                    throw new NotFoundException(message);
+                    throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
     }
@@ -71,13 +71,13 @@ public class FriendsService {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
                 friendsRepository::delete,
                 () -> {
-                    throw new NotFoundException(message);
+                    throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
         friendsRepository.findFriendsByUserIdAndFriendId(friendId, userId).ifPresentOrElse(
                 friendsRepository::delete,
                 () -> {
-                    throw new NotFoundException(message);
+                    throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
     }
