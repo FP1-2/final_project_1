@@ -15,10 +15,12 @@ import lombok.Data;
  */
 @Data
 public class PostRequest {
+
     /**
      * URL зображення для поста.
      */
     private String imageUrl;
+
     /**
      * Заголовок поста.
      * <p>
@@ -27,6 +29,7 @@ public class PostRequest {
     @NotBlank(message = "The post title cannot be empty.")
     @Size(max = 200, message = "The title of the post should not exceed 200 characters.")
     private String title;
+
     /**
      * Текст поста.
      * <p>
@@ -34,6 +37,7 @@ public class PostRequest {
      */
     @NotBlank(message = "The text of the post cannot be empty")
     private String body;
+
     /**
      * Тип поста. За замовчуванням встановлено {@code PostType.POST}.
      */

@@ -26,12 +26,9 @@ public class Post extends AbstractEntity {
     @Column(name = "image_url")
     private String imageUrl;
 
-    @NotBlank
-    @Column(nullable = false)
     private String title;
 
-    @NotBlank
-    @Column(nullable = false, columnDefinition = "TEXT")
+    @Column(columnDefinition = "TEXT")
     private String body;
 
     @NotNull

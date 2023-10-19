@@ -6,6 +6,7 @@ import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.RepostRequest;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.PostService;
 
@@ -80,25 +81,6 @@ public class PostController {
     public ResponseEntity<ActionResponse> likePost(@PathVariable Long postId) {
         Long userId = currentUserService.getCurrentUserId();
         return postService.likePost(userId, postId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Створює репост поста з заданим ID від поточного користувача.
-     *
-     * @param postId Ідентифікатор поста, який потрібно репостити.
-     * @return Відгук про дію.
-     *
-     * <p>
-     * <strong>Приклад:</strong>
-     *   /api/posts/repost/4
-     * </p>
-     */
-    @PostMapping("/repost/{postId}")
-    public ResponseEntity<ActionResponse> repost(@PathVariable Long postId) {
-        Long userId = currentUserService.getCurrentUserId();
-        return postService.repost(userId, postId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -184,13 +166,37 @@ public class PostController {
      *  "body": "Тут міститься вміст мого поста."}
      * </p>
      */
-    @PostMapping("/")
+    @PostMapping("/post")
     public ResponseEntity<PostResponse> createPost(@Validated
                                                    @RequestBody
                                                    PostRequest postRequest) {
         Long userId = currentUserService.getCurrentUserId();
         PostResponse postResponse = postService.createPost(postRequest, userId);
         return ResponseEntity.ok(postResponse);
+    }
+
+    /**
+     * Обробляє запит на репост поста.
+     * <p>
+     * Цей метод використовує логіку, описану в {@link PostService#createRepost}.
+     * </p>
+     * <p>
+     * Додатково, цей метод використовує валідацію вхідних даних за допомогою моделі
+     * {@link RepostRequest}.
+     * </p>
+     *
+     * @param repostRequest Об'єкт запиту на репост, який містить інформацію про допис, який необхідно репостити.
+     * @return {@code ResponseEntity<ActionResponse>} Якщо репост був успішно створено чи видалено,
+     *         повертає статус OK (200) з відповіддю. В іншому випадку повертає статус Not Found (404).
+     */
+    @PostMapping("/repost")
+    public ResponseEntity<ActionResponse> createRepost(@Validated
+                                                       @RequestBody
+                                                       RepostRequest repostRequest) {
+        Long userId = currentUserService.getCurrentUserId();
+        return postService.createRepost(repostRequest, userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

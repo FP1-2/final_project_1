@@ -263,47 +263,6 @@ public class Gen {
         return commentRepository.findAll();
     }
 
-    //    private List<Post> genPosts() {
-//        List<AppUser> appUsers1 = appUserService.findAll();
-//        Faker faker = new Faker();
-//
-//        appUsers1.forEach(user -> {
-//            IntStream.rangeClosed(1, MathUtils.random(4, 10)).forEach(ignored -> {
-//                Post post = new Post();
-//                post.setType(PostType.POST);
-//                post.setStatus(getRandomPostStatus());
-//                post.setImageUrl(HEADER_PHOTO);
-//                post.setUser(user);
-//                post.setTitle(String.join(" ",
-//                        faker.lorem().words(MathUtils.random(1, 5))));
-//                post.setBody(faker.lorem().paragraph());
-//                postService.save(post);
-//            });
-//        });
-//
-//        return postService.findAll();
-//    }
-//
-//    private void genReposts() {
-//        Faker faker = new Faker();
-//        posts.forEach(originalPost -> {
-//            if (MathUtils.random(0, 2) == 0) {
-//                AppUser repostingUser = appUsers1.get(MathUtils.random(0, appUsers1.size() - 1));
-//
-//                Post repost = new Post();
-//                repost.setType(PostType.REPOST);
-//                repost.setStatus(getRandomPostStatus());
-//                repost.setImageUrl(HEADER_PHOTO);
-//                repost.setUser(repostingUser);
-//                repost.setTitle(String.join(" ",
-//                        faker.lorem().words(MathUtils.random(1, 5))));
-//                repost.setBody(faker.lorem().paragraph());
-//                repost.setOriginalPostId(originalPost.getId());
-//            postService.save(repost);
-//
-//            }
-//        });
-//    }
     private List<Post> genPostsAndReposts() {
         List<AppUser> allUsers = appUserService.findAll();
         Faker faker = new Faker();
@@ -342,7 +301,6 @@ public class Gen {
         post.setBody(faker.lorem().paragraph());
         return post;
     }
-
 
 }
 

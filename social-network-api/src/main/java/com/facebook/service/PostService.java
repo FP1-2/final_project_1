@@ -6,24 +6,22 @@ import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.RepostRequest;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.PostFacade;
-import com.facebook.model.AbstractCreatedDate;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
+import com.facebook.model.posts.PostType;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-import com.facebook.repository.posts.UserAndPostRepository;
-import com.facebook.utils.EX;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.function.BiFunction;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -178,44 +176,10 @@ public class PostService {
      * @throws NotFoundException якщо пост з вказаним ID не знайдено.
      */
     public PostResponse findPostDetailsById(Long postId) {
-        Optional<Map<String, Object>> result = postRepository.findPostDetailsById(postId);
         return postRepository.findPostDetailsById(postId)
                 .filter(map -> map.get("post_id") != null)
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
-    }
-
-    /**
-     * Здійснює взаємодію користувача із постом (наприклад, лайк чи репост).
-     * Якщо взаємодія вже існує, вона видаляється, інакше - створюється нова.
-     *
-     * @param userId         Ідентифікатор користувача, який здійснює взаємодію.
-     * @param postId         Ідентифікатор поста, над яким здійснюється взаємодія.
-     * @param repository     Репозиторій для взаємодії (може бути для лайків, репостів тощо).
-     * @param entitySupplier Функція для створення нової взаємодії.
-     * @return Інформація про статус взаємодії: чи було додано чи видалено дію.
-     */
-    private <T extends AbstractCreatedDate> Optional<ActionResponse> handleAction(
-            Long userId,
-            Long postId,
-            UserAndPostRepository<T, Long> repository,
-            BiFunction<AppUser, Post, T> entitySupplier) {
-
-        AppUser user = appUserRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
-        Post post = postRepository.findById(postId)
-                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
-
-        Optional<T> existingEntityOpt = repository.findByUserAndPost(user, post);
-
-        return Optional.of(existingEntityOpt.map(existingEntity -> {
-            repository.delete(existingEntity);
-            return new ActionResponse(false, "Action removed");
-        }).orElseGet(() -> {
-            T newEntity = entitySupplier.apply(user, post);
-            repository.save(newEntity);
-            return new ActionResponse(true, "Action added");
-        }));
     }
 
     /**
@@ -227,25 +191,27 @@ public class PostService {
      * @param postId Ідентифікатор поста, якому ставлять лайк.
      * @return Інформація про статус лайку: чи було додано чи видалено лайк.
      */
-    public Optional<ActionResponse> likePost(Long userId, Long postId) {
-        return handleAction(userId, postId, likeRepository, (user, post) -> {
-            Like like = new Like();
-            like.setUser(user);
-            like.setPost(post);
-            return like;
-        });
-    }
+    public Optional<ActionResponse> likePost(Long userId,
+                                             Long postId) {
+        AppUser user = appUserRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+        Post post = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
 
-    /**
-     * Здійснює дію "репост" користувачем для поста.
-     * Якщо репост вже існує, він видаляється, інакше - створюється новий репост.
-     *
-     * @param userId Ідентифікатор користувача, який робить репост.
-     * @param postId Ідентифікатор поста, який репостять.
-     * @return Інформація про статус репосту: чи було зроблено чи видалено репост.
-     */
-    public Optional<ActionResponse> repost(Long userId, Long postId) {
-        throw EX.NI;
+        Optional<Like> existingLike = likeRepository.findByUserAndPost(user, post);
+
+        return Optional.of(existingLike
+                .map(like -> {
+                    likeRepository.delete(like);
+                    return new ActionResponse(false, "Like removed");
+                })
+                .orElseGet(() -> {
+                    Like like = new Like();
+                    like.setUser(user);
+                    like.setPost(post);
+                    likeRepository.save(like);
+                    return new ActionResponse(true, "Like added");
+                }));
     }
 
     /**
@@ -256,7 +222,8 @@ public class PostService {
      *                який містить ідентифікатор поста та текст коментаря.
      * @return Інформація про доданий коментар у формі {@link CommentResponse}.
      */
-    public Optional<CommentResponse> addComment(Long userId, CommentRequest request) {
+    public Optional<CommentResponse> addComment(Long userId,
+                                                CommentRequest request) {
         Post post = postRepository
                 .findById(request.getPostId())
                 .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
@@ -269,6 +236,66 @@ public class PostService {
             Comment savedComment = commentRepository.save(comment);
             return postFacade.convertToCommentResponse(savedComment);
         });
+    }
+
+    /**
+     * Виконує каскадне видалення поста за його ідентифікатором
+     * та всіх пов'язаних з ним записів (лайків, коментарів).
+     *
+     * @param postId ідентифікатор поста, який потрібно
+     *               видалити разом зі своїми залежностями
+     */
+    public void performCascadeDeletion(Long postId) {
+
+        likeRepository.deleteByPostId(postId);
+
+        commentRepository.deleteByPostId(postId);
+
+        postRepository.deleteById(postId);
+    }
+
+    /**
+     * Виконує дію репосту допису користувачем. Логіка роботи наступна:
+     *
+     * <ul>
+     *     <li>Якщо репостимо пост і репоста на пост немає: створюємо новий репост.</li>
+     *     <li>Якщо репостимо пост і репост вже наш є:
+     *         видаляємо існуючий репост.</li>
+     *     <li>Якщо репостимо репост: визначаємо оригінальний пост та репостимо його.</li>
+     *     <li>Якщо репостимо репост і оригінал нами репостився:
+     *         видаляємо репост оригінального допису.</li>
+     * </ul>
+     *
+     * @param request Запит на репост, який містить інформацію про допис, який необхідно репостити.
+     * @param userId Ідентифікатор користувача, який ініціює репост.
+     * @return Відповідь з деталями про створений або видалений репост.
+     */
+    public Optional<ActionResponse> createRepost(RepostRequest request,
+                                                 Long userId) {
+        AppUser user = appUserRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        Post originalPost = postRepository.findById(request.getOriginalPostId())
+                .orElseThrow(() -> new NotFoundException("Original post not found!"));
+
+        Long originalPostId = Optional.of(originalPost)
+                .filter(p -> p.getType() == PostType.REPOST && p.getOriginalPostId() != null)
+                .map(Post::getOriginalPostId)
+                .orElse(request.getOriginalPostId());
+
+        Optional<Post> existingRepost = postRepository
+                .findByUserAndOriginalPostId(user, originalPostId);
+
+        return Optional.of(existingRepost
+                .map(repost -> {
+                    performCascadeDeletion(repost.getId());
+                    return new ActionResponse(false, "Repost removed");
+                })
+                .orElseGet(() -> {
+                    Post repost = postFacade.convertRepostRequestToPost(request, user);
+                    postRepository.save(repost);
+                    return new ActionResponse(true, "Repost added");
+                }));
     }
 
     /**

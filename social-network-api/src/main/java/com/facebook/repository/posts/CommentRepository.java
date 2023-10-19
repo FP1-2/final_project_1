@@ -2,6 +2,7 @@ package com.facebook.repository.posts;
 
 import com.facebook.model.posts.Comment;
 
+import com.facebook.model.posts.Post;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -29,6 +30,8 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
      * @return Кількість коментарів.
      */
     Long countByPostId(Long postId);
+
+    void deleteByPostId(Long postId);
 
 }
 

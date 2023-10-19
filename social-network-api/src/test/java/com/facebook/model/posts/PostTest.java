@@ -52,42 +52,6 @@ class PostTest {
     }
 
     /**
-     * Тестує обмеження: URL зображення посту
-     * не повинен бути null.
-     * Очікується ConstraintViolationException
-     * при спробі збереження.
-     */
-    @Test
-    void imageUrlNotNull() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setBody(BODY);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-
-        assertThrows(ConstraintViolationException.class,
-                () -> tem.persistAndFlush(post));
-    }
-
-    /**
-     * Тестує обмеження: текст посту
-     * не повинен бути null.
-     * Очікується ConstraintViolationException
-     * при спробі збереження.
-     */
-    @Test
-    void bodyNotNull() {
-        Post post = new Post();
-        post.setTitle(TITLE);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
-
-        assertThrows(ConstraintViolationException.class,
-                () -> tem.persistAndFlush(post));
-    }
-
-    /**
      * Тестує правильність встановлення дати
      * при створенні посту.
      * Переконується, що поля createdDate та
@@ -137,26 +101,6 @@ class PostTest {
                 .isNotEqualTo(initialLastModifiedDate);
         assertThat(savedPost.getLastModifiedDate())
                 .isAfter(initialLastModifiedDate);
-    }
-
-
-    /**
-     * Тестує обмеження: заголовок посту
-     * не повинен бути null.
-     * Очікується ConstraintViolationException
-     * при спробі збереження.
-     */
-    @Test
-    void titleNotNull() {
-        Post post = new Post();
-        post.setBody(BODY);
-        post.setStatus(PostStatus.DRAFT);
-        post.setUser(createAndSaveTestUser());
-        post.setImageUrl(IMAGE);
-        post.setType(PostType.POST);
-
-        assertThrows(ConstraintViolationException.class,
-                () -> tem.persistAndFlush(post));
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.facebook.repository.posts;
 
+import com.facebook.model.AppUser;
 import com.facebook.model.posts.Post;
 
 import java.util.List;
@@ -23,6 +24,8 @@ import org.springframework.stereotype.Repository;
  */
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
+
+    Optional<Post> findByUserAndOriginalPostId(AppUser user, Long originalPostId);
 
     /**
      * SQL-запит для витягу детальної інформації по постах.

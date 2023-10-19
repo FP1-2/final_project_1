@@ -15,75 +15,15 @@ React,Redux Toolkit, Git, ESLint, Stylelint, HTML, CSS, SASS, npm, formik[social
 
 ## Кінцеві точки API:
 
-### 1. Отримання коментарів для заданого поста
+### 1. Створення нового поста
 
-- **URL**: `/api/posts/{postId}/comments`
-- **Метод**: `GET`
-- **Параметри**:
-    - `postId` - ідентифікатор поста
-    - `page` - номер сторінки (за замовчуванням: 0)
-    - `size` - розмір сторінки (за замовчуванням: 10)
-    - `sort` - параметри сортування (наприклад, "createdDate,desc")
+- *URL*: `/api/posts/post`
+- *Метод*: `POST`
 
-**Приклад**: `/api/posts/4/comments?page=0&size=10&sort=createdDate,desc`
+*Приклад*: `/api/posts/post` 
+- *Тіло запиту*:
 
-### 2. Додавання "лайка" до поста
-
-- **URL**: `/api/posts/like/{postId}`
-- **Метод**: `POST`
-- **Параметри**: `postId` - ідентифікатор поста
-
-**Приклад**: `/api/posts/like/4`
-
-### 3. Створення репоста поста
-
-- **URL**: `/api/posts/repost/{postId}`
-- **Метод**: `POST`
-- **Параметри**: `postId` - ідентифікатор поста
-
-**Приклад**: `/api/posts/repost/4`
-
-### 4. Додавання коментаря до поста
-
-- **URL**: `/api/posts/comment`
-- **Метод**: `POST`
-- **Тіло запиту**:
-
-```json
-{
-  "postId": 4,
-  "content": "Great post!"
-}
-```
-
-**Приклад**: `/api/posts/comment`
-
-### 5. Отримання постів користувача за його ID
-
-- **URL**: `/api/posts/by_user_id/{userId}`
-- **Метод**: `GET`
-- **Параметри**:
-    - `userId` - ідентифікатор користувача
-    - `page` - номер сторінки (за замовчуванням: 0)
-    - `size` - розмір сторінки (за замовчуванням: 10)
-    - `sort` - параметри сортування (наприклад, "createdDate,desc")
-
-**Приклад**: `/api/posts/by_user_id/1?page=0&size=10&sort=id,desc`
-
-### 6. Отримання деталей поста за його ID
-
-- **URL**: `/api/posts/{postId}`
-- **Метод**: `GET`
-- **Параметри**: `postId` - ідентифікатор поста
-
-**Приклад**: `/api/posts/4`
-
-### 7. Створення нового поста
-
-- **URL**: `/api/posts/`
-- **Метод**: `POST`
-- **Тіло запиту**:
-
+*не обов'язкове поле* `"imageUrl"`
 ```json
 {
   "imageUrl": "https://some-image-url.com/image.jpg",
@@ -92,4 +32,79 @@ React,Redux Toolkit, Git, ESLint, Stylelint, HTML, CSS, SASS, npm, formik[social
 }
 ```
 
-**Приклад**: `/api/posts/`
+### 2. Створення репоста поста
+
+- *URL*: `/api/posts/repost`
+- *Метод*: `POST`
+
+*Приклад*: `/api/posts/repost`
+
+- *Тіло запиту*:
+
+*обов'язкове поле* `"originalPostId"`
+
+```json
+{
+  "imageUrl": "https://example.com/image.jpg",
+  "title": "My Repost Title",
+  "body": "This is the body of my repost.",
+  "originalPostId": 12345
+}
+```
+
+*Якщо `originalPostId` виявиться репостом, то буде репоститься оригінал цього репоста. Повторний запит з тим самим `originalPostId` видаляє репост та пов'язані з ним лайки та коментарі.*
+
+### 3. Отримання постів користувача за його ID
+
+- *URL*: `/api/posts/by_user_id/{userId}`
+- *Метод*: `GET`
+- *Параметри*:
+    - `userId` - ідентифікатор користувача
+    - `page` - номер сторінки (за замовчуванням: 0)
+    - `size` - розмір сторінки (за замовчуванням: 10)
+    - `sort` - параметри сортування (наприклад, "createdDate,desc")
+
+*Приклад*: `/api/posts/by_user_id/1?page=0&size=10&sort=id,desc`
+
+### 4. Отримання деталей поста за його ID
+
+- *URL*: `/api/posts/{postId}`
+- *Метод*: `GET`
+- *Параметри*: `postId` - ідентифікатор поста
+
+*Приклад*: `/api/posts/4`
+
+### 5. Додавання коментаря до поста
+
+- *URL*: `/api/posts/comment`
+- *Метод*: `POST`
+
+*Приклад*: `/api/posts/comment`
+- *Тіло запиту*:
+
+```json
+{
+  "postId": 4,
+  "content": "Great post!"
+}
+```
+
+### 6. Отримання коментарів для заданого поста
+
+- *URL*: `/api/posts/comments/{postId}`
+- *Метод*: `GET`
+- *Параметри*:
+  - `postId` - ідентифікатор поста
+  - `page` - номер сторінки (за замовчуванням: 0)
+  - `size` - розмір сторінки (за замовчуванням: 10)
+  - `sort` - параметри сортування (наприклад, "createdDate,desc")
+
+*Приклад*: `/api/posts/4/comments?page=0&size=10&sort=createdDate,desc`
+
+### 7. Додавання "лайка" до поста
+
+- *URL*: `/api/posts/like/{postId}`
+- *Метод*: `POST`
+- *Параметри*: `postId` - ідентифікатор поста
+
+*Приклад*: `/api/posts/like/4`

@@ -7,12 +7,12 @@ import com.facebook.dto.post.LikeResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.PostSqlResult;
+import com.facebook.dto.post.RepostRequest;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
-import com.facebook.model.posts.PostType;
 import com.facebook.repository.posts.PostRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -67,8 +67,20 @@ public class PostFacade {
         post.setTitle(request.getTitle());
         post.setBody(request.getBody());
         post.setStatus(PostStatus.PUBLISHED);
+        post.setType(request.getType());
         post.setUser(user);
-        post.setType(PostType.POST);
+        return post;
+    }
+
+    public Post convertRepostRequestToPost(RepostRequest request, AppUser user){
+        Post post = new Post();
+        post.setImageUrl(request.getImageUrl());
+        post.setTitle(request.getTitle());
+        post.setBody(request.getBody());
+        post.setStatus(PostStatus.PUBLISHED);
+        post.setType(request.getType());
+        post.setUser(user);
+        post.setOriginalPostId(request.getOriginalPostId());
         return post;
     }
 

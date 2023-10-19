@@ -7,6 +7,7 @@ import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.RepostRequest;
 import com.facebook.exception.ValidationErrorResponse;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.posts.CommentRepository;
@@ -40,9 +41,11 @@ import java.util.Objects;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
 import static org.junit.jupiter.api.Assertions.fail;
+
 
 /**
  * Інтеграційний тест для класу {@link PostController}.
@@ -158,12 +161,10 @@ class PostControllerTest {
         // Виконання запиту до API
         ResponseEntity<PageDto<CommentDTO>> response = restTemplate
                 .exchange(
-                        baseUrl + "api/posts/"
-                                + targetPost.getId()
-                                + "/comments?page="
-                                + page + "&size="
-                                + size + "&sort="
-                                + sort,
+                        baseUrl + "api/posts/" + targetPost.getId()
+                                + "/comments?page=" + page
+                                + "&size=" + size
+                                + "&sort=" + sort,
                         HttpMethod.GET,
                         new HttpEntity<>(authHeaders),
                         new ParameterizedTypeReference<PageDto<CommentDTO>>() {
@@ -248,69 +249,105 @@ class PostControllerTest {
      * <p>
      * Сценарій тесту:
      * <ul>
-     * <li>1. Спроба репостити існуючий пост. Незалежно від того,
-     *        чи був пост репостнутий раніше, сервіс має або створити репост,
-     *        або видалити його, в залежності від поточного стану.</li>
-     * <li>2. Спроба репостити той же пост знову. Сервіс має зреагувати
-     *         протилежним чином, порівняно з попередньою дією (або видалити репост,
-     *         якщо він був створений, або створити його знову,
-     *         якщо він був видалений).</li>
-     * <li>3. Порівняння результатів першого та другого репостування. Очікується,
-     *        що статус репосту зміниться на протилежний.</li>
-     * <li>4. Спроба репостити неіснуючий пост.
-     *        Очікується отримання помилки "Post not found".</li>
+     * <li>1. Створення оригінального поста.</li>
+     * <li>2. Репост оригінального поста. Очікується, що репост буде створений.</li>
+     * <li>3. Повторний репост того ж самого поста. Очікується, що репост буде видалений.</li>
      * </ul>
-     * </p>
-     * <p>
-     * Таким чином, цей тест перевіряє поведінку функції репостування без конкретного припущення
-     * про первинний стан репосту.
      * </p>
      */
     @Test
     void testRepost() {
-//        // 1. Сценарій з існуючим postId
-//        ResponseEntity<ActionResponse> firstRepostResponse = restTemplate.exchange(
-//                baseUrl + "api/posts/repost/1",
-//                HttpMethod.POST,
-//                new HttpEntity<>(authHeaders),
-//                ActionResponse.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, firstRepostResponse.getStatusCode());
-//        assertNotNull(firstRepostResponse.getBody());
-//
-//        ResponseEntity<ActionResponse> secondRepostResponse = restTemplate.exchange(
-//                baseUrl + "api/posts/repost/1",
-//                HttpMethod.POST,
-//                new HttpEntity<>(authHeaders),
-//                ActionResponse.class
-//        );
-//
-//        assertEquals(HttpStatus.OK, secondRepostResponse.getStatusCode());
-//        assertNotNull(secondRepostResponse.getBody());
-//        assertNotEquals(firstRepostResponse.getBody().added(), secondRepostResponse.getBody().added());
-//
-//        // 2. Сценарій з неіснуючим postId
-//
-//        try {
-//            restTemplate.exchange(
-//                    baseUrl + "api/posts/repost/999",
-//                    HttpMethod.POST,
-//                    new HttpEntity<>(authHeaders),
-//                    ActionResponse.class
-//            );
-//        } catch (HttpClientErrorException.NotFound e) {
-//            String expectedErrorMessage = """
-//                        {"type":"Not Found Error","message":"Post not found!"}
-//                    """
-//                    .strip();
-//            log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
-//            assertEquals(expectedErrorMessage, e.getResponseBodyAsString());
-//            return;
-//        }
-//
-//        fail("Очікувалося виключення HttpClientErrorException.NotFound");
+        // 1. Створення оригінального поста
+        PostRequest originalPostRequest = new PostRequest();
+        originalPostRequest.setImageUrl("https://example.com/image.jpg");
+        originalPostRequest.setTitle("My Original Post Title");
+        originalPostRequest.setBody("This is the body of my original post.");
+        ResponseEntity<PostResponse> originalPostResponseEntity = createPost(originalPostRequest);
+        PostResponse originalPost = originalPostResponseEntity.getBody();
+        assertNotNull(originalPost, "Створення оригінального поста не вдалося!");
+
+        // 2. Репост оригінального поста
+        RepostRequest repostRequest = new RepostRequest();
+        repostRequest.setImageUrl("https://example.com/image.jpg");
+        repostRequest.setTitle("My Repost Title");
+        repostRequest.setBody("This is the body of my repost.");
+        repostRequest.setOriginalPostId(originalPost.getPostId());
+        ResponseEntity<ActionResponse> repostResponseEntity = createRepost(repostRequest);
+        ActionResponse repostResponse = repostResponseEntity.getBody();
+        assertTrue(repostResponse.added(), "Репост мав бути створений!");
+        assertEquals("Repost added", repostResponse.message());
+
+        // 3. Повторний репост оригінального поста
+        ResponseEntity<ActionResponse> secondRepostResponseEntity = createRepost(repostRequest);
+        ActionResponse secondRepostResponse = secondRepostResponseEntity.getBody();
+        assertFalse(secondRepostResponse.added(), "Репост мав бути видалений!");
+        assertEquals("Repost removed", secondRepostResponse.message());
     }
+
+    /**
+     * Тест для перевірки поведінки репосту при помилковому ID оригінального посту.
+     * <p>
+     * Сценарій тесту:
+     * <ul>
+     * <li>1. Формується запит на репост з недійсним ID оригінального посту.</li>
+     * <li>2. Перевіряється відповідь сервера на цей запит. Очікується помилка
+     *        з повідомленням про відсутність оригінального посту.</li>
+     * </ul>
+     * </p>
+     */
+    @Test
+    void testRepostErrors() {
+        long invalidOriginalPostId = 9999;
+        RepostRequest invalidRepostRequest = new RepostRequest();
+        invalidRepostRequest.setOriginalPostId(invalidOriginalPostId);
+
+        try {
+            createRepost(invalidRepostRequest);
+        } catch (HttpClientErrorException e) {
+            log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
+            assertTrue(e.getResponseBodyAsString().contains("Original post not found!"));
+            return;
+        }
+        fail("Expected HttpClientErrorException with message 'Original post not found!'");
+    }
+
+    /**
+     * Створює новий пост за допомогою REST API.
+     * <p>
+     * Цей метод відправляє POST-запит на відповідний ендпойнт API,
+     * передаючи тіло запиту, і повертає відповідь сервера у вигляді {@link PostResponse}.
+     * </p>
+     *
+     * @param request об'єкт {@link PostRequest}, який містить дані для створення нового поста.
+     * @return {@link ResponseEntity} з тілом відповіді {@link PostResponse}.
+     */
+    private ResponseEntity<PostResponse> createPost(PostRequest request) {
+        return restTemplate.postForEntity(
+                baseUrl + "api/posts/post",
+                new HttpEntity<>(request, authHeaders),
+                PostResponse.class
+        );
+    }
+
+    /**
+     * Створює репост за допомогою REST API.
+     * <p>
+     * Цей метод відправляє POST-запит на відповідний ендпойнт API,
+     * передаючи тіло запиту, і повертає відповідь сервера у вигляді {@link ActionResponse}.
+     * </p>
+     *
+     * @param request об'єкт {@link RepostRequest}, який містить дані для створення репосту.
+     * @return {@link ResponseEntity} з тілом відповіді {@link ActionResponse}.
+     */
+    private ResponseEntity<ActionResponse> createRepost(RepostRequest request) {
+        return restTemplate.postForEntity(
+                baseUrl + "api/posts/repost",
+                new HttpEntity<>(request, authHeaders),
+                ActionResponse.class
+        );
+    }
+
+
 
     /**
      * Тестує додавання коментаря до публікації.
@@ -472,11 +509,11 @@ class PostControllerTest {
      * <p>
      * Сценарії:
      * 1. Позитивний сценарій: створення нового поста
-     *    з коректними даними.
+     * з коректними даними.
      * 2. Негативний сценарій: створення поста без заголовка.
      * 3. Негативний сценарій: створення поста без зображення.
      * 4. Негативний сценарій: створення поста з заголовком,
-     *    що перевищує 200 символів.
+     * що перевищує 200 символів.
      * 5. Негативний сценарій: створення поста без тіла.
      * </p>
      */
@@ -489,7 +526,7 @@ class PostControllerTest {
         validPostRequest.setBody("Valid body content");
 
         ResponseEntity<PostResponse> validResponse = restTemplate.postForEntity(
-                baseUrl + "api/posts/",
+                baseUrl + "api/posts/post",
                 new HttpEntity<>(validPostRequest, authHeaders),
                 PostResponse.class
         );
@@ -544,7 +581,6 @@ class PostControllerTest {
                 {"violations":[{"fieldName":"body","message":"The text of the post cannot be empty"}]}
                 """
                 .strip());
-
     }
 
     /**
@@ -557,13 +593,13 @@ class PostControllerTest {
      * в тілі відповіді.
      * </p>
      *
-     * @param request          запит, який буде відправлено на сервер.
-     * @param expectedMessage  очікуване повідомлення про помилку.
+     * @param request         запит, який буде відправлено на сервер.
+     * @param expectedMessage очікуване повідомлення про помилку.
      */
     private void assertBadRequestWithMessage(PostRequest request, String expectedMessage) {
         try {
             restTemplate.postForEntity(
-                    baseUrl + "api/posts/",
+                    baseUrl + "api/posts/post",
                     new HttpEntity<>(request, authHeaders),
                     PostResponse.class
             );

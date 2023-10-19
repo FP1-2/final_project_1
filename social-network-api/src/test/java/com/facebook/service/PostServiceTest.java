@@ -223,7 +223,7 @@ class PostServiceTest {
 
         assertTrue(result.isPresent());
         assertTrue(result.get().added());
-        assertEquals("Action added", result.get().message());
+        assertEquals("Like added", result.get().message());
         Mockito
                 .verify(likeRepository)
                 .save(any());
@@ -267,7 +267,7 @@ class PostServiceTest {
 
         assertTrue(result.isPresent());
         assertFalse(result.get().added());
-        assertEquals("Action removed", result.get().message());
+        assertEquals("Like removed", result.get().message());
         Mockito
                 .verify(likeRepository)
                 .delete(existingLike);
