@@ -56,8 +56,6 @@ import com.facebook.repository.posts.PostRepository;
  *  <li>{@link #testFindPostDetailsByUserId()} - Отримання деталей постів за ID користувача</li>
  *  <li>{@link #testLikePostWhenNoExistingLike()} - Додавання лайку до посту, коли лайка ще не існує</li>
  *  <li>{@link #testLikePostWhenExistingLike()} - Видалення лайку з посту, якщо лайк вже існує</li>
- *  <li>{@link #testAddRepostIfNotExists()} - Додавання репосту до посту, коли репост ще не існує</li>
- *  <li>{@link #testRemoveRepostIfExists()} - Видалення репосту з посту, якщо репост вже існує</li>
  *  <li>{@link #testAddComment()} - Додавання коментаря до посту</li>
  *  <li>{@link #testAddCommentWithMissingUser()} - Додавання коментаря користувачем,
  *      який відсутній в базі даних</li>
