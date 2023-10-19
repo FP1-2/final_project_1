@@ -122,10 +122,10 @@ public class PostFacade {
     /**
      * Перетворює результат SQL-запиту про деталі поста на об'єкт
      * відповіді {@link PostResponse}.
-     * <p>
-     * Метод використовує допоміжний метод для опрацювання результатів, асоційованих з репостами.
+     * <p>Метод використовує допоміжний метод для опрацювання результатів, асоційованих з репостами.
      * Інформація про автора, коментарі, лайки та інші деталі додаються до відповіді.
-     * </p>
+     * Якщо реалізувати репости репостів додати:
+     * <p>{@code post.setReposts(stringToList(sqlResult.getCurrentReposts()));}</p></p>
      *
      * @param row Результат SQL-запиту у вигляді мапи.
      * @return Перетворений об'єкт {@link PostResponse}.
@@ -139,7 +139,6 @@ public class PostFacade {
 
         post.setComments(stringToList(sqlResult.getCommentIds()));
         post.setLikes(stringToList(sqlResult.getLikeIds()));
-//      post.setReposts(stringToList(sqlResult.getCurrentReposts()));
 
         if (sqlResult.getOriginalPostId() != null) {
             post.setOriginalPost(mapOriginalPost(sqlResult));
@@ -151,11 +150,9 @@ public class PostFacade {
     /**
      * Перетворює результат SQL-запиту, асоційований з оригінальним постом,
      * на об'єкт відповіді {@link PostResponse}.
-     * <p>
-     * Метод створює відповідь для репостів, де оригінальний пост додається як частина результату.
+     * <p>Метод створює відповідь для репостів, де оригінальний пост додається як частина результату.
      * Він заповнює інформацію про автора оригінального поста та додаткові деталі,
-     * такі як коментарі, лайки та репости.
-     * </p>
+     * такі як коментарі, лайки та репости.</p>
      *
      * @param sqlResult Результат SQL-запиту, що представляє деталі оригінального посту.
      * @return Перетворений об'єкт {@link PostResponse} для оригінального посту.

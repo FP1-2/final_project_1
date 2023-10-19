@@ -13,6 +13,8 @@ import lombok.Data;
  *
  * <p>Клас також містить рядкові поля для ідентифікаторів коментарів, лайків та репостів,
  * пов'язаних із дописом.</p>
+ * Якщо реалізувати репости репостів додати:
+ * <p>{@code private String currentReposts}</p>
  */
 @Data
 public class PostSqlResult {
@@ -31,7 +33,6 @@ public class PostSqlResult {
     private String avatar;
     private String commentIds;
     private String likeIds;
-//  private String currentReposts;
     private PostType type;
 
     private Long originalUserId;
@@ -66,8 +67,7 @@ public class PostSqlResult {
                 + ", avatar='" + avatar + '\''
                 + ", commentIds='" + commentIds + '\''
                 + ", likeIds='" + likeIds + '\''
-//              + ", repostIds='" + currentReposts + '\''
-                + ", type=" + type
+                + ", type=" + type + '\''
                 + ", originalUserId=" + originalUserId
                 + ", originalName='" + originalName + '\''
                 + ", originalSurname='" + originalSurname + '\''
