@@ -3,11 +3,19 @@ import Header from './components/Header/Header';
 import AppRoutes from './AppRoutes';
 
 function App() {
-  const isLoginPage = window.location.pathname.includes('/login');
+  const isHeader = !window.location.pathname.includes('/login') && !window.location.pathname.includes('/registration');
+
+  if (isHeader) {
+    return (
+      <div className="App">
+        <Header />
+        <AppRoutes />
+      </div>
+    );
+  }
 
   return (
     <div className="App">
-      {!isLoginPage && <Header />}
       <AppRoutes />
     </div>
   );
