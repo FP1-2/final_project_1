@@ -3,7 +3,7 @@ import { getTokenFromLocalStorage } from '../utils/localStorageHelper';
 
 
 export const basicAx = axios.create({
-  baseURL: 'http://13.53.82.220:9000/',
+  baseURL: 'https://yourhostel.world:9000/',
 });
 
 export const workAx = async (method, url, data) => {
