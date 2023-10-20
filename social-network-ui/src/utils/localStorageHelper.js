@@ -33,3 +33,15 @@ export const deleteTokenFromLocalStorage = () => {
     console.error('Error deleting token from localStorage:', error);
   }
 };
+
+export const saveUserToLocalStorage = (userData) => {
+  localStorage.setItem('user', JSON.stringify(userData));
+};
+
+export const deleteUserFromLocalStorage = () => {
+  try {
+    localStorage.removeItem('user');
+  } catch (error) {
+    console.error('Error deleting token from localStorage:', error);
+  }
+};
