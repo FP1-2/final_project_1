@@ -100,6 +100,16 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    /**
+     * Оброблює винятки типу {@link UnauthorizedException}.
+     *
+     * <p>Перехоплює та формує відповідь для клієнта
+     * з повідомленням та HTTP статусом 401 (Unauthorized).</p>
+     *
+     * @param ex екземпляр винятка.
+     * @return відповідь для клієнта із мапою даних,
+     * що містить тип винятка та повідомлення.
+     */
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Map<String, Object>>
     handleUnauthorizedAccessException(UnauthorizedException ex) {
