@@ -59,11 +59,20 @@ import static org.junit.jupiter.api.Assertions.fail;
  * <p>
  * Основні сценарії тестування включають:
  * <ul>
+ *     <li>{@link PostControllerTest#setup() Налаштування перед кожним тестом для отримання авторизаційного токену}</li>
  *     <li>{@link PostControllerTest#testGetCommentsByPostIdWithPagination() Перевірка отримання коментарів до поста з використанням пагінації}</li>
  *     <li>{@link PostControllerTest#testLikeAndUnlikePost() Перевірка логіки "лайкання" та "дизлайкання" постів}</li>
- *     <li>{@link PostControllerTest#testRepost() Перевірка логіки репостування поста (створення та видалення репоста)}</li>
- *     <li>{@link PostControllerTest#testAddComment() Перевірка додавання коментаря до публікації та обробки помилок валідації}</li>
- *     <li>{@link PostControllerTest#testGetPostsByUserId() Перевірка отримання постів користувача з використанням пагінації}</li>
+ *     <li>{@link PostControllerTest#testRepost() Перевірка логіки репостів}</li>
+ *     <li>{@link PostControllerTest#testRepostErrors() Перевірка помилок репостів з невірним ID поста}</li>
+ *     <li>{@link PostControllerTest#createPost(PostRequest) Метод для створення нового поста через REST API}</li>
+ *     <li>{@link PostControllerTest#createRepost(RepostRequest) Метод для створення репоста через REST API}</li>
+ *     <li>{@link PostControllerTest#createPatch(Long, PostPatchRequest) Метод для оновлення поста за допомогою REST API}</li>
+ *     <li>{@link PostControllerTest#testPostAndRepostUpdate() Тестує створення, репост та оновлення постів}</li>
+ *     <li>{@link PostControllerTest#testAddComment() Тестує додавання коментаря до публікації}</li>
+ *     <li>{@link PostControllerTest#testGetPostsByUserId() Тест для перевірки отримання постів користувача з використанням пагінації}</li>
+ *     <li>{@link PostControllerTest#testGetPostById() Тест для перевірки отримання поста за ID}</li>
+ *     <li>{@link PostControllerTest#testCreatePost() Тестує створення нового поста}</li>
+ *     <li>{@link PostControllerTest#assertBadRequestWithMessage(PostRequest request, String expectedMessage) Тестує відповідь сервера на некоректний запит}</li>
  * </ul>
  * </p>
  * <p>
@@ -350,7 +359,20 @@ class PostControllerTest {
         );
     }
 
-    private ResponseEntity<PostResponse> createPatch(Long postId, PostPatchRequest patchRequest) {
+    /**
+     * Оновлює пост за допомогою REST API.
+     * <p>
+     * Цей метод відправляє PATCH-запит на відповідний ендпойнт API,
+     * передаючи тіло запиту, і повертає відповідь сервера у вигляді {@link PostResponse}.
+     * </p>
+     *
+     * @param postId ідентифікатор поста, який потрібно оновити.
+     * @param patchRequest об'єкт {@link PostPatchRequest},
+     *                     який містить дані для оновлення поста.
+     * @return {@link ResponseEntity} з тілом відповіді {@link PostResponse}.
+     */
+    private ResponseEntity<PostResponse> createPatch(Long postId,
+                                                     PostPatchRequest patchRequest) {
         log.info("postId: " + postId + "; patchRequest: " + patchRequest);
         return restTemplate.exchange(
                 baseUrl + "api/posts/update/" + postId,
@@ -360,6 +382,19 @@ class PostControllerTest {
         );
     }
 
+    /**
+     * Тестує створення, репост та оновлення постів.
+     * <p>
+     * Цей тестовий метод послідовно:
+     * <ul>
+     *     <li>Створює оригінальний пост;</li>
+     *     <li>Створює репост цього поста;</li>
+     *     <li>Оновлює оригінальний пост;</li>
+     *     <li>Оновлює репост.</li>
+     * </ul>
+     * На кожному етапі відбуваються перевірки коректності даних у відповідях сервера.
+     * </p>
+     */
     @Test
     public void testPostAndRepostUpdate() {
         //Створюємо пост:
