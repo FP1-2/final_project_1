@@ -396,7 +396,7 @@ class PostControllerTest {
      * </p>
      */
     @Test
-    public void testPostAndRepostUpdate() {
+    void testPostAndRepostUpdate() {
         //Створюємо пост:
         PostRequest postRequest = new PostRequest();
         postRequest.setImageUrl("https://example.com/image.jpg");
