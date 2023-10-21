@@ -5,6 +5,7 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostPatchRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.RepostRequest;
@@ -30,11 +31,13 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
+
 
 import java.util.List;
 import java.util.Objects;
@@ -93,7 +96,7 @@ class PostControllerTest {
 
     private final String baseUrl = "http://localhost:9000/";
 
-    private final RestTemplate restTemplate = new RestTemplate();
+    private final RestTemplate restTemplate = new RestTemplate(new HttpComponentsClientHttpRequestFactory());
 
     private HttpHeaders authHeaders;
 
@@ -347,7 +350,61 @@ class PostControllerTest {
         );
     }
 
+    private ResponseEntity<PostResponse> createPatch(Long postId, PostPatchRequest patchRequest) {
+        log.info("postId: " + postId + "; patchRequest: " + patchRequest);
+        return restTemplate.exchange(
+                baseUrl + "api/posts/update/" + postId,
+                HttpMethod.PATCH,
+                new HttpEntity<>(patchRequest, authHeaders),
+                PostResponse.class
+        );
+    }
 
+    @Test
+    public void testPostAndRepostUpdate() {
+        //Створюємо пост:
+        PostRequest postRequest = new PostRequest();
+        postRequest.setImageUrl("https://example.com/image.jpg");
+        postRequest.setTitle("My Post Title");
+        postRequest.setBody("This is the body of my post.");
+
+        ResponseEntity<PostResponse> postResponseEntity = createPost(postRequest);
+        PostResponse aPost = postResponseEntity.getBody();
+        //Створюємо репост:
+        RepostRequest repostRequest = new RepostRequest();
+
+        repostRequest.setOriginalPostId(aPost.getPostId());
+        repostRequest.setImageUrl("https://example.com/repostImage.jpg");
+        repostRequest.setTitle("My Repost Title");
+        repostRequest.setBody("This is the body of my repost.");
+
+        createRepost(repostRequest);
+        //Застосовуємо зміни до поста:
+        PostPatchRequest postPatchRequest = new PostPatchRequest();
+        postPatchRequest.setImageUrl("https://example.com/newImage.jpg");
+        postPatchRequest.setTitle("Updated Post Title");
+        postPatchRequest.setBody("This is the updated body of my post.");
+
+        ResponseEntity<PostResponse> updatedPostResponseEntity = createPatch(aPost.getPostId(), postPatchRequest);
+        PostResponse updatedPost = updatedPostResponseEntity.getBody();
+
+        //Застосовуємо зміни до репоста
+        ResponseEntity<PostResponse> updatedRepostResponseEntity = createPatch(aPost.getPostId() + 1, postPatchRequest);
+        PostResponse bRepost = updatedRepostResponseEntity.getBody();
+
+
+        // Перевірка оригінального поста
+        assertEquals("https://example.com/newImage.jpg", updatedPost.getImageUrl());
+        assertEquals("Updated Post Title", updatedPost.getTitle());
+        assertEquals("This is the updated body of my post.", updatedPost.getBody());
+
+        // Перевірка репоста
+        assertEquals("https://example.com/newImage.jpg", bRepost.getImageUrl());
+        assertEquals("Updated Post Title", bRepost.getTitle());
+        assertEquals("This is the updated body of my post.", bRepost.getBody());
+        assertNotNull(bRepost.getOriginalPost());
+        assertEquals(aPost.getPostId(), bRepost.getOriginalPost().getPostId());
+    }
 
     /**
      * Тестує додавання коментаря до публікації.
