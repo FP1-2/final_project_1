@@ -4,10 +4,12 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostPatchRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.RepostRequest;
 import com.facebook.exception.NotFoundException;
+import com.facebook.exception.UnauthorizedException;
 import com.facebook.facade.PostFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
@@ -18,11 +20,6 @@ import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -31,6 +28,10 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 
 /**
@@ -317,6 +318,44 @@ public class PostService {
         return postRepository.findPostDetailsById(savedPost.getId())
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException("Post details not found after creation!"));
+    }
+
+    /**
+     * Оновлює існуючий пост/репост за допомогою наданого запиту на оновлення.
+     *
+     * @param request DTO, що містить поля для оновлення поста.
+     * @param postId  ідентифікатор поста, який потрібно оновити.
+     * @param userId  ідентифікатор користувача, який робить запит на оновлення.
+     * @return об'єкт {@link PostResponse} з даними оновленого поста.
+     * @throws NotFoundException     якщо пост або користувач не знайдені.
+     * @throws UnauthorizedException якщо користувач не має прав на оновлення цього поста.
+     */
+    public PostResponse updatePost(PostPatchRequest request, Long postId, Long userId) {
+        AppUser user = appUserRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND));
+
+        Post existingPost = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
+
+        Optional.of(user.getId())
+                .filter(id -> id.equals(existingPost.getUser().getId()))
+                .orElseThrow(() -> new UnauthorizedException("User not authorized to update this post!"));
+
+        Optional
+                .ofNullable(request.getImageUrl())
+                .ifPresent(existingPost::setImageUrl);
+        Optional
+                .ofNullable(request.getTitle())
+                .ifPresent(existingPost::setTitle);
+        Optional
+                .ofNullable(request.getBody())
+                .ifPresent(existingPost::setBody);
+
+        Post savedPost = postRepository.save(existingPost);
+
+        return postRepository.findPostDetailsById(savedPost.getId())
+                .map(postFacade::convertToPostResponse)
+                .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
     }
 
 }

@@ -4,19 +4,19 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostPatchRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.RepostRequest;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.PostService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -197,6 +197,23 @@ public class PostController {
         return postService.createRepost(repostRequest, userId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Контролер для обробки запиту на часткове оновлення існуючого поста.
+     *
+     * @param postId       ідентифікатор поста, який потрібно оновити.
+     * @param patchRequest DTO з даними для часткового оновлення поста.
+     * @return об'єкт {@link PostResponse} з даними оновленого поста.
+     */
+    @PatchMapping("/update/{postId}")
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long postId,
+                                                   @Validated
+                                                   @RequestBody
+                                                   PostPatchRequest patchRequest) {
+        Long userId = currentUserService.getCurrentUserId();
+        PostResponse postResponse = postService.updatePost(patchRequest, postId, userId);
+        return ResponseEntity.ok(postResponse);
     }
 
 }
