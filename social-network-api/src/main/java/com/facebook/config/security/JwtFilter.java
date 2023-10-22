@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -45,8 +46,10 @@ public class JwtFilter extends OncePerRequestFilter {
                                 .getAuthentication());
                 chain.doFilter(request, response);
             } catch (UsernameNotFoundException ex) {
-                log.info("UsernameNotFoundException: Username not found; {}",
+                log.info("Username not found; {}",
                         ex.getMessage());
+                response.setStatus(HttpStatus.FORBIDDEN.value());
+                response.getWriter().write("User not found");
             } catch (Exception ex) {
                 log.error("Error occurred: {}",
                         ex.getMessage());
