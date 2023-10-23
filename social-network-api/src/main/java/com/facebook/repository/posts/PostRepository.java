@@ -1,5 +1,6 @@
 package com.facebook.repository.posts;
 
+import com.facebook.model.AppUser;
 import com.facebook.model.posts.Post;
 
 import java.util.List;
@@ -24,23 +25,86 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    Optional<Post> findByUserAndOriginalPostId(AppUser user, Long originalPostId);
+
+    /**
+     * SQL-запит для витягу детальної інформації по постах.
+     * <p>
+     * Запит дозволяє отримати:
+     * - основну інформацію по посту (ID, дати створення та модифікації,
+     *   URL зображення, заголовок, тіло, статус, тип);
+     * - дані користувача, який опублікував пост (ID, ім'я, прізвище,
+     *   ім'я користувача, аватар);
+     * - списки ID коментарів, лайків та репостів, які відносяться до посту.
+     * </p>
+     * <p>
+     * Додатково, якщо даний пост є репостом іншого посту, запит також отримує
+     * інформацію про оригінальний пост та користувача, який створив
+     * оригінальний пост.
+     * </p>
+     * <p>
+     * Цей запит використовується в двох основних методах:
+     * - {@link #findPostDetailsByUserId(Long, Pageable)}:
+     *   для отримання деталей усіх постів певного користувача;
+     * - {@link #findPostDetailsById(Long)}:
+     *   для отримання деталей конкретного посту за його ID.
+     * </p>
+     * <p>
+     * Зверніть увагу, що ця константа містить базову частину запиту,
+     * яка пізніше розширюється додатковими умовами в залежності від конкретного методу,
+     * в якому вона використовується.
+     * </p>
+     */
     String POST_DETAILS_SELECT = """
-                SELECT
-                    p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
-                    u.id as user_id, u.name, u.surname, u.username, u.avatar,
-                    GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                    GROUP_CONCAT(DISTINCT l.id) AS like_ids,
-                    GROUP_CONCAT(DISTINCT r.id) AS repost_ids
-                FROM
-                    posts p
-                LEFT JOIN
-                    users u ON p.user_id = u.id
-                LEFT JOIN
-                    comments c ON p.id = c.post_id
-                LEFT JOIN
-                    likes l ON p.id = l.post_id
-                LEFT JOIN
-                    reposts r ON p.id = r.post_id
+                        SELECT
+                            p.id AS post_id,
+                            p.created_date,
+                            p.last_modified_date,
+                            p.image_url,
+                            p.title,
+                            p.body,
+                            p.status,
+                            p.type,
+                            p.original_post_id,
+                          
+                            u.id AS user_id,
+                            u.name,
+                            u.surname,
+                            u.username,
+                            u.avatar,
+                          
+                            GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
+                            GROUP_CONCAT(DISTINCT l.id) AS like_ids,
+                            GROUP_CONCAT(DISTINCT r.id) AS current_reposts,
+                           
+                            ou.id AS original_user_id,
+                            ou.name AS original_name,
+                            ou.surname AS original_surname,
+                            ou.username AS original_username,
+                            ou.avatar AS original_avatar,
+                          
+                            op.title AS original_title,
+                            op.body AS original_body,
+                            op.status AS original_status,
+                            op.type AS original_type,
+                          
+                            GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
+                            GROUP_CONCAT(DISTINCT ol.id) AS original_like_ids,
+                            GROUP_CONCAT(DISTINCT orp.id) AS original_reposts
+                        FROM
+                            posts p
+                        LEFT JOIN posts op ON p.original_post_id = op.id
+                        LEFT JOIN users u ON p.user_id = u.id
+                        LEFT JOIN users ou ON op.user_id = ou.id
+                        
+                        LEFT JOIN comments c ON p.id = c.post_id
+                        LEFT JOIN comments oc ON op.id = oc.post_id
+                        
+                        LEFT JOIN likes l ON p.id = l.post_id
+                        LEFT JOIN likes ol ON op.id = ol.post_id
+                        
+                        LEFT JOIN posts orp ON op.id = orp.original_post_id AND orp.type = 'REPOST'
+                        LEFT JOIN posts r ON p.id = r.original_post_id AND r.type = 'REPOST'
             """;
 
     /**
@@ -59,17 +123,12 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список мап, де кожна мапа представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-        WHERE
-            p.user_id = :userId
-        GROUP BY
-            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
-            u.id, u.name, u.surname, u.username, u.avatar
-        """,
+             WHERE p.user_id = :userId
+             GROUP BY p.id, u.id, op.id, ou.id
+            """,
             countQuery = "SELECT count(*) FROM posts WHERE user_id = :userId",
             nativeQuery = true)
-    List<Map<String, Object>> findPostDetailsByUserId(@Param("userId")
-                                                      Long userId,
-                                                      Pageable pageable);
+    List<Map<String, Object>> findPostDetailsByUserId(@Param("userId") Long userId, Pageable pageable);
 
     /**
      * Знаходить деталі конкретного посту за його ідентифікатором.
@@ -85,12 +144,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Мапа, що представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-        WHERE
-            p.id = :postId
-        GROUP BY
-            p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status,
-            u.id, u.name, u.surname, u.username, u.avatar
-        """, nativeQuery = true)
+            WHERE
+                p.id = :postId
+            GROUP BY p.id, u.id, op.id, ou.id
+            """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("postId") Long postId);
 
 
