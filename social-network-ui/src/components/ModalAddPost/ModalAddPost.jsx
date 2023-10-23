@@ -1,4 +1,4 @@
-import React, { useRef, useState,useEffect} from "react";
+import React, { useRef, useState, useEffect} from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import Textarea from "../Textarea/Textarea";
@@ -40,9 +40,11 @@ const ModalAddPost = () => {
   };
 
   const onSubmit = async (value) => {
-    setErrorValidation(false);
     if(value.text==="" && value.img===""){
       setErrorValidation(true);
+    }else{
+      dispatch(modalAddPostState(false));
+      setErrorValidation(false);
     }
   };
 
@@ -54,16 +56,12 @@ const ModalAddPost = () => {
     dispatch(modalAddPostState(false));
   };
 
-  const AddPost=()=>{
-    dispatch(modalAddPostState(false));
-    // console.log("publish");
-  };
 
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
-      {({ isValid, setFieldValue, values }) => (
-        <div className={modalAddPost?style.modalWrapper:style.displayNone} style={{top:`${scroll-126}px`}}>
+      {({setFieldValue, values }) => (
+        <div className={modalAddPost?style.modalWrapper:style.displayNone} style={{top:`${scroll-492}px`}}>
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>
@@ -81,7 +79,7 @@ const ModalAddPost = () => {
                 </div>
               </div>
               <div className={style.modalMain}>
-                <Textarea type="text" name="text" placeholder="Anything new?" />
+                <Textarea type="text" name="text" placeholder="Anything new?"/>
                 {values.img && <PreviewImage file={values.img} />}
               </div>
             </div>
@@ -92,8 +90,10 @@ const ModalAddPost = () => {
                   <AddPhoto className={style.modalAddPhotoImg} />
                   Download photo
                 </button>
-                <input type="file" name="img" ref={img} style={{ display: "none" }} onChange={(e) => setFieldValue("img", e.target.files[0])} />
-                <button type="submit" disabled={!isValid} className={style.modalPublish} onClick={AddPost}>Publish</button>
+                <input type="file" name="img" ref={img} style={{ display: "none" }} onChange={(e) => {
+                  setFieldValue("img", e.target.files[0]);
+                  setErrorValidation(false);}} />
+                <button type="submit" className={style.modalPublish}>Publish</button>
               </div>
             </div>            
           </Form>

@@ -1,3 +1,4 @@
+@import "../../styles/mixin.scss";
 .friendCardWrapper {
     padding: 16px;
     display: flex;
@@ -6,6 +7,18 @@
     gap: 16px;
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
     border-radius: 5px;
+
+    @include width_992 {
+        padding: 15px;
+    }
+
+    @include width_768 {
+        margin-bottom: 15px;
+        
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
 
     .friendCard {
         display: flex;

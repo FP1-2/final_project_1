@@ -1,12 +1,18 @@
-.imgWrapper{
+@import "../../styles/mixin.scss";
+
+.imgWrapper {
     display: flex;
     justify-content: center;
     padding-left: 16px;
     padding-right: 16px;
     box-sizing: border-box;
 
-        .img{
+    .img {
         max-height: 260px;
         object-fit: cover;
+
+        @include width_576 {
+            width: 100%;
+        }
     }
 }

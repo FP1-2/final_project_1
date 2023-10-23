@@ -22,10 +22,6 @@ const PostsPage = () => {
     commentInputFocus.current.focus();
   };
 
-  // const changeClickComment = () => {
-  //   setClickComment(state => !state);
-  // }
-
   return (
     <div className={style.postWrapper}>
       <div className={style.post}>

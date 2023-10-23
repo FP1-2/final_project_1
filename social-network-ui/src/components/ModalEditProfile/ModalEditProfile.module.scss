@@ -1,4 +1,6 @@
+@import "../../styles/mixin.scss";
 .modalWrapper {
+    z-index: 2;
     position: absolute;
     width: 100%;
     min-height: 100vh;
@@ -7,7 +9,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    z-index: 1;
+    padding: 15px;
 
     .modal {
         width: 730px;
@@ -111,7 +113,7 @@
         }
 
         .modalMain{
-            padding: 20px 10px 20px 16px ;
+            padding: 20px 16px ;
 
             .modalMainAvatar{
                 display: flex;
@@ -192,10 +194,14 @@
                     }
                 }
                 .modalMainHeaderPhotoImg{
-                    min-width: 500px;
+                    width: 500px;
                     max-height: 185px;
                     object-fit: cover;
                     border-radius: 8px;
+
+                    @include width_576 {
+                        width: 100%;
+                    }
                 }
             }
 
@@ -225,6 +231,10 @@
                 flex-direction: column;
                 gap: 12px;
                 justify-content: space-between;
+
+                @include width_768 {
+                    width: 100%;
+                }
 
                 .modalMainInputEditProfile{
                     padding: 18px 16px;
@@ -265,6 +275,8 @@
                     &:hover{
                         cursor: pointer;
                     }
+
+                    
                 }
             }
 

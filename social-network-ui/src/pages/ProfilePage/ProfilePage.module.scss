@@ -1,50 +1,81 @@
+@import "../../styles/mixin.scss";
+
 .profilePage {
     position: relative;
 
-    .headerImgWrapper {
+    .headerWrapper {
         width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
-        position: relative;
-
-        .headerImg {
+        
+        .header{
+            position: relative;
             width: 940px;
             height: 350px;
-            object-fit: cover;
-            border-bottom-left-radius: 5px;
-            border-bottom-right-radius: 5px;
-        }
 
-        .headerBtn {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            height: 35px;
-            font-size: 15px;
-            font-weight: 600;
-            color: white;
-            line-height: 1.3333;
-            background-color: rgba(0, 0, 0, 0.4);
-            border: none;
-            border-radius: 5px;
-            position: absolute;
-            top: 300px;
-            right: 330px;
-            padding: 0 30px;
-
-            &:hover {
-                cursor: pointer;
-                background-color: rgba(0, 0, 0, 0.6);
+            @include width_992 {
+                width: 100%;
+            }
+            @include width_576 {
+                max-height: 210px;
             }
 
-            .headerBtnCamera {
-                width: 20px;
-                height: 20px;
+            .headerImg {
+                width: 100%;
+                max-height: 100%;
+                object-fit: cover;
+                border-bottom-left-radius: 5px;
+                border-bottom-right-radius: 5px;
             }
+    
+            .headerBtn {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 5px;
+                height: 35px;
+                background-color: rgba(0, 0, 0, 0.4);
+                border: none;
+                border-radius: 5px;
+                position: absolute;
+                top: 300px;
+                right: 40px;
+                padding: 0 30px;
+                z-index: 1;
+    
+                &:hover {
+                    cursor: pointer;
+                    background-color: rgba(0, 0, 0, 0.6);
+                }
+
+                @include width_576 {
+                    top: 75%;
+                    right: 20px;
+                    padding: 0 15px;
+                }
+    
+                .headerBtnCamera {
+                    width: 20px;
+                    height: 20px;
+                }
+
+                .headerBtnText{
+                    font-size: 15px;
+                    font-weight: 600;
+                    color: white;
+                    line-height: 1.3333;
+
+                    @include width_992 {
+                        display: none;
+                    }
+                }
+            }
+
         }
+
+
     }
 
     .infoWrapper {
@@ -57,50 +88,93 @@
             width: 940px;
             display: flex;
             align-items: flex-end;
-            height: 160px;
+            justify-content: space-between;
+            min-height: 160px;
+            position: relative;
+            gap: 0px;
 
             &::after {
                 content: "";
-                width: 940px;
+                width: 100%;
                 border-bottom: 1px solid #ccced2;
                 position: absolute;
             }
 
+            @include width_992 {
+                gap: 60px;
+            }
+
+            @include width_880 {
+                flex-direction: column;
+                align-items: center;
+                gap: 0px;
+                margin-bottom: 16px;
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    border-bottom: 1px solid #ccced2;
+                    position: absolute;
+                    bottom: -16px;
+                }
+            }
+
             .infoAvatarWrapper {
                 position: absolute;
-                top: 320px;
-                left: 340px;
+                width: 100%;
+                z-index: 1;
 
-                .infoAvatar {
-                    width: 168px;
-                    height: 168px;
-                    border-radius: 50%;
-                    object-fit: cover;
-                    border: 5px solid white;
-                }
-
-                .infoAvatarBtn {
+                @include width_880 {
                     display: flex;
                     align-items: center;
                     justify-content: center;
-                    width: 36px;
-                    height: 36px;
-                    border: none;
-                    border-radius: 50%;
-                    background-color: #E4E6EB;
-                    position: absolute;
-                    top: 120px;
-                    right: 5px;
+                    top: -80px;
+                }
+                .infoAvatar{
+                    position: relative;
+                    padding-left: 35px;
 
-                    &:hover {
-                        cursor: pointer;
-                        background-color: #d5d8de;
+                    @include width_880 {
+                        padding-left: 0;
                     }
 
-                    .infoAvatarBtnCamera {
-                        width: 20px;
-                        height: 20px;
+                    .infoAvatarImg {
+                        width: 168px;
+                        height: 168px;
+                        border-radius: 50%;
+                        object-fit: cover;
+                        border: 5px solid white;
                     }
+    
+                    .infoAvatarBtn {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        width: 36px;
+                        height: 36px;
+                        border: none;
+                        border-radius: 50%;
+                        background-color: #E4E6EB;
+                        position: absolute;
+                        top: 120px;
+                        left: 170px;
+
+                        @include width_880 {
+                            left: 140px;
+                        }
+    
+    
+                        &:hover {
+                            cursor: pointer;
+                            background-color: #d5d8de;
+                        }
+    
+                        .infoAvatarBtnCamera {
+                            width: 20px;
+                            height: 20px;
+                        }
+                    }
+
                 }
             }
 
@@ -108,8 +182,14 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
+                padding: 32px 10px 35px 230px;
+                z-index: 0;
 
-                padding: 32px 10px 35px 270px;
+                @include width_880 {
+                    padding: 120px 0 16px;
+                    align-items: center;
+                    text-align: center;
+                }
 
                 .infoName {
                     font-weight: 700;
@@ -127,10 +207,6 @@
                     font-size: 15px;
                     line-height: 1.3333;
                     color: #65676B;
-
-                    &:hover {
-                        text-decoration: underline;
-                    }
                 }
             }
 
@@ -151,15 +227,108 @@
                 border-radius: 5px;
                 margin-left: 100px;
                 margin-bottom: 65px;
+                z-index: 1;
 
                 &:hover {
                     cursor: pointer;
                     background-color: #d5d8de;
                 }
 
+                @include width_992 {
+                    margin-left: 0px;
+                    min-width: 200px;
+                }
+
+                @include width_880 {
+                    margin-bottom: 0;
+                }
+
+
                 .infoBtnPencil {
                     width: 20px;
                     height: 20px;
+                }
+            }
+
+            .infoBtnsWrapper{
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 16px;
+                padding-bottom: 35px;
+                padding-right: 30px;
+                z-index: 1;
+
+                .infoBtnDeleteFriend{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    font-size: 15px;
+                    color:#050505;
+                    padding: 8px 12px;
+                    gap: 6px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #F0F2F5;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d8dadf;
+                    }
+
+                    .infoBtnDeleteFriendImg{
+                        width: 16px;
+                        height: 16px;
+                    }
+                }
+                .infoBtnMessage{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    font-size: 15px;
+                    color:white;
+                    padding: 8px 12px;
+                    gap: 6px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #0866FF;;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #0861f2;
+                    }
+                    .infoBtnMessageImg{
+                        width: 16px;
+                        height: 16px;                  
+                    }
+                }
+                .infoBtnAddFriend{
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    line-height: 1.3333;
+                    font-weight: 600;
+                    font-size: 15px;
+                    color:#050505;
+                    padding: 8px 12px;
+                    gap: 6px;
+                    border: none;
+                    border-radius: 5px;
+                    background-color: #F0F2F5;
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d8dadf;
+                    }
+
+                    .infoBtnAddFriendImg{
+                        width: 16px;
+                        height: 16px;
+                    }
                 }
             }
         }
@@ -178,16 +347,29 @@
             margin: 0;
             padding: 0;
 
+            @include width_992 {
+                width: 850px;
+            }
+
+            @include width_880 {
+                width: 100%;
+                justify-content: center;
+            }
+
             .linksListElem {
                 list-style: none;
                 height: 45px;
                 padding-left: 16px;
                 padding-right: 16px;
-                min-width: 120px;
+                width: 120px;
                 border-radius: 5px;
 
                 &:hover {
                     background-color: #f2f2f2;
+                }
+
+                @include width_576 {
+                    width: 50px;
                 }
 
 
@@ -210,9 +392,13 @@
                 height: 45px;
                 padding-left: 16px;
                 padding-right: 16px;
-                min-width: 120px;
+                width: 120px;
                 border-radius: 5px;
                 position: relative;
+
+                @include width_576 {
+                    width: 50px;
+                }
 
                 &::after {
                     content: "";
@@ -238,122 +424,4 @@
         }
     }
 
-    .profileBodyWrapper {
-        background-color: #F0F2F5;
-        height: auto;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding-top: 15px;
-        box-sizing: border-box;
-
-        .profileBody {
-            display: grid;
-            grid-auto-flow: column;
-            justify-content: center;
-            gap: 16px;
-            width: 940px;
-
-            .profileInformation {
-                display: flex;
-                flex-direction: column;
-                justify-content: center;
-                width: 360px;
-                min-height: 200px;
-                max-height: 250px;
-                background-color: white;
-                border-radius: 5px;
-                box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-                padding: 20px 16px 15px;
-
-                .profileInformationTitile {
-                    font-weight: 700;
-                    font-size: 20px;
-                    color: #050505;
-                }
-
-                .profileInformationList {
-                    padding: 0;
-
-                    .profileInformationElem {
-                        list-style: none;
-                        margin-bottom: 16px;
-                    }
-                }
-
-                .profileInformationBtn {
-                    width: 100%;
-                    text-align: center;
-                    padding: 8px 0;
-                    font-size: 15px;
-                    line-height: 1.3333;
-                    font-weight: 600;
-                    color: #050505;
-                    background-color: #E4E6EB;
-                    border: none;
-                    border-radius: 5px;
-
-                    &:hover {
-                        cursor: pointer;
-                        background-color: #d5d8de;
-                    }
-
-                }
-
-            }
-
-            .profileBodyPostsWrapper {
-                width: 500px;
-
-
-                .profileAddPost {
-                    padding: 12px 16px;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 8px;
-                    background-color: white;
-                    width: 100%;
-                    height: 64px;
-                    border-radius: 5px;
-                    box-sizing: border-box;
-                    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-
-                    .profileAddPostImg {
-                        width: 40px;
-                        height: 40px;
-                        border-radius: 50%;
-                        object-fit: cover;
-                    }
-
-                    .profileAddPostBtn {
-                        width: 100%;
-                        padding: 8px 12px;
-                        border: none;
-                        border-radius: 20px;
-                        font-size: 17px;
-                        line-height: 1.3333;
-                        color: #65676B;
-                        background-color: #E4E6EB;
-                        text-align: left;
-
-                        &:hover {
-                            cursor: pointer;
-                            background-color: #d5d8de;
-                        }
-                    }
-                }
-
-                .profilePosts {
-                    padding: 0;
-                    box-sizing: border-box;
-
-                    .profilePost {
-                        list-style: none;
-                        margin-bottom: 16px;
-                    }
-                }
-            }
-        }
-    }
 }

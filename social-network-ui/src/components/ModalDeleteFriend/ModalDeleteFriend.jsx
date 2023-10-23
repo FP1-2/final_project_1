@@ -1,6 +1,5 @@
 import React, {useEffect,useState} from "react";
 import style from "./ModalDeleteFriend.module.scss";
-// import PropTypes from "prop-types";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
 import { modalDeleteFriendState } from "../../redux-toolkit/profile/slice";
@@ -27,11 +26,10 @@ const ModalDeleteFriend = () => {
 
   const deleteFriend=()=>{
     dispatch(modalDeleteFriendState(false));
-    // console.log("delete");
   };
 
   return (
-    <div className={modalDeleteFriend?style.modalWrapper:style.displayNone} style={{top:`${scroll-126}px`}} onClick={modalDeleteFriendClose}>
+    <div className={modalDeleteFriend?style.modalWrapper:style.displayNone} style={{top:`${scroll}px`}}>
       <div className={style.modal}>
         <header className={style.modalHeader}>
           <h2 className={style.modalHeadertittle}>Remove Анна Надточий from friends</h2>
@@ -50,10 +48,4 @@ const ModalDeleteFriend = () => {
     </div>
   );
 };
-// FriendProfile.propTypes = {
-// //   file: PropTypes.object
-// };
-// FriendProfile.defaultProps = {
-// //   file: {}
-// };
 export default ModalDeleteFriend;
