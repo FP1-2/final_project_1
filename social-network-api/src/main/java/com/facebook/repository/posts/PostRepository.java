@@ -146,9 +146,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query(value = POST_DETAILS_SELECT + """
             WHERE
                 p.id = :postId
-            GROUP BY
-                p.id, p.created_date, p.last_modified_date, p.image_url, p.title, p.body, p.status, p.type, p.original_post_id,
-                u.id, u.name, u.surname, u.username, u.avatar
+            GROUP BY p.id, u.id, op.id, ou.id
             """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("postId") Long postId);
 

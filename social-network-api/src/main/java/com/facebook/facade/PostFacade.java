@@ -16,6 +16,7 @@ import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.posts.PostRepository;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -109,14 +110,21 @@ public class PostFacade {
     }
 
     /**
-     * Перетворює результат SQL-запиту на деталі поста
-     * у вигляді мапи на об'єкт PostSqlResult.
+     * Перетворює результат SQL-запиту на деталі поста з мапи в об'єкт PostSqlResult.
+     * Оскільки dev використовує базу даних h2, де ключі в верхньому регістрі,
+     * а prod - MySQL в нижньому,
+     * цей метод перетворює всі ключі в верхній регістр для уніфікації перед маппінгом.
+     * Це забезпечує коректну роботу мапера незалежно від особливостей реалізації бази даних.
      *
      * @param row Результат SQL-запиту у вигляді мапи.
      * @return Об'єкт PostSqlResult.
      */
     public PostSqlResult mapToPostSqlResult(Map<String, Object> row) {
-        return modelMapper.map(row, PostSqlResult.class);
+        Map<String, Object> resultMap = new HashMap<>();
+        for (Map.Entry<String, Object> entry : row.entrySet()) {
+            resultMap.put(entry.getKey().toUpperCase(), entry.getValue());
+        }
+        return modelMapper.map(resultMap, PostSqlResult.class);
     }
 
     /**
@@ -132,6 +140,7 @@ public class PostFacade {
      */
     public PostResponse convertToPostResponse(Map<String, Object> row) {
         PostSqlResult sqlResult = mapToPostSqlResult(row);
+
         PostResponse post = new PostResponse();
 
         post.setAuthor(modelMapper.map(sqlResult, Author.class));
@@ -158,6 +167,8 @@ public class PostFacade {
      * @return Перетворений об'єкт {@link PostResponse} для оригінального посту.
      */
     private PostResponse mapOriginalPost(PostSqlResult sqlResult){
+
+
         PostResponse originalPost = new PostResponse();
 
         modelMapper.map(sqlResult, originalPost);
