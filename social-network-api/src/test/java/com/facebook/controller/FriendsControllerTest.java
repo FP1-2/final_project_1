@@ -17,7 +17,7 @@ import java.util.List;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = FriendsController.class)
-public class FriendsControllerTest {
+class FriendsControllerTest {
 
     @Autowired
     private FriendsController friendsController;
