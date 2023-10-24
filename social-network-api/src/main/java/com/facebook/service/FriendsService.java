@@ -27,7 +27,7 @@ public class FriendsService {
 
     private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
 
-    public Friends sendFriendRequest(Long userId, Long friendId) {
+    public FriendsResponse sendFriendRequest(Long userId, Long friendId) {
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found!"));
         AppUser friend = appUserRepository.findById(friendId)
@@ -44,7 +44,9 @@ public class FriendsService {
         }
 
         Friends friendRequest = new Friends(user, friend, FriendsStatus.PENDING);
-        return friendsRepository.save(friendRequest);
+        friendsRepository.save(friendRequest);
+
+        return facade.toFriendsResponse(friendRequest);
     }
 
     public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {

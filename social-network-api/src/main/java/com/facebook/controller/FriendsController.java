@@ -3,7 +3,6 @@ package com.facebook.controller;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
-import com.facebook.facade.FriendsFacade;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.FriendsService;
 import jakarta.validation.Valid;
@@ -22,13 +21,10 @@ public class FriendsController {
 
     private final CurrentUserService currentUserService;
 
-    private final FriendsFacade facade;
-
     @PostMapping("/send-request")
     public ResponseEntity<FriendsResponse> sendFriendRequest(@Valid @RequestBody FriendsRequest request) {
         Long userId = currentUserService.getCurrentUserId();
-        FriendsResponse response = facade.toFriendsResponse(friendsService.sendFriendRequest(userId, request.getFriendId()));
-        return ResponseEntity.ok(response);
+        return ResponseEntity.ok(friendsService.sendFriendRequest(userId, request.getFriendId()));
     }
 
     @PutMapping("/update-status")
