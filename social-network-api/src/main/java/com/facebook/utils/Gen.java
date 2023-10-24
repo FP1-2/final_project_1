@@ -8,16 +8,19 @@ import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
-import com.facebook.model.posts.Repost;
+import com.facebook.model.posts.PostType;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
-import com.facebook.repository.posts.RepostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.PostService;
 import com.github.javafaker.Faker;
+
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
+
 import lombok.extern.log4j.Log4j2;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -49,8 +52,6 @@ public class Gen {
 
     private final CommentRepository commentRepository;
 
-    private final RepostRepository repostRepository;
-
     private final AppUserService appUserService;
 
     private final PasswordEncoder passwordEncoder;
@@ -67,8 +68,6 @@ public class Gen {
 
     private List<Like> likes;
 
-    private List<Repost> reposts;
-
     private Gen(ApplicationContext context) {
         this.context = context;
 
@@ -79,14 +78,11 @@ public class Gen {
 
         this.likeRepository = context.getBean(LikeRepository.class);
         this.commentRepository = context.getBean(CommentRepository.class);
-        this.repostRepository = context.getBean(RepostRepository.class);
 
         this.appUsers1 = genAppUser();
-        this.posts = genPosts();
-
+        this.posts = genPostsAndReposts();
         this.comments = genComments();
         this.likes = genLikes();
-        this.reposts = genReposts();
     }
 
     public static Gen of(ApplicationContext context) {
@@ -238,34 +234,6 @@ public class Gen {
                 .values()[MathUtils.random(0, PostStatus.values().length - 1)];
     }
 
-
-    private List<Post> genPosts() {
-        List<AppUser> appUsers1 = appUserService.findAll();
-
-        Faker faker = new Faker();
-
-        appUsers1.forEach(user -> {
-            // Для кожного користувача генеруємо від 1 до 10 постів
-            IntStream
-                    .rangeClosed(1, MathUtils.random(4, 10))
-                    .forEach(ignored -> {
-                        Post post = new Post();
-                        post.setStatus(getRandomPostStatus());
-                        post.setImageUrl(HEADER_PHOTO);
-                        post.setUser(user);
-                        post.setTitle(String.join(" ",
-                                faker
-                                        .lorem()
-                                        .words(MathUtils.random(1, 5)))
-                        );
-                        post.setBody(faker.lorem().paragraph()); // Lorem Ipsum
-                        postService.save(post);
-                    });
-        });
-
-        return postService.findAll();
-    }
-
     private List<Like> genLikes() {
         posts.forEach(post -> {
             appUsers1.forEach(user -> {
@@ -295,19 +263,44 @@ public class Gen {
         return commentRepository.findAll();
     }
 
-    private List<Repost> genReposts() {
-        posts.forEach(post -> {
-            appUsers1.forEach(user -> {
-                // 33% шанс сделать репост
-                if (MathUtils.random(0, 2) == 0) {
-                    postService.repost(user.getId(), post.getId());
+    private List<Post> genPostsAndReposts() {
+        List<AppUser> allUsers = appUserService.findAll();
+        Faker faker = new Faker();
+
+        allUsers.forEach(user -> {
+            IntStream.rangeClosed(1, MathUtils.random(4, 10)).forEach(ignored -> {
+                Post post = createPost(user, faker);
+                postService.save(post);
+
+                int repostsCount = MathUtils.random(0, 3);
+                for (int i = 0; i < repostsCount; i++) {
+                    List<AppUser> potentialReposters = new ArrayList<>(allUsers.stream()
+                            .filter(u -> !u.equals(user))
+                            .toList());
+                    Collections.shuffle(potentialReposters);
+
+                    AppUser repostingUser = potentialReposters.remove(0);
+                    Post repost = createPost(repostingUser, faker);
+                    repost.setType(PostType.REPOST);
+                    repost.setOriginalPostId(post.getId());
+                    postService.save(repost);
                 }
             });
         });
-
-        return repostRepository.findAll();
+        return postService.findAll();
     }
 
+    private Post createPost(AppUser user, Faker faker) {
+        Post post = new Post();
+        post.setType(PostType.POST);
+        post.setStatus(getRandomPostStatus());
+        post.setImageUrl(HEADER_PHOTO);
+        post.setUser(user);
+        post.setTitle(String.join(" ",
+                faker.lorem().words(MathUtils.random(1, 5))));
+        post.setBody(faker.lorem().paragraph());
+        return post;
+    }
 
 }
 

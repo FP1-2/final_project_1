@@ -1,14 +1,20 @@
 package com.facebook.dto.post;
 
-import com.facebook.dto.appuser.AppUserForPost;
 import java.time.LocalDateTime;
 import lombok.Data;
 
+/**
+ * DTO для представлення коментаря.
+ */
 @Data
 public class CommentDTO {
+
     private Long id;
+
     private String content;
+
     private LocalDateTime createdDate;
-    private AppUserForPost appUser;
+
+    private Author appUser;
 
 }
