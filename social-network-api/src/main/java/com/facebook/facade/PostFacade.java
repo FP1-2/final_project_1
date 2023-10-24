@@ -14,6 +14,7 @@ import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.posts.PostRepository;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -121,10 +122,22 @@ public class PostFacade {
      */
     public PostSqlResult mapToPostSqlResult(Map<String, Object> row) {
         Map<String, Object> resultMap = new HashMap<>();
+
         for (Map.Entry<String, Object> entry : row.entrySet()) {
             resultMap.put(entry.getKey().toUpperCase(), entry.getValue());
         }
-        return modelMapper.map(resultMap, PostSqlResult.class);
+
+        PostSqlResult result = modelMapper.map(resultMap, PostSqlResult.class);
+
+        result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
+        result.setLikeIds((String) resultMap.get("LIKE_IDS"));
+
+        result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
+        result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_IDS"));
+        result.setOriginalRepostsIds((String) resultMap.get("ORIGINAL_REPOST_IDS"));
+
+        return result;
+
     }
 
     /**
@@ -168,7 +181,6 @@ public class PostFacade {
      */
     private PostResponse mapOriginalPost(PostSqlResult sqlResult){
 
-
         PostResponse originalPost = new PostResponse();
 
         modelMapper.map(sqlResult, originalPost);
@@ -190,7 +202,7 @@ public class PostFacade {
 
         originalPost.setComments(stringToList(sqlResult.getOriginalCommentIds()));
         originalPost.setLikes(stringToList(sqlResult.getOriginalLikeIds()));
-        originalPost.setReposts(stringToList(sqlResult.getOriginalReposts()));
+        originalPost.setReposts(stringToList(sqlResult.getOriginalRepostsIds()));
 
         return originalPost;
     }

@@ -47,7 +47,7 @@ public class PostSqlResult {
     private String originalStatus;
     private String originalCommentIds;
     private String originalLikeIds;
-    private String originalReposts;
+    private String originalRepostsIds;
     private PostType originalType;
 
     @Override
@@ -79,7 +79,7 @@ public class PostSqlResult {
                 + ", originalStatus='" + originalStatus + '\''
                 + ", originalCommentIds='" + originalCommentIds + '\''
                 + ", originalLikeIds='" + originalLikeIds + '\''
-                + ", originalRepostIds='" + originalReposts + '\''
+                + ", originalRepostIds='" + originalRepostsIds + '\''
                 + ", originalType=" + originalType
                 + '}';
     }
