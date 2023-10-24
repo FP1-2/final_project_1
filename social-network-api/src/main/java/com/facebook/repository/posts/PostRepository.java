@@ -75,7 +75,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
                             GROUP_CONCAT(DISTINCT l.id) AS like_ids,
-                            GROUP_CONCAT(DISTINCT r.id) AS current_reposts,
+                            GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
                             ou.name AS original_name,
@@ -90,7 +90,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
                             GROUP_CONCAT(DISTINCT ol.id) AS original_like_ids,
-                            GROUP_CONCAT(DISTINCT orp.id) AS original_reposts
+                            GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids
                         FROM
                             posts p
                         LEFT JOIN posts op ON p.original_post_id = op.id
