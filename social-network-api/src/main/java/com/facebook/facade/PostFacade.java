@@ -131,10 +131,11 @@ public class PostFacade {
 
         result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
         result.setLikeIds((String) resultMap.get("LIKE_IDS"));
+        result.setRepostIds((String) resultMap.get("REPOST_IDS"));
 
         result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
         result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_IDS"));
-        result.setOriginalRepostsIds((String) resultMap.get("ORIGINAL_REPOST_IDS"));
+        result.setOriginalRepostIds((String) resultMap.get("ORIGINAL_REPOST_IDS"));
 
         return result;
 
@@ -159,12 +160,21 @@ public class PostFacade {
         post.setAuthor(modelMapper.map(sqlResult, Author.class));
         modelMapper.map(sqlResult, post);
 
-        post.setComments(stringToList(sqlResult.getCommentIds()));
-        post.setLikes(stringToList(sqlResult.getLikeIds()));
+        Optional.ofNullable(sqlResult.getCommentIds())
+                .map(this::stringToList)
+                .ifPresent(post::setComments);
 
-        if (sqlResult.getOriginalPostId() != null) {
-            post.setOriginalPost(mapOriginalPost(sqlResult));
-        }
+        Optional.ofNullable(sqlResult.getLikeIds())
+                .map(this::stringToList)
+                .ifPresent(post::setLikes);
+
+        Optional.ofNullable(sqlResult.getRepostIds())
+                .map(this::stringToList)
+                .ifPresent(post::setReposts);
+
+        Optional.ofNullable(sqlResult.getOriginalPostId())
+                .map(id -> mapOriginalPost(sqlResult))
+                .ifPresent(post::setOriginalPost);
 
         return post;
     }
@@ -200,9 +210,17 @@ public class PostFacade {
         originalPost.setStatus(sqlResult.getOriginalStatus());
         originalPost.setType(sqlResult.getOriginalType());
 
-        originalPost.setComments(stringToList(sqlResult.getOriginalCommentIds()));
-        originalPost.setLikes(stringToList(sqlResult.getOriginalLikeIds()));
-        originalPost.setReposts(stringToList(sqlResult.getOriginalRepostsIds()));
+        Optional.ofNullable(sqlResult.getOriginalCommentIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setComments);
+
+        Optional.ofNullable(sqlResult.getOriginalLikeIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setLikes);
+
+        Optional.ofNullable(sqlResult.getOriginalRepostIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setReposts);
 
         return originalPost;
     }
