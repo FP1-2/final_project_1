@@ -7,21 +7,21 @@ import static org.junit.jupiter.api.Assertions.assertNotEquals;
 class FriendsStatusTest {
 
     @Test
-    public void testEnumValues() {
+    void testEnumValues() {
         assertEquals("PENDING", FriendsStatus.PENDING.name());
         assertEquals("APPROVED", FriendsStatus.APPROVED.name());
         assertEquals("REJECTED", FriendsStatus.REJECTED.name());
     }
 
     @Test
-    public void testEnumComparison() {
+    void testEnumComparison() {
         FriendsStatus pending = FriendsStatus.PENDING;
         FriendsStatus approved = FriendsStatus.APPROVED;
         FriendsStatus rejected = FriendsStatus.REJECTED;
 
-        assertEquals(pending, FriendsStatus.PENDING);
-        assertEquals(approved, FriendsStatus.APPROVED);
-        assertEquals(rejected, FriendsStatus.REJECTED);
+        assertEquals(FriendsStatus.PENDING, pending);
+        assertEquals(FriendsStatus.APPROVED, approved);
+        assertEquals(FriendsStatus.REJECTED, rejected);
 
         assertNotEquals(pending, approved);
         assertNotEquals(approved, rejected);

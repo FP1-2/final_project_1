@@ -8,13 +8,13 @@ import static org.junit.jupiter.api.Assertions.*;
 class FriendsTest {
 
     @Test
-    public void testFriendsConstructor() {
+    void testFriendsConstructor() {
         Friends friends = new Friends();
         assertNotNull(friends);
     }
 
     @Test
-    public void testFriendsGettersAndSetters() {
+    void testFriendsGettersAndSetters() {
         Friends friends = new Friends();
 
         friends.setStatus(FriendsStatus.PENDING);
@@ -23,13 +23,13 @@ class FriendsTest {
     }
 
     @Test
-    public void testAppUserConstructor() {
+    void testAppUserConstructor() {
         AppUser user = new AppUser();
         assertNotNull(user);
     }
 
     @Test
-    public void testUserGettersAndSetters() {
+    void testUserGettersAndSetters() {
         AppUser user = new AppUser();
 
         user.setUsername("testUser");

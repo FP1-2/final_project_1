@@ -17,7 +17,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
-public class FriendsServiceTest {
+class FriendsServiceTest {
 
     @Mock
     private FriendsRepository friendsRepository;
@@ -43,7 +43,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testSendFriendRequest() {
+    void testSendFriendRequest() {
         AppUser user = new AppUser();
         user.setId(USER_ID_2);
 
@@ -61,7 +61,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testSendFriendRequestAlreadyExists() {
+    void testSendFriendRequestAlreadyExists() {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(new Friends()));
 
         assertThrows(NotFoundException.class, () -> {
@@ -70,7 +70,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testChangeFriendsStatus1() {
+    void testChangeFriendsStatus1() {
         Friends friends = new Friends();
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(friends));
 
@@ -80,7 +80,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testChangeFriendsStatusNotFound() {
+    void testChangeFriendsStatusNotFound() {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.empty());
 
         assertThrows(NotFoundException.class, () -> {
@@ -89,7 +89,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testDeleteFriend() {
+    void testDeleteFriend() {
         Friends friends = new Friends();
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(friends));
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_2, USER_ID_1)).thenReturn(Optional.of(friends));
@@ -100,7 +100,7 @@ public class FriendsServiceTest {
     }
 
     @Test
-    public void testDeleteFriendNotFound() {
+    void testDeleteFriendNotFound() {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.empty());
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_2, USER_ID_1)).thenReturn(Optional.empty());
 
