@@ -3,14 +3,12 @@ package com.facebook.facade;
 import com.facebook.dto.post.Author;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentResponse;
-import com.facebook.dto.post.LikeResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.PostSqlResult;
 import com.facebook.dto.post.RepostRequest;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
-import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.posts.PostRepository;
@@ -84,18 +82,6 @@ public class PostFacade {
         post.setUser(user);
         post.setOriginalPostId(request.getOriginalPostId());
         return post;
-    }
-
-    /**
-     * Конвертує об'єкт {@link Like} у відповідний DTO {@link LikeResponse}.
-     *
-     * @param like об'єкт "лайка", який потрібно конвертувати
-     * @return об'єкт DTO, що представляє "лайк"
-     */
-    public LikeResponse convertToLikeResponse(Like like) {
-        LikeResponse response = modelMapper.map(like, LikeResponse.class);
-        response.setCreated_date(like.getCreatedDate());
-        return response;
     }
 
     /**
