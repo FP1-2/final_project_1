@@ -28,6 +28,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -271,6 +272,7 @@ public class PostService {
      * @param userId Ідентифікатор користувача, який ініціює репост.
      * @return Відповідь з деталями про створений або видалений репост.
      */
+    @Transactional
     public Optional<ActionResponse> createRepost(RepostRequest request,
                                                  Long userId) {
         AppUser user = appUserRepository.findById(userId)
