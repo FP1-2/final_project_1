@@ -1,6 +1,5 @@
-package com.facebook.model;
+package com.facebook.model.friends;
 
-import com.facebook.model.friends.FriendsStatus;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;

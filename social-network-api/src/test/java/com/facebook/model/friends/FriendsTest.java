@@ -1,7 +1,6 @@
-package com.facebook.model;
+package com.facebook.model.friends;
 
-import com.facebook.model.friends.Friends;
-import com.facebook.model.friends.FriendsStatus;
+import com.facebook.model.AppUser;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
