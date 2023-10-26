@@ -4,7 +4,7 @@ import MessagesIcon from "../../assets/messagesIcon.png";
 import FavoritsIcon from "../../assets/favoriteIcon.png";
 import NotificationIcon from "../../assets/notificationIcon.png";
 import ProfileIcon from "../../assets/profileIcon.png";
-import styles from "./Header.module.scss";
+import styles from "./Aside.module.scss";
 import React from "react";
 import {logout} from "../../redux-toolkit/store";
 export default function Aside (){

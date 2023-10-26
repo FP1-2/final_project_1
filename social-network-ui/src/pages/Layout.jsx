@@ -1,5 +1,5 @@
 import {Outlet} from "react-router";
-import Aside from "../components/Header/Aside";
+import Aside from "../components/Aside/Aside";
 import Header from "../components/Header/Header";
 import styles from "../components/Header/Header.module.scss"
 import {useLocation} from "react-router-dom";

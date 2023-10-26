@@ -1,0 +1,41 @@
+.aside{
+  width: 30%;
+  nav {
+    background-color: #f6f6f6;
+    font-size: 22px;
+    font-weight: 400;
+    padding-left: 50px;
+    line-height: 1.6;
+
+    ul {
+      li {
+        padding: 15px;
+
+        img {
+          height: 20px;
+          width: 20px;
+          margin-right: 7px;
+        }
+      }
+    }
+
+    @media only screen and (max-width: 993px){
+
+    }
+    @media only screen and (max-width: 481px){}
+  }
+  .logOut{
+    background-color: #4172ed;
+    color: #fff;
+    font-size: 18px;
+    border-radius: 10px;
+
+    border-color: #fff;
+    padding: 5px;
+    min-width: 150px;
+    margin-left: 70px;
+    margin-top: 70px;
+    font-weight: 550;
+
+  }
+}
