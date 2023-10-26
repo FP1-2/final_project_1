@@ -23,8 +23,8 @@ export const loginThunk = createAsyncThunk(
         },
       });
       const userInfo = responseUser.data;
-      saveUserToLocalStorage(userInfo);
-
+      
+      saveUserToLocalStorage(id);
       setTimeout(() => {
         deleteTokenFromLocalStorage();
         deleteUserFromLocalStorage();

@@ -1,3 +1,5 @@
+@import "variables.scss";
+
 @mixin width_576 {
     @media (max-width: 576px){
         @content;
@@ -14,4 +16,25 @@
     @media (max-width: 992px){
         @content;
     }
+}
+
+@mixin flex-center{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+@mixin flex-center-row{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+@mixin input-field{
+    background-color: $input-color-main;
+    border-radius: 16px;
+    color: $text-color-gray;
+    height: 36px;
+}
+
+@mixin message-style{
+
 }

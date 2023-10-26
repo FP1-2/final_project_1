@@ -33,6 +33,7 @@ public class PostSqlResult {
     private String avatar;
     private String commentIds;
     private String likeIds;
+    private String repostIds;
     private PostType type;
 
     private Long originalUserId;
@@ -47,7 +48,7 @@ public class PostSqlResult {
     private String originalStatus;
     private String originalCommentIds;
     private String originalLikeIds;
-    private String originalReposts;
+    private String originalRepostIds;
     private PostType originalType;
 
     @Override
@@ -67,6 +68,7 @@ public class PostSqlResult {
                 + ", avatar='" + avatar + '\''
                 + ", commentIds='" + commentIds + '\''
                 + ", likeIds='" + likeIds + '\''
+                + ", repostIds='" + repostIds + '\''
                 + ", type=" + type + '\''
                 + ", originalUserId=" + originalUserId
                 + ", originalName='" + originalName + '\''
@@ -79,7 +81,7 @@ public class PostSqlResult {
                 + ", originalStatus='" + originalStatus + '\''
                 + ", originalCommentIds='" + originalCommentIds + '\''
                 + ", originalLikeIds='" + originalLikeIds + '\''
-                + ", originalRepostIds='" + originalReposts + '\''
+                + ", originalRepostIds='" + originalRepostIds + '\''
                 + ", originalType=" + originalType
                 + '}';
     }

@@ -3,17 +3,16 @@ package com.facebook.facade;
 import com.facebook.dto.post.Author;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentResponse;
-import com.facebook.dto.post.LikeResponse;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.dto.post.PostSqlResult;
 import com.facebook.dto.post.RepostRequest;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
-import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.posts.PostRepository;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -86,18 +85,6 @@ public class PostFacade {
     }
 
     /**
-     * Конвертує об'єкт {@link Like} у відповідний DTO {@link LikeResponse}.
-     *
-     * @param like об'єкт "лайка", який потрібно конвертувати
-     * @return об'єкт DTO, що представляє "лайк"
-     */
-    public LikeResponse convertToLikeResponse(Like like) {
-        LikeResponse response = modelMapper.map(like, LikeResponse.class);
-        response.setCreated_date(like.getCreatedDate());
-        return response;
-    }
-
-    /**
      * Конвертує об'єкт {@link Comment} у відповідний DTO {@link CommentResponse}.
      *
      * @param comment об'єкт коментаря, який потрібно конвертувати
@@ -121,10 +108,23 @@ public class PostFacade {
      */
     public PostSqlResult mapToPostSqlResult(Map<String, Object> row) {
         Map<String, Object> resultMap = new HashMap<>();
+
         for (Map.Entry<String, Object> entry : row.entrySet()) {
             resultMap.put(entry.getKey().toUpperCase(), entry.getValue());
         }
-        return modelMapper.map(resultMap, PostSqlResult.class);
+
+        PostSqlResult result = modelMapper.map(resultMap, PostSqlResult.class);
+
+        result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
+        result.setLikeIds((String) resultMap.get("LIKE_IDS"));
+        result.setRepostIds((String) resultMap.get("REPOST_IDS"));
+
+        result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
+        result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_IDS"));
+        result.setOriginalRepostIds((String) resultMap.get("ORIGINAL_REPOST_IDS"));
+
+        return result;
+
     }
 
     /**
@@ -146,12 +146,21 @@ public class PostFacade {
         post.setAuthor(modelMapper.map(sqlResult, Author.class));
         modelMapper.map(sqlResult, post);
 
-        post.setComments(stringToList(sqlResult.getCommentIds()));
-        post.setLikes(stringToList(sqlResult.getLikeIds()));
+        Optional.ofNullable(sqlResult.getCommentIds())
+                .map(this::stringToList)
+                .ifPresent(post::setComments);
 
-        if (sqlResult.getOriginalPostId() != null) {
-            post.setOriginalPost(mapOriginalPost(sqlResult));
-        }
+        Optional.ofNullable(sqlResult.getLikeIds())
+                .map(this::stringToList)
+                .ifPresent(post::setLikes);
+
+        Optional.ofNullable(sqlResult.getRepostIds())
+                .map(this::stringToList)
+                .ifPresent(post::setReposts);
+
+        Optional.ofNullable(sqlResult.getOriginalPostId())
+                .map(id -> mapOriginalPost(sqlResult))
+                .ifPresent(post::setOriginalPost);
 
         return post;
     }
@@ -167,7 +176,6 @@ public class PostFacade {
      * @return Перетворений об'єкт {@link PostResponse} для оригінального посту.
      */
     private PostResponse mapOriginalPost(PostSqlResult sqlResult){
-
 
         PostResponse originalPost = new PostResponse();
 
@@ -188,9 +196,17 @@ public class PostFacade {
         originalPost.setStatus(sqlResult.getOriginalStatus());
         originalPost.setType(sqlResult.getOriginalType());
 
-        originalPost.setComments(stringToList(sqlResult.getOriginalCommentIds()));
-        originalPost.setLikes(stringToList(sqlResult.getOriginalLikeIds()));
-        originalPost.setReposts(stringToList(sqlResult.getOriginalReposts()));
+        Optional.ofNullable(sqlResult.getOriginalCommentIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setComments);
+
+        Optional.ofNullable(sqlResult.getOriginalLikeIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setLikes);
+
+        Optional.ofNullable(sqlResult.getOriginalRepostIds())
+                .map(this::stringToList)
+                .ifPresent(originalPost::setReposts);
 
         return originalPost;
     }

@@ -7,12 +7,10 @@ import {ReactComponent as FacebookLogo} from '../../img/FacebookLogo.svg';
 
 const LoginPage = () => {
   const dispatch = useDispatch();
-
   const handleSubmit = (values) => {
 
     dispatch(loginThunk(values));
   };
-
   return (
     <section className={styles.container}>
       <div className={styles.wrapper}>

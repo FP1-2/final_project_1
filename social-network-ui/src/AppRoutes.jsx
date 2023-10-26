@@ -8,13 +8,16 @@ import PostsPage from './pages/PostsPage/PostsPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
-
+import ChatField from './components/ChatField/ChatField';
 function AppRoutes() {
+
   return (
     <Routes>
       <Route path="/login" element={<LoginPage/>} />
       <Route path="/" element={<PostsPage/>} />
-      <Route path="/messages" element={<MessagesPage/>} />
+      <Route path="/messages" element={<MessagesPage />}>
+        <Route path="/messages/:id" element={<ChatField/>}/>
+      </Route>
       <Route path="/favorites" element={<FavoritsPage/>}/>
       <Route path="/notifications" element={<NotificationsPage/>}/>
       <Route path="/profile" element={<ProfilePage/>} />

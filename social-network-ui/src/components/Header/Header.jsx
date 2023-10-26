@@ -68,8 +68,8 @@ function Header() {
                   Profile</NavLink>
             </li>
           </ul>
-        </nav>
-        <button className={styles.logOut}onClick={() => logout()}>Log out</button>
+        </nav> 
+         <button className={styles.logOut}onClick={() => logout()}>Log out</button>
       </header>
     );
   } return(
