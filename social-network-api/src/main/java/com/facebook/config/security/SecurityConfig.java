@@ -71,7 +71,10 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/api/auth/signup"),
                                 AntPathRequestMatcher.antMatcher("/api/auth/confirm/**"),
                                 AntPathRequestMatcher.antMatcher("/api/users/reset-password/**"),
-                                AntPathRequestMatcher.antMatcher("/api/users/update-password/**")
+                                AntPathRequestMatcher.antMatcher("/api/users/update-password/**"),
+                                AntPathRequestMatcher.antMatcher("/api-docs/**"),
+                                AntPathRequestMatcher.antMatcher("/swagger*/**"),
+                                AntPathRequestMatcher.antMatcher("/error")
                         ).permitAll()
                         .requestMatchers(
                                 AntPathRequestMatcher.antMatcher("/user/**")

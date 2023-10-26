@@ -36,8 +36,8 @@ spring:
       path: /h2
   jpa:
     show-sql: true
-    properties:
-      hibernate.format_sql: "true"
+#    properties:
+#      hibernate.format_sql: "true"
     hibernate:
 
 #  Що робить update:
@@ -61,6 +61,12 @@ spring:
 
 server:
   port: ${SERVER_PORT:9000}
+
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 ---
 spring:
