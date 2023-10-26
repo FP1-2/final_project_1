@@ -1,6 +1,5 @@
-import React from "react";
-import { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink } from "react-router-dom";
 import styles from "./Header.module.scss";
 import facebookIcon from "../../assets/facebook_icon.png";
@@ -9,29 +8,27 @@ import PostsIcon from "../../assets/postsIcon.png";
 import MessagesIcon from "../../assets/messagesIcon.png";
 import ProfileIcon from "../../assets/profileIcon.png";
 import FavoritsIcon from "../../assets/favoriteIcon.png";
-import Cookie from "js-cookie";
 import LoginForm from "../LogInForm/LogInForm";
-
-import { loginThunk } from "../../redux-toolkit/login/thunks";
-import {isTokenInLocalStorage, deleteTokenFromLocalStorage, deleteUserFromLocalStorage} from '../../utils/localStorageHelper';
-
+import { loadAuthToken, loadAuthUser } from "../../redux-toolkit/login/thunks";
+import {logout, startLogoutTimer} from "../../redux-toolkit/store";
 
 function Header() {
-  const [isAuthorized, setIsAuthorized] = useState(isTokenInLocalStorage());
-  const dispatch = useDispatch();
-  const logout=()=> {
-    deleteTokenFromLocalStorage();
-    deleteUserFromLocalStorage();
-    Cookie.remove("authToken");
-    setIsAuthorized(false);
-  };
-  
-  const handleSubmit = (values) => {
 
-    dispatch(loginThunk(values));
-    setIsAuthorized(true);
+  const dispatch = useDispatch();
+
+  const { id } = useSelector(state => state.auth.token.obj) || null;
+
+  useEffect(() => {
+    if (id) {
+      dispatch(loadAuthUser(id));
+    }}, [id, dispatch]);
+
+  const handleSubmit = (values) => {
+    dispatch(loadAuthToken(values));
+    startLogoutTimer();
   };
-  if (isAuthorized){
+
+  if (id){
     return (
       <header className={styles.header}>
         <div>
@@ -69,7 +66,7 @@ function Header() {
             </li>
           </ul>
         </nav>
-        <button className={styles.logOut}onClick={() => logout()}>Log out</button>
+        <button className={styles.logOut} onClick={() => logout()}>Log out</button>
       </header>
     );
   } return(

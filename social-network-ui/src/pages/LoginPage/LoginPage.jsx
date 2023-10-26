@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch} from "react-redux";
-import { loginThunk } from '../../redux-toolkit/login/thunks';
+import { loadAuthToken } from '../../redux-toolkit/login/thunks';
 import styles from "./LoginPage.module.scss";
 import LoginForm from '../../components/LogInForm/LogInForm.jsx';
 import {ReactComponent as FacebookLogo} from '../../img/FacebookLogo.svg';
@@ -10,7 +10,7 @@ const LoginPage = () => {
 
   const handleSubmit = (values) => {
 
-    dispatch(loginThunk(values));
+    dispatch(loadAuthToken(values));
   };
 
   return (
