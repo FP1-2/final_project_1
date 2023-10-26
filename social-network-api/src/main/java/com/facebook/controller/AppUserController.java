@@ -1,5 +1,6 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.UserNewPasswordRequest;
@@ -13,12 +14,15 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @Log4j2
 @RestController
@@ -45,7 +49,7 @@ public class AppUserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<AppUserResponse> getUserAppById(@PathVariable Long id) {
+    public ResponseEntity<AppUserResponse> getUserAppById(@PathVariable long id) {
         return appUserService.findById(id)
                 .map(appUserFacade::convertToAppUserResponse)
                 .map(ResponseEntity::ok)
@@ -74,5 +78,14 @@ public class AppUserController {
                 .map(ResponseEntity::ok)
                 .orElseThrow(UserNotFoundException::new);
     }
-    
+
+    @GetMapping("/search")
+    public ResponseEntity<List<AppUserChatResponse>> searchUserByKeyword(@RequestParam String input,
+                                                                         @RequestParam(defaultValue = "0") int page,
+                                                                         @RequestParam(defaultValue = "20") int size){
+        Pageable pageable = PageRequest.of(page, size);
+        List<AppUserChatResponse> userByKeyword = appUserService.findUserByKeyword(input, pageable);
+        return ResponseEntity.ok(userByKeyword);
+
+    }
 }

@@ -1,13 +1,14 @@
-package com.facebook.model;
+package com.facebook.model.chat;
 
+import com.facebook.model.AbstractEntity;
+import com.facebook.model.AppUser;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @Data
 @Entity
@@ -27,6 +28,13 @@ public class Chat extends AbstractEntity {
     public static Chat of(AppUser user1, AppUser user2){
         Chat chat = new Chat();
         chat.setChatParticipants(List.of(user1, user2));
+        return chat;
+    }
+    public static Chat of(Long id, LocalDateTime createdAt, LocalDateTime lastModifiedDate){
+        Chat chat = new Chat();
+        chat.setId(id);
+        chat.setCreatedDate(createdAt);
+        chat.setLastModifiedDate(lastModifiedDate);
         return chat;
     }
 }

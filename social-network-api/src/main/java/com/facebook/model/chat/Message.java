@@ -1,5 +1,7 @@
-package com.facebook.model;
+package com.facebook.model.chat;
 
+import com.facebook.model.AbstractEntity;
+import com.facebook.model.AppUser;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -14,7 +16,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Message extends AbstractEntity {
     @Column(nullable = false)
-    private String text;
+    private ContentType contentType;
+    private String content;
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)
     private AppUser sender;

@@ -2,46 +2,91 @@ package com.facebook.facade;
 
 
 import com.facebook.dto.appuser.AppUserChatResponse;
-import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.message.MessageRequest;
 import com.facebook.dto.message.MessageResponse;
 import com.facebook.dto.message.MessageResponseList;
 import com.facebook.model.AppUser;
-import com.facebook.model.Message;
+import com.facebook.model.chat.ContentType;
+import com.facebook.model.chat.Message;
+import com.facebook.model.chat.MessageStatus;
 import com.facebook.service.AppUserService;
+import com.facebook.service.ChatService;
+import com.facebook.service.MessageService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
 
+@Log4j2
 @Component
 @RequiredArgsConstructor
 public class MessageFacade {
 
     private final ModelMapper modelMapper;
-    private final AppUserFacade userFacade;
+    private final ChatFacade chatFacade;
+    private final MessageService messageService;
+    private final ChatService chatService;
+    private final AppUserService appUserService;
+    public MessageResponse convertToMessageResponse(Message message, AppUser chatParticipant) {
+        MessageResponse response = modelMapper.map(message, MessageResponse.class);
 
-    public MessageResponse convertToMessageResponse(Message message) {
-        return modelMapper.map(message, MessageResponse.class);
+        response.setChat(chatFacade.convertToChatResponse(message.getChat(), chatParticipant));
+
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+        String formattedDateTime = message.getCreatedDate().format(formatter);
+        response.setCreatedAt(formattedDateTime);
+        return response;
     }
 
-
-    public Message convertToMessage(MessageRequest messageRequest) {
+    public Message convertToMessage(MessageRequest messageRequest, AppUser sender ) {
         Message message = modelMapper.map(messageRequest, Message.class);
-        Principal principal = SecurityContextHolder.getContext().getAuthentication();
-        AppUser sender = userFacade.convertToAppUser(principal.getName());
         message.setSender(sender);
-
+        message.setContentType(ContentType.fromString(messageRequest.getContentType()));
         return message;
     }
-    public MessageResponseList convertToMessageResponseList(Message message) {
-        AppUser sender = message.getSender();
-        AppUserChatResponse appUserResponse = userFacade.convertToAppUserChatResponse(sender);
-        MessageResponseList map = modelMapper.map(message, MessageResponseList.class);
-        map.setSender(appUserResponse);
-        return map;
+
+
+    public List<MessageResponse> getAllMessages(Long chatId, Pageable pageable){
+        AppUser chatParticipant = chatFacade.getReceiverUser(chatId);
+        return messageService.getAllMessages(chatId, pageable).stream()
+                .map(m -> convertToMessageResponse(m, chatParticipant))
+                .toList();
+    }
+
+    public MessageResponse addMessage(MessageRequest messRq, Principal principal){
+
+        AppUser chatParticipant = chatFacade.getReceiverUser(messRq.getChatId(), principal);
+        AppUser sender = appUserService.convertToAppUser(principal.getName());
+
+        Message newMessage = convertToMessage(messRq, sender);
+        Message savedMessage = messageService.addMessage(newMessage);
+        chatService.updateLastModifiedDate(savedMessage.getChat(), savedMessage.getLastModifiedDate());
+        return convertToMessageResponse(savedMessage, chatParticipant);
+    }
+
+    public MessageResponse updateStatus(Long id, MessageStatus status, Principal principal){
+        Message updatedMessage = messageService.updateStatus(id, status);
+        AppUser chatParticipant = chatFacade.getReceiverUser(updatedMessage.getChat().getId(), principal);
+        return convertToMessageResponse(updatedMessage, chatParticipant);
+    }
+    public Long countUnreadMessage(AppUser user){
+        return messageService.countUnreadMessage(user);
+    }
+    public Long countUnreadMessage(){
+        AppUser user = appUserService.getAuthUser();
+        return messageService.countUnreadMessage(user);
+    }
+    public Long countUnreadMessage(Principal principal){
+        AppUser authUser = appUserService.getAuthUser(principal);
+        return messageService.countUnreadMessage(authUser);
     }
 
 }

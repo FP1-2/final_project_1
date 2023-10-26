@@ -1,5 +1,6 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.appuser.AppUserEditRequest;
 import com.facebook.exception.UserNotFoundException;
 import com.facebook.facade.AppUserFacade;
@@ -96,6 +97,9 @@ public class AppUserService {
 
     public AppUser getAuthUser(){
         Principal principal = SecurityContextHolder.getContext().getAuthentication();
+        return getAuthUser(principal);
+    }
+    public AppUser getAuthUser(Principal principal){
         return findByUsername(principal.getName())
                 .orElseThrow(UserNotFoundException::new);
     }
@@ -105,5 +109,14 @@ public class AppUserService {
             return save(u);
         });
     }
-
+    public AppUser convertToAppUser(String username){
+        return findByUsername(username).map(i-> i).orElseThrow(() -> new UsernameNotFoundException("user not found"));
+    }
+    public List<AppUserChatResponse> findUserByKeyword(String keyword, Pageable pageable){
+        AppUser authUser = getAuthUser();
+       return repo.searchUserByNameAndUsername(keyword, authUser.getId(), pageable)
+               .stream()
+               .map(u -> facade.convertToAppUserChatResponse(u))
+               .toList();
+    }
 }
