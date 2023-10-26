@@ -1,6 +1,7 @@
 package com.facebook.model.posts;
 
 import com.facebook.model.AppUser;
+import lombok.extern.log4j.Log4j2;
 import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 /**
  * Тестовий клас для перевірки функціональності
@@ -21,12 +23,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
  * @see Like
  * @see DataJpaTest
  */
+@Log4j2
 @DataJpaTest
 class LikeTest {
 
     @Autowired
     private TestEntityManager tem;
 
+    /**
+     * Створює та зберігає користувача для тестування.
+     *
+     * @return користувача, який був створений та збережений в базі даних
+     */
     private AppUser createAndSaveTestUser() {
         AppUser user = new AppUser();
         user.setName("Test");
@@ -37,6 +45,12 @@ class LikeTest {
         return tem.persistAndFlush(user);
     }
 
+    /**
+     * Створює та зберігає пост для тестування.
+     *
+     * @param user користувач, який створив пост
+     * @return повідомлення, яке було створено та збережено в базі даних
+     */
     private Post createAndSaveTestPost(AppUser user) {
         Post post = new Post();
         post.setTitle("Title");
@@ -44,6 +58,7 @@ class LikeTest {
         post.setStatus(PostStatus.DRAFT);
         post.setUser(user);
         post.setImageUrl("image.jpg");
+        post.setType(PostType.POST);
         return tem.persistAndFlush(post);
     }
 
@@ -118,6 +133,54 @@ class LikeTest {
 
         assertThrows(ConstraintViolationException.class,
                 () -> tem.persistAndFlush(like2));
+    }
+
+    /**
+     * Створює та повертає новий об'єкт типу "Repost".
+     *
+     * @param user користувач, який створює репост
+     * @return новий об'єкт типу "Repost"
+     */
+    private Post createRepost(AppUser user){
+        Post repost = new Post();
+        repost.setTitle("Repost Title");
+        repost.setBody("Repost Body");
+        repost.setStatus(PostStatus.DRAFT);
+        repost.setUser(user);
+        repost.setImageUrl("repost_image.jpg");
+        repost.setType(PostType.REPOST);
+        return repost;
+    }
+
+    /**
+     * Тест для успішного сценарію, коли type дорівнює REPOST
+     * і originalPostId не дорівнює NULL.
+     */
+    @Test
+    void successfulRepostScenario() {
+        AppUser user = createAndSaveTestUser();
+        Post originalPost = createAndSaveTestPost(user);
+
+        Post repost = createRepost(user);
+
+        repost.setOriginalPostId(originalPost.getId());
+
+        Post savedRepost = tem.persistAndFlush(repost);
+        assertNotNull(savedRepost.getId());
+    }
+
+    /**
+     * Тест для неуспішного сценарію, коли type дорівнює REPOST,
+     * але originalPostId дорівнює NULL.
+     * Очікується ConstraintViolationException при спробі збереження.
+     */
+    @Test
+    void unsuccessfulRepostScenario() {
+        AppUser user = createAndSaveTestUser();
+        Post repost = createRepost(user);
+        // не встановлюємо originalPostId, щоб викликати помилку
+        assertThrows(jakarta.validation.ConstraintViolationException.class,
+                    () -> tem.persistAndFlush(repost));
     }
 
 }

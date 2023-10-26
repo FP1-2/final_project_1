@@ -1,10 +1,14 @@
-package com.facebook.dto.appuser;
+package com.facebook.dto.post;
 
 import lombok.Data;
 
+/**
+ * DTO представлення автора.
+ */
 @Data
-public class AppUserForPost {
-    private Long id;
+public class Author {
+
+    private Long userId;
 
     private String name;
 
