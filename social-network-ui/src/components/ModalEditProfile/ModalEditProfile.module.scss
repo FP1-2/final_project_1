@@ -1,10 +1,11 @@
 @import "../../styles/mixin.scss";
+
 .modalWrapper {
-    z-index: 2;
+    z-index: 3;
     position: absolute;
     width: 100%;
     min-height: 100vh;
-    background-color: rgba(255,255,255, 0.4);
+    background-color: rgba(255, 255, 255, 0.4);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -112,21 +113,21 @@
             }
         }
 
-        .modalMain{
-            padding: 20px 16px ;
+        .modalMain {
+            padding: 20px 16px;
 
-            .modalMainAvatar{
+            .modalMainAvatar {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
 
-                .modalMainAvatarWrapper{
+                .modalMainAvatarWrapper {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
 
-                    .modalMainAvatarTitle{
+                    .modalMainAvatarTitle {
                         color: #050505;
                         font-weight: 700;
                         font-size: 20px;
@@ -134,7 +135,8 @@
                         padding-top: 8px;
                         padding-bottom: 8px;
                     }
-                    .modalMainAvatarBtn{
+
+                    .modalMainAvatarBtn {
                         padding: 8px;
                         border: none;
                         border-radius: 5px;
@@ -145,12 +147,13 @@
                         line-height: 1.1765;
                         background-color: transparent;
 
-                        &:hover{
+                        &:hover {
                             background-color: rgba(0, 0, 0, 0.05);
                         }
                     }
                 }
-                .modalMainAvatarImg{
+
+                .modalMainAvatarImg {
                     width: 168px;
                     min-height: 168px;
                     object-fit: cover;
@@ -158,18 +161,18 @@
                 }
             }
 
-            .modalMainHeaderPhoto{
+            .modalMainHeaderPhoto {
                 display: flex;
                 flex-direction: column;
                 align-items: center;
 
-                .modalMainHeaderPhotoWrapper{
+                .modalMainHeaderPhotoWrapper {
                     display: flex;
                     justify-content: space-between;
                     align-items: center;
                     width: 100%;
 
-                    .modalMainHeaderPhotoTitle{
+                    .modalMainHeaderPhotoTitle {
                         color: #050505;
                         font-weight: 700;
                         font-size: 20px;
@@ -177,7 +180,8 @@
                         padding-top: 8px;
                         padding-bottom: 8px;
                     }
-                    .modalMainHeaderPhotoBtn{
+
+                    .modalMainHeaderPhotoBtn {
                         padding: 8px;
                         border: none;
                         border-radius: 5px;
@@ -188,12 +192,13 @@
                         line-height: 1.1765;
                         background-color: transparent;
 
-                        &:hover{
+                        &:hover {
                             background-color: rgba(0, 0, 0, 0.05);
                         }
                     }
                 }
-                .modalMainHeaderPhotoImg{
+
+                .modalMainHeaderPhotoImg {
                     width: 500px;
                     max-height: 185px;
                     object-fit: cover;
@@ -205,25 +210,7 @@
                 }
             }
 
-            .modalMainBtnAddInform{
-                margin-top: 20px;
-                padding: 0;
-                width: 100%;
-                min-height: 40px;
-                color: #0064D1;
-                font-weight: 600;
-                font-size: 17px;
-                line-height: 1.1765;
-                background-color: #EBF5FF;
-                border: none;
-                border-radius: 5px;
-
-                &:hover{
-                    background-color: #dfe9f2;
-                    cursor: pointer;
-                }
-            }
-            .modalMainInputsWrapper{
+            .modalMainInfoList {
 
                 width: 674px;
                 padding: 16px 0;
@@ -231,52 +218,65 @@
                 flex-direction: column;
                 gap: 12px;
                 justify-content: space-between;
+                margin-top: 20px;
 
                 @include width_768 {
                     width: 100%;
                 }
 
-                .modalMainInputEditProfile{
-                    padding: 18px 16px;
-                    color: #050505;
-                    font-size: 16px;
-                    line-height: 1.25;
-                    border-radius: 5px;
-                    border: 2px solid #ced0d4;
+                .modalMainInfoElem {
 
-                    &::placeholder{
-                        color: #65676B;
-                    }
 
-                    &:hover{
-                        border-color: #65676b;
-                    }
+                    .modalMainInfoElemText {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
 
-                    &:focus{
-                        border: 2px solid #0866ff;
-                        outline: none;
-                    }
+                        .modalMainInfoElemTitle {
+                            color: #050505;
+                            font-weight: 700;
+                            font-size: 20px;
+                            line-height: 1.2;
+                            padding-top: 8px;
+                            padding-bottom: 8px;
+                        }
 
-                    .displayNone {
-                        display: none;
+                        .modalMainInfoElemBtn {
+                            padding: 8px;
+                            border: none;
+                            border-radius: 5px;
+                            min-width: 115px;
+                            color: #0064D1;
+                            font-weight: 400;
+                            font-size: 17px;
+                            line-height: 1.1765;
+                            background-color: transparent;
+
+                            &:hover {
+                                background-color: rgba(0, 0, 0, 0.05);
+                            }
+                        }
                     }
                 }
-                .modalMainSaveProfileBtn{
-                    margin-top: 20px;
-                    border: none;
-                    border-radius: 5px;
-                    line-height: 1.3333;
-                    color: white;
-                    font-weight: 600;
-                    font-size: 17px;
-                    background-color: #0866FF;
-                    min-height: 36px;
+            }
 
-                    &:hover{
-                        cursor: pointer;
-                    }
+            .modalMainSaveProfileBtn {
+                margin-top: 20px;
+                border: none;
+                border-radius: 5px;
+                line-height: 1.3333;
+                color: white;
+                font-weight: 600;
+                font-size: 17px;
+                background-color: #0866FF;
+                min-height: 36px;
+                width: 100%;
 
-                    
+                &:hover {
+                    cursor: pointer;
+                }
+                &:disabled{
+                    background-color: #ccd0d5;
                 }
             }
 
@@ -287,6 +287,7 @@
 
     }
 }
-.displayNone{
+
+.displayNone {
     display: none;
 }

@@ -1,13 +1,22 @@
 const initialValue = {
+    profileUser:{
+        obj: {},
+        status: '',
+        error: '',
+    },
     modalDeleteFriend: {
-        state:false,
-        obj:{}
+        state: false,
     },
-    modalAddPost:{
-        state:false,
+    modalAddPost: {
+        state: false,
     },
-    modalEditProfile:{
-        state:false,
-    }
+    modalEditProfile: {
+        state: false,
+    },
+    editUser:{
+        obj: {},
+        status: '',
+        error: '',
+    },
 }
 export default initialValue;

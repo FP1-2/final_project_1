@@ -1,5 +1,5 @@
 import axios from "axios";
-import { basicAx} from "../ax";
+import { basicAx, workAx} from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getPhotoURL = async (file) => {
@@ -10,11 +10,15 @@ export const getPhotoURL = async (file) => {
     return response;
 }
 
-export const registrationThunkRequest = createAsyncThunk(
-    "registration/data",
-    async (obj,{rejectWithValue}) => {
+export const getUserThunkRequest = createAsyncThunk(
+    "profile/data",
+    async ({token, id},{rejectWithValue}) => {
         try{
-            const response =await basicAx.post("api/auth/signup", obj);
+            const response = await basicAx.get(`api/users/${id}`, {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                },
+              });
             return response.data;
         }
         catch(err){
@@ -23,12 +27,12 @@ export const registrationThunkRequest = createAsyncThunk(
     }
 )
 
-export const confirmRegistrationRequest = createAsyncThunk(
-    "confirmRegistrationMessage/data",
-    async (url,{rejectWithValue}) => {
+export const editUserThunkRequest = createAsyncThunk(
+    "profile/dat",
+    async (obj,{rejectWithValue}) => {
         try{
-            const response =await basicAx.post(`api/auth/confirm${url}`);
-            return response.data
+            // const response = await workAx("post",`api/users/edit`,obj)
+            // console.log(response.data);
         }
         catch(err){
             return rejectWithValue (err.response.data);

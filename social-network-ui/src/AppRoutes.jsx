@@ -21,7 +21,7 @@ function AppRoutes() {
       <Route path="/messages" element={<MessagesPage />} />
       <Route path="/favorites" element={<FavoritsPage />} />
       <Route path="/notifications" element={<NotificationsPage />} />
-      <Route path='/profile/*' element={<ProfilePage typeProfile="myUser"/>}>
+      <Route path='/profile/*' element={<ProfilePage/>}>
         <Route path='' element={<PostsPageProfile />} />
         <Route path='friends' element={<FriendPageProfile />} />
         <Route path='liked' element={<LikedPageProfile />} />

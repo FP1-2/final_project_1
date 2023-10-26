@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-// import { registrationThunkRequest,confirmRegistrationRequest } from "./thunks";
-// import builders from "../builders";
+import { getUserThunkRequest,editUserThunkRequest} from "./thunks";
+import builders from "../builders";
 
 const profileReducer = createSlice({
     name: "profile",
@@ -17,10 +17,10 @@ const profileReducer = createSlice({
             state.modalEditProfile.state = action.payload;
         },
     },
-    // extraReducers:(builder)=>{
-    //     builders(builder, registrationThunkRequest,'registrationMassage');
-    //     builders(builder, confirmRegistrationRequest,'confirmRegistrationMessage');
-    // }
+    extraReducers:(builder)=>{
+        builders(builder, getUserThunkRequest,'profileUser');
+        builders(builder, editUserThunkRequest,'editUser');
+    }
 });
 
 export const {modalDeleteFriendState,modalAddPostState,modalEditProfileState} = profileReducer.actions;

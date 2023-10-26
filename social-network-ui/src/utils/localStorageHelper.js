@@ -45,3 +45,13 @@ export const deleteUserFromLocalStorage = () => {
     console.error('Error deleting token from localStorage:', error);
   }
 };
+
+export const getUserFromLocalStorage = () => {
+  try {
+    const user = localStorage.getItem('user');
+    return user || null;
+  } catch (error) {
+    console.error('Error getting user from localStorage:', error);
+    return null;
+  }
+};

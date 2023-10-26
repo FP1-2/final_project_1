@@ -51,6 +51,7 @@ const ModalAddPost = () => {
   const dispatch=useDispatch();
 
   const modalAddPost=useSelector((state)=>state.profile.modalAddPost.state);
+  const userObject = useSelector(state => state.profile.profileUser.obj);
 
   const modalAddPostClose=()=>{
     dispatch(modalAddPostState(false));
@@ -72,9 +73,9 @@ const ModalAddPost = () => {
                   </button>
                 </div>
                 <div className={style.modalHeaderInfo}>
-                  <img src="https://risovach.ru/upload/2013/01/mem/kakoy-pacan_9771748_orig_.jpeg" alt="" className={style.modalHeaderInfoImg} />
+                  <img src={userObject.avatar ? userObject.avatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="" className={style.modalHeaderInfoImg} />
                   <a href="" className={style.modalHeaderInfoLink}>
-                    Ірина Сергіївна Надточий
+                    {`${userObject.name} ${userObject.surname}`}
                   </a>
                 </div>
               </div>

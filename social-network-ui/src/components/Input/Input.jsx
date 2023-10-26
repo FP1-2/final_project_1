@@ -34,7 +34,7 @@ const Input = (props) => {
 
       {props.type === "text" && props.modal === "editProfile" ?
         <div className={style.textlInputWrapper}>
-          <input className={style.modalMainInputEditProfile} {...field} {...props} />
+          <input className={style.modalMainInputEditProfile} {...field} {...props}/>
           <p className={error ? style.errorNames : style.errorDisplayNone} >{error}</p>
         </div>
         : props.type === "text" && props.modal === "" ?
@@ -54,7 +54,6 @@ const Input = (props) => {
               </button>
               <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
             </div>
-
             : <>
               <input className={style.input} {...field} {...props} />
               <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
@@ -65,13 +64,11 @@ const Input = (props) => {
 
 Input.propTypes = {
   name: PropTypes.string.isRequired,
-  text: PropTypes.string,
   type: PropTypes.string.isRequired,
   modal: PropTypes.string,
 };
 
 Input.defaultProps = {
-  text: "",
   modal: ""
 };
 
