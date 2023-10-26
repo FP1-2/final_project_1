@@ -19,6 +19,11 @@ logging:
 #  Це може бути корисно при налаштуванні та виправленні тестів,
 #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
 #       org.springframework.test.context.cache: DEBUG
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 ---
 spring:
@@ -36,8 +41,8 @@ spring:
       path: /h2
   jpa:
     show-sql: true
-    properties:
-      hibernate.format_sql: "true"
+#    properties:
+#      hibernate.format_sql: "true"
     hibernate:
 
 #  Що робить update:
@@ -61,6 +66,8 @@ spring:
 
 server:
   port: ${SERVER_PORT:9000}
+
+
 
 ---
 spring:
