@@ -1,13 +1,15 @@
 package com.facebook.dto.chat;
 
 import com.facebook.dto.appuser.AppUserChatResponse;
+import com.facebook.dto.message.MessageResponseList;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Set;
 
 @Data
-public class ChatResponse {
+public class ChatResponseList {
     private Long id;
     private AppUserChatResponse chatParticipant;
+    private MessageResponseList lastMessage;
 }

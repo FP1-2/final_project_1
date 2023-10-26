@@ -130,11 +130,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-    @ExceptionHandler(UserNotFoundException.class)
-    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
-        log.warn(ex.getMessage());
-        return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
-    }
+//    @ExceptionHandler(UserNotFoundException.class)
+//    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
+//        log.warn(ex.getMessage());
+//        return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+//    }
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<String> handleInvalidTokenException(InvalidTokenException ex){
@@ -148,5 +148,6 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
+
 
 }

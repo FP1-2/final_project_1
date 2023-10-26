@@ -4,14 +4,22 @@ import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
+import com.facebook.model.chat.Chat;
+import com.facebook.model.chat.ContentType;
+import com.facebook.model.chat.Message;
+import com.facebook.model.chat.MessageStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
 import com.facebook.model.posts.PostType;
+import com.facebook.repository.ChatRepository;
+import com.facebook.repository.MessageRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.service.AppUserService;
+import com.facebook.service.ChatService;
+import com.facebook.service.MessageService;
 import com.facebook.service.PostService;
 import com.github.javafaker.Faker;
 
@@ -68,6 +76,13 @@ public class Gen {
 
     private List<Like> likes;
 
+
+    private final ChatService chatService;
+    private final ChatRepository chatRepository;
+    private final MessageService messageService;
+    private final MessageRepository messageRepository;
+    private List<Chat> chats;
+    private List<Message> messages;
     private Gen(ApplicationContext context) {
         this.context = context;
 
@@ -75,14 +90,21 @@ public class Gen {
         this.passwordEncoder = context.getBean(PasswordEncoder.class);
         this.appUserFacade = context.getBean(AppUserFacade.class);
         this.postService = context.getBean(PostService.class);
+        this.chatService = context.getBean(ChatService.class);
+        this.messageService = context.getBean(MessageService.class);
 
         this.likeRepository = context.getBean(LikeRepository.class);
         this.commentRepository = context.getBean(CommentRepository.class);
+        this.chatRepository = context.getBean(ChatRepository.class);
+        this.messageRepository = context.getBean(MessageRepository.class);
 
         this.appUsers1 = genAppUser();
         this.posts = genPostsAndReposts();
         this.comments = genComments();
         this.likes = genLikes();
+
+        this.chats = genChats();
+        this.messages = genMessages();
     }
 
     public static Gen of(ApplicationContext context) {
@@ -215,13 +237,12 @@ public class Gen {
                 51));
         return appUserService.findAll();
     }
-
     private void createAppUser(GenAppUser dto) {
         AppUser appUser = appUserFacade.convertToAppUser(dto);
         appUser.setRoles(new String[]{"USER"});
 
         String encodedPassword = Optional.of(dto)
-                .filter(user -> DEFAULT_USERNAME.equals(user.getUsername()))
+//                .filter(user -> DEFAULT_USERNAME.equals(user.getUsername()))
                 .map(user -> passwordEncoder.encode(DEFAULT_PASSWORD))
                 .orElse(passwordEncoder.encode(password[MathUtils.random(0, 12)]));
 
@@ -302,6 +323,30 @@ public class Gen {
         return post;
     }
 
+    private List<Chat> genChats() {
+        Optional<AppUser> test = appUserService.findByUsername("test");
+        Optional<AppUser> greak = appUserService.findByUsername("Greak");
+        Optional<AppUser> bretNickname = appUserService.findByUsername("BretNickname");
+
+        Chat chat1 = Chat.of(test.get(), greak.get());
+        chatRepository.save(chat1);
+        Chat chat2 = Chat.of(bretNickname.get(), test.get());
+        chatRepository.save(chat2);
+
+        return chatRepository.findAll();
+    }
+
+    private List<Message> genMessages() {
+        Faker faker = new Faker();
+        chats.forEach(chat -> {
+            chat.getChatParticipants().forEach(participant -> {
+                String text = faker.lorem().sentence();
+                Message message = new Message(ContentType.TEXT, text, participant, chat, MessageStatus.SENT);
+                messageRepository.save(message);
+            });
+        });
+        return messageRepository.findAll();
+    }
 }
 
 

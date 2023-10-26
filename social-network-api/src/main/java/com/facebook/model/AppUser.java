@@ -41,6 +41,7 @@ public class AppUser extends AbstractEntity {
     String password;
 
     private String roles;
+    private Boolean isOnline;
 
     public void setRoles(String[] roles) {
         this.roles = String.join(DELIMITER, roles);
@@ -59,14 +60,9 @@ public class AppUser extends AbstractEntity {
                 avatar, headerPhoto, dateOfBirth,
                 password, roles);
     }
-//    @ManyToMany(mappedBy = "users")
+
+//    @ManyToMany(mappedBy = "chatParticipants")
 //    private Set<Chat> chats = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "sender", cascade = CascadeType.ALL)
-//    private Set<Message> sentMessages = new HashSet<>();
-//
-//    @OneToMany(mappedBy = "receiver", cascade = CascadeType.ALL)
-//    private Set<Message> receivedMessages = new HashSet<>();
 
 
 
