@@ -19,6 +19,11 @@ logging:
 #  Це може бути корисно при налаштуванні та виправленні тестів,
 #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
 #       org.springframework.test.context.cache: DEBUG
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 ---
 spring:
@@ -62,11 +67,7 @@ spring:
 server:
   port: ${SERVER_PORT:9000}
 
-springdoc:
-  api-docs:
-    path: /api-docs
-  swagger-ui:
-    path: /swagger-ui.html
+
 
 ---
 spring:
