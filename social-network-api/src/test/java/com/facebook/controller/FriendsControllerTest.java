@@ -82,12 +82,12 @@ class FriendsControllerTest {
     }
 
     @Test
-    void getFriendsByUserIdTest() {
+    void getFriendsByAuthTest() {
         when(currentUserService.getCurrentUserId()).thenReturn(USER_ID_2);
         List<FriendsResponse> mockResponseList = List.of(new FriendsResponse(), new FriendsResponse());
         when(friendsService.getFriendsByUserId(USER_ID_2)).thenReturn(mockResponseList);
 
-        ResponseEntity<List<FriendsResponse>> response = friendsController.getFriendsByUserId();
+        ResponseEntity<List<FriendsResponse>> response = friendsController.getFriendsByAuth();
 
         verify(currentUserService).getCurrentUserId();
         verify(friendsService).getFriendsByUserId(USER_ID_2);

@@ -49,9 +49,20 @@ public class FriendsController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FriendsResponse>> getFriendsByUserId() {
+    public ResponseEntity<List<FriendsResponse>> getFriendsByAuth() {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(friendsService.getFriendsByUserId(userId));
+    }
+
+    @GetMapping("/list/{userId}")
+    public ResponseEntity<List<FriendsResponse>> getFriendsByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(friendsService.getFriendsByUserId(id));
+    }
+
+    @GetMapping("/list/friend-requests")
+    public ResponseEntity<List<FriendsResponse>> getFriendsRequests() {
+        Long userId = currentUserService.getCurrentUserId();
+        return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
     }
 
 }

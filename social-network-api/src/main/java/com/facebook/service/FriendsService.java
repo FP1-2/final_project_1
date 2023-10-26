@@ -91,4 +91,11 @@ public class FriendsService {
                 .toList();
     }
 
+    public List<FriendsResponse> getFriendsRequest(Long id) {
+        return friendsRepository.findFriendsRequestsByUserId(id)
+                .stream()
+                .map((facade::toFriendsResponse))
+                .toList();
+    }
+
 }
