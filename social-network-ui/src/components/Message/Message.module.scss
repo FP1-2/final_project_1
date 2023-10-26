@@ -1,0 +1,96 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
+.messageWrapper{
+  display:flex;
+  flex-direction:row;
+  font-size:15px;
+  align-items: center;
+  width:100%;
+  &__cont{
+    display:flex;
+    flex-direction:row;
+    align-items: center;
+    flex: 1;
+    
+    &__text {
+      @include input-field;
+      @include flex-center;
+      padding:8px;
+      max-width: 588px;
+      position: relative;
+      height: auto;
+      & p{
+        overflow-wrap: anywhere;
+      }
+      & img{
+        height: 200px;
+        width: auto;
+        border-radius: 6px;
+      }
+      
+      &:hover div{
+        display: flex;
+      }
+      &__datatime{
+        position: absolute;
+        background-color: $text-color-gray;
+        display:none;
+        border-radius: 6px;
+        right: 100%;
+        width: fit-content;
+        opacity: 0.8;
+        top:0;
+        & p{
+          padding:6px;
+          color:$main-text-color;
+          width:max-content;
+        }
+      }
+    }
+  }
+  &__avatar{
+    width:28px;
+    height:28px;
+    margin-right:8px;
+  }
+
+}
+
+.authUser{
+  background-color: $btn-main-color;
+  color: $text-color-on-dark-background;
+}
+.auth{
+        justify-content: flex-end;
+    }
+.chatUser {
+  background-color: $background-color-receiver-message;
+  color: $main-text-color;
+}
+.image{
+  background-color: $main-background-color;
+}
+
+.messageStatus{
+  font-size:13px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-top:8px;
+  &__unread{
+    color: $text-color-gray;
+  }
+  &__read{
+    width: 16px;
+    height: 16px;
+  }
+  &__error{
+    color: red;
+  }
+}
+
+
+.none{
+  display:none;
+}

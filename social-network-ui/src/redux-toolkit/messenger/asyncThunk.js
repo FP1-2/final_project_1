@@ -1,14 +1,16 @@
 import {createAsyncThunk} from "@reduxjs/toolkit";
 import {basicAx} from "../ax";
+const token = localStorage.getItem('authToken');
 
+const config = {
+    headers: {
+    'Authorization': `Bearer ${token}`,
+}}
 export const loadChats = createAsyncThunk(
     "messenger/chats",
     async ({page, size},{rejectWithValue}) => {
         try{
-            const response = await basicAx.get("api/chats?page=${page}&size=${size}");
-            if(!response.ok){
-                throw new Error("Error in chats loading.");
-            }
+            const response = await basicAx.get(`api/chats?page=${page}&size=${size}`, config);
             return response.data;
         }
         catch(err){
@@ -18,12 +20,11 @@ export const loadChats = createAsyncThunk(
 )
 export const loadChat = createAsyncThunk(
     "messenger/chat",
-    async (id,{rejectWithValue}) => {
+    async ({id},{rejectWithValue}) => {
         try{
-            const response = await basicAx.get(`api/chats/${id}`);
-            if(!response.ok){
-                throw new Error("Error in chat loading.");
-            }
+            console.log("Sending chat request...");
+            const response = await basicAx.get(`api/chats/${id}`, config);
+
             return response.data;
         }
         catch(err){
@@ -32,16 +33,15 @@ export const loadChat = createAsyncThunk(
     }
 )
 export const createChat = createAsyncThunk(
-    "messenger/chat",
-    async (username,{rejectWithValue}) => {
+    "messenger/newChat",
+    async ({username},{rejectWithValue}) => {
         try{
-            const response = await basicAx.post(`api/chats/${username}`);
-            if(!response.ok){
-                throw new Error("Error in creating new chat.");
-            }
+            const response = await basicAx.post(`api/chats/${username}`,null, config);
+            
             return response.data;
         }
         catch(err){
+            console.log(err)
             return rejectWithValue (err.response.data);
         }
     }
@@ -54,6 +54,65 @@ export const deleteChat = createAsyncThunk(
             if(!response.ok){
                 throw new Error("Error in chat loading.");
             }
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)
+export const loadMessages = createAsyncThunk(
+    "messenger/messages",
+    async ({id, page, size},{rejectWithValue}) => {
+        try{
+            const response = await basicAx.get(`api/chats/messages/${id}?page=${page}&size=${size}`, config);
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)
+export const loadUser = createAsyncThunk(
+    'messenger/user',
+    async ({id}, { rejectWithValue }) => {
+      try {
+        const response = await basicAx.get(`api/users/${id}`, config);
+        return response.data;
+      } catch (err) {
+        return rejectWithValue(err.response.data);
+      }
+    }
+  );
+  export const loadUnreadMessagesQt = createAsyncThunk(
+    "messenger/unread",
+    async (_,{rejectWithValue}) => {
+        try{
+            const response = await basicAx.get(`api/chats/messages/unread`, config);
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)
+export const searchChat = createAsyncThunk(
+    "messenger/searchChats",
+    async ({input, page, size},{rejectWithValue}) => {
+        try{
+            const response = await basicAx.get(`api/chats/search?input=${input}&page=${page}&size=${size}`, config);
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)
+export const searchUser = createAsyncThunk(
+    "messenger/searchUsers",
+    async ({input, page, size},{rejectWithValue}) => {
+        try{
+            const response = await basicAx.get(`api/users/search?input=${input}&page=${page}&size=${size}`, config);
             return response.data;
         }
         catch(err){

@@ -15,4 +15,11 @@
 body{
   background: $main-background-color;
   line-height: 1.34;
+  text-decoration: none;
+  
+  color: $main-text-color;
+}
+a{
+  cursor: pointer;
+  color: $main-text-color;
 }

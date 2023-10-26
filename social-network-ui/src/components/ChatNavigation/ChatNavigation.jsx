@@ -1,149 +1,190 @@
-import "./style.scss"
+import styles from "./ChatNavigation.module.scss"
 import ChatItem from "./ChatItem";
-import Search from "../icons/Search";
+import Search from "../Icons/Search";
+import Close from "../Icons/Close"
+import BackIcon from "../Icons/BackIcon"
+import PropTypes from 'prop-types';
+import {Link, NavLink} from 'react-router-dom'
+import ChatLoader from "./ChatLoader";
+import { checkSentType, checkReadType} from "../../utils/statusType";
+import { useEffect, useState } from "react";
+import useDebounce from "../../utils/useDebounce";
+import { searchChat } from "../../redux-toolkit/messenger/asyncThunk";
+import { resetSearchChats } from "../../redux-toolkit/messenger/slice";
+import { useDispatch, useSelector } from "react-redux";
+import { checkContentType } from "../../utils/contentType";
+export default function ChatNavigation({chatsStatus, chats, handleLoadChat, authUser ,handleCreateChatClick, handleLoadMoreChats,pageSize}) {
+    const dispatch = useDispatch();
+    const [searchText, setSearchText] = useState('')
+    const [show, setShow] = useState(false);
+    const debounedSearchText = useDebounce(searchText, 500);
+    const searchChats = useSelector(state => state.messenger.searchChats)
+    const [hasMore, setHasMore] = useState(true);
+    
 
-export default function ChatNavigation ({chats}){
+    useEffect(()=>{
+        if(chats.length !== 0 && chats.length < pageSize){
+            setHasMore(false)
+        }else if(chats.length>0 ){
+            setHasMore(true)
+        }
+    },[chats])
+    
+    useEffect(()=>{
+        if(debounedSearchText){
+            handleSearchChange(debounedSearchText);
+        }
+    }, [debounedSearchText]);
+    const handleSearchChange = (input) =>{
 
-    const authUser ={
-            id: 99,
-            name: "Olha",
-            surname: "Khomych",
-            username: "olhaKhomych",
-            avatar: "",
+        if (searchText.trim() === '') {
+            dispatch(resetSearchChats());
+            return;
         }
-    // test chats list
-    const chat = [
-        {
-            id: 1,
-            chatParticipant: {
-                    name: "Alex",
-                    surname: "Smith",
-                    username: "alexSmith",
-                    avatar: "",
-                },
-            lastMessage: null
-        },
-        {
-            id: 2,
-            chatParticipant: {
-                    name: "Ted",
-                    surname: "Crus",
-                    username: "tedCrus",
-                    avatar: "",
-                },
-            lastMessage: {
-                id:1,
-                text: "Hello",
-                sender: {
-                    name: "Olha",
-                    surname: "Khomych",
-                    username: "olhaKhomych",
-                    avatar: "",
-                },
-                createdDate: "",
-                status: "READ",
-            }
-        },
-        {
-            id: 3,
-            chatParticipant: {
-                name: "Ron",
-                surname: "Whisly",
-                username: "ronWhisly",
-                avatar: "",
-            },
-            lastMessage: {
-                id:1,
-                text: "Hello",
-                sender: {
-                    name: "Olha",
-                    surname: "Khomych",
-                    username: "olhaKhomych",
-                    avatar: "",
-                },
-                createdDate: "",
-                status: "SENT",
-            }
-        },
-        {
-            id: 4,
-            chatParticipant: {
-                name: "Kate",
-                surname: "Koval",
-                username: "kateKoval",
-                avatar: "",
-            },
-            lastMessage: {
-                id:1,
-                text: "Hi! How Are You?",
-                sender: {
-                    name: "Kate",
-                    surname: "Koval",
-                    username: "kateKoval",
-                    avatar: "",
-                },
-                createdDate: "",
-                status: "SENT",
-            }
-        },
-        {
-            id: 6,
-            chatParticipant: {
-                name: "Donna",
-                surname: "Amigo",
-                username: "donnaAmigo",
-                avatar: "",
-            },
-            lastMessage: {
-                id:1,
-                text: "Nice to see you. I'm sure it will be great vacation! Bye, bye and good bye!!!!",
-                sender: {
-                    name: "Donna",
-                    surname: "Amigo",
-                    username: "donnaAmigo",
-                    avatar: "",
-                },
-                createdDate: "",
-                status: "SENT",
-            }
+        dispatch(searchChat({input:input, page: 0, size: 20 }))
+        // const filtered = chats.filter(chat => {
+        //     const participantName = chat.chatParticipant.name.toLowerCase() + ' ' + chat.chatParticipant.surname.toLowerCase();
+        //     return participantName.includes(searchText.toLowerCase());
+        // });
+    
+        // setFilteredChats(filtered);
+    }
+   
+    const handleInputClick = () => {
+        if (searchText.trim() === '') {
+            dispatch(resetSearchChats());
         }
-    ]
+        setShow(true)
+    }
+
+    const handleBackIcon = () => {
+        setSearchText('');
+        setShow(false)
+        dispatch(resetSearchChats());
+    }
+
     return (
-        <section className="chat-nav-section">
-            <div className="chat-nav-section__header">
-                <div className="chat-nav-section__header__text">
+    <section className={(window.location.pathname !== '/messages') ? `${styles.chatNavSection} ${styles.hide}` : styles.chatNavSection}>
+            {chatsStatus === ("pending" || "") ? <ChatLoader/> 
+             :
+            <>
+            <div className={styles.chatNavSection__header}>
+                <div className={styles.chatNavSection__header__text}>
                     <h1>Чати</h1>
                 </div>
-                <div className="chat-nav-section__header__button-wrapper">
-                    <div />
+                <NavLink to='/messages/new'>
+                    <div className={styles.chatNavSection__header__buttonWrapper} onClick={handleCreateChatClick}>
+                <div/>
                 </div>
+                </NavLink>
             </div>
-            <div className="chat-nav-section__search">
-                <div className="chat-nav-section__search__input">
+            <div className={styles.chatNavSection__search}>
+                {show && <div  className={styles.chatNavSection__search__back}  onClick={handleBackIcon}>
+                   <BackIcon size={"1em"}
+                   />
+                </div>}
+                <div className={styles.chatNavSection__search__input}>
                     <span>
                         <Search/>
                     </span>
-                    <input type="text" placeholder="Поиск в Messenger"/>
+                    <input type="text" placeholder="Поиск в Messenger" 
+                    value={searchText}
+                    onChange={(e) => setSearchText(e.target.value)}
+                    onClick={handleInputClick}/>
+                    <span  onClick={handleBackIcon} >
+                        <Close style={{cursor:"pointer"}}/>
+                    </span>
                 </div>
             </div>
-            <div className="chat-nav-section__chat-list">
-                <ul className="chat-nav-section__chat-list__items">
-                    {chats.map(({_id, chatParticipant: chatParticipant, lastMessage})=>{
-                        return (<li key={_id} className="chat-nav-section__chat-list__items__item">
+            <div className={styles.chatNavSection__chatList}>
+                <ul className={styles.chatNavSection__chatList__items}>
+                    {!show 
+                    ? chats.map(({id, chatParticipant, lastMessage}) => {
+                        return (
+                            <li key={id} className={styles.chatNavSection__chatList__items__item}>
+                                <NavLink to={`/messages/${id}`} >
                             <ChatItem
-                                additionalClass="chat-nav-section__chat-list__items__item--avatar"
-                                additionalClass2="chat-item-container__status--read"
-                                name={chatParticipant.name+" "+chatParticipant.surname}
-                                photo={chatParticipant.photo}
-                                message={ lastMessage === null ? ""
-                                : (lastMessage.sender.username === authUser.username ? ("Ви: "  + lastMessage.text) : lastMessage.text)}
-                                unread={ lastMessage !== null && lastMessage.sender.username !== authUser.username && lastMessage.status === "SENT"}
-                                read={ lastMessage !== null && lastMessage.sender.username === authUser.username && lastMessage.status === "READ"}
+                                additionalClass={styles.chatNavSection__chatList__items__item__avatar}
+                                additionalClass2={styles.chatItemContainer__status__read}
+                                name={chatParticipant.name + " " + chatParticipant.surname}
+                                photo={chatParticipant.avatar}
+                                message={lastMessage === null ? ""
+                                    : (lastMessage.sender.username === authUser.username 
+                                        ? 
+                                        ("Ви: " + checkContentType(lastMessage.contentType, lastMessage.content)) 
+                                        : checkContentType(lastMessage.contentType, lastMessage.content))}
+                                unread={lastMessage !== null && lastMessage.sender.username !== authUser.username && checkSentType(lastMessage.status)}
+                                read={lastMessage !== null && lastMessage.sender.username === authUser.username && checkReadType(lastMessage.status)}
+                                clickHandler={() => {
+                                    handleLoadChat(id)
+                                    setShow(false);
+                                }}
+                                showTime={true}
+                                time={lastMessage.createdAt}
                             />
-                        </li>)
-                    })}
+                            </NavLink>
+                        </li>
+                        )
+                    }
+                    ) 
+                    :
+                    searchChats.obj.map(({id, chatParticipant}) => {
+                        return (
+                            <li key={id} className={styles.chatNavSection__chatList__items__item}>
+                                <Link to={`/messages/${id}`}>
+                            <ChatItem
+                                additionalClass={styles.chatNavSection__chatList__items__item.avatar}
+                                name={chatParticipant.name + " " + chatParticipant.surname}
+                                photo={chatParticipant.avatar}
+                                message={null}clickHandler={() => {
+                                    handleLoadChat(id)
+                                }}
+                            />
+                            </Link>
+                        </li>
+                        )
+                    })
+                    }
+                    {hasMore && chats.length >0 && <li className={styles.chatNavSection__chatList__items__item}>
+                                <button  className={styles.chatNavSection__chatList__items__item__btn} onClick={handleLoadMoreChats}>More</button></li>}
                 </ul>
             </div>
+            
+            </>}
         </section>
     )
 }
+ChatNavigation.propTypes = {
+    chatsStatus: PropTypes.oneOf(['', 'pending', 'fulfilled', 'rejected']).isRequired,
+    chats: PropTypes.arrayOf(
+        PropTypes.shape({
+            id: PropTypes.number.isRequired,
+            chatParticipant: PropTypes.shape({
+                id: PropTypes.number.isRequired,
+                name: PropTypes.string.isRequired,
+                surname: PropTypes.string.isRequired,
+                username: PropTypes.string.isRequired,
+                avatar: PropTypes.string,
+            }).isRequired,
+            lastMessage: PropTypes.shape({
+                id: PropTypes.number.isRequired,
+                contentType: PropTypes.string.isRequired,
+                content: PropTypes.string.isRequired,
+                sender: PropTypes.shape({
+                    id: PropTypes.number.isRequired,
+                    name: PropTypes.string.isRequired,
+                    surname: PropTypes.string.isRequired,
+                    username: PropTypes.string.isRequired,
+                    avatar: PropTypes.string,
+                }).isRequired,
+                status: PropTypes.string.isRequired,
+            }),
+        })
+    ).isRequired,
+    handleLoadChat: PropTypes.func.isRequired,
+    authUser: PropTypes.object.isRequired,
+    isChatClick: PropTypes.bool.isRequired,
+    handleCreateChatClick: PropTypes.func,
+    handleLoadMoreChats: PropTypes.func,
+    pageSize: PropTypes.number
+};

@@ -1,0 +1,50 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
+.messengerPage{
+  @include flex-center-row;
+  color: $main-text-color;
+  height: calc(100vh - 60px);
+  background-color: $main-background-color;
+}
+.chatFieldSection{
+  @include flex-center;
+  width: 100%;
+  height: 100%;
+  &__empty{
+    display:none;
+  }
+  }
+@media (max-width: 767px) {
+  .hide{
+    display:none;
+  }
+}
+
+@media (min-width: 768px) {
+  .chatFieldSection{
+    width: 60%;
+
+      &__empty{
+        width: 100%;
+        height: 100%;
+        @include flex-center;
+        justify-content: center;
+        background: $input-color-main;
+        h1{
+          color: $text-color-gray;
+          font-weight: bold;
+          margin: 24px;
+          font-size: 24px;
+          text-align: center;
+        }
+    }
+    
+  }
+}
+
+@media (min-width: 1025px) {
+  .chatFieldSection{
+    width: 74%;
+  }
+}
