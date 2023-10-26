@@ -1,22 +1,14 @@
 import React from 'react';
-import Header from './components/Header/Header';
 import AppRoutes from './AppRoutes';
+import {useSelector} from "react-redux";
 
 function App() {
-  const isHeader = !window.location.pathname.includes('/login') && !window.location.pathname.includes('/registration');
-
-  if (isHeader) {
-    return (
-      <div className="App">
-        <Header />
-        <AppRoutes />
-      </div>
-    );
-  }
+    const { id } = useSelector(state => state.auth.token.obj) || null;
+    const isAuth = !!id;
 
   return (
     <div className="App">
-      <AppRoutes />
+      <AppRoutes isAuth={isAuth} />
     </div>
   );
 }

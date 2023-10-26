@@ -1,8 +1,12 @@
 import React from 'react';
+import {Outlet} from "react-router";
 
 function MessagesPage() {
   return (
-    <div>MessagesPage</div>
+      <div >
+        MessagePage
+        <Outlet />
+      </div>
   );
 }
 
