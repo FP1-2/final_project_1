@@ -1,6 +1,7 @@
 package com.facebook.config.socket;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -51,7 +52,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
         converter.setObjectMapper(new ObjectMapper());
         converter.setContentTypeResolver(defaultContentTypeResolver);
         messageConverters.add(converter);
-        return false;
+        return true;
     }
     @Override
     public void configureClientInboundChannel(ChannelRegistration registration) {
