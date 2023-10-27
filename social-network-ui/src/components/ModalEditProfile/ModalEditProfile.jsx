@@ -64,8 +64,7 @@ const ModalEditProfile = () => {
   };
 
 
-  const onSubmit = async (value) => {
-    console.log(value);
+  const onSubmit = async () => {
     dispatch(modalEditProfileState(false));
   };
 

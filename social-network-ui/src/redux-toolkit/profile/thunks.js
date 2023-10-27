@@ -10,29 +10,24 @@ export const getPhotoURL = async (file) => {
     return response;
 }
 
-export const getUserThunkRequest = createAsyncThunk(
-    "profile/data",
-    async ({token, id},{rejectWithValue}) => {
-        try{
-            const response = await basicAx.get(`api/users/${id}`, {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-            return response.data;
-        }
-        catch(err){
-            return rejectWithValue (err.response.data);
+export const loadUserProfile = createAsyncThunk(
+    'profile/profileUser',
+    async ({id,user}, { rejectWithValue }) => {
+        try {
+            const response = await workAx("get",`api/users/${id}`);
+            return {...response.data, user:user};;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
         }
     }
-)
+);
 
-export const editUserThunkRequest = createAsyncThunk(
-    "profile/dat",
+export const editUser = createAsyncThunk(
+    "profile/editUser",
     async (obj,{rejectWithValue}) => {
         try{
-            // const response = await workAx("post",`api/users/edit`,obj)
-            // console.log(response.data);
+            const response = await workAx("post",`api/users/edit`,obj)
+            console.log(response.data);
         }
         catch(err){
             return rejectWithValue (err.response.data);

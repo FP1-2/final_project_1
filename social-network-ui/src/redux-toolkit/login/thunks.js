@@ -1,37 +1,26 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
-import { basicAx } from '../ax.js';
-import {
-  saveTokenToLocalStorage,
-  getTokenFromLocalStorage,
-  saveUserToLocalStorage,
-  deleteTokenFromLocalStorage,
-  deleteUserFromLocalStorage,
-} from '../../utils/localStorageHelper';
+import {basicAx, workAx} from '../ax.js';
 
-export const loginThunk = createAsyncThunk(
-  'auth/data',
-  async (obj, { rejectWithValue }) => {
-    try {
-      const response = await basicAx.post('api/auth/token', obj);
-      const responseToken = response.data;
-      const { token, id } = responseToken;
-      saveTokenToLocalStorage(token);
-
-      const responseUser = await basicAx.get(`api/users/${id}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      const userInfo = responseUser.data;
-      saveUserToLocalStorage(userInfo);
-
-      setTimeout(() => {
-        deleteTokenFromLocalStorage();
-        deleteUserFromLocalStorage();
-      }, 24 * 60 * 60 * 1000);
-      return responseToken;
-    } catch (err) {
-      return rejectWithValue(err.response.data);
+export const loadAuthToken = createAsyncThunk(
+    'auth/token',
+    async (obj, { rejectWithValue }) => {
+        try {
+            const response = await basicAx.post('api/auth/token', obj);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
     }
-  }
+);
+
+export const loadAuthUser = createAsyncThunk(
+    'auth/user',
+    async (userId, { rejectWithValue }) => {
+        try {
+            const response = await workAx("get",`api/users/${userId}`);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
 );

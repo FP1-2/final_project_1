@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import { getUserThunkRequest,editUserThunkRequest} from "./thunks";
+import { editUser,loadUserProfile} from "./thunks";
 import builders from "../builders";
 
 const profileReducer = createSlice({
@@ -16,13 +16,16 @@ const profileReducer = createSlice({
         modalEditProfileState: (state, action) => {
             state.modalEditProfile.state = action.payload;
         },
+        removeUser: (state) => {
+            state.profileUser.obj = {};
+        },
     },
     extraReducers:(builder)=>{
-        builders(builder, getUserThunkRequest,'profileUser');
-        builders(builder, editUserThunkRequest,'editUser');
+        builders(builder, editUser,'editUser');
+        builders(builder, loadUserProfile,'profileUser');
     }
 });
 
-export const {modalDeleteFriendState,modalAddPostState,modalEditProfileState} = profileReducer.actions;
+export const {modalDeleteFriendState,modalAddPostState,modalEditProfileState,removeUser} = profileReducer.actions;
 
 export default profileReducer.reducer;
