@@ -1,8 +1,6 @@
 package com.facebook.utils;
 
 import com.facebook.dto.appuser.GenAppUser;
-import com.facebook.dto.friends.AppUserFriends;
-import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
@@ -11,13 +9,9 @@ import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
-import com.facebook.model.friends.Friends;
-import com.facebook.model.friends.FriendsStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
-import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
-import com.facebook.model.posts.PostType;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.service.AppUserService;
