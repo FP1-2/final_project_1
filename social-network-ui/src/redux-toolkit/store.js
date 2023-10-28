@@ -4,6 +4,7 @@ import storage from 'redux-persist/lib/storage';
 import registrationReducer from "./registration/slice";
 import loginReducer from "./login/slice";
 import profileReducer from "./profile/slice";
+import postReducer from "./post/slice";
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -12,13 +13,15 @@ const rootReducer = (state, action) => {
         return {
             registration: undefined,
             auth: undefined,
-            profile:undefined
+            profile:undefined,
+            post:undefined
         };
     }
     return combineReducers({
         registration: registrationReducer,
         auth: loginReducer,
         profile:profileReducer,
+        post:postReducer,
     })(state, action);
 }
 

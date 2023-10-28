@@ -38,10 +38,9 @@ export const editUser = createAsyncThunk(
 export const postsUser = createAsyncThunk(
     "profile/postsUse",
     async (id,{rejectWithValue}) => {
-        console.log(id);
         try{
             const response = await workAx("get",`api/posts/by_user_id/${id}`);
-            return response.data;
+            return response.data.content;
         }
         catch(err){
             return rejectWithValue (err.response.data);

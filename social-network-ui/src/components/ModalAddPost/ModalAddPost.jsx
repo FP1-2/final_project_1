@@ -8,6 +8,8 @@ import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { modalAddPostState } from "../../redux-toolkit/profile/slice";
+import { getPhotoURL } from "../../redux-toolkit/registration/thunks";
+import { addPost } from "../../redux-toolkit/post/thunks";
 
 const validationSchema = object({
   text: string().min(3, "Must be more than 2 characters"),
@@ -17,6 +19,7 @@ const ModalAddPost = () => {
 
   const [scroll,setScroll]=useState(null);
   const [errorValidation, setErrorValidation]=useState(false);
+  const img = useRef();
 
   const handleScroll = () => {
     setScroll(Math.round(window.scrollY));
@@ -28,7 +31,7 @@ const ModalAddPost = () => {
   }, []);
 
 
-  const img = useRef();
+
 
   const clickDownloadImg = () => {
     img.current.click();
@@ -43,10 +46,17 @@ const ModalAddPost = () => {
     if(value.text==="" && value.img===""){
       setErrorValidation(true);
     }else{
-      dispatch(modalAddPostState(false));
+      const photo = (await getPhotoURL(value.img));
+      dispatch(addPost({imageUrl:photo, body:value.text, title:"add new post"}));
       setErrorValidation(false);
+      dispatch(modalAddPostState(false));
     }
   };
+
+  // const downloadPostPhoto = async (file) => {
+   
+    
+  // };
 
   const dispatch=useDispatch();
 
@@ -81,7 +91,7 @@ const ModalAddPost = () => {
               </div>
               <div className={style.modalMain}>
                 <Textarea type="text" name="text" placeholder="Anything new?"/>
-                {values.img && <PreviewImage file={values.img} />}
+                {values.img && <PreviewImage file={values.img}/>}
               </div>
             </div>
             <div>

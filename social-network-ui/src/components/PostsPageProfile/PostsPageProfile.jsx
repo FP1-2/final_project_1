@@ -13,6 +13,7 @@ const PostPageProfile = () => {
 
   const dispatch = useDispatch();
   const userObject = useSelector(state => state.profile.profileUser.obj);
+  const userPosts = useSelector(state => state.profile.postsUser.obj);
 
 
   const modalAddPostOpen = () => {
@@ -53,10 +54,12 @@ const PostPageProfile = () => {
                 <button className={style.profileAddPostBtn} onClick={modalAddPostOpen}>Add post</button>
               </div> : null}
             <ul className={style.profilePosts}>
-              <li className={style.profilePost}><PostProfile /></li>
-              <li className={style.profilePost}><RepostProfile /></li>
-              <li className={style.profilePost}><PostProfile /></li>
-              <li className={style.profilePost}><PostProfile /></li>
+              {userPosts.map((el) => <li className={style.profilePost} key={el.postId}>
+                {el.type === "REPOST" ?
+                  <RepostProfile el={el} />
+                  : <PostProfile el={el} />}
+              </li>
+              )}
             </ul>
           </div>
         </div>

@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import { editUser,loadUserProfile} from "./thunks";
+import { editUser,loadUserProfile,postsUser} from "./thunks";
 import builders from "../builders";
 
 const profileReducer = createSlice({
@@ -23,7 +23,7 @@ const profileReducer = createSlice({
     extraReducers:(builder)=>{
         builders(builder, editUser,'editUser');
         builders(builder, loadUserProfile,'profileUser');
-        // builders(builder, postsUser,'postsUser');
+        builders(builder, postsUser,'postsUser');
     }
 });
 
