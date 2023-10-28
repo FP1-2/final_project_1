@@ -341,7 +341,7 @@ public class Gen {
         chats.forEach(chat -> {
             chat.getChatParticipants().forEach(participant -> {
                 String text = faker.lorem().sentence();
-                Message message = new Message(ContentType.TEXT, text, participant, chat, MessageStatus.SENT);
+                Message message = Message.of(ContentType.TEXT, text, participant, chat, MessageStatus.SENT);
                 messageRepository.save(message);
             });
         });

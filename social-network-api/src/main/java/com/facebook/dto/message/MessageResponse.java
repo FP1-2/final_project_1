@@ -15,6 +15,6 @@ public class MessageResponse {
     private String content;
     private AppUserChatResponse sender;
     private ChatResponse chat;
-    private String createdAt;
+    private LocalDateTime createdAt;
     private MessageStatus status;
 }

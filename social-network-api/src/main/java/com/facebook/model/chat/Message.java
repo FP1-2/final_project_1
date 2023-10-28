@@ -3,7 +3,6 @@ package com.facebook.model.chat;
 import com.facebook.model.AbstractEntity;
 import com.facebook.model.AppUser;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
@@ -12,7 +11,6 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "message")
 @EqualsAndHashCode(callSuper = true)
-@AllArgsConstructor
 @NoArgsConstructor
 public class Message extends AbstractEntity {
     @Column(nullable = false)
@@ -25,4 +23,15 @@ public class Message extends AbstractEntity {
     @JoinColumn(name = "chat_id", nullable = false)
     private Chat chat;
     private MessageStatus status;
+
+    public static Message of(ContentType contentType, String content, AppUser sender, Chat chat, MessageStatus status){
+        Message newMessage = new Message();
+        newMessage.setContentType(contentType);
+        newMessage.setContent(content);
+        newMessage.setSender(sender);
+        newMessage.setChat(chat);
+        newMessage.setStatus(status);
+
+        return newMessage;
+    }
 }

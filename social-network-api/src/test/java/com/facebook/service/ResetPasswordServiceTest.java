@@ -30,9 +30,6 @@ class ResetPasswordServiceTest {
     @MockBean
     private AppUserService appUserService;
 
-    @MockBean
-    private CurrentUserService CurrentUserService;
-
     @Autowired
     private ResetPasswordService resetPasswordService;
 
@@ -86,7 +83,9 @@ class ResetPasswordServiceTest {
 
     @Test
     void testResetUserPasswordWithValidToken() {
-        UserNewPasswordRequest user = new UserNewPasswordRequest(EMAIL, "newPassword");
+        UserNewPasswordRequest user = new UserNewPasswordRequest();
+        user.setEmail(EMAIL);
+        user.setNewPassword("newPassword");
         when(resetPasswordTokenCache.get(EMAIL)).thenReturn(TOKEN);
 
         resetPasswordService.resetUserPassword(TOKEN, user);
@@ -98,7 +97,9 @@ class ResetPasswordServiceTest {
     @Test
     void testResetUserPasswordWithInvalidToken() {
 
-        UserNewPasswordRequest user = new UserNewPasswordRequest(EMAIL, "newPassword");
+        UserNewPasswordRequest user = new UserNewPasswordRequest();
+        user.setEmail(EMAIL);
+        user.setNewPassword("newPassword");
         when(resetPasswordTokenCache.get(EMAIL)).thenReturn(TOKEN);
 
         assertThrows(InvalidTokenException.class, () -> resetPasswordService.resetUserPassword(INVALID_TOKEN, user));

@@ -4,8 +4,6 @@ import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.message.MessageResponseList;
 import lombok.Data;
 
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 public class ChatResponseList {
