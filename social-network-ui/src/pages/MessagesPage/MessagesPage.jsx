@@ -55,14 +55,14 @@ export default function MessagesPage() {
             dispatch(loadChat({ id }));
         }
     }, [id, dispatch]);
-    
+
     useEffect(() => {
         if (Object.keys(chat).length > 0) {
             addChat(chat);
             navigate(`/messages/${chat.id}`);
         }
     }, [chat]);
-    
+
     useEffect(() => {
         if (newMess !== null) {
             dispatch(updateChats(newMess));
@@ -87,11 +87,11 @@ export default function MessagesPage() {
             document.title = ` (${unreadQt}) Messenger | Facebook`;
         }
     }, [unreadQt]);
-    
+
     useEffect(() => {
         if (window.location.pathname === '/messages') {
             setIsChatClicked(false)
-        } 
+        }
     }, [window.location.pathname])
     return (
         <div className={styles.messengerPage}>
