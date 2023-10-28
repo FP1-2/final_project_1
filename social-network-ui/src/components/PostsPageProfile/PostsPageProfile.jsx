@@ -7,11 +7,13 @@ import { modalAddPostState, modalEditProfileState } from "../../redux-toolkit/pr
 import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as Calendar } from "../../img/calendarProfileInformation.svg";
 import { ReactComponent as Home } from "../../img/homeProfileInformation.svg";
+// import { getPostsUser } from "../../redux-toolkit/profile/thunks";
 
 const PostPageProfile = () => {
 
   const dispatch = useDispatch();
   const userObject = useSelector(state => state.profile.profileUser.obj);
+
 
   const modalAddPostOpen = () => {
     dispatch(modalAddPostState(true));

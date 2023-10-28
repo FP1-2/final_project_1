@@ -23,6 +23,7 @@ const profileReducer = createSlice({
     extraReducers:(builder)=>{
         builders(builder, editUser,'editUser');
         builders(builder, loadUserProfile,'profileUser');
+        // builders(builder, postsUser,'postsUser');
     }
 });
 

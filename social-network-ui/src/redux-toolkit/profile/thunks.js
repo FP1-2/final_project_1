@@ -15,7 +15,7 @@ export const loadUserProfile = createAsyncThunk(
     async ({id,user}, { rejectWithValue }) => {
         try {
             const response = await workAx("get",`api/users/${id}`);
-            return {...response.data, user:user};;
+            return {...response.data, user:user};
         } catch (err) {
             return rejectWithValue(err.response.data);
         }
@@ -26,8 +26,22 @@ export const editUser = createAsyncThunk(
     "profile/editUser",
     async (obj,{rejectWithValue}) => {
         try{
-            const response = await workAx("post",`api/users/edit`,obj)
-            console.log(response.data);
+            const response = await workAx("put",`api/users/edit`,obj);
+            return response.data;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)
+
+export const postsUser = createAsyncThunk(
+    "profile/postsUse",
+    async (id,{rejectWithValue}) => {
+        console.log(id);
+        try{
+            const response = await workAx("get",`api/posts/by_user_id/${id}`);
+            return response.data;
         }
         catch(err){
             return rejectWithValue (err.response.data);

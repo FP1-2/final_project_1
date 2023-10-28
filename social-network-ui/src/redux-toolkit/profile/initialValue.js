@@ -4,6 +4,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    postsUser:{
+        obj: {},
+        status: '',
+        error: '',
+    },
     modalDeleteFriend: {
         state: false,
     },
@@ -18,5 +23,6 @@ const initialValue = {
         status: '',
         error: '',
     },
+
 }
 export default initialValue;
