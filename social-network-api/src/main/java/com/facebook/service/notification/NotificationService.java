@@ -1,5 +1,7 @@
 package com.facebook.service.notification;
 
+import com.facebook.dto.notifications.NotificationResponse;
+import com.facebook.exception.NotFoundException;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
@@ -9,8 +11,15 @@ import com.facebook.model.posts.Post;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
 import java.util.List;
+
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 
@@ -22,6 +31,30 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
 
     private final FriendsRepository friendsRepository;
+
+    private final ModelMapper modelMapper;
+
+    public Page<NotificationResponse> getNotificationsByUser(Long userId,
+                                                             int page,
+                                                             int size) {
+        Pageable pageable = PageRequest.of(page,
+                size, Sort.by(Sort.Direction.DESC, "createdDate"));
+        return notificationRepository.findByUserId(userId, pageable)
+                .map(notification -> modelMapper.map(notification,
+                        NotificationResponse.class));
+    }
+
+    public void markNotificationAsRead(Long notificationId) {
+        Notification notification = notificationRepository
+                .findById(notificationId).orElseThrow(
+                        () -> new NotFoundException("Notification not found"));
+        notification.setRead(true);
+        notificationRepository.save(notification);
+    }
+
+    public Long getUnreadNotificationCount(Long userId) {
+        return notificationRepository.countByUserIdAndIsRead(userId, false);
+    }
 
     public List<AppUser> getApprovedFriendsOfUser(Long userId) {
         return friendsRepository
