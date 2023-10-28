@@ -92,4 +92,9 @@ spring:
 #      hibernate.format_sql: "true"
 server:
   port: ${SERVER_PORT:9000}
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: ${KEY_STORE_PASSWORD_SSL}
+    key-store-type: PKCS12
+    key-alias: tomcat
 ---
