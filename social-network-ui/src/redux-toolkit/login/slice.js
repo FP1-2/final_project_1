@@ -1,23 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import {createSlice} from '@reduxjs/toolkit';
 import initialValue from './initialValue';
-import {loginThunk, userThunk} from './thunks';
 import builders from '../builders';
+import { loadAuthToken, loadAuthUser } from './thunks';
 
-
-const authSlice = createSlice({
-  name: 'auth',
-  initialState: initialValue,
-  reducers:{
-  },
-  extraReducers:(builder)=>{
-    builders(builder, loginThunk, 'login');
-}
+const loginReducer = createSlice({
+    name: 'auth',
+    initialState: initialValue,
+    reducers: {},
+    extraReducers: (builder) => {
+        builders(builder, loadAuthToken, 'token');
+        builders(builder, loadAuthUser, 'user');
+    }
 });
-/* export const { setToken, setError, setLoading } = authSlice.actions;
- */
-/* export const selectToken = (state) => state.auth.token;
-export const selectError = (state) => state.auth.error;
-export const selectLoading = (state) => state.auth.loading;
- */
 
-export default authSlice.reducer;
+export const {
+
+} = loginReducer.actions;
+
+export default loginReducer.reducer;

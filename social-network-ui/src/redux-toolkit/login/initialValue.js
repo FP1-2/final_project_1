@@ -1,4 +1,14 @@
 const initialValue = {
-  login: { obj: {}, status: '', error: '' },
+    token: {
+        obj: {},
+        status: '',
+        error: ''
+    },
+    user: {
+        obj: {},
+        status: '',
+        error: ''
+    },
 };
+
 export default initialValue;
