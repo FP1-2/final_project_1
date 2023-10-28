@@ -1,7 +1,6 @@
 package com.facebook.facade;
 
 import com.facebook.dto.appuser.AppUserChatResponse;
-import com.facebook.dto.chat.ChatRequest;
 import com.facebook.dto.chat.ChatResponse;
 import com.facebook.dto.chat.ChatResponseList;
 import com.facebook.dto.chat.ChatSqlResult;
@@ -13,7 +12,6 @@ import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.Message;
 import com.facebook.service.AppUserService;
 import com.facebook.service.ChatService;
-import com.facebook.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -31,9 +29,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class ChatFacade {
     private final ModelMapper modelMapper;
-//    private final AppUserFacade userFacade;
-//    private final MessageFacade messageFacade;
-//    private final MessageService messageService;
     private final ChatService chatService;
     private final AppUserService appUserService;
     public ChatResponse convertToChatResponse(Chat chat, AppUser chatP) {
@@ -42,7 +37,7 @@ public class ChatFacade {
         chatResponse.setChatParticipant(appUserChatResponse);
         return chatResponse;
     }
-    public ChatResponseList convertToChatResponseList(Chat chat) {
+    private ChatResponseList convertToChatResponseList(Chat chat) {
         ChatResponseList chatResponse = modelMapper.map(chat, ChatResponseList.class);
 
         AppUser receiverUser = getReceiverUser(chat.getId());
@@ -57,7 +52,7 @@ public class ChatFacade {
     private ChatSqlResult convertToChatSqlResult(Map<String, Object> sqlResult){
         return modelMapper.map(sqlResult, ChatSqlResult.class);
     }
-    public ChatResponse convertToChatResponseFromSql(Map<String, Object> sqlResult){
+    private ChatResponse convertToChatResponseFromSql(Map<String, Object> sqlResult){
         ChatSqlResult result = convertToChatSqlResult(sqlResult);
         AppUserChatResponse user = modelMapper.map(result, AppUserChatResponse.class);
         user.setId(result.getUserId());

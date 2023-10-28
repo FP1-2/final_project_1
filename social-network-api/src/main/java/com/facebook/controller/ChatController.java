@@ -5,17 +5,13 @@ import com.facebook.dto.chat.ChatResponseList;
 import com.facebook.dto.message.MessageResponse;
 import com.facebook.facade.ChatFacade;
 import com.facebook.facade.MessageFacade;
-import com.facebook.service.ChatService;
-import com.facebook.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @Log4j2
@@ -23,8 +19,6 @@ import java.util.List;
 @RequestMapping("api/chats")
 @RequiredArgsConstructor
 public class ChatController {
-    private final ChatService chatService;
-//    private final MessageService messageService;
     private final MessageFacade messageFacade;
     private final ChatFacade chatFacade;
     @GetMapping
@@ -40,8 +34,6 @@ public class ChatController {
     public ResponseEntity<ChatResponse> getChatById(@PathVariable long id){
         ChatResponse chatResponse = chatFacade.getChatById(id);
         log.info("Get Chat with ID: "+ id);
-        Principal principal = SecurityContextHolder.getContext().getAuthentication();
-        log.info("Princ name" + principal.getName());
         return ResponseEntity.ok(chatResponse);
     }
 

@@ -17,7 +17,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -63,7 +62,7 @@ public class AppUserController {
         return ResponseEntity.ok("Reset password link sent successfully!");
     }
 
-    @PutMapping(value = "/update-password/{token}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping("/update-password/{token}")
     public ResponseEntity<String> updatePassword(@PathVariable String token,
                                                  @Valid @RequestBody UserNewPasswordRequest user) {
         resetPasswordService.resetUserPassword(token, user);

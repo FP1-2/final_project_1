@@ -1,10 +1,8 @@
 package com.facebook.facade;
 
 
-import com.facebook.dto.appuser.AppUserChatResponse;
 import com.facebook.dto.message.MessageRequest;
 import com.facebook.dto.message.MessageResponse;
-import com.facebook.dto.message.MessageResponseList;
 import com.facebook.model.AppUser;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
@@ -15,15 +13,11 @@ import com.facebook.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.time.format.DateTimeFormatter;
-import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 
 @Log4j2
 @Component
@@ -35,18 +29,16 @@ public class MessageFacade {
     private final MessageService messageService;
     private final ChatService chatService;
     private final AppUserService appUserService;
-    public MessageResponse convertToMessageResponse(Message message, AppUser chatParticipant) {
+    private MessageResponse convertToMessageResponse(Message message, AppUser chatParticipant) {
         MessageResponse response = modelMapper.map(message, MessageResponse.class);
 
         response.setChat(chatFacade.convertToChatResponse(message.getChat(), chatParticipant));
 
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-        String formattedDateTime = message.getCreatedDate().format(formatter);
-        response.setCreatedAt(formattedDateTime);
+        response.setCreatedAt(message.getCreatedDate());
         return response;
     }
 
-    public Message convertToMessage(MessageRequest messageRequest, AppUser sender ) {
+    private Message convertToMessage(MessageRequest messageRequest, AppUser sender ) {
         Message message = modelMapper.map(messageRequest, Message.class);
         message.setSender(sender);
         message.setContentType(ContentType.fromString(messageRequest.getContentType()));
