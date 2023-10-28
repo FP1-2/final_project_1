@@ -2,9 +2,9 @@
 import React from "react";
 
 export default function Chat() {
-    return (
-        <div >
-            Chat
-        </div>
-    );
+  return (
+    <div>
+        Chat
+    </div>
+  );
 }

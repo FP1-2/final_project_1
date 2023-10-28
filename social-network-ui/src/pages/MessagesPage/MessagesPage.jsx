@@ -3,10 +3,10 @@ import {Outlet} from "react-router";
 
 function MessagesPage() {
   return (
-      <div >
-        MessagePage
-        <Outlet />
-      </div>
+    <div>
+      MessagePage
+      <Outlet/>
+    </div>
   );
 }
 

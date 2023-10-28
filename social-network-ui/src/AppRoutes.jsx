@@ -13,28 +13,27 @@ import Layout from "./pages/Layout";
 import PropTypes from "prop-types";
 import Chat from "./components/Chat/Chat";
 
-function AppRoutes( {isAuth} ) {
+function AppRoutes({isAuth}) {
   return (
     <Routes>
-
-        <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<Layout/>}/>} >
-          <Route index element={<ProtectedRoute isAuth={isAuth} content={<PostsPage/>}/>}/>
-          <Route path="/profile" element={<ProtectedRoute isAuth={isAuth} content={<ProfilePage/>}/>}/>
-          <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage/>}/>}>
-              <Route path="/messages/:id" element={<ProtectedRoute isAuth={isAuth} content={<Chat/>}/>}/>
-          </Route>
-          <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritsPage/>}/>}/>
-          <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage/>}/>}/>
+      <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<Layout/>}/>}>
+        <Route index element={<ProtectedRoute isAuth={isAuth} content={<PostsPage/>}/>}/>
+        <Route path="/profile" element={<ProtectedRoute isAuth={isAuth} content={<ProfilePage/>}/>}/>
+        <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage/>}/>}>
+          <Route path="/messages/:id" element={<ProtectedRoute isAuth={isAuth} content={<Chat/>}/>}/>
         </Route>
-        <Route path="/login" element={<LoginPage isAuth={isAuth}/>} />
-        <Route path='/registration' element={<RegistrationForm />} />
-        <Route path='/registration/confirm' element={<ConfirmRegistration/>}/>
+        <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritsPage/>}/>}/>
+        <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage/>}/>}/>
+      </Route>
+      <Route path="/login" element={<LoginPage isAuth={isAuth}/>}/>
+      <Route path='/registration' element={<RegistrationForm/>}/>
+      <Route path='/registration/confirm' element={<ConfirmRegistration/>}/>
     </Routes>
   );
 }
 
 export default AppRoutes;
 
-AppRoutes.propTypes={
-    isAuth: PropTypes.bool.isRequired
-}
+AppRoutes.propTypes = {
+  isAuth: PropTypes.bool.isRequired
+};

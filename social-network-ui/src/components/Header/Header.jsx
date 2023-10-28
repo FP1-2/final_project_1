@@ -5,16 +5,16 @@ import {NavLink} from "react-router-dom";
 
 function Header() {
 
-    return (
-      <header className={styles.header}>
-        <div>
-          <NavLink to={"/"}>
-              <img src={facebookIcon} alt="" />
-          </NavLink>
-          <input type="text" className={styles.searc} name="search" placeholder="Search on Facebook" />
-        </div>
-      </header>
-    )
+  return (
+    <header className={styles.header}>
+      <div>
+        <NavLink to={"/"}>
+          <img src={facebookIcon} alt="" />
+        </NavLink>
+        <input type="text" className={styles.searc} name="search" placeholder="Search on Facebook" />
+      </div>
+    </header>
+  );
 }
 
 export default Header;

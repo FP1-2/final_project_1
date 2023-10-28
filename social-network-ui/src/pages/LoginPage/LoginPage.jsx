@@ -10,7 +10,7 @@ import {Navigate} from "react-router-dom";
 
 const LoginPage = ({isAuth}) => {
   const dispatch = useDispatch();
-  const { id } = useSelector(state => state.auth.token.obj) || null;
+  const {id} = useSelector(state => state.auth.token.obj) || null;
   const handleSubmit = (values) => {
     dispatch(loadAuthToken(values));
     startLogoutTimer();
@@ -18,29 +18,30 @@ const LoginPage = ({isAuth}) => {
   useEffect(() => {
     if (id) {
       dispatch(loadAuthUser(id));
-    }}, [id, dispatch]);
+    }
+  }, [id, dispatch]);
   return (
-      isAuth ? <Navigate to="/" replace/> :
-    <section className={styles.container}>
-      <div className={styles.wrapper}>
-        <div className={styles['logo-slogan__wrapper']}>
-          <div className={styles['facebookLogo__wrapper']}>
-            <FacebookLogo className={styles.facebookLogo} />
+    isAuth ? <Navigate to="/" replace/> :
+      <section className={styles.container}>
+        <div className={styles.wrapper}>
+          <div className={styles['logo-slogan__wrapper']}>
+            <div className={styles['facebookLogo__wrapper']}>
+              <FacebookLogo className={styles.facebookLogo}/>
+            </div>
+            <h2 className={styles.slogan__wrapper}>
+              Facebook helps you connect and share with the people in your life.
+            </h2>
           </div>
-          <h2 className={styles.slogan__wrapper}>
-            Facebook helps you connect and share with the people in your life.
-          </h2>
+          <div className={styles['login-form__wrapper']}>
+            <LoginForm handleSubmit={handleSubmit}/>
+          </div>
         </div>
-        <div className={styles['login-form__wrapper']}>
-          <LoginForm handleSubmit={handleSubmit} />
-        </div>
-      </div>
-    </section>
+      </section>
   );
 };
 
 export default LoginPage;
-LoginPage.propTypes={
+LoginPage.propTypes = {
   isAuth: PropTypes.bool.isRequired
 };
 
