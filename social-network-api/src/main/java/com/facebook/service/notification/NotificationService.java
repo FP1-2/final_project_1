@@ -12,7 +12,6 @@ import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
 import java.util.List;
 
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
