@@ -14,7 +14,8 @@ import lombok.NoArgsConstructor;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(name = "friends")
+@Table(name = "friends",
+        uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "friend_id"}))
 public class Friends extends AbstractEntity {
 
     @NotNull
