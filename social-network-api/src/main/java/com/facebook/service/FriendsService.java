@@ -11,12 +11,15 @@ import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
+import com.facebook.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
-
+@Log4j2
 @Service
 @RequiredArgsConstructor
 public class FriendsService {
@@ -26,6 +29,8 @@ public class FriendsService {
     private final AppUserRepository appUserRepository;
 
     private final FriendsFacade facade;
+
+    private final NotificationService notificationService;
 
     private final AppUserFacade userFacade;
 
@@ -50,9 +55,11 @@ public class FriendsService {
         Friends friendRequest = new Friends(user, friend, FriendsStatus.PENDING);
         friendsRepository.save(friendRequest);
 
+        notificationService.createFriendRequestNotification(user, friend);
         return facade.toFriendsResponse(friendRequest);
     }
 
+    @Transactional
     public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
                 f -> {
@@ -60,7 +67,9 @@ public class FriendsService {
                         f.setStatus(FriendsStatus.APPROVED);
                         friendsRepository.save(f);
 
-                        friendsRepository.save(new Friends(f.getFriend(), f.getUser(),FriendsStatus.APPROVED));
+                        if (!friendsRepository.existsByUserIdAndFriendId(friendId, userId)) {
+                            friendsRepository.save(new Friends(f.getFriend(), f.getUser(), FriendsStatus.APPROVED));
+                        }
                     }
                     else {
                         f.setStatus(FriendsStatus.REJECTED);
@@ -68,6 +77,7 @@ public class FriendsService {
                     }
                 },
                 () -> {
+                    log.warn("Friends pair not found for userId: {} and friendId: {}", userId, friendId);
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
@@ -111,6 +121,10 @@ public class FriendsService {
                 .stream()
                 .map(facade::toFriendsResponse)
                 .toList();
+    }
+
+    public List<Friends> getFriendsListByUserIdAndStatus(Long userId) {
+        return friendsRepository.findByUserId(userId);
     }
 
 }

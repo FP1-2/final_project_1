@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -27,5 +28,12 @@ public interface FriendsRepository extends JpaRepository<Friends, Long> {
 //    @Modifying
 //    @Query(value = "DELETE FROM FRIENDS f WHERE (f.USER_ID = :userId AND f.FRIEND_ID = :friendId) OR (f.USER_ID = :friendId AND f.FRIEND_ID = :userId)", nativeQuery = true)
 //    void deleteFriendByUserIdAndFriendId(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
+    @Query(value = "SELECT * FROM FRIENDS WHERE USER_ID = :userId AND STATUS = :status", nativeQuery = true)
+    List<Friends> findFriendsByUserIdAndStatus(@Param("userId") Long userId, @Param("status") String status);
+
+    boolean existsByUserIdAndFriendId(Long userId, Long friendId);
+
+    List<Friends> findByUserId(Long userId);
 
 }
