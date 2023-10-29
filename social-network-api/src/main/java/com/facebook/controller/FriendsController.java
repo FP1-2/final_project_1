@@ -1,5 +1,6 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
@@ -41,27 +42,35 @@ public class FriendsController {
     @DeleteMapping("/delete")
     public ResponseEntity<FriendsResponse> deleteFriend(@Valid @RequestBody FriendsRequest request) {
         Long userId = currentUserService.getCurrentUserId();
+        System.out.println("asdf 0");
+        System.out.println(userId);
+        System.out.println(request.getFriendId());
         friendsService.deleteFriend(
                 userId,
                 request.getFriendId()
         );
+        System.out.println("asdf 3");
+//        friendsService.deleteFriend1(userId, request.getFriendId());
         return ResponseEntity.ok().build();
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FriendsResponse>> getFriendsByAuth() {
+    public ResponseEntity<List<AppUserResponse>> getFriendsByAuth() {
+        System.out.println("asdf 0");
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(friendsService.getFriendsByUserId(userId));
     }
 
-    @GetMapping("/list/{userId}")
-    public ResponseEntity<List<FriendsResponse>> getFriendsByUserId(@PathVariable Long id) {
+    @GetMapping("/list/{id}")
+    public ResponseEntity<List<AppUserResponse>> getFriendsByUserId(@PathVariable Long id) {
         return ResponseEntity.ok(friendsService.getFriendsByUserId(id));
     }
 
     @GetMapping("/list/friend-requests")
-    public ResponseEntity<List<FriendsResponse>> getFriendsRequests() {
+    public ResponseEntity<List<FriendsResponse>> getFriendsRequestsByAuh() {
+        System.out.println("asdf 10");
         Long userId = currentUserService.getCurrentUserId();
+        System.out.println(friendsService.getFriendsRequest(userId));
         return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
     }
 

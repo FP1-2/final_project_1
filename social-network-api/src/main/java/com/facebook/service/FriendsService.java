@@ -1,8 +1,10 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
@@ -24,6 +26,8 @@ public class FriendsService {
     private final AppUserRepository appUserRepository;
 
     private final FriendsFacade facade;
+
+    private final AppUserFacade userFacade;
 
     private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
 
@@ -60,7 +64,7 @@ public class FriendsService {
                     }
                     else {
                         f.setStatus(FriendsStatus.REJECTED);
-                        friendsRepository.save(f);
+                        friendsRepository.delete(f);
                     }
                 },
                 () -> {
@@ -71,30 +75,41 @@ public class FriendsService {
 
     public void deleteFriend(Long userId, Long friendId) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
-                friendsRepository::delete,
+                (f) -> {
+                    System.out.printf("asdf 1 ---> %s\n", f);
+                    friendsRepository.delete(f);
+                },
                 () -> {
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
         friendsRepository.findFriendsByUserIdAndFriendId(friendId, userId).ifPresentOrElse(
-                friendsRepository::delete,
+                (f) -> {
+                    System.out.printf("asdf 2 ---> %s\n", f);
+                    friendsRepository.delete(f);
+                },
                 () -> {
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
     }
 
-    public List<FriendsResponse> getFriendsByUserId(Long id) {
+//    public void deleteFriend1(Long userId, Long friendId) {
+//        friendsRepository.deleteFriendByUserIdAndFriendId(userId, friendId);
+//    }
+
+    public List<AppUserResponse> getFriendsByUserId(Long id) {
         return friendsRepository.findFriendsByUserId(id)
                 .stream()
-                .map(facade::toFriendsResponse)
+//                .map(facade::toFriendsResponse)
+                .map(userFacade::convertToAppUserResponse)
                 .toList();
     }
 
-    public List<FriendsResponse> getFriendsRequest(Long id) {
-        return friendsRepository.findFriendsRequestsByUserId(id)
+    public List<FriendsResponse> getFriendsRequest(Long userId) {
+        return friendsRepository.findFriendsRequestsByUserId(userId)
                 .stream()
-                .map((facade::toFriendsResponse))
+                .map(facade::toFriendsResponse)
                 .toList();
     }
 
