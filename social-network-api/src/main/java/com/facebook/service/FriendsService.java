@@ -19,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -85,41 +86,30 @@ public class FriendsService {
 
     public void deleteFriend(Long userId, Long friendId) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
-                (f) -> {
-                    System.out.printf("asdf 1 ---> %s\n", f);
-                    friendsRepository.delete(f);
-                },
+                friendsRepository::delete,
                 () -> {
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
         friendsRepository.findFriendsByUserIdAndFriendId(friendId, userId).ifPresentOrElse(
-                (f) -> {
-                    System.out.printf("asdf 2 ---> %s\n", f);
-                    friendsRepository.delete(f);
-                },
+                friendsRepository::delete,
                 () -> {
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }
         );
     }
 
-//    public void deleteFriend1(Long userId, Long friendId) {
-//        friendsRepository.deleteFriendByUserIdAndFriendId(userId, friendId);
-//    }
-
     public List<AppUserResponse> getFriendsByUserId(Long id) {
-        return friendsRepository.findFriendsByUserId(id)
+        return appUserRepository.findUserFriendsByUserId(id)
                 .stream()
-//                .map(facade::toFriendsResponse)
                 .map(userFacade::convertToAppUserResponse)
                 .toList();
     }
 
-    public List<FriendsResponse> getFriendsRequest(Long userId) {
-        return friendsRepository.findFriendsRequestsByUserId(userId)
+    public List<AppUserResponse> getFriendsRequest(Long userId) {
+        return appUserRepository.findUserFriendsRequestsByUserId(userId)
                 .stream()
-                .map(facade::toFriendsResponse)
+                .map(userFacade::convertToAppUserResponse)
                 .toList();
     }
 
