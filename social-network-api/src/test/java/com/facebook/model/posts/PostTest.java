@@ -94,6 +94,13 @@ class PostTest {
         savedPost.setTitle("Updated Title");
         tem.persistAndFlush(savedPost);
 
+        // Оновлюємо стан об'єкта savedPost з бази даних,
+        // щоб переконатися, що він відображає актуальний стан запису,
+        // включаючи автоматично оновлені поля. Цей крок необхідний,
+        // тому що без нього локальний стан об'єкта може не відповідати
+        // стану запису у базі даних після операції збереження.
+        tem.refresh(savedPost);
+
         // 4. Перевірка, що дата модифікації змінилася
         assertThat(savedPost.getLastModifiedDate())
                 .isNotEqualTo(initialLastModifiedDate);
