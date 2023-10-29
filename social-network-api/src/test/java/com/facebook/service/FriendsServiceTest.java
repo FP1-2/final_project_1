@@ -6,6 +6,7 @@ import com.facebook.model.friends.Friends;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.exception.NotFoundException;
+import com.facebook.service.notification.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -25,6 +26,9 @@ class FriendsServiceTest {
     @Mock
     private AppUserRepository appUserRepository;
 
+    @Mock
+    private NotificationService notificationService;
+
     private FriendsService friendsService;
 
     private static final Long USER_ID_1 = 123L;
@@ -39,7 +43,7 @@ class FriendsServiceTest {
 
         FriendsFacade friendsFacade = new FriendsFacade(modelMapper);
 
-        friendsService = new FriendsService(friendsRepository, appUserRepository, friendsFacade);
+        friendsService = new FriendsService(friendsRepository, appUserRepository, friendsFacade, notificationService);
     }
 
     @Test
@@ -64,9 +68,8 @@ class FriendsServiceTest {
     void testSendFriendRequestAlreadyExists() {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(new Friends()));
 
-        assertThrows(NotFoundException.class, () -> {
-            friendsService.sendFriendRequest(USER_ID_1, USER_ID_2);
-        });
+        assertThrows(NotFoundException.class,
+                () -> friendsService.sendFriendRequest(USER_ID_1, USER_ID_2));
     }
 
     @Test
@@ -74,18 +77,16 @@ class FriendsServiceTest {
         Friends friends = new Friends();
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(friends));
 
-        assertThrows(NotFoundException.class, () -> {
-            friendsService.changeFriendsStatus(USER_ID_2, USER_ID_1, true);
-        });
+        assertThrows(NotFoundException.class,
+                () -> friendsService.changeFriendsStatus(USER_ID_2, USER_ID_1, true));
     }
 
     @Test
     void testChangeFriendsStatusNotFound() {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            friendsService.changeFriendsStatus(USER_ID_2, USER_ID_1, true);
-        });
+        assertThrows(NotFoundException.class,
+                () -> friendsService.changeFriendsStatus(USER_ID_2, USER_ID_1, true));
     }
 
     @Test
@@ -104,9 +105,8 @@ class FriendsServiceTest {
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_1, USER_ID_2)).thenReturn(Optional.empty());
         when(friendsRepository.findFriendsByUserIdAndFriendId(USER_ID_2, USER_ID_1)).thenReturn(Optional.empty());
 
-        assertThrows(NotFoundException.class, () -> {
-            friendsService.deleteFriend(USER_ID_2, USER_ID_1);
-        });
+        assertThrows(NotFoundException.class,
+                () -> friendsService.deleteFriend(USER_ID_2, USER_ID_1));
     }
 
 }
