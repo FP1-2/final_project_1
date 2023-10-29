@@ -1,5 +1,6 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
@@ -49,9 +50,20 @@ public class FriendsController {
     }
 
     @GetMapping("/list")
-    public ResponseEntity<List<FriendsResponse>> getFriendsByUserId() {
+    public ResponseEntity<List<AppUserResponse>> getFriendsByAuth() {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(friendsService.getFriendsByUserId(userId));
+    }
+
+    @GetMapping("/list/{id}")
+    public ResponseEntity<List<AppUserResponse>> getFriendsByUserId(@PathVariable Long id) {
+        return ResponseEntity.ok(friendsService.getFriendsByUserId(id));
+    }
+
+    @GetMapping("/list/friend-requests")
+    public ResponseEntity<List<AppUserResponse>> getFriendsRequestsByAuh() {
+        Long userId = currentUserService.getCurrentUserId();
+        return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
     }
 
 }

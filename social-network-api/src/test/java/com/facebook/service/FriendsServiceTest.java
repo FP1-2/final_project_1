@@ -1,5 +1,6 @@
 package com.facebook.service;
 
+import com.facebook.facade.AppUserFacade;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
@@ -43,7 +44,9 @@ class FriendsServiceTest {
 
         FriendsFacade friendsFacade = new FriendsFacade(modelMapper);
 
-        friendsService = new FriendsService(friendsRepository, appUserRepository, friendsFacade, notificationService);
+        AppUserFacade userFacade = new AppUserFacade(modelMapper);
+
+        friendsService = new FriendsService(friendsRepository, appUserRepository, friendsFacade, notificationService, userFacade);
     }
 
     @Test
