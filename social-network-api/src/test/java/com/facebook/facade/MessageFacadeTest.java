@@ -11,6 +11,7 @@ import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
 import com.facebook.model.chat.MessageStatus;
+import com.facebook.service.ChatService;
 import com.facebook.service.MessageService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,6 +41,8 @@ public class MessageFacadeTest {
     private MessageService messageService;
     @MockBean
     private AppUserService appUserService;
+    @MockBean
+    private ChatService chatService;
     @Autowired
     private MessageFacade messageFacade;
     private AppUser authUser;
