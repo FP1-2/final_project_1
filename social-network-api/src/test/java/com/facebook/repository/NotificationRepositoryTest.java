@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
  * Тестовий клас для перевірки роботи репозиторію повідомлень.
  */
 @DataJpaTest
-public class NotificationRepositoryTest {
+class NotificationRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -39,7 +39,7 @@ public class NotificationRepositoryTest {
      * Підготовка даних перед кожним тестом.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
 
         // Створення та збереження користувача
         user = new AppUser();
@@ -82,7 +82,7 @@ public class NotificationRepositoryTest {
      * Тест перевіряє вибірку повідомлень за ідентифікатором користувача.
      */
     @Test
-    public void testFindByUserId() {
+    void testFindByUserId() {
         Page<Notification> notifications = notificationRepository
                 .findByUserId(user.getId(),
                         PageRequest.of(0, 10));
@@ -93,7 +93,7 @@ public class NotificationRepositoryTest {
      * Тест перевіряє видалення повідомлень за ідентифікатором поста.
      */
     @Test
-    public void testDeleteByPostId() {
+    void testDeleteByPostId() {
         notificationRepository.deleteByPostId(post.getId());
         Notification foundNotification = entityManager
                 .find(Notification.class,
@@ -105,7 +105,7 @@ public class NotificationRepositoryTest {
      * Тест перевіряє підрахунок кількості непрочитаних повідомлень користувача.
      */
     @Test
-    public void testCountByUserIdAndIsRead() {
+    void testCountByUserIdAndIsRead() {
         Notification unreadNotification = new Notification();
         unreadNotification.setUser(user);
         unreadNotification.setRead(false);

@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Тестовий клас для перевірки функціональності сутності "Повідомлення".
  */
 @ExtendWith(MockitoExtension.class)
-public class NotificationTest {
+class NotificationTest {
 
     private Notification notification;
 
@@ -40,7 +40,7 @@ public class NotificationTest {
      * Підготовка до тестування.
      */
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         notification = new Notification();
     }
 
@@ -48,7 +48,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та отримання користувача.
      */
     @Test
-    public void testNotificationUser() {
+    void testNotificationUser() {
         notification.setUser(user);
         assertEquals(user, notification.getUser());
     }
@@ -57,7 +57,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та отримання ініціатора.
      */
     @Test
-    public void testNotificationInitiator() {
+    void testNotificationInitiator() {
         notification.setInitiator(initiator);
         assertEquals(initiator, notification.getInitiator());
     }
@@ -66,7 +66,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та отримання публікації.
      */
     @Test
-    public void testNotificationPost() {
+    void testNotificationPost() {
         notification.setPost(post);
         assertEquals(post, notification.getPost());
     }
@@ -75,7 +75,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та отримання повідомлення.
      */
     @Test
-    public void testNotificationMessage() {
+    void testNotificationMessage() {
         String message = "Test Message";
         notification.setMessage(message);
         assertEquals(message, notification.getMessage());
@@ -85,7 +85,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та перевірку статусу прочитаності повідомлення.
      */
     @Test
-    public void testNotificationIsRead() {
+    void testNotificationIsRead() {
         notification.setRead(true);
         assertTrue(notification.isRead());
     }
@@ -94,7 +94,7 @@ public class NotificationTest {
      * Тест перевіряє присвоєння та отримання типу повідомлення.
      */
     @Test
-    public void testNotificationType() {
+    void testNotificationType() {
         NotificationType type = NotificationType.POST_LIKED;
         notification.setType(type);
         assertEquals(type, notification.getType());

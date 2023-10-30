@@ -26,7 +26,7 @@ import static org.mockito.Mockito.*;
  * Перевіряє коректність створення повідомлень різних типів.
  */
 @ExtendWith(MockitoExtension.class)
-public class NotificationServiceTest {
+class NotificationServiceTest {
 
     @Mock
     private NotificationRepository notificationRepository;
@@ -48,7 +48,7 @@ public class NotificationServiceTest {
 
     // ... ініціалізація об'єктів
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         user = new AppUser();
         user.setId(1L);
         user.setName("Іван");
@@ -66,7 +66,7 @@ public class NotificationServiceTest {
      * Тестує створення повідомлення про "лайк" поста.
      */
     @Test
-    public void testCreateLikeNotification() {
+    void testCreateLikeNotification() {
         notificationService.createLikeNotification(initiator, post);
 
         verify(notificationRepository).save(any(Notification.class));
@@ -76,7 +76,7 @@ public class NotificationServiceTest {
      * Тестує створення повідомлення про репост поста.
      */
     @Test
-    public void testCreateRepostNotification() {
+    void testCreateRepostNotification() {
         notificationService.createRepostNotification(initiator, post);
 
         verify(notificationRepository).save(any(Notification.class));
@@ -86,7 +86,7 @@ public class NotificationServiceTest {
      * Тестує створення повідомлення про коментар до поста.
      */
     @Test
-    public void testCreateCommentNotification() {
+    void testCreateCommentNotification() {
         notificationService.createCommentNotification(initiator, post);
 
         verify(notificationRepository).save(any(Notification.class));
@@ -96,7 +96,7 @@ public class NotificationServiceTest {
      * Тестує створення повідомлення для друзів про новий пост користувача.
      */
     @Test
-    public void testCreateFriendPostNotification() {
+    void testCreateFriendPostNotification() {
         List<AppUser> friends = List.of(user);
         when(friendsRepository.findFriendsByUserIdAndStatus(initiator.getId(),
                 FriendsStatus.APPROVED.name())).thenReturn(List.of(new Friends()));
@@ -110,7 +110,7 @@ public class NotificationServiceTest {
      * Тестує створення повідомлення про запит у друзі.
      */
     @Test
-    public void testCreateFriendRequestNotification() {
+    void testCreateFriendRequestNotification() {
         notificationService.createFriendRequestNotification(initiator, user);
 
         verify(notificationRepository).save(any(Notification.class));
