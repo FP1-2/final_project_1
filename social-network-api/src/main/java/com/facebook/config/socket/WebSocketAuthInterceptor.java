@@ -14,9 +14,9 @@ import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.messaging.support.ChannelInterceptor;
 
 import org.springframework.messaging.support.MessageHeaderAccessor;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
@@ -40,7 +40,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
             if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
                 String token = requestTokenHeader.substring(7);
                 authenticateUser(token).ifPresentOrElse(accessor::setUser, () -> {
-                    throw new UsernameNotFoundException("username not found");
+                    throw new BadCredentialsException("Bad credentials");
                 });
             }
         }
