@@ -8,6 +8,10 @@ import org.springframework.data.domain.Sort;
  */
 public class SortUtils {
 
+    private SortUtils() {
+        throw new UnsupportedOperationException("Utility class should not be instantiated");
+    }
+
     /**
      * Повертає об'єкт сортування на основі вхідного рядка сортування.
      *
