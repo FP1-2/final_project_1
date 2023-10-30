@@ -9,6 +9,8 @@ import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
+import com.facebook.model.friends.Friends;
+import com.facebook.model.friends.FriendsStatus;
 import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
@@ -374,25 +376,27 @@ public class Gen {
                             });
                 });
 
-        appUsers1.stream()
-                .map(user -> friendsService
-                        .getFriendsListByUserIdAndStatus(user.getId()))
-                .flatMap(List::stream)
-                .forEach(request -> {
-                    if (MathUtils.random(0, 10) < 3) {
-                        friendsService
-                                .changeFriendsStatus(request.getUser().getId(),
-                                        request.getFriend().getId(), true);
-                    } else {
-                        friendsService
-                                .changeFriendsStatus(request.getUser().getId(),
-                                        request.getFriend().getId(), false);
+        appUsers1.forEach(user -> {
+            if (MathUtils.random(0, 10) < 3) {
+                List<Friends> friendsList = friendsService.getFriendsListByUserIdAndStatus(user.getId());
+                log.info("List<Friends> friends: {}", friendsList);
+
+                friendsList.forEach(friendship -> {
+                    if (friendship.getStatus() == FriendsStatus.PENDING) {
+                        boolean acceptFriendship = MathUtils.random(0, 10) < 5;
+                        friendsService.changeFriendsStatus(
+                                friendship.getUser().getId(),
+                                friendship.getFriend().getId(),
+                                acceptFriendship
+                        );
                     }
                 });
-
+            }
+        });
 
         AppUser defaultUser1 = appUserService.findByUsername(DEFAULT_USERNAME)
                 .orElseThrow(() -> new NotFoundException("Default user not found!"));
+
         AppUser defaultUser2 = appUserService.findByUsername(DEFAULT_USERNAME2)
                 .orElseThrow(() -> new NotFoundException("Default user 2 not found!"));
 
@@ -402,7 +406,6 @@ public class Gen {
         } catch (AlreadyExistsException e) {
             log.info("Friend request already exists between default users.");
         }
-
     }
     private List<Chat> genChats() {
         Optional<AppUser> test = appUserService.findByUsername("test");

@@ -15,6 +15,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Клас, що представляє собою пост в системі. Основні поля класу:
+ * <ul>
+ *     <li>{@link #imageUrl} - URL зображення поста.</li>
+ *     <li>{@link #title} - Заголовок поста.</li>
+ *     <li>{@link #body} - Текстовий вміст поста.</li>
+ *     <li>{@link #status} - Статус поста.</li>
+ *     <li>{@link #user} - Користувач, який створив пост.</li>
+ *     <li>{@link #type} - Тип поста.</li>
+ *     <li>{@link #originalPostId} - ID оригінального поста (у випадку репоста).</li>
+ * </ul>
+ * Метод {@link #isValidCombination()} перевіряє правильність комбінації типу поста
+ * та ID оригінального поста. Наприклад, звичайний пост не повинен мати ID
+ * оригінального поста, а репост повинен мати такий ID.
+ */
 @Data
 @Entity
 @NoArgsConstructor

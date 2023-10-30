@@ -12,6 +12,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Клас, що представляє собою коментар до поста в системі. Основні поля класу:
+ * <ul>
+ *     <li>{@link #user} - Користувач, який залишив коментар.</li>
+ *     <li>{@link #post} - Пост, до якого було залишено коментар.</li>
+ *     <li>{@link #content} - Текстовий вміст коментаря.</li>
+ * </ul>
+ */
 @Data
 @Entity
 @NoArgsConstructor
