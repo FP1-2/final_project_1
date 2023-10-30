@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.facebook.service.notification.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -86,6 +87,8 @@ class PostServiceTest {
     @MockBean
     private PostFacade postFacade;
 
+    @MockBean
+    private NotificationService notificationService;
     /**
      * Тестує отримання всіх постів.
      *
