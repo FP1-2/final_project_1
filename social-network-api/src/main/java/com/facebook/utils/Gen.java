@@ -16,7 +16,6 @@ import com.facebook.model.chat.MessageStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.PostStatus;
-import com.facebook.model.posts.PostType;
 import com.facebook.repository.ChatRepository;
 import com.facebook.repository.MessageRepository;
 import com.facebook.repository.posts.CommentRepository;
@@ -394,6 +393,17 @@ public class Gen {
 
         AppUser defaultUser1 = appUserService.findByUsername(DEFAULT_USERNAME)
                 .orElseThrow(() -> new NotFoundException("Default user not found!"));
+        AppUser defaultUser2 = appUserService.findByUsername(DEFAULT_USERNAME2)
+                .orElseThrow(() -> new NotFoundException("Default user 2 not found!"));
+
+        try {
+            friendsService.sendFriendRequest(defaultUser1.getId(), defaultUser2.getId());
+            friendsService.changeFriendsStatus(defaultUser1.getId(), defaultUser2.getId(), true);
+        } catch (AlreadyExistsException e) {
+            log.info("Friend request already exists between default users.");
+        }
+
+    }
     private List<Chat> genChats() {
         Optional<AppUser> test = appUserService.findByUsername("test");
         Optional<AppUser> greak = appUserService.findByUsername("Greak");
@@ -418,17 +428,4 @@ public class Gen {
         });
         return messageRepository.findAll();
     }
-}
-
-        AppUser defaultUser2 = appUserService.findByUsername(DEFAULT_USERNAME2)
-                .orElseThrow(() -> new NotFoundException("Default user 2 not found!"));
-
-        try {
-            friendsService.sendFriendRequest(defaultUser1.getId(), defaultUser2.getId());
-            friendsService.changeFriendsStatus(defaultUser1.getId(), defaultUser2.getId(), true);
-        } catch (AlreadyExistsException e) {
-            log.info("Friend request already exists between default users.");
-        }
-    }
-
 }
