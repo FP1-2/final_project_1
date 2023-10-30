@@ -173,7 +173,6 @@ public class NotificationService {
      * @param post      Створений пост.
      */
     public void createFriendPostNotification(AppUser initiator, Post post) {
-        log.info("Post object: {}", post);
         List<AppUser> friends = getApprovedFriendsOfUser(initiator.getId());
         for (AppUser friend : friends) {
             createFriendNotification(initiator,
