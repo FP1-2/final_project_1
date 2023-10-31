@@ -79,7 +79,7 @@ class PostTest {
      * </ol>
      */
     @Test
-    void dateModification() throws InterruptedException {
+    void dateModification() {
         // 1. Створення і збереження поста
         Post post = createPost(createAndSaveTestUser(), PostStatus.DRAFT);
         Post savedPost = tem.persistAndFlush(post);
