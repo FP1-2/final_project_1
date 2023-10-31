@@ -12,6 +12,14 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Клас, що представляє собою "лайк" в системі. Основні поля класу:
+ * <ul>
+ *     <li>{@link #user} - Користувач, який виставив "лайк".</li>
+ *     <li>{@link #post} - Пост, який отримав "лайк".</li>
+ * </ul>
+ * Унікальність "лайка" забезпечується комбінацією користувача та поста.
+ */
 @Data
 @Entity
 @NoArgsConstructor

@@ -4,6 +4,9 @@ import lombok.Data;
 
 import java.time.LocalDateTime;
 
+/**
+ * Об'єкт відповіді для представлення сповіщення.
+ */
 @Data
 public class NotificationResponse {
     private Long id;

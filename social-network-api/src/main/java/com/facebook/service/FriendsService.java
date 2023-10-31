@@ -1,8 +1,10 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
+import com.facebook.facade.AppUserFacade;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
+
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -29,6 +32,8 @@ public class FriendsService {
     private final FriendsFacade facade;
 
     private final NotificationService notificationService;
+
+    private final AppUserFacade userFacade;
 
     private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
 
@@ -69,7 +74,7 @@ public class FriendsService {
                     }
                     else {
                         f.setStatus(FriendsStatus.REJECTED);
-                        friendsRepository.save(f);
+                        friendsRepository.delete(f);
                     }
                 },
                 () -> {
@@ -94,10 +99,17 @@ public class FriendsService {
         );
     }
 
-    public List<FriendsResponse> getFriendsByUserId(Long id) {
-        return friendsRepository.findFriendsByUserId(id)
+    public List<AppUserResponse> getFriendsByUserId(Long id) {
+        return appUserRepository.findUserFriendsByUserId(id)
                 .stream()
-                .map(facade::toFriendsResponse)
+                .map(userFacade::convertToAppUserResponse)
+                .toList();
+    }
+
+    public List<AppUserResponse> getFriendsRequest(Long userId) {
+        return appUserRepository.findUserFriendsRequestsByUserId(userId)
+                .stream()
+                .map(userFacade::convertToAppUserResponse)
                 .toList();
     }
 

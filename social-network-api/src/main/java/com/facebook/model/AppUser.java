@@ -5,6 +5,21 @@ import lombok.Data;
 import lombok.EqualsAndHashCode;
 import lombok.NoArgsConstructor;
 
+/**
+ * Клас, що представляє собою користувача в системі. Основні поля класу:
+ * <ul>
+ *     <li>{@link #name} - Ім'я користувача.</li>
+ *     <li>{@link #surname} - Прізвище користувача.</li>
+ *     <li>{@link #username} - Логін користувача.</li>
+ *     <li>{@link #email} - Електронна пошта користувача.</li>
+ *     <li>{@link #address} - Адреса користувача.</li>
+ *     <li>{@link #avatar} - Аватар користувача.</li>
+ *     <li>{@link #headerPhoto} - Зображення заголовка користувача.</li>
+ *     <li>{@link #dateOfBirth} - Дата народження користувача.</li>
+ *     <li>{@link #password} - Пароль користувача.</li>
+ *     <li>{@link #roles} - Ролі користувача в системі.</li>
+ * </ul>
+ */
 @Data
 @Entity
 @NoArgsConstructor

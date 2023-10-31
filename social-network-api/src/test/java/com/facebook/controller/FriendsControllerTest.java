@@ -1,5 +1,6 @@
 package com.facebook.controller;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
@@ -82,12 +83,12 @@ class FriendsControllerTest {
     }
 
     @Test
-    void getFriendsByUserIdTest() {
+    void getFriendsByAuthTest() {
         when(currentUserService.getCurrentUserId()).thenReturn(USER_ID_2);
-        List<FriendsResponse> mockResponseList = List.of(new FriendsResponse(), new FriendsResponse());
+        List<AppUserResponse> mockResponseList = List.of(new AppUserResponse(), new AppUserResponse());
         when(friendsService.getFriendsByUserId(USER_ID_2)).thenReturn(mockResponseList);
 
-        ResponseEntity<List<FriendsResponse>> response = friendsController.getFriendsByUserId();
+        ResponseEntity<List<AppUserResponse>> response = friendsController.getFriendsByAuth();
 
         verify(currentUserService).getCurrentUserId();
         verify(friendsService).getFriendsByUserId(USER_ID_2);
