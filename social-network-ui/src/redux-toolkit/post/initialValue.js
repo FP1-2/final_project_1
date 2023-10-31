@@ -9,11 +9,22 @@ const initialValue = {
         status: '',
         error: '',
     },
+    addComment:{
+        obj: {},
+        status: '',
+        error: '',
+    },
+    addLike:{
+        obj: {},
+        status: '',
+        error: '',
+    },
     addPost:{
         obj: {},
         status: '',
         error: '',
     },
+    postObj:{},
     addRepost:{
         obj: {},
         status: '',
@@ -24,5 +35,8 @@ const initialValue = {
         status: '',
         error: '',
     },
+    modalEditPost:false,
+    modalAddRepost:false,
+    modalAddPost:false,
 }
 export default initialValue;

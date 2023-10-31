@@ -1,25 +1,23 @@
 const initialValue = {
-    profileUser:{
+    getFriends:{
         obj: {},
         status: '',
         error: '',
     },
-    postsUser:{
-        obj: [],
-        status: '',
-        error: '',
-    },
-    modalDeleteFriend: {
-        state: false,
-    },
-    modalEditProfile: {
-        state: false,
-    },
-    editUser:{
+    deleteFriend:{
         obj: {},
         status: '',
         error: '',
     },
-
+    requestToFriend:{
+        obj: {},
+        status: '',
+        error: '',
+    },
+    confirmFriendRequest:{
+        obj: {},
+        status: '',
+        error: '',
+    },
 }
 export default initialValue;

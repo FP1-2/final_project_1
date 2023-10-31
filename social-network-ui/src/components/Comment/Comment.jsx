@@ -1,26 +1,26 @@
 import React from "react";
 import style from "./Comment.module.scss";
-// import PropTypes from "prop-types";
+import PropTypes from "prop-types";
+import { NavLink } from "react-router-dom";
 
-const Comment = () => {
+const Comment = ({ el }) => {
   return (
     <div className={style.commentWrapper}>
-      <img className={style.commentImg} src="https://risovach.ru/upload/2013/01/mem/kakoy-pacan_9771748_orig_.jpeg" alt="" />
+      <img className={style.commentImg} src={el.appUser.avatar
+        ? el.appUser.avatar
+        : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
       <div className={style.commentWrapperText}>
-        <a href="#" className={style.commentTextTitle}>
-          Надточий Анна
-        </a>
-        <p className={style.commentText}>Дуже гарно!</p>
+        <NavLink to={`/profile/${el.appUser.userId}`} className={style.commentTextTitle}>
+          {el.appUser.name}
+        </NavLink>
+        <p className={style.commentText}>{el.content}</p>
       </div>
     </div>
   );
 };
 
 
-// Comment.propTypes = {
-//   file: PropTypes.object
-// };
-// Comment.defaultProps = {
-//   file:{}
-// };
+Comment.propTypes = {
+  el: PropTypes.object.isRequired,
+};
 export default Comment;

@@ -3,10 +3,13 @@ import style from "./PostsPageProfile.module.scss";
 import PostProfile from "../PostProfile/PostProfile";
 import RepostProfile from "../RepostProfile/RepostProfile";
 import ModalAddPost from "../ModalAddPost/ModalAddPost";
-import { modalAddPostState, modalEditProfileState } from "../../redux-toolkit/profile/slice";
+import { modalEditProfileState } from "../../redux-toolkit/profile/slice";
+import { modalAddPostState } from "../../redux-toolkit/post/slice";
 import { useDispatch, useSelector } from "react-redux";
 import { ReactComponent as Calendar } from "../../img/calendarProfileInformation.svg";
 import { ReactComponent as Home } from "../../img/homeProfileInformation.svg";
+import ModalEditPost from "../ModalEditPost/ModalEditPost";
+import ModalAddRepost from "../ModalAddRepost/ModalAddRepost";
 // import { getPostsUser } from "../../redux-toolkit/profile/thunks";
 
 const PostPageProfile = () => {
@@ -25,7 +28,8 @@ const PostPageProfile = () => {
 
   return (
     <>
-
+      <ModalAddRepost />
+      <ModalEditPost />
       <ModalAddPost />
       <div className={style.profileBodyWrapper}>
         <div className={style.profileBody}>
@@ -54,12 +58,13 @@ const PostPageProfile = () => {
                 <button className={style.profileAddPostBtn} onClick={modalAddPostOpen}>Add post</button>
               </div> : null}
             <ul className={style.profilePosts}>
-              {userPosts.map((el) => <li className={style.profilePost} key={el.postId}>
-                {el.type === "REPOST" ?
-                  <RepostProfile el={el} />
-                  : <PostProfile el={el} />}
-              </li>
-              )}
+              {Object.keys(userPosts) ? userPosts.map((el) =>
+                <li className={style.profilePost} key={el.postId}>
+                  {el.type === "REPOST" ?
+                    <RepostProfile el={el} />
+                    : <PostProfile el={el} />}
+                </li>
+              ) : null}
             </ul>
           </div>
         </div>

@@ -1,28 +1,32 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import Textarea from "../Textarea/Textarea";
 import PreviewImage from "../PreviewImage/PreviewImage";
-import style from "./ModalAddPost.module.scss";
+import style from "./ModalEditPost.module.scss";
 import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalAddPostState } from "../../redux-toolkit/post/slice";
+import { modalEditPostState } from "../../redux-toolkit/post/slice";
 import { getPhotoURL } from "../../redux-toolkit/registration/thunks";
-import { addPost } from "../../redux-toolkit/post/thunks";
+import { editPost } from "../../redux-toolkit/post/thunks";
 
 const validationSchema = object({
   text: string().required("Text is required").min(3, "Must be more than 2 characters"),
-  // name: string().required("Name is required").min(2, "Must be more than 1 characters"),
 });
 
-const ModalAddPost = () => {
+const ModalEditPost = () => {
+
+  const dispatch = useDispatch();
 
   const [scroll, setScroll] = useState(null);
   const [errorValidation, setErrorValidation] = useState(false);
   const img = useRef();
-  const modalAddPost = useSelector((state) => state.post.modalAddPost);
+
+
+  const modalEditPost = useSelector((state) => state.post.modalEditPost);
   const userObject = useSelector(state => state.profile.profileUser.obj);
+  const post = useSelector((state) => state.post.postObj);
 
   const handleScroll = () => {
     setScroll(Math.round(window.scrollY));
@@ -32,9 +36,6 @@ const ModalAddPost = () => {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-
-
 
   const clickDownloadImg = () => {
     img.current.click();
@@ -46,26 +47,19 @@ const ModalAddPost = () => {
   };
 
   const onSubmit = async (value) => {
-    if (value.text === "" && value.img === "") {
-      setErrorValidation(true);
-    } else if (value.img === "") {
-      dispatch(addPost({ imageUrl: "", body: value.text, title: "add new post" }));
+    if (value.img === "") {
+      dispatch(editPost({ obj: { imageUrl: "", body: value.text, title: "add new post" }, id: post.postId }));
       setErrorValidation(false);
-      dispatch(modalAddPostState(false));
     } else {
       const photo = (await getPhotoURL(value.img));
-      dispatch(addPost({ imageUrl: photo, body: value.text, title: "add new post" }));
+      dispatch(editPost({ obj: { imageUrl: photo, body: value.text, title: "add new post" }, id: post.postId }));
       setErrorValidation(false);
-      dispatch(modalAddPostState(false));
     }
+    dispatch(modalEditPostState(false));
   };
 
-  const dispatch = useDispatch();
-
-
-
-  const modalAddPostClose = () => {
-    dispatch(modalAddPostState(false));
+  const modalEditPostClose = () => {
+    dispatch(modalEditPostState(false));
   };
 
 
@@ -73,26 +67,26 @@ const ModalAddPost = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
       {({ setFieldValue, values }) => (
-        <div className={modalAddPost ? style.modalWrapper : style.displayNone} style={{ top: `${scroll - 492}px` }}>
+        <div style={{ top: `${scroll - 492}px` }} className={modalEditPost ? style.modalWrapper : style.displayNone} >
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>
                 <div className={style.modalHeaderTitleWrapper}>
-                  <h2 className={style.modalHeaderTitle}>Create a publication</h2>
-                  <button className={style.modalHeaderCloseBtn} onClick={modalAddPostClose}>
+                  <h2 className={style.modalHeaderTitle}>Edit publication</h2>
+                  <button type="button" className={style.modalHeaderCloseBtn} onClick={modalEditPostClose}>
                     <Cross className={style.modalHeaderCloseBtnImg} />
                   </button>
                 </div>
                 <div className={style.modalHeaderInfo}>
                   <img src={userObject.avatar ? userObject.avatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="" className={style.modalHeaderInfoImg} />
-                  <h3  className={style.modalHeaderInfoTitle}>
+                  <a href="" className={style.modalHeaderInfoLink}>
                     {`${userObject.name} ${userObject.surname}`}
-                  </h3>
+                  </a>
                 </div>
               </div>
               <div className={style.modalMain}>
-                <Textarea type="text" name="text" placeholder="Anything new?" />
-                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = "" }}>Clear photo</button>}
+                <Textarea type="text" name="text" placeholder="Enter text of publication" />
+                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = ""; }}>Clear photo</button>}
                 {values.img && <PreviewImage file={values.img} />}
               </div>
             </div>
@@ -115,4 +109,4 @@ const ModalAddPost = () => {
     </Formik>
   );
 };
-export default ModalAddPost;
+export default ModalEditPost;

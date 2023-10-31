@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import style from "./RepostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
@@ -9,28 +9,64 @@ import { ReactComponent as Dots } from "../../img/dots.svg";
 import { ReactComponent as SharePostBtn } from "../../img/sharePostBtn.svg";
 import { ReactComponent as SendCommentPost } from "../../img/sendCommentPost.svg";
 import { ReactComponent as BlueComment } from "../../img/blueComment.svg";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
+import { addLike,getCommentsPost, addComment } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
+import { clearComments, setPost,modalAddRepostState,modalEditPostState } from "../../redux-toolkit/post/slice";
+import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
 
 const RepostProfile = ({ el }) => {
-
+  const dispatch = useDispatch();
+  
   const [clickLike, setClickLike] = useState(false);
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
+  const commenttext=useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
+  const {
+    getCommentsPost: {
+      obj,
+      status,
+      error
+    }
+  } = useSelector(state => state.post);
+
 
   const changeClickLike = () => {
+    dispatch(addLike(el.postId));
+
     setClickLike(state => !state);
   };
 
   const commentClick = () => {
     setClickComment((val => !val));
+    dispatch(clearComments());
+    dispatch(getCommentsPost(el.postId));
+  };
+
+  const sendComment=()=>{
+    const obj={
+      postId:el.postId,
+      content:commenttext.current.value
+    };
+    dispatch(addComment(obj));
+    setClickComment(false);
+    commenttext.current.value="";
+  };
+  const sharePost = () => {
+    dispatch(setPost(el));
+    dispatch(modalAddRepostState(true));
+  };
+
+  const modalEditPostOpen = () => {
+    dispatch(setPost(el));
+    dispatch(modalEditPostState(true));
   };
 
   return (
@@ -49,7 +85,7 @@ const RepostProfile = ({ el }) => {
         </button>
           : null}
         {btnAlso ? <div className={style.postHeaderBtnWrapper}>
-          <button className={style.postHeaderBtn}>
+          <button className={style.postHeaderBtn} onClick={modalEditPostOpen}>
             <Pencil className={style.postHeaderBtnImg} />
             Edit post
           </button>
@@ -73,8 +109,8 @@ const RepostProfile = ({ el }) => {
         </NavLink>
       </div>
       <p className={style.repostText}>{el.originalPost.body}</p>
-      {el.originalPost.author.imageUrl ?
-        <img src={el.originalPost.author.imageUrl} alt="Photo of post" className={style.postImg} />
+      {el.imageUrl ?
+        <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
         : null}
       <div className={style.postFooterWrapper}>
         <div className={style.postFooterInfo}>
@@ -96,23 +132,29 @@ const RepostProfile = ({ el }) => {
             <CommentPostBtn className={style.postCommentBtnImg} />
             Comment
           </button>
-          <button className={style.postBtn}>
+          <button className={style.postBtn} onClick={sharePost}>
             <SharePostBtn className={style.postLikeBtnImg} />
             Share
           </button>
         </div>
-        {clickComment ?
-          <div className={style.postFooterComents}>
-            <Comment />
-            <Comment />
-            <div className={style.postFooterAddComents}>
-              <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />
-              <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} />
-              <button className={style.postFooterAddComentBtn}>
-                <SendCommentPost className={style.postFooterAddComentBtnImg} />
-              </button>
+        {clickComment ? <div className={style.postFooterComents}>
+          {status === "pending" ?
+            <div className={style.loderWrapper}>
+              <div className={style.loder}></div>
             </div>
+            : status === "rejected" ?
+              <ErrorPage message={error ? error : "Oops something went wrong!"} />
+              :
+              (obj.content.length ? obj.content.map((el) => <Comment el={el} key={el.id} />) : null)
+          }
+          <div className={style.postFooterAddComents}>
+            <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />
+            <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} ref={commenttext}/>
+            <button className={style.postFooterAddComentBtn} onClick={sendComment}>
+              <SendCommentPost className={style.postFooterAddComentBtnImg} />
+            </button>
           </div>
+        </div>
           : null}
       </div>
     </div>

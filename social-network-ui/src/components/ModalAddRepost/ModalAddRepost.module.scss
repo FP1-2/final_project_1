@@ -118,31 +118,76 @@
                     line-height: 1.3333;
                     font-size: 15px;
                     font-weight: 600;
+
                 }
             }
+
+            .modalNewInfo {
+                width: 92%;
+                margin-left: 16px;
+                box-sizing: border-box;
+                max-height: 210px;
+                border: none;
+                text-align: left;
+                font-size: 24px;
+                resize: none;
+
+                &::placeholder {
+                    font-size: 24px;
+                }
+                &:focus {
+                    outline: none;
+                }
+            }
+
+            .repost {
+
+                padding: 12px 16px 12px 45px;
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                gap: 8px;
+
+                .repostAvatar {
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+
+                .repostName {
+                    font-weight: 600;
+                    font-size: 13px;
+                    color: #050505;
+                    text-decoration: none;
+                }
+
+            }
+
         }
 
         .modalMain {
-            overflow: auto;
             width: 100%;
-            max-height: 217px;
+            max-height: 500px;
 
-            .modalMainBtn {
-                padding: 8px;
+            .modalMainText {
+                box-sizing: border-box;
+                padding-right: 16px;
+                padding-left: 45px;
                 border: none;
-                border-radius: 5px;
-                min-width: 115px;
-                color: #0064D1;
-                font-weight: 400;
-                font-size: 17px;
-                line-height: 1.1765;
-                background-color: transparent;
-                margin-bottom: 16px;
-                margin-left: 16px;
+                text-align: left;
+                font-size: 15px;
+                resize: none;
+                width: 100%;
+            }
 
-                &:hover {
-                    background-color: rgba(0, 0, 0, 0.05);
-                }
+            .modalMainImg {
+                width: 93%;
+                max-height: 245px;
+                object-fit: cover;
+                padding-left: 16px;
+                padding-right: 16px;
+                margin-top: 16px;
             }
         }
 
@@ -191,8 +236,7 @@
             }
 
             .modalPublish {
-                min-height: 100%;
-                min-width: 229px;
+                width: 98%;
                 border: none;
                 border-radius: 5px;
                 font-size: 15px;
@@ -203,6 +247,10 @@
 
                 &:hover {
                     cursor: pointer;
+                }
+
+                &:disabled{
+                    background-color: #ccd0d5;
                 }
             }
         }

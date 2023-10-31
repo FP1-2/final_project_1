@@ -14,7 +14,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
 import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
-import { editUser, loadUserProfile,postsUser } from "../../redux-toolkit/profile/thunks";
+import { editUser, loadUserProfile, postsUser } from "../../redux-toolkit/profile/thunks";
 import { useParams } from "react-router-dom";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 

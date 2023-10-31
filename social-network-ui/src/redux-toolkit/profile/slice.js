@@ -10,9 +10,6 @@ const profileReducer = createSlice({
         modalDeleteFriendState: (state, action) => {
             state.modalDeleteFriend.state = action.payload;
         },
-        modalAddPostState: (state, action) => {
-            state.modalAddPost.state = action.payload;
-        },
         modalEditProfileState: (state, action) => {
             state.modalEditProfile.state = action.payload;
         },
@@ -27,6 +24,6 @@ const profileReducer = createSlice({
     }
 });
 
-export const {modalDeleteFriendState,modalAddPostState,modalEditProfileState,removeUser} = profileReducer.actions;
+export const {modalDeleteFriendState,modalEditProfileState,removeUser} = profileReducer.actions;
 
 export default profileReducer.reducer;

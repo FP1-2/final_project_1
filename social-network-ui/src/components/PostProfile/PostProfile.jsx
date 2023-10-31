@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef } from "react";
+import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
@@ -13,36 +14,58 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { addRepost } from "../../redux-toolkit/post/thunks";
-import { useDispatch} from "react-redux";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
+import { addLike, getCommentsPost, addComment } from "../../redux-toolkit/post/thunks";
+import { useDispatch } from "react-redux";
 
 
 const PostProfile = ({ el }) => {
-  const dispatch=useDispatch();
+  const dispatch = useDispatch();
 
   const [clickLike, setClickLike] = useState(false);
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
-  // console.log(el);
+  const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
-  useEffect(() => {
-
-  }, []);
-
+  const {
+    getCommentsPost: {
+      obj,
+      status,
+      error
+    }
+  } = useSelector(state => state.post);
 
   const changeClickLike = () => {
+    dispatch(addLike(el.postId));
     setClickLike(state => !state);
   };
 
+  const sendComment = () => {
+    const obj = {
+      postId: el.postId,
+      content: commenttext.current.value
+    };
+    setClickComment(false);
+    dispatch(addComment(obj));
+  };
+
   const sharePost = () => {
-    dispatch(addRepost({imageUrl:el.imageUrl, body:el.text, title:"add repost", originalPostId:el.postId}));
+    dispatch(setPost(el));
+    dispatch(modalAddRepostState(true));
   };
 
   const commentClick = () => {
     setClickComment((val => !val));
+    dispatch(clearComments());
+    dispatch(getCommentsPost(el.postId));
+  };
+
+  const modalEditPostOpen = () => {
+    dispatch(setPost(el));
+    dispatch(modalEditPostState(true));
   };
 
   return (
@@ -61,7 +84,7 @@ const PostProfile = ({ el }) => {
         </button>
           : null}
         {btnAlso ? <div className={style.postHeaderBtnWrapper}>
-          <button className={style.postHeaderBtn}>
+          <button className={style.postHeaderBtn} onClick={modalEditPostOpen}>
             <Pencil className={style.postHeaderBtnImg} />
             Edit post
           </button>
@@ -101,12 +124,19 @@ const PostProfile = ({ el }) => {
           </button>
         </div>
         {clickComment ? <div className={style.postFooterComents}>
-          <Comment />
-          <Comment />
+          {status === "pending" ?
+            <div className={style.loderWrapper}>
+              <div className={style.loder}></div>
+            </div>
+            : status === "rejected" ?
+              <ErrorPage message={error ? error : "Oops something went wrong!"} />
+              :
+              (obj.content.length ? obj.content.map((el) => <Comment el={el} key={el.id} />) : null)
+          }
           <div className={style.postFooterAddComents}>
             <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />
-            <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} />
-            <button className={style.postFooterAddComentBtn}>
+            <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} ref={commenttext} />
+            <button className={style.postFooterAddComentBtn} onClick={sendComment}>
               <SendCommentPost className={style.postFooterAddComentBtnImg} />
             </button>
           </div>

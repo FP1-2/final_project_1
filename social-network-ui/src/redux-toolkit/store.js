@@ -5,6 +5,7 @@ import registrationReducer from "./registration/slice";
 import loginReducer from "./login/slice";
 import profileReducer from "./profile/slice";
 import postReducer from "./post/slice";
+import friendReducer from "./friend/slice";
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -14,7 +15,8 @@ const rootReducer = (state, action) => {
             registration: undefined,
             auth: undefined,
             profile:undefined,
-            post:undefined
+            post:undefined,
+            friend:undefined,
         };
     }
     return combineReducers({
@@ -22,6 +24,7 @@ const rootReducer = (state, action) => {
         auth: loginReducer,
         profile:profileReducer,
         post:postReducer,
+        friend:friendReducer,
     })(state, action);
 }
 

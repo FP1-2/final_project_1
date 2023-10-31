@@ -10,7 +10,7 @@
     justify-content: center;
     align-items: center;
     box-sizing: border-box;
-    z-index: 2;
+    z-index: 3;
     padding: 15px;
 
     .modal {
@@ -112,12 +112,16 @@
                     border-radius: 50%;
                 }
 
-                .modalHeaderInfoTitle {
+                .modalHeaderInfoLink {
                     text-decoration: none;
                     color: #050505;
                     line-height: 1.3333;
                     font-size: 15px;
                     font-weight: 600;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
                 }
             }
         }

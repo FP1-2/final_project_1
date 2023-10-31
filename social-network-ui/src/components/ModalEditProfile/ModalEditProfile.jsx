@@ -100,7 +100,7 @@ const ModalEditProfile = () => {
             <div>
               <div className={style.modalHeader}>
                 <div className={style.modalHeaderTitleWrapper}>
-                  <h2 className={style.modalHeaderTitle}>Create a publication</h2>
+                  <h2 className={style.modalHeaderTitle}>Edit profile</h2>
                   <button type="button" className={style.modalHeaderCloseBtn} onClick={modalEditProfileClose}>
                     <Cross className={style.modalHeaderCloseBtnImg} />
                   </button>
