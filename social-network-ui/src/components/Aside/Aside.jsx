@@ -1,7 +1,7 @@
 import {NavLink} from "react-router-dom";
 import PostsIcon from "../../assets/postsIcon.png";
 import MessagesIcon from "../../assets/messagesIcon.png";
-import FavoritsIcon from "../../assets/favoriteIcon.png";
+import FavoritesIcon from "../../assets/favoriteIcon.png";
 import NotificationIcon from "../../assets/notificationIcon.png";
 import ProfileIcon from "../../assets/profileIcon.png";
 import styles from "./Aside.module.scss";
@@ -27,7 +27,7 @@ export default function Aside() {
           </li>
           <li>
             <NavLink to="/favorites">
-              <img src={FavoritsIcon} alt=""/>
+              <img src={FavoritesIcon} alt=""/>
               Favorites</NavLink>
           </li>
           <li>

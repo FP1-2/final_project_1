@@ -1,5 +1,6 @@
-.aside{
+.aside {
   width: 30%;
+
   nav {
     background-color: #f6f6f6;
     font-size: 22px;
@@ -10,10 +11,11 @@
     ul {
       li {
         padding: 15px;
-        a{
+
+        a {
           text-decoration: none;
         }
-        
+
         img {
           height: 20px;
           width: 20px;
@@ -22,17 +24,18 @@
       }
     }
 
-    @media only screen and (max-width: 993px){
+    @media only screen and (max-width: 993px) {
 
     }
-    @media only screen and (max-width: 481px){}
+    @media only screen and (max-width: 481px) {
+    }
   }
-  .logOut{
+
+  .logOut {
     background-color: #4172ed;
     color: #fff;
     font-size: 18px;
     border-radius: 10px;
-
     border-color: #fff;
     padding: 5px;
     min-width: 150px;

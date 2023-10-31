@@ -16,7 +16,9 @@ const LoginPage = ({isAuth}) => {
     startLogoutTimer();
   };
   useEffect(() => {
+    
     if (id) {
+      // console.log(id)
       dispatch(loadAuthUser(id));
     }
   }, [id, dispatch]);

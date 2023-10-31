@@ -1,18 +1,25 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
 .header {
   position: relative;
+  border-bottom: 1px solid $input-color-main;
+  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
   div {
     padding: 10px 15px;
     display: flex;
     align-items: center;
     background-color: #fff;
     input {
-      max-width: 300px;
-      min-height: 30px;
-      font-size: 18px;
-      padding: 6px 0 4px 10px;
-      border: 1px solid #cecece;
-      // background: #F6F6f6;
-      border-radius: 25px;
+      @include input-field;
+      padding: 0 16px;
+      // max-width: 300px;
+      // min-height: 30px;
+      // font-size: 18px;
+      // padding: 6px 0 4px 10px;
+      // border: 1px solid #cecece;
+      // // background: #F6F6f6;
+      // border-radius: 25px;
     }
     img {
       height: 40px;
@@ -41,7 +48,7 @@
 
 
 .container{
-  width:100wh;
+  width:100vw;
   height:100vh;
   background-color: #f6f6f6;
 }

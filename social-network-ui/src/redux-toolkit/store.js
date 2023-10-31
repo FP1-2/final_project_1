@@ -14,6 +14,7 @@ const rootReducer = (state, action) => {
         return {
             registration: undefined,
             auth: undefined,
+            messenger: undefined
         };
     }
     return combineReducers({
@@ -33,14 +34,13 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
-    // reducer: rootReducer,
-    // middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat(webSocketMiddleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(webSocketMiddleware),
 });
 
 export const persist = persistStore(store);
 
 export const logout = async () => {
+    store.dispatch({type: 'webSocket/close'})
     store.dispatch({type: RESET_STATE});
     await persist.purge();
 }
