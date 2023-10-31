@@ -37,14 +37,12 @@ const chatsReducer = createSlice({
     },
     updateChatsLastMessage: (state, action) => {
       const newMess = action.payload;
-      const updatedChats = state.chats.obj.map(c => {
+      state.chats.obj = state.chats.obj.map(c => {
         if (newMess.chat.id === c.id) {
           return {...c, lastMessage: {...c.lastMessage, status: "READ"}}
         }
         return c
-      })
-
-      state.chats.obj = updatedChats;
+      });
     },
     setUnreadMessagesQt: (state, action) => {
       state.unreadMessagesQt.obj = action.payload;

@@ -4,7 +4,7 @@ import Header from "../components/Header/Header";
 import styles from "../components/Header/Header.module.scss";
 import {useLocation} from "react-router-dom";
 import MessageNotificationList from '../components/MessageNotification/MessageNotificationList';
-import ErrorMessage from "../components/ErrorPage/ErrorMessage";
+import ErrorConnectionMessage from "../components/ErrorMessage/ErrorConnectionMessage";
 import {useSelector} from "react-redux";
 export default function Layout() {
   const isVisible = useSelector(state => state.webSocket.isVisible);
@@ -18,7 +18,7 @@ export default function Layout() {
       {showAside && <Aside/>}
       <Outlet/>
       <MessageNotificationList/>
-      <ErrorMessage isVisible={isVisible}/>
+      <ErrorConnectionMessage isVisible={isVisible}/>
     </div>
   );
 }

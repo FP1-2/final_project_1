@@ -17,6 +17,7 @@ import ChatHeader from './ChatHeader';
 import ChatBody from './ChatBody';
 import Modal from '../Modal/Modal';
 import useDebounce from "../../utils/useDebounce";
+import {checkReadStatus, checkSentStatus, StatusType} from "../../utils/statusType";
 
 export default function Chat() {
   const {chatId} = useParams();
@@ -45,8 +46,9 @@ export default function Chat() {
   /* Load Chat*/
   useEffect(() => {
     dispatch(resetChat());
-      
+    
     if (chatId !== 'new' && chatId) {
+      
       dispatch(loadChat({id: chatId}));
       dispatch(resetMessages());
       dispatch(loadMessages({id: chatId, page: 0, size: PAGE_SIZE}));
@@ -54,7 +56,7 @@ export default function Chat() {
       setPageNumber(0);
     }
   }, [chatId, dispatch]);
-
+  
   useEffect(() => {
     if (!newChat) {
       const uniqueNewMessages = messages.obj.filter(message => {
@@ -100,7 +102,7 @@ export default function Chat() {
   useEffect(() => {
     if (newMessage !== null && Object.keys(chat).length > 0
       && chat.obj.id === newMessage.chat.id
-      && newMessage.status !== "READ") {
+      && !checkReadStatus(newMessage.status)) {
       setMessagesList(prevMessages => [newMessage, ...prevMessages]);
     }
   }, [newMessage]);
@@ -109,7 +111,7 @@ export default function Chat() {
   /*change message status*/
   function changeMessageStatus() {
     const unreadMessages = messagesList.filter(m => {
-      return m.sender.username !== user.username && m.status === "SENT";
+      return m.sender.username !== user.username && checkSentStatus(m.status);
     });
 
     unreadMessages.forEach(u => {
@@ -117,7 +119,7 @@ export default function Chat() {
       dispatch({type: "webSocket/updateMessageStatus", payload: u.id});
       dispatch(updateChatsLastMessage(u));
       setMessagesList(prevMessages => prevMessages.map(m =>
-        m.id === u.id ? {...m, status: "READ"} : m
+        m.id === u.id ? {...m, status: StatusType.READ} : m
       ));
 
     });
@@ -127,15 +129,15 @@ export default function Chat() {
     });
 
     if (m) {
-      m.status = "READ";
+      m.status = StatusType.READ;
       dispatch(updateChats(m));
     }
   }
 
   useEffect(() => {
-    if (messageWithNewStatus !== null && messageWithNewStatus.status === "READ") {
+    if (messageWithNewStatus !== null && checkReadStatus(messageWithNewStatus.status)) {
       setMessagesList(prevMessages => prevMessages.map(m =>
-        m.id === messageWithNewStatus.id ? {...m, status: "READ"} : m
+        m.id === messageWithNewStatus.id ? {...m, status: StatusType.READ} : m
       ));
 
       dispatch(setMessageWithNewStatus(null));
@@ -194,7 +196,8 @@ export default function Chat() {
   };
   useEffect(() => {
     if (chat.status ==='rejected' && messages.status === 'rejected' &&
-        chat.error.status === 404 || messages.error.status === 404) {
+        chat.error.status === 404 || messages.error.status === 404 ||
+        chat.error.status === 400 || messages.error.status === 400) {
       dispatch(resetChat());
       dispatch(resetMessages());
       navigate('/not-found');

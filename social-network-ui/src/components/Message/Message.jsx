@@ -1,7 +1,7 @@
 import styles from './Message.module.scss';
 import Avatar from "../Avatar/Avatar";
 import {ContentType, fromString} from "../../utils/contentType";
-import {checkSentType, checkFailedType} from "../../utils/statusType";
+import {checkSentStatus, checkFailedStatus} from "../../utils/statusType";
 import PropTypes from 'prop-types';
 import Like from '../Icons/Like';
 
@@ -41,8 +41,8 @@ export default function Message({
         </div>
       </div>
       <div className={(index !== 0) ? `${styles.messageStatus} ${styles.none}` : styles.messageStatus}>
-        {checkSentType(status) ? <div className={styles.messageStatus__unread}>Надіслано</div>
-          : (checkFailedType(status) ? <div className={styles.messageStatus__error}>Error</div>
+        {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Надіслано</div>
+          : (checkFailedStatus(status) ? <div className={styles.messageStatus__error}>Error</div>
             : <div className={styles.messageStatus__read}>
               <Avatar photo={photo} name={name}/>
             </div>)

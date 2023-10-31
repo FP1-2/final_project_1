@@ -1,0 +1,260 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
+
+.chat {
+  @include flex-center;
+  height: 100%;
+  width: 100%;
+  position: relative;
+
+  &__header {
+    width: 100%;
+    height: 64px;
+    @include flex-center-row;
+    border-bottom: $border;
+    padding: 12px 16px;
+    &__filter{
+      width:56px;
+      height: 56px;
+    }
+    &__user {
+      border-radius: $main-border-radius;
+      width: max-content;
+      cursor: pointer;
+      &:hover {
+        background-color: $background-color-receiver-message;
+        
+      }
+
+      &__card {
+        height: auto;
+        cursor:poiner;
+      }
+    }
+
+    &> :hover {
+      background: none;
+      cursor: auto;
+    }
+
+    & h2 {
+      font-size: 19px;
+      padding-right: 6px;
+    }
+
+    & input {
+      flex: 1;
+      font-size: 19px;
+    }
+
+    // &__filter{
+    //   width:36px;
+    //   height: 36px;
+    // }
+  }
+
+  &__filteredUsers {
+    position: absolute;
+    height: 390px;
+    width: 300px;
+    border-radius: $main-border-radius;
+    border: $border;
+    box-shadow: 0 6px 22px 4px rgba(0, 0, 0, 0.1);
+    font-size: 12px;
+    overflow: auto;
+    top: 50px;
+    left: 40px;
+    background-color: $main-background-color;
+
+    &__item {
+      cursor: pointer;
+      padding: 2px;
+    }
+  }
+
+  &__body {
+    flex: 1;
+    display: flex;
+    flex-direction: column-reverse;
+    width: 100%;
+    overflow: auto;
+
+    &__messList {
+      @include flex-center;
+      flex-direction: column-reverse;
+      align-items: stretch;
+      padding: 8px 16px;
+      
+
+      &__item {
+        @include flex-center;
+        width: 100%;
+        padding-bottom: 8px;
+
+        &__btn {
+          @include buttonStyle;
+        }
+      }
+
+    }
+
+    &__emptyMessages {
+      @include size(100px);
+    }
+  }
+
+  &__input {
+    width: 100%;
+    @include flex-center-row;
+    padding: 12px 16px;
+    position: relative;
+
+    &__area {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background-color: $input-color-main;
+      border-radius: 16px;
+      color: $text-color-gray;
+      min-height: 36px;
+      width: 100%;
+      padding: 8px 12px;
+      max-height: 140px;
+
+      &__wrap {
+        @include flex-center;
+        align-items: flex-start;
+        flex:1;
+        height: inherit;
+      }
+
+      &__file {
+        position: relative;
+        @include size(48px);
+        margin-bottom: 8px;
+
+        & img {
+          border-radius: $main-border-radius;
+        }
+
+        &__closeBtn {
+          @include flex-center;
+          justify-content: center;
+          position: absolute;
+          background-color: #ffffff;
+          @include sizeCircle(24px);
+          bottom: 30px;
+          left: 30px;
+          cursor: pointer;
+        }
+      }
+
+      & textarea {
+        font-size: 15px;
+        font-family: inherit;
+        resize: none;
+        color: $text-color-gray;
+        width: inherit;
+      }
+    }
+  }
+
+  &__emptyList {
+    flex: 1;
+    @include flex-center;
+    padding-top: 45px;
+
+    &__name {
+      font-size: 17px;
+      font-weight: bold;
+      padding-top: 8px;
+
+    }
+
+    &__text {
+      color: $text-color-gray;
+      font-size: 13px;
+      padding-top: 8px;
+    }
+  }
+}
+
+.card {
+  @include size(40px);
+}
+
+.messageDate {
+  font-size: 13px;
+  color: $text-color-gray;
+  font-weight: bold;
+  padding-bottom: 8px;
+}
+
+.likeBtn {
+  cursor: pointer;
+}
+
+.pickerWrapper {
+  position: absolute;
+  bottom: 100%;
+  right: 12px;
+
+  & div {
+
+    &.em-emoji-picker {
+      max-height: 336px;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .back {
+    @include sizeCircle(36px);
+    background-color: $input-color-main;
+    margin-right: 6px;
+    cursor: pointer;
+    @include flex-center;
+    justify-content: center;
+
+    &:hover {
+      background-color: $text-color-gray;
+    }
+  }
+
+  .chat {
+    &__filteredUsers {
+
+      width: 340px;
+      left: 50px;
+    }
+  }
+}
+
+@media (min-width: 768px) {
+  .back {
+    display: none;
+  }
+}
+
+.none {
+  display: none;
+}
+
+.modalImg{
+  width: 100%;
+  height: auto;
+}
+@media screen and (max-width: 767px) and (orientation: landscape) {
+  .modalImg{
+  width: auto;
+  height: 100%;
+  }
+}
+@media (min-width: 1020px) {
+  .modalImg{
+    width:auto;
+    height: 90%;
+  }
+ 
+}

@@ -41,7 +41,6 @@ const webSocketMiddleware = (store) => (next) => (action) => {
       );
       return () => {
         if (client && client.connected) {
-          console.log(f)
           store.dispatch(setIsVisible(true));
           client.disconnect();
         }

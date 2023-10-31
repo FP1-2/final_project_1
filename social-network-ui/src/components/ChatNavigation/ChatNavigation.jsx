@@ -6,7 +6,7 @@ import BackIcon from "../Icons/BackIcon";
 import PropTypes from 'prop-types';
 import {Link, NavLink, useParams} from 'react-router-dom';
 import ChatLoader from "./ChatLoader";
-import {checkSentType, checkReadType} from "../../utils/statusType";
+import {checkSentStatus, checkReadStatus} from "../../utils/statusType";
 import {useEffect, useState} from "react";
 import useDebounce from "../../utils/useDebounce";
 import {searchChat} from "../../redux-toolkit/messenger/asyncThunk";
@@ -30,7 +30,6 @@ export default function ChatNavigation({
   const debouncedSearchText = useDebounce(searchText, 500);
   const searchChats = useSelector(state => state.messenger.searchChats);
   const {chatId} = useParams();
-
   useEffect(() => {
     if (debouncedSearchText) {
       handleSearchChange(debouncedSearchText);
@@ -109,8 +108,8 @@ export default function ChatNavigation({
                               ?
                               ("Ви: " + checkContentType(lastMessage.contentType, lastMessage.content))
                               : checkContentType(lastMessage.contentType, lastMessage.content))}
-                          isUnread={lastMessage !== null && lastMessage.sender.username !== authUser.username && checkSentType(lastMessage.status)}
-                          isRead={lastMessage !== null && lastMessage.sender.username === authUser.username && checkReadType(lastMessage.status)}
+                          isUnread={lastMessage !== null && lastMessage.sender.username !== authUser.username && checkSentStatus(lastMessage.status)}
+                          isRead={lastMessage !== null && lastMessage.sender.username === authUser.username && checkReadStatus(lastMessage.status)}
                           clickHandler={() => {
                             handleLoadChat(id);
                             setShow(false);

@@ -1,7 +1,7 @@
 export const StatusType = {
-  SENT: 'sent',
-  READ: 'read',
-  FAILED: 'failed'
+  SENT: 'SENT',
+  READ: 'READ',
+  FAILED: 'FAILED'
 };
 
 export function fromString(typeString) {
@@ -17,14 +17,14 @@ export function fromString(typeString) {
   }
 }
 
-export function checkSentType(type) {
+export function checkSentStatus(type) {
   return fromString(type) === StatusType.SENT;
 }
 
-export function checkReadType(type) {
+export function checkReadStatus(type) {
   return fromString(type) === StatusType.READ;
 }
 
-export function checkFailedType(type) {
+export function checkFailedStatus(type) {
   return fromString(type) === StatusType.FAILED;
 }

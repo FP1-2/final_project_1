@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import AppRoutes from './AppRoutes';
 import {useSelector, useDispatch} from "react-redux";
 import {useCallback} from 'react';
+import { setIsVisible } from './redux-toolkit/ws/slice';
 
 function App() {
   const authUser = useSelector(state => state.auth.user.obj);
@@ -9,6 +10,7 @@ function App() {
 
   const dispatch = useDispatch();
   const connectWebSocket = useCallback(() => {
+      dispatch(setIsVisible(false));
       dispatch({type: 'webSocket/connect'});
   }, [authUser, dispatch]);
 

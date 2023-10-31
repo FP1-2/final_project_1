@@ -8,6 +8,7 @@ import {Outlet, useNavigate, useParams} from 'react-router-dom';
 import {getDate} from "../../utils/formatData";
 import {setNewMessage} from '../../redux-toolkit/ws/slice';
 import {useLocation} from "react-router-dom";
+import {checkReadStatus} from "../../utils/statusType";
 
 export default function MessagesPage() {
   const dispatch = useDispatch();
@@ -66,7 +67,7 @@ export default function MessagesPage() {
   }, [newMess]);
   // Updating status of message
   useEffect(() => {
-    if (newStatus !== null && newStatus.status === "READ") {
+    if (newStatus !== null && checkReadStatus(newStatus.status)) {
       dispatch(updateChatsLastMessage(newStatus));
     }
   }, [newStatus]);
@@ -89,7 +90,7 @@ export default function MessagesPage() {
       dispatch(resetMessages);
     }
   }, [location.pathname]);
-
+  
   return (
     <div className={styles.messengerPage}>
       <ChatNavigation
