@@ -25,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.*;
  * Використовує in-memory базу даних H2 для тестування CRUD операцій.
  */
 @DataJpaTest
-public class FavoriteRepositoryTest {
+class FavoriteRepositoryTest {
 
     @Autowired
     private TestEntityManager entityManager;
@@ -38,7 +38,7 @@ public class FavoriteRepositoryTest {
     private Post post;
 
     @BeforeEach
-    public void setUp() {
+    void setUp() {
         user = new AppUser();
         user.setName("Ім'я");
         user.setSurname("Прізвище");
@@ -60,7 +60,7 @@ public class FavoriteRepositoryTest {
      * Тестує знаходження об'єкта {@link Favorite} за userId та postId.
      */
     @Test
-    public void testFindByUserIdAndPostId() {
+    void testFindByUserIdAndPostId() {
         Favorite favorite = new Favorite();
         favorite.setUser(user);
         favorite.setPost(post);
@@ -77,7 +77,7 @@ public class FavoriteRepositoryTest {
      * Тестує відсутність об'єкта {@link Favorite} за заданими userId та postId.
      */
     @Test
-    public void testFavoriteNotExists() {
+    void testFavoriteNotExists() {
         Optional<Favorite> foundFavorite = favoriteRepository
                 .findByUserIdAndPostId(user.getId(), post.getId() + 1);
         assertFalse(foundFavorite.isPresent());
@@ -87,7 +87,7 @@ public class FavoriteRepositoryTest {
      * Тестує підрахунок кількості об'єктів {@link Favorite} за userId.
      */
     @Test
-    public void testCountFavoritesByUserId() {
+    void testCountFavoritesByUserId() {
         Favorite favorite1 = new Favorite();
         favorite1.setUser(user);
         favorite1.setPost(post);

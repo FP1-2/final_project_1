@@ -8,7 +8,7 @@ import com.facebook.model.posts.Post;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class FavoriteTest {
+class FavoriteTest {
 
     private Favorite favorite;
     private AppUser user;
@@ -30,17 +30,17 @@ public class FavoriteTest {
     }
 
     @Test
-    public void testFavoriteUser() {
+    void testFavoriteUser() {
         assertEquals(user, favorite.getUser());
     }
 
     @Test
-    public void testFavoritePost() {
+    void testFavoritePost() {
         assertEquals(post, favorite.getPost());
     }
 
     @Test
-    public void testFavoriteNotNull() {
+    void testFavoriteNotNull() {
         assertNotNull(favorite);
     }
 
