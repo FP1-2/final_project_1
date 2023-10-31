@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
@@ -130,11 +131,11 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
     }
 
-//    @ExceptionHandler(UserNotFoundException.class)
-//    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
-//        log.warn(ex.getMessage());
-//        return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
-//    }
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<String> handleUserNotFoundException(UserNotFoundException ex){
+        log.warn(ex.getMessage());
+        return new ResponseEntity<>(ex.getLocalizedMessage(), HttpStatus.NOT_FOUND);
+    }
 
     @ExceptionHandler(InvalidTokenException.class)
     public ResponseEntity<String> handleInvalidTokenException(InvalidTokenException ex){
@@ -148,6 +149,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
-
-
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid value type: " + ex.getMessage());
+    }
 }

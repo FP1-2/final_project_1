@@ -1,6 +1,7 @@
 package com.facebook.config.socket;
 
 import com.facebook.config.security.AppUserDetails;
+import com.facebook.exception.UnauthorizedException;
 import com.facebook.service.AppUserService;
 import com.facebook.service.JwtTokenService;
 import lombok.extern.log4j.Log4j2;
@@ -40,7 +41,7 @@ public class WebSocketAuthInterceptor implements ChannelInterceptor {
             if (requestTokenHeader != null && requestTokenHeader.startsWith("Bearer")) {
                 String token = requestTokenHeader.substring(7);
                 authenticateUser(token).ifPresentOrElse(accessor::setUser, () -> {
-                    throw new BadCredentialsException("Bad credentials");
+                    throw new UnauthorizedException("User is unauthorized.");
                 });
             }
         }
