@@ -361,4 +361,16 @@ public class PostService {
                 .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
     }
 
+    @Transactional
+    public void deletePost(Long userId, Long postId) {
+        Post existedPost = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
+
+        if(userId.equals(existedPost.getUser().getId())) {
+            performCascadeDeletion(postId);
+        } else {
+            throw new UnauthorizedException("User not authorised to delete this post!");
+        }
+    }
+
 }
