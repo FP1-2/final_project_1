@@ -1,5 +1,6 @@
 package com.facebook.service.favorites;
 
+import com.facebook.controller.FavoritesController;
 import com.facebook.dto.post.PostResponse;
 import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
@@ -24,6 +25,13 @@ import java.util.Map;
 
 import static com.facebook.utils.SortUtils.getSorting;
 
+/**
+ * Сервіс для роботи з обраними постами користувача.
+ * @see PostResponse
+ * @see PostFacade
+ * @see FavoritesController
+ * @see FavoriteRepository
+ */
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -37,6 +45,12 @@ public class FavoritesService {
 
     private final EntityManager em;
 
+    /**
+     * Додає пост до обраних користувача.
+     *
+     * @param postId ID поста, який потрібно додати.
+     * @param currentUserId ID поточного користувача.
+     */
     public void addToFavorites(Long postId, Long currentUserId) {
 
         favoriteRepository
@@ -55,6 +69,12 @@ public class FavoritesService {
         favoriteRepository.save(favorite);
     }
 
+    /**
+     * Видаляє пост з обраних користувача.
+     *
+     * @param postId ID поста, який потрібно видалити.
+     * @param currentUserId ID поточного користувача.
+     */
     public void removeFromFavorites(Long postId, Long currentUserId) {
         Favorite favorite = favoriteRepository.findByUserIdAndPostId(currentUserId, postId)
                 .orElseThrow(() -> new NotFoundException("Favorite post not found"));
@@ -62,10 +82,28 @@ public class FavoritesService {
         favoriteRepository.delete(favorite);
     }
 
+    /**
+     * Перевіряє, чи є пост у обраних у користувача.
+     *
+     * @param postId ID поста для перевірки.
+     * @param currentUserId ID поточного користувача.
+     * @return true, якщо пост є в обраних, інакше - false.
+     */
     public boolean isPostInFavorites(Long postId, Long currentUserId) {
 
         return favoriteRepository.findByUserIdAndPostId(currentUserId, postId).isPresent();
     }
+
+    /**
+     * Знаходить деталі обраних постів користувача.
+     *
+     * @param currentUserId ID поточного користувача.
+     * @param page Номер сторінки.
+     * @param size Кількість елементів на сторінці.
+     * @param sort Порядок сортування.
+     * @return Сторінка з деталями обраних постів.
+     * Перетворення даних відбувається в {@link PostFacade}.
+     */
 
     public Page<PostResponse> findFavoritePostDetailsByUserId(Long currentUserId,
                                                               int page,
