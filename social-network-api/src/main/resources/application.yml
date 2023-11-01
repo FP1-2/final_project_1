@@ -1,5 +1,5 @@
 frontend:
-  url: ${FRONTEND_URL:https://danit-final-project-1.netlify.app/}
+  url: ${FRONTEND_URL:https://danit-final-project-1.netlify.app}
 email:
   host: ${EMAIL_HOST}
   port: ${EMAIL_PORT}
@@ -99,5 +99,5 @@ server:
     key-alias: tomcat
 
 frontend:
-  url: https://danit-final-project-1.netlify.app/
+  url: https://danit-final-project-1.netlify.app
 ---
