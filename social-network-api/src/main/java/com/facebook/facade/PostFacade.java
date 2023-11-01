@@ -11,6 +11,7 @@ import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostStatus;
+import com.facebook.repository.favorites.FavoriteRepository;
 import com.facebook.repository.posts.PostRepository;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ import org.springframework.stereotype.Component;
 /**
  * Фасад для обробки та перетворення даних поста.
  * Призначений для опрацювання даних,
- * отриманих з {@link PostRepository}.
+ * отриманих з {@link PostRepository}, {@link FavoriteRepository}.
  */
 @Log4j2
 @Component

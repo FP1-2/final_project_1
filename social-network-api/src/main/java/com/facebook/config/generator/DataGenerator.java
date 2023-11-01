@@ -20,6 +20,7 @@ public class DataGenerator implements CommandLineRunner {
     public void run(String... args){
         log.info("Data generation is starting...");
         Gen.of(context);
+        log.info("Data generation is finish");
     }
 
 }

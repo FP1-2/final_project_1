@@ -11,7 +11,7 @@ import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Service;
