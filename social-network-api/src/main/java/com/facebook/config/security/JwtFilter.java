@@ -70,6 +70,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     "/api-docs/**",
                     "/swagger*/**",
                     "/error",
+                    "/ws/**",
                     "/h2" -> false;
             default -> true;
         };
