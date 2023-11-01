@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 const ErrorPage = ({ message, className }) => {
   return (
-    <div className={`${style.messageWrapper} ${className && style.messageWrapper}`}>
+    <div className={`${style.messageWrapper} ${className}`}>
       <p className={style.message}>{message}</p>
     </div>
   );
