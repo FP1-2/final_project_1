@@ -9,7 +9,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
-import Layout from "./pages/Layout";
+import Layout from "./pages/Layout/Layout";
 import PropTypes from "prop-types";
 import Chat from "./components/Chat/Chat";
 import PageNotFound from './pages/PageNotFound/PageNotFound';

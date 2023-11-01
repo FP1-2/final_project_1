@@ -1,7 +1,7 @@
 import styles from './MessagesPage.module.scss';
 import ChatNavigation from "../../components/ChatNavigation/ChatNavigation";
-import {useDispatch, useSelector, shallowEqual} from "react-redux";
-import {loadChats, loadUnreadMessagesQt} from "../../redux-toolkit/messenger/asyncThunk";
+import {useDispatch, useSelector} from "react-redux";
+import {loadChats} from "../../redux-toolkit/messenger/asyncThunk";
 import {useEffect, useMemo, useState} from "react";
 import {updateChats, updateChatsLastMessage, resetChat, resetMessages} from '../../redux-toolkit/messenger/slice';
 import {Outlet, useNavigate, useParams} from 'react-router-dom';
@@ -12,22 +12,23 @@ import {checkReadStatus} from "../../utils/statusType";
 
 export default function MessagesPage() {
   const dispatch = useDispatch();
-  const chats = useSelector(state => state.messenger.chats);
-  const authUser = useSelector(state => state.auth.user.obj, shallowEqual);
-  const newMess = useSelector(state => state.webSocket.newMessage);
-  const newStatus = useSelector(state => state.webSocket.messageWithNewStatus);
-  const unreadQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
-  const PAGE_SIZE = 10;
   const navigate = useNavigate();
-  const {chatId} = useParams();
   const location = useLocation();
+  const {chatId} = useParams();
+
+  const authUser = useSelector(state => state.auth.user.obj);
+  const {chats, unreadMessagesQt} = useSelector(state => state.messenger);
+  const {newMessage, messageWithNewStatus} = useSelector(state => state.webSocket);
+
   const showChat = location.pathname.startsWith('/messages/') && location.pathname.includes('/messages');
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(0);
+  const PAGE_SIZE = 10;
+
   useEffect(() => {
     dispatch(loadChats({page: 0, size: PAGE_SIZE}));
     setHasMore(true);
-  }, [dispatch]);
+  }, []);
 
   const sortedChats = useMemo(() => {
     chats.obj.length < PAGE_SIZE && setHasMore(false);
@@ -60,29 +61,25 @@ export default function MessagesPage() {
 
   // Updating last message
   useEffect(() => {
-    if (newMess !== null) {
-      dispatch(updateChats(newMess));
+    if (newMessage !== null) {
+      dispatch(updateChats(newMessage));
       dispatch(setNewMessage(null));
     }
-  }, [newMess]);
+  }, [newMessage]);
   // Updating status of message
   useEffect(() => {
-    if (newStatus !== null && checkReadStatus(newStatus.status)) {
-      dispatch(updateChatsLastMessage(newStatus));
+    if (messageWithNewStatus !== null && checkReadStatus(messageWithNewStatus.status)) {
+      dispatch(updateChatsLastMessage(messageWithNewStatus));
     }
-  }, [newStatus]);
+  }, [messageWithNewStatus]);
   // Show unread message qt
   useEffect(() => {
-    dispatch(loadUnreadMessagesQt());
-  }, [dispatch]);
-
-  useEffect(() => {
-    if (unreadQt === 0) {
+    if (unreadMessagesQt.obj === 0) {
       document.title = `Messenger | Facebook`;
     } else {
-      document.title = ` (${unreadQt}) Messenger | Facebook`;
+      document.title = ` (${unreadMessagesQt.obj}) Messenger | Facebook`;
     }
-  }, [unreadQt]);
+  }, [unreadMessagesQt.obj]);
 
   useEffect(() => {
     if (showChat || chatId ==='new') {

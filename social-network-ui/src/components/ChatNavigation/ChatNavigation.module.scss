@@ -42,14 +42,6 @@
       justify-content: center;
       cursor: pointer;
 
-      & div {
-        background-image: url("http://res.cloudinary.com/ditpsafw3/image/upload/v1698702982/errwnkhvbadvau98g3p9.png");
-        background-position: 0px -357px;
-        background-size: auto;
-        @include size(20px);
-        background-repeat: no-repeat;
-        display: inline-block;
-      }
     }
   }
 

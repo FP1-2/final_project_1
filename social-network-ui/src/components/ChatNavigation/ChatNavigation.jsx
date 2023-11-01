@@ -25,18 +25,19 @@ export default function ChatNavigation({
   pageNumber
 }) {
   const dispatch = useDispatch();
+  const {chatId} = useParams();
+  const searchChats = useSelector(state => state.messenger.searchChats);
+
   const [searchText, setSearchText] = useState('');
   const [show, setShow] = useState(false);
   const debouncedSearchText = useDebounce(searchText, 500);
-  const searchChats = useSelector(state => state.messenger.searchChats);
-  const {chatId} = useParams();
+
   useEffect(() => {
     if (debouncedSearchText) {
       handleSearchChange(debouncedSearchText);
     }
   }, [debouncedSearchText]);
   const handleSearchChange = (input) => {
-
     if (searchText.trim() === '') {
       dispatch(resetSearchChats());
       return;
@@ -69,7 +70,7 @@ export default function ChatNavigation({
             </div>
             <NavLink to='/messages/new'>
               <div className={styles.chatNavSection__header__buttonWrapper}>
-                <div/>
+                <img src='/img/chat.png' alt='chat'/>
               </div>
             </NavLink>
           </div>

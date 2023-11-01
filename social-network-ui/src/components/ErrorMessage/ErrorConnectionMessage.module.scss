@@ -3,7 +3,7 @@
 .errorMessage{
     background-color: $text-color-gray;
     position: fixed;
-    bottom:0;
+    bottom:60px;
     z-index: 1000;
     @include flex-center-row;
     justify-content: space-evenly;

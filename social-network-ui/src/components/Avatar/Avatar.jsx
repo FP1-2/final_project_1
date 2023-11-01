@@ -5,13 +5,13 @@ export default function Avatar({name, additionalClass, photo}) {
   
   return (
     <div className={`${styles.avatarWrapper} ${additionalClass ? additionalClass : ""}`}>
-      <img src={photo !== null ? photo : "http://res.cloudinary.com/ditpsafw3/image/upload/v1698702906/spl2yas0amgpe6tapva3.jpg"} alt={name}/>
+      <img src={photo !== null ? photo : "/img/default-avatar.jpg"} alt={name}/>
     </div>
   );
 }
 
 Avatar.propTypes = {
-  photo: PropTypes.string,
+  photo: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]).isRequired,
   name: PropTypes.string.isRequired,
   additionalClass: PropTypes.string,
 };

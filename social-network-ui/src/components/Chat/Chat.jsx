@@ -10,7 +10,7 @@ import {
   resetChat
 } from '../../redux-toolkit/messenger/slice';
 import {setMessageWithNewStatus} from '../../redux-toolkit/ws/slice';
-import {useDispatch, useSelector, shallowEqual} from "react-redux";
+import {useDispatch, useSelector} from "react-redux";
 import {useEffect, useState} from "react";
 import MessageInput from "./MessageInput";
 import ChatHeader from './ChatHeader';
@@ -24,9 +24,8 @@ export default function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {chat, messages} = useSelector(state => state.messenger);
-  const user = useSelector(state => state.auth.user.obj, shallowEqual);
-  const searchUsers = useSelector(state => state.messenger.searchUsers);
+  const {chat, messages, searchUsers} = useSelector(state => state.messenger);
+  const user = useSelector(state => state.auth.user.obj);
   const {newMessage, messageWithNewStatus} = useSelector(state => state.webSocket);
 
   const [messagesList, setMessagesList] = useState([]);
@@ -48,14 +47,13 @@ export default function Chat() {
     dispatch(resetChat());
     
     if (chatId !== 'new' && chatId) {
-      
       dispatch(loadChat({id: chatId}));
       dispatch(resetMessages());
       dispatch(loadMessages({id: chatId, page: 0, size: PAGE_SIZE}));
       setNewChat(true);
       setPageNumber(0);
     }
-  }, [chatId, dispatch]);
+  }, [chatId,]);
   
   useEffect(() => {
     if (!newChat) {

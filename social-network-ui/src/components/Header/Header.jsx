@@ -1,20 +1,59 @@
-import React from "react";
+import React, {useEffect} from "react";
 import styles from "./Header.module.scss";
-import facebookIcon from "../../assets/facebook_icon.png";
 import {NavLink} from "react-router-dom";
+import Avatar from "../Avatar/Avatar";
+import PropTypes from "prop-types";
+import FacebookIcon from "../Icons/FacebookIcon";
+import NotificationIcon from "../Icons/NotificationIcon";
+import MessengerIcon from "../Icons/Messenger";
+import Search from "../Icons/Search";
+import {useDispatch, useSelector} from "react-redux";
+import {loadUnreadMessagesQt} from "../../redux-toolkit/messenger/asyncThunk";
 
-function Header() {
+export default function Header({authUser}) {
+  const dispatch = useDispatch();
+  const unreadMessQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
+  const newNotificationsQt = 2;
+
+  useEffect(() => {
+    dispatch(loadUnreadMessagesQt());
+  }, []);
 
   return (
     <header className={styles.header}>
-      <div>
-        <NavLink to={"/"}>
-          <img src={facebookIcon} alt="" />
+      <div className={styles.header__logoWrap}>
+        <NavLink to={"/"} className={styles.header__logoWrap__link}>
+          <FacebookIcon size={"40px"} />
         </NavLink>
-        <input type="text" className={styles.searc} name="search" placeholder="Search on Facebook" />
+        <input type="text" className={styles.header__logoWrap__search} name="search" placeholder="Search on Facebook"/>
       </div>
+      <div className={styles.header__icons}>
+        <div className={`${styles.header__icons__item} ${styles.desktopNone}`}>
+          <Search/>
+        </div>
+        <NavLink to={'/messages'} className={styles.header__icons__item}>
+          <MessengerIcon/>
+          {unreadMessQt > 0 && <span>{unreadMessQt}</span>}
+        </NavLink>
+        <NavLink to={'/notifications'} className={styles.header__icons__item}>
+          <NotificationIcon/>
+          {newNotificationsQt > 0 && <span>{newNotificationsQt}</span>}
+        </NavLink>
+        <NavLink to={`/profile/${authUser.id}`} className={styles.header__icons__item}>
+          <Avatar name={authUser.name} photo={authUser.avatar} additionalClass={styles.header__icons__item__avatar}/>
+        </NavLink>
+      </div>
+
     </header>
   );
 }
 
-export default Header;
+Header.propTypes = {
+  authUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    surname: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]).isRequired,
+  }).isRequired,
+};
