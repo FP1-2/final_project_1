@@ -276,10 +276,12 @@ public class PostService {
 
         notificationRepository.deleteByPostId(postId);
 
-        favoriteRepository.deleteByPostId(postId);
-
         postRepository.deleteById(postId);
+    }
 
+    public void performAllCascadeDeletion(Long postId) {
+        favoriteRepository.deleteByPostId(postId);
+        performCascadeDeletion(postId);
         performRepostCascadeDeletion(postId);
     }
 
@@ -402,7 +404,7 @@ public class PostService {
         }
 
         if(userId.equals(existedPost.getUser().getId())) {
-            performCascadeDeletion(postId);
+            performAllCascadeDeletion(postId);
         } else {
             throw new UnauthorizedException("User not authorised to delete this post!");
         }
