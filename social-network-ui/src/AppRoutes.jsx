@@ -8,6 +8,8 @@ import PostsPage from './pages/PostsPage/PostsPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
+import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
+import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
 
 function AppRoutes() {
   return (
@@ -20,6 +22,8 @@ function AppRoutes() {
       <Route path="/profile" element={<ProfilePage/>} />
       <Route path='/registration' element={<RegistrationForm />} />
       <Route path='/registration/confirm' element={<ConfirmRegistration/>}/>
+      <Route path='/reset-password' element={<ResetPassword/>}/>
+      <Route path='/change_password/:token' element={<UpdatePass/>}/>
     </Routes>
   );
 }

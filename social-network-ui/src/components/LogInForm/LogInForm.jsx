@@ -37,7 +37,7 @@ const LoginForm = () => {
             <ErrorMessage name="password" component="div" />
           </div>
           <button type="submit" className={styles.submit}>Log In</button>
-          <NavLink to="/forgotten password" className={styles.link}>Forgotten password?</NavLink>
+          <NavLink to="/reset-password" className={styles.link}>Forgotten password?</NavLink>
           <button className={styles.create} >Create new account</button>
         </Form>
       </Formik>
