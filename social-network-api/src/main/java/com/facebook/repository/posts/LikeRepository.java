@@ -7,6 +7,7 @@ import com.facebook.model.posts.Post;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
@@ -15,4 +16,6 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     Optional<Like> findByUserAndPost(AppUser user, Post post);
 
     void deleteByPostId(Long postId);
+
+    List<Like> findAllByPostIdIn(List<Long> postIds);
 }
