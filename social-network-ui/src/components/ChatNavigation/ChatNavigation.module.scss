@@ -41,7 +41,12 @@
       @include flex-center;
       justify-content: center;
       cursor: pointer;
-
+      & :hover{
+        background-color: $hover-background-color;
+      }
+        & img{
+          cursor: pointer;
+        }
     }
   }
 
@@ -188,8 +193,7 @@
   &__photo {
     border-radius: 50%;
     margin: 0 6px;
-    // width:56px;
-    // height:56px;
+    cursor:pointer;
     height: 100%;
   }
 
@@ -198,10 +202,10 @@
     flex: 1;
     justify-content: space-between;
     height: 100%;
+    cursor:pointer;
   }
 
   &__info {
-    // @include flex-center;
     display: grid;
     align-items: flex-start;
     padding: 6px;
