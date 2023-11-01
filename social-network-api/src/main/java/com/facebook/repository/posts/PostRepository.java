@@ -178,5 +178,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """, nativeQuery = true)
     Optional<Post> findPostWithMoreThanFourComments();
 
-}
+    List<Post> findByOriginalPostId(Long originalPostId);
 
+}

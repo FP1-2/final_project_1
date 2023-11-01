@@ -7,6 +7,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
+
 /**
  * Репозиторій для роботи з повідомленнями.
  */
@@ -38,5 +40,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
      */
     Long countByUserIdAndIsRead(Long userId, boolean isRead);
 
-}
+    List<Notification> findAllByPostIdIn(List<Long> postIds);
 
+}
