@@ -107,7 +107,7 @@ class ResetPasswordServiceTest {
 
     @Test
     void testSendResetPasswordEmail() throws Exception {
-        String URL = "http://localhost:3000/change_password/"+TOKEN +"?em="+EMAIL;
+        String URL = "https://danit-final-project-1.netlify.app/change_password/"+TOKEN +"?em="+EMAIL;
         resetPasswordService.sendResetPasswordEmail(EMAIL, TOKEN);
         String content ="<p>Click the link below to reset your password:<br>"
                 +"<a href="+URL+">Reset password</a>"
