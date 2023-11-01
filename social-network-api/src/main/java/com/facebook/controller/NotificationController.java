@@ -2,7 +2,7 @@ package com.facebook.controller;
 
 import com.facebook.dto.notifications.NotificationResponse;
 import com.facebook.service.CurrentUserService;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.web.bind.annotation.GetMapping;

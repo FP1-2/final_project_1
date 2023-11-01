@@ -7,7 +7,7 @@ import com.facebook.model.friends.Friends;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.exception.NotFoundException;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;

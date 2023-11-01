@@ -1,4 +1,4 @@
-package com.facebook.service.notification;
+package com.facebook.service.notifications;
 
 import com.facebook.model.AppUser;
 import com.facebook.model.notifications.Notification;

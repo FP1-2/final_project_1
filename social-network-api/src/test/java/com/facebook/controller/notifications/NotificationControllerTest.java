@@ -3,7 +3,7 @@ package com.facebook.controller.notifications;
 import com.facebook.dto.notifications.NotificationResponse;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.EmailHandlerService;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;

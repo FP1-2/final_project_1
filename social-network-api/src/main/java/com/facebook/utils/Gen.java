@@ -27,6 +27,7 @@ import com.facebook.service.FriendsService;
 import com.facebook.service.ChatService;
 import com.facebook.service.MessageService;
 import com.facebook.service.PostService;
+import com.facebook.service.favorites.FavoritesService;
 import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
@@ -81,6 +82,8 @@ public class Gen {
 
     private final PostService postService;
 
+    private final FavoritesService favoritesService;
+
     private List<AppUser> appUsers1;
 
     private List<PostResponse> posts;
@@ -103,6 +106,7 @@ public class Gen {
         this.passwordEncoder = context.getBean(PasswordEncoder.class);
         this.appUserFacade = context.getBean(AppUserFacade.class);
         this.postService = context.getBean(PostService.class);
+        this.favoritesService = context.getBean(FavoritesService.class);
         this.friendsService = context.getBean(FriendsService.class);
         this.chatService = context.getBean(ChatService.class);
         this.messageService = context.getBean(MessageService.class);
@@ -117,6 +121,7 @@ public class Gen {
         this.comments = genComments();
         this.likes = genLikes();
         genFriends();
+        genFavorites();
 
         this.chats = genChats();
         this.messages = genMessages();
@@ -379,7 +384,6 @@ public class Gen {
         appUsers1.forEach(user -> {
             if (MathUtils.random(0, 10) < 3) {
                 List<Friends> friendsList = friendsService.getFriendsListByUserIdAndStatus(user.getId());
-                log.info("List<Friends> friends: {}", friendsList);
 
                 friendsList.forEach(friendship -> {
                     if (friendship.getStatus() == FriendsStatus.PENDING) {
@@ -430,5 +434,17 @@ public class Gen {
             });
         });
         return messageRepository.findAll();
+    }
+    private void genFavorites() {
+        appUsers1.forEach(user -> {
+            int randomFavoritesCount = MathUtils.random(0, 10);
+            for (int i = 0; i < randomFavoritesCount; i++) {
+                PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+
+                try {
+                    favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
+                } catch (AlreadyExistsException e) {}
+            }
+        });
     }
 }

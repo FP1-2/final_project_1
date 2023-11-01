@@ -21,7 +21,7 @@ import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -35,6 +35,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import static com.facebook.utils.SortUtils.getSorting;
 
 
 /**
@@ -91,26 +93,6 @@ public class PostService {
      */
     public void save(Post post) {
         postRepository.save(post);
-    }
-
-    /**
-     * Повертає об'єкт сортування на основі вхідного рядка сортування.
-     *
-     * @param sort рядок сортування у форматі "властивість, напрямок".
-     *             Напрямок може бути або "asc", або "desc".
-     *             Якщо напрямок відсутній,
-     *             за замовчуванням вважається "asc".
-     * @return об'єкт {@link Sort} для використання в запитах до репозиторію.
-     */
-    private Sort getSorting(String sort) {
-        String[] sortParts = sort.split(",");
-        String property = sortParts[0];
-
-        String direction = sortParts.length > 1 ? sortParts[1] : "asc";
-
-        return direction.equalsIgnoreCase("desc")
-                ? Sort.by(Sort.Order.desc(property))
-                : Sort.by(Sort.Order.asc(property));
     }
 
     /**

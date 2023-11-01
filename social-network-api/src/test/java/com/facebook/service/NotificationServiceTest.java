@@ -7,7 +7,7 @@ import com.facebook.model.notifications.Notification;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
-import com.facebook.service.notification.NotificationService;
+import com.facebook.service.notifications.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
