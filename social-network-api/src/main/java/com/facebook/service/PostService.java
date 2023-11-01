@@ -318,7 +318,7 @@ public class PostService {
 
         return Optional.of(existingRepost
                 .map(repost -> {
-                    deletePost(userId, repost.getId());
+                    performCascadeDeletion(repost.getId());
                     return new ActionResponse(false, "Repost removed");
                 })
                 .orElseGet(() -> {
