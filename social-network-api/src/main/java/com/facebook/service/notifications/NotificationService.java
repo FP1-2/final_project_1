@@ -1,4 +1,4 @@
-package com.facebook.service.notification;
+package com.facebook.service.notifications;
 
 import com.facebook.dto.notifications.NotificationResponse;
 import com.facebook.exception.NotFoundException;
@@ -173,7 +173,6 @@ public class NotificationService {
      * @param post      Створений пост.
      */
     public void createFriendPostNotification(AppUser initiator, Post post) {
-        log.info("Post object: {}", post);
         List<AppUser> friends = getApprovedFriendsOfUser(initiator.getId());
         for (AppUser friend : friends) {
             createFriendNotification(initiator,

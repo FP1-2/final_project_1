@@ -81,32 +81,24 @@ class PostTest {
     @Test
     void dateModification() {
         // 1. Створення і збереження поста
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.DRAFT);
-
+        Post post = createPost(createAndSaveTestUser(), PostStatus.DRAFT);
         Post savedPost = tem.persistAndFlush(post);
 
         // 2. Отримання дати модифікації
-        LocalDateTime initialLastModifiedDate
-                = savedPost.getLastModifiedDate();
+        LocalDateTime initialLastModifiedDate = savedPost.getLastModifiedDate();
 
         // 3. Зміна даних і повторне збереження
         savedPost.setTitle("Updated Title");
         tem.persistAndFlush(savedPost);
 
-        // Оновлюємо стан об'єкта savedPost з бази даних,
-        // щоб переконатися, що він відображає актуальний стан запису,
-        // включаючи автоматично оновлені поля. Цей крок необхідний,
-        // тому що без нього локальний стан об'єкта може не відповідати
-        // стану запису у базі даних після операції збереження.
+        // Оновлюємо стан об'єкта savedPost з бази даних
         tem.refresh(savedPost);
 
         // 4. Перевірка, що дата модифікації змінилася
-        assertThat(savedPost.getLastModifiedDate())
-                .isNotEqualTo(initialLastModifiedDate);
-        assertThat(savedPost.getLastModifiedDate())
-                .isAfter(initialLastModifiedDate);
+        assertThat(savedPost.getLastModifiedDate()).isNotEqualTo(initialLastModifiedDate);
+        assertThat(savedPost.getLastModifiedDate()).isAfterOrEqualTo(initialLastModifiedDate);
     }
+
 
     /**
      * Тестує статус "DRAFT" посту.
