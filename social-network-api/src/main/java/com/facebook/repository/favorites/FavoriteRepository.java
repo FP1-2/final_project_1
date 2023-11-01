@@ -1,6 +1,8 @@
 package com.facebook.repository.favorites;
 
+import com.facebook.model.AppUser;
 import com.facebook.model.favorites.Favorite;
+import com.facebook.model.posts.Post;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,9 +13,45 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+/**
+ * Репозиторій для роботи з об'єктами {@link Favorite} у базі даних.
+ * Надає методи для знаходження, зберігання та видалення об'єктів "фаворитів".
+ *
+ * <p>Основні методи:
+ * <ul>
+ *     <li>{@link #findFavoritePostDetailsByUserId(Long, Pageable)}
+ *     - знаходить деталі постів, доданих до "фаворитів" для конкретного користувача.</li>
+ *     <li>{@link #countFavoritesByUserId(Long)}
+ *     - підраховує кількість постів у "фаворитах" для конкретного користувача.</li>
+ *     <li>{@link #findByUserIdAndPostId(Long, Long)}
+ *     - знаходить об'єкт "фаворит" за ідентифікатором користувача та поста.</li>
+ * </ul>
+ * </p>
+ *
+ * @see Favorite
+ * @see AppUser
+ * @see Post
+ */
 @Repository
 public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
+    /**
+     * SQL-запит для отримання деталізованої інформації про пости, додані до "фаворитів".
+     *
+     * <p>Запит виконує наступні дії:
+     * <ul>
+     *     <li>Об'єднує таблиці "фаворитів", постів та користувачів.</li>
+     *     <li>Отримує основну інформацію про пост, таку як: ідентифікатор, дату створення,
+     *     URL зображення, заголовок, тіло поста тощо.</li>
+     *     <li>Отримує інформацію про користувача, який створив пост.</li>
+     *     <li>Отримує інформацію про оригінальний пост, якщо поточний пост є репостом.</li>
+     *     <li>Отримує інформацію про коментарі, лайки та репости для кожного поста.</li>
+     * </ul>
+     * </p>
+     *
+     * <p>Результатом запиту є список мап, де ключ - назва колонки, а значення
+     * - відповідне значення з бази даних.</p>
+     */
     String FAVORITE_POST_DETAILS_SELECT = """
                         SELECT
                             p.id AS post_id,
