@@ -63,10 +63,7 @@ public class AppUserService {
     }
 
     public Optional<AppUser> findByUsername(String username) {
-        Optional<AppUser> appUser = repo.findByUsername(username);
-        log.info(appUser);
-        return appUser;
-
+        return repo.findByUsername(username);
     }
 
     public Optional<AppUser> findById(Long id) {

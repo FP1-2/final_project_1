@@ -17,9 +17,11 @@ import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostType;
 import com.facebook.repository.AppUserRepository;
+import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
+import com.facebook.service.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
@@ -62,6 +64,10 @@ public class PostService {
     private final AppUserRepository appUserRepository;
 
     private final PostFacade postFacade;
+
+    private final NotificationRepository notificationRepository;
+
+    private final NotificationService notificationService;
 
     /**
      * Отримує усі пости з бази даних.
@@ -212,6 +218,9 @@ public class PostService {
                     like.setUser(user);
                     like.setPost(post);
                     likeRepository.save(like);
+
+                    notificationService.createLikeNotification(user, post);
+
                     return new ActionResponse(true, "Like added");
                 }));
     }
@@ -236,6 +245,9 @@ public class PostService {
             comment.setPost(post);
             comment.setContent(request.getContent());
             Comment savedComment = commentRepository.save(comment);
+
+            notificationService.createCommentNotification(user, post);
+
             return postFacade.convertToCommentResponse(savedComment);
         });
     }
@@ -252,6 +264,8 @@ public class PostService {
         likeRepository.deleteByPostId(postId);
 
         commentRepository.deleteByPostId(postId);
+
+        notificationRepository.deleteByPostId(postId);
 
         postRepository.deleteById(postId);
     }
@@ -297,6 +311,9 @@ public class PostService {
                 .orElseGet(() -> {
                     Post repost = postFacade.convertRepostRequestToPost(request, user);
                     postRepository.save(repost);
+
+                    notificationService.createRepostNotification(user, repost);
+
                     return new ActionResponse(true, "Repost added");
                 }));
     }
@@ -316,6 +333,8 @@ public class PostService {
 
         Post savedPost = postRepository
                 .save(postFacade.convertPostRequestToPost(request, user));
+
+        notificationService.createFriendPostNotification(user, savedPost);
 
         return postRepository.findPostDetailsById(savedPost.getId())
                 .map(postFacade::convertToPostResponse)

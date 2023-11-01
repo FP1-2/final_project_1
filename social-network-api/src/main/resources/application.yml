@@ -85,9 +85,9 @@ spring:
     jdbc:
       time_zone: UTC
     open-in-view: false
-    show-sql: true
-    properties:
-      hibernate.format_sql: "true"
+#    show-sql: true
+#    properties:
+#      hibernate.format_sql: "true"
 server:
   port: ${SERVER_PORT:9000}
   ssl:
