@@ -1,6 +1,6 @@
 const initialValue = {
     getFriends:{
-        obj: {},
+        obj: [],
         status: '',
         error: '',
     },
@@ -19,5 +19,16 @@ const initialValue = {
         status: '',
         error: '',
     },
+    friend:{
+        obj: {},
+        status: '',
+        error: '',
+    },
+    requestsToMe:{
+        obj: {},
+        status: '',
+        error: '',
+    },
+    modalDeleteFriend:false,
 }
 export default initialValue;

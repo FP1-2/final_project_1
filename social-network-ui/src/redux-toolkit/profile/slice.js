@@ -24,6 +24,6 @@ const profileReducer = createSlice({
     }
 });
 
-export const {modalDeleteFriendState,modalEditProfileState,removeUser} = profileReducer.actions;
+export const {modalEditProfileState,removeUser} = profileReducer.actions;
 
 export default profileReducer.reducer;

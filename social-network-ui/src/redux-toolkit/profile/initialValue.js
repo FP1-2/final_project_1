@@ -9,9 +9,6 @@ const initialValue = {
         status: '',
         error: '',
     },
-    modalDeleteFriend: {
-        state: false,
-    },
     modalEditProfile: {
         state: false,
     },

@@ -3,10 +3,10 @@ import { basicAx, workAx} from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const getFriends = createAsyncThunk(
-    'friend/getFriends',
-    async ({ rejectWithValue }) => {
+    'friends/getFriends',
+    async (id, { rejectWithValue }) => {
         try {
-            const response = await workAx("get",`api/friends/list`);
+            const response = await workAx("get",`api/friends/list/${id}`);
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response.data);
@@ -14,7 +14,7 @@ export const getFriends = createAsyncThunk(
     }
 );
 export const deleteFriend = createAsyncThunk(
-    'friend/deleteFriend',
+    'friends/deleteFriend',
     async (obj, { rejectWithValue }) => {
         try {
             const response = await workAx("delete",`api/friends/delete`,obj);
@@ -26,7 +26,7 @@ export const deleteFriend = createAsyncThunk(
 );
 
 export const requestToFriend = createAsyncThunk(
-    'friend/requestToFriend',
+    'friends/requestToFriend',
     async (obj, { rejectWithValue }) => {
         try {
             const response = await workAx("post",`api/friends/send-request`,obj);
@@ -38,10 +38,35 @@ export const requestToFriend = createAsyncThunk(
 );
 
 export const confirmFriendRequest = createAsyncThunk(
-    'friend/confirmFriendRequest',
+    'friends/confirmFriendRequest',
     async (obj, { rejectWithValue }) => {
         try {
             const response = await workAx("put",`api/friends/update-status`,obj);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const friend = createAsyncThunk(
+    'friends/friend',
+    async (id, { rejectWithValue }) => {
+        try {
+            console.log(id);
+            const response = await workAx("get",`api/users/${id}`);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const requestsToMe = createAsyncThunk(
+    'friends/requestsToMe',
+    async ({ rejectWithValue }) => {
+        try {
+            const response = await workAx("get",`api/friends/list/friend-requests`);
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response.data);

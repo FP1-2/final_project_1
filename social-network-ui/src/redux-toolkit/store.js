@@ -5,7 +5,7 @@ import registrationReducer from "./registration/slice";
 import loginReducer from "./login/slice";
 import profileReducer from "./profile/slice";
 import postReducer from "./post/slice";
-import friendReducer from "./friend/slice";
+import friendsReducer from "./friend/slice";
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -24,7 +24,7 @@ const rootReducer = (state, action) => {
         auth: loginReducer,
         profile:profileReducer,
         post:postReducer,
-        friend:friendReducer,
+        friends:friendsReducer,
     })(state, action);
 }
 

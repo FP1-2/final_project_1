@@ -1,20 +1,26 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import {getFriends,deleteFriend,requestToFriend,confirmFriendRequest} from "./thunks";
+import {getFriends,deleteFriend,requestToFriend,confirmFriendRequest,friend, requestsToMe} from "./thunks";
 import builders from "../builders";
 
-const friendReducer = createSlice({
-    name: "friend",
+const friendsReducer = createSlice({
+    name: "friends",
     initialState: initialValue,
-    reducers: {},
+    reducers: {
+        modalDeleteFriendState: (state, action) => {
+            state.modalDeleteFriend = action.payload;
+        },
+    },
     extraReducers:(builder)=>{
         builders(builder, getFriends,'getFriends');
         builders(builder, deleteFriend,'deleteFriend');
         builders(builder, requestToFriend,'requestToFriend');
         builders(builder, confirmFriendRequest,'confirmFriendRequest');
+        builders(builder, friend, "friend");
+        builders(builder, requestsToMe, "requestsToMe");
     }
 });
 
-export const {} = friendReducer.actions;
+export const {modalDeleteFriendState} = friendsReducer.actions;
 
-export default friendReducer.reducer;
+export default friendsReducer.reducer;

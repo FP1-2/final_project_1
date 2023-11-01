@@ -16,7 +16,7 @@ const ModalAddRepost = () => {
   const [scroll, setScroll] = useState(null);
   const dispatch = useDispatch();
   const modalAddRepost = useSelector((state) => state.post.modalAddRepost);
-  const userObject = useSelector(state => state.profile.profileUser.obj);
+  const userObject = useSelector(state => state.auth.user.obj);
   const post = useSelector((state) => state.post.postObj);
 
   const handleScroll = () => {
@@ -34,9 +34,9 @@ const ModalAddRepost = () => {
 
   const onSubmit = async (value) => {
     if (post.type === "REPOST") {
-      dispatch(addRepost({imageUrl:post.originalPost.imageUrl, body: value.text, title: "add repost", originalPostId: post.originalPost.postId}));
+      dispatch(addRepost({ imageUrl: post.originalPost.imageUrl, body: value.text, title: "add repost", originalPostId: post.originalPost.postId }));
     } else {
-      dispatch(addRepost({imageUrl: post.imageUrl, body: value.text, title: "add repost", originalPostId: post.postId}));
+      dispatch(addRepost({ imageUrl: post.imageUrl, body: value.text, title: "add repost", originalPostId: post.postId }));
     }
     dispatch(modalAddRepostState(false));
   };
@@ -56,7 +56,7 @@ const ModalAddRepost = () => {
             <div>
               <div className={style.modalHeader}>
                 <div className={style.modalHeaderTitleWrapper}>
-                  <h2 className={style.modalHeaderTitle}>Create a publication</h2>
+                  <h2 className={style.modalHeaderTitle}>Share a publication</h2>
                   <button type="button" className={style.modalHeaderCloseBtn} onClick={modalAddRepostClose}>
                     <Cross className={style.modalHeaderCloseBtnImg} />
                   </button>
@@ -69,18 +69,17 @@ const ModalAddRepost = () => {
                 </div>
                 <input type="text" className={style.modalNewInfo} placeholder="Add your text" onChange={(e) => setFieldValue("text", e.target.value)} />
                 <div className={style.repost}>
-                  <img src={post.author.avatar
-                    ? post.author.avatar
+                  <img src={post.author ? post.author.avatar
                     : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.repostAvatar} />
                   <h4 className={style.repostName} >
-                    {`${post.author.name} ${post.author.surname}`}
+                    {post.author?`${post.author.name} ${post.author.surname}`:null}
                   </h4>
                 </div>
               </div>
               <div className={style.modalMain}>
-                <p className={style.modalMainText}>{post.type === "REPOST"?post.originalPost.body:post.body}</p>
-                {(post.type === "REPOST" && post.originalPost.imageUrl)?<img className={style.modalMainImg} src={post.originalPost.imageUrl}/>:null}
-                {(post.imageUrl &&post.type === "POST")?<img className={style.modalMainImg} src={post.imageUrl}/>:null}
+                <p className={style.modalMainText}>{post.type === "REPOST" ? post.originalPost.body : post.body}</p>
+                {(post.type === "REPOST" && post.originalPost.imageUrl) ? <img className={style.modalMainImg} src={post.originalPost.imageUrl} /> : null}
+                {(post.imageUrl && post.type === "POST") ? <img className={style.modalMainImg} src={post.imageUrl} /> : null}
               </div>
             </div>
             <div>

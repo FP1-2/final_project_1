@@ -2,13 +2,13 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
-import { modalDeleteFriendState } from "../../redux-toolkit/profile/slice";
+import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
 import { Link, Outlet } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
 import { ReactComponent as DeleteFriend } from "../../img/deleteFriend.svg";
-// import { ReactComponent as AddFriend } from "../../img/addFriend.svg";
+import { ReactComponent as AddFriend } from "../../img/addFriend.svg";
 import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
@@ -16,7 +16,9 @@ import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
 import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
 import { editUser, loadUserProfile, postsUser } from "../../redux-toolkit/profile/thunks";
 import { useParams } from "react-router-dom";
+import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
+import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -35,6 +37,14 @@ const ProfilePage = () => {
 
   const indexSlash = window.location.pathname.lastIndexOf('/');
   const word = window.location.pathname.slice(indexSlash + 1);
+  const friends = useSelector(state => state.friends.getFriends.obj);
+  const myId = useSelector(state => state.auth.user.obj.id);
+  let isMyFriend;
+  for (const el of friends) {
+    if (el.id === myId) {
+      isMyFriend = true;
+    }
+  }
 
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
@@ -48,6 +58,7 @@ const ProfilePage = () => {
       dispatch(removeUser());
     }
     getUser(userId, token);
+    dispatch(getFriends(id));
     dispatch(postsUser(id));
   }, [id]);
 
@@ -93,9 +104,13 @@ const ProfilePage = () => {
     dispatch(modalEditProfileState(true));
   };
   const modalDeleteFriendOpen = () => {
+    dispatch(friend(id));
     dispatch(modalDeleteFriendState(true));
   };
 
+  const addFriend = () => {
+    dispatch(requestToFriend({friendId:id}));
+  };
 
 
   const clickLinkPosts = () => {
@@ -136,13 +151,12 @@ const ProfilePage = () => {
   }
 
   return (<>
-
     {status === "pending" ?
       <div className={style.loderWrapper}>
         <div className={style.loder}></div>
       </div>
       : status === "rejected" ?
-        <ErrorPage message={error ? error : "Oops something went wrong!"} />
+        <ErrorPage message={error.message ? error.message : "Oops something went wrong!"} />
         :
         <>
           <ModalEditProfile />
@@ -151,7 +165,6 @@ const ProfilePage = () => {
             <div className={style.headerWrapper}>
               <header className={style.header}>
                 <img className={style.headerImg} src={obj.headerPhoto ? obj.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
-                {/* <input type="file" name="" id="" style={{ display: "none" }} /> */}
                 {obj.user === "myUser" ? <button className={style.headerBtn} onClick={clickInputHeaderPicture}>
                   <HeaderCamera className={style.headerBtnCamera} />
                   <input type="file" style={{ display: "none" }} ref={inputHeaderPicture} onChange={(e) => downloadInputHeaderPicture(e)} />
@@ -172,7 +185,7 @@ const ProfilePage = () => {
                 </div>
                 <div className={style.infoNameWrapper}>
                   <h2 className={style.infoName}>{`${obj.name} ${obj.surname}`}</h2>
-                  {/* <p className={style.infoFriends} href="">Friends: </p> */}
+                  <p className={style.infoFriends} href="">Friends: {friends.length}</p>
                 </div>
                 {obj.user === "myUser" ? <button className={style.infoBtnEdit} onClick={modalEditProfileOpen}>
                   <Pencil className={style.infoBtnPencil} />
@@ -180,14 +193,16 @@ const ProfilePage = () => {
                 </button>
                   :
                   <div className={style.infoBtnsWrapper}>
-                    <button className={style.infoBtnDeleteFriend} onClick={modalDeleteFriendOpen}>
-                      <DeleteFriend className={style.infoBtnDeleteFriendImg} />
-                      Delete
-                    </button>
-                    {/* <button className={style.infoBtnAddFriend}>
-                <AddFriend className={style.infoBtnAddFriendImg} />
-                Add Friend
-              </button> */}
+                    {isMyFriend ?
+                      <button className={style.infoBtnDeleteFriend} onClick={modalDeleteFriendOpen}>
+                        <DeleteFriend className={style.infoBtnDeleteFriendImg} />
+                        Delete
+                      </button>
+                      :
+                      <button className={style.infoBtnAddFriend} onClick={addFriend}>
+                        <AddFriend className={style.infoBtnAddFriendImg} />
+                        Add Friend
+                      </button>}
                     <button className={style.infoBtnMessage}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />
                       Message

@@ -48,7 +48,7 @@ const ModalEditPost = () => {
 
   const onSubmit = async (value) => {
     if (value.img === "") {
-      dispatch(editPost({ obj: { imageUrl: "", body: value.text, title: "add new post" }, id: post.postId }));
+      dispatch(editPost({ obj: { imageUrl: post.imageUrl, body: value.text, title: "add new post" }, id: post.postId }));
       setErrorValidation(false);
     } else {
       const photo = (await getPhotoURL(value.img));
