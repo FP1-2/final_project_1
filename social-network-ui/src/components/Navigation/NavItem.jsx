@@ -13,7 +13,7 @@ export default function NavItem({to, label, icon, active, children, isDesktop}) 
       </NavLink>
     </li>
   );
-};
+}
 NavItem.propTypes = {
   to: PropTypes.string.isRequired,
   label: PropTypes.string,
