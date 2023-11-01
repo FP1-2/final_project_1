@@ -237,31 +237,6 @@ public class PostService {
         });
     }
 
-    public void performRepostCascadeDeletion(Long postId) {
-        List<Post> repostRepo = postRepository.findByOriginalPostId(postId);
-        List<Long> repostIds = repostRepo.stream().map(Post::getId).toList();
-
-        Optional.of(notificationRepository.findAllByPostIdIn(repostIds))
-                .filter(notifications -> !notifications.isEmpty())
-                .ifPresent(notificationRepository::deleteAllInBatch);
-
-        Optional.of(postRepository.findByOriginalPostId(postId))
-                .filter(reposts -> !reposts.isEmpty())
-                .ifPresent(postRepository::deleteAllInBatch);
-
-        Optional.of(commentRepository.findAllByPostIdIn(repostIds))
-                .filter(comments -> !comments.isEmpty())
-                .ifPresent(commentRepository::deleteAllInBatch);
-
-        Optional.of(likeRepository.findAllByPostIdIn(repostIds))
-                .filter(likes -> !likes.isEmpty())
-                .ifPresent(likeRepository::deleteAllInBatch);
-
-        Optional.of(favoriteRepository.findAllByPostIdIn(repostIds))
-                .filter(favorites -> !favorites.isEmpty())
-                .ifPresent(favoriteRepository::deleteAllInBatch);
-    }
-
     /**
      * Виконує каскадне видалення поста за його ідентифікатором
      * та всіх пов'язаних з ним записів (лайків, коментарів).
@@ -270,6 +245,7 @@ public class PostService {
      *               видалити разом зі своїми залежностями
      */
     public void performCascadeDeletion(Long postId) {
+
         likeRepository.deleteByPostId(postId);
 
         commentRepository.deleteByPostId(postId);
@@ -277,12 +253,6 @@ public class PostService {
         notificationRepository.deleteByPostId(postId);
 
         postRepository.deleteById(postId);
-    }
-
-    public void performAllCascadeDeletion(Long postId) {
-        favoriteRepository.deleteByPostId(postId);
-        performCascadeDeletion(postId);
-        performRepostCascadeDeletion(postId);
     }
 
     /**
@@ -394,14 +364,41 @@ public class PostService {
                 .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
     }
 
+    public void performRepostCascadeDeletion(Long postId) {
+        List<Post> repostRepo = postRepository.findByOriginalPostId(postId);
+        List<Long> repostIds = repostRepo.stream().map(Post::getId).toList();
+
+        Optional.of(notificationRepository.findAllByPostIdIn(repostIds))
+                .filter(notifications -> !notifications.isEmpty())
+                .ifPresent(notificationRepository::deleteAllInBatch);
+
+        Optional.of(postRepository.findByOriginalPostId(postId))
+                .filter(reposts -> !reposts.isEmpty())
+                .ifPresent(postRepository::deleteAllInBatch);
+
+        Optional.of(commentRepository.findAllByPostIdIn(repostIds))
+                .filter(comments -> !comments.isEmpty())
+                .ifPresent(commentRepository::deleteAllInBatch);
+
+        Optional.of(likeRepository.findAllByPostIdIn(repostIds))
+                .filter(likes -> !likes.isEmpty())
+                .ifPresent(likeRepository::deleteAllInBatch);
+
+        Optional.of(favoriteRepository.findAllByPostIdIn(repostIds))
+                .filter(favorites -> !favorites.isEmpty())
+                .ifPresent(favoriteRepository::deleteAllInBatch);
+    }
+
+    public void performAllCascadeDeletion(Long postId) {
+        favoriteRepository.deleteByPostId(postId);
+        performCascadeDeletion(postId);
+        performRepostCascadeDeletion(postId);
+    }
+
     @Transactional
     public void deletePost(Long userId, Long postId) {
         Post existedPost = postRepository.findById(postId)
                 .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
-
-        if(existedPost.getType().equals(PostType.REPOST) && existedPost.getOriginalPostId() != null) {
-            performRepostCascadeDeletion(postId);
-        }
 
         if(userId.equals(existedPost.getUser().getId())) {
             performAllCascadeDeletion(postId);
