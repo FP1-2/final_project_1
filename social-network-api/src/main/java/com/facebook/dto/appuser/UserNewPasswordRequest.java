@@ -2,12 +2,10 @@ package com.facebook.dto.appuser;
 
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
-import lombok.AllArgsConstructor;
 import lombok.Data;
 
 
 @Data
-@AllArgsConstructor
 public class UserNewPasswordRequest {
     @NotNull
     private String email;

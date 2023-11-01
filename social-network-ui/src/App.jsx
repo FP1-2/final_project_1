@@ -1,22 +1,28 @@
-import React from 'react';
-import Header from './components/Header/Header';
+import React, {useEffect} from 'react';
 import AppRoutes from './AppRoutes';
+import {useSelector, useDispatch} from "react-redux";
+import {useCallback} from 'react';
+import { setIsVisible } from './redux-toolkit/ws/slice';
 
 function App() {
-  const isHeader = !window.location.pathname.includes('/login') && !window.location.pathname.includes('/registration');
+  const authUser = useSelector(state => state.auth.user.obj);
+  const isAuth = Object.keys(authUser).length > 0;
 
-  if (isHeader) {
-    return (
-      <div className="App">
-        <Header />
-        <AppRoutes />
-      </div>
-    );
-  }
+  const dispatch = useDispatch();
+  const connectWebSocket = useCallback(() => {
+    dispatch(setIsVisible(false));
+    dispatch({type: 'webSocket/connect'});
+  }, [authUser]);
+
+  useEffect(() => {
+    if (isAuth) {
+      connectWebSocket();
+    }
+  }, [isAuth]);
 
   return (
     <div className="App">
-      <AppRoutes />
+      <AppRoutes isAuth={isAuth}/>
     </div>
   );
 }
