@@ -1,8 +1,7 @@
 import axios from 'axios';
 
 export const basicAx = axios.create({
-  // baseURL: 'https://yourhostel.world',
-  baseURL: 'http://localhost:9000/',
+  baseURL: 'https://yourhostel.world',
 });
 
 export const workAx = async (method, url, data) => {
