@@ -25,10 +25,10 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
 
   const handleSend = async () => {
     if (uploadedFile && message.trim() !== '') {
-      sendImage(uploadedFile);
+      await sendImage(uploadedFile);
       sendMessage(ContentType.TEXT, message);
     } else if (uploadedFile) {
-      sendImage(uploadedFile);
+      await sendImage(uploadedFile);
     } else if (message.trim() !== '') {
       sendMessage(ContentType.TEXT, message);
     }
@@ -39,7 +39,7 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
       sendMessage(ContentType.IMAGE, photoURL);
       handleDeleteFile();
     } catch (error) {
-      console.error('Сталася помилка під час завантаження:', error);
+      alert('Сталася помилка під час завантаження, спробуйте ще раз.');
     }
   }
 
