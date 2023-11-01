@@ -38,42 +38,43 @@ export default function ChatBody({
           </>
         )
       ) 
-      :
-      (
-        <ul className={styles.chat__body__messList}>
-          {messages.status === 'pending' && pageNumber === 0 ? <Loader/> :
-            messagesList.map(({id, contentType, content, createdAt, sender, status}, index) => {
-              const prevMessage = messagesList[index + 1];
-              const showDate = !prevMessage || new Date(createdAt) - new Date(prevMessage.createdAt) > 15 * 60 * 1000;
+        :
+        (
+          <ul className={styles.chat__body__messList}>
+            {messages.status === 'pending' && pageNumber === 0 ? <Loader/> :
+              messagesList.map(({id, contentType, content, createdAt, sender, status}, index) => {
+                const prevMessage = messagesList[index + 1];
+                const showDate = !prevMessage || new Date(createdAt) - new Date(prevMessage.createdAt) > 15 * 60 * 1000;
 
-              return (
-                <li key={id} className={styles.chat__body__messList__item}>
-                  {showDate && <div className={styles.messageDate}>{getTimeAgo(createdAt)}</div>}
-                  <Message
-                    contentType={contentType}
-                    content={content}
-                    authUser={authUser.username === sender.username}
-                    datetime={formatDate(createdAt)}
-                    photo={sender.avatar}
-                    additionalClass=""
-                    name={sender.name + ' ' + sender.surname}
-                    status={newMess !== null && newMess.id === id ? newMess.status : status}
-                    index={index}
-                    handleOpenImg={handleOpenImg}
-                  />
-                </li>
-              );
-            })}
-          {messages.status === 'pending' && pageNumber !== 0 && <Loader/>}
-          {hasMore && messagesList.length > 0 && (
-            <li className={styles.chat__body__messList__item}>
-              <button className={styles.chat__body__messList__item__btn} onClick={handleLoadMoreMessages}>
-                More
-              </button>
-            </li>
-          )}
-        </ul>
-      )}
+                return (
+                  <li key={id} className={styles.chat__body__messList__item}>
+                    {showDate && <div className={styles.messageDate}>{getTimeAgo(createdAt)}</div>}
+                    <Message
+                      contentType={contentType}
+                      content={content}
+                      authUser={authUser.username === sender.username}
+                      datetime={formatDate(createdAt)}
+                      photo={sender.avatar}
+                      additionalClass=""
+                      name={sender.name + ' ' + sender.surname}
+                      status={newMess !== null && newMess.id === id ? newMess.status : status}
+                      index={index}
+                      handleOpenImg={handleOpenImg}
+                    />
+                  </li>
+                );
+              })}
+            {messages.status === 'pending' && pageNumber !== 0 && <Loader/>}
+            {hasMore && messagesList.length > 0 && (
+              <li className={styles.chat__body__messList__item}>
+                <button className={styles.chat__body__messList__item__btn} onClick={handleLoadMoreMessages}>
+                  More
+                </button>
+              </li>
+            )}
+          </ul>
+        )
+      }
     </div>
   );
 }

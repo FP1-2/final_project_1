@@ -10,8 +10,8 @@ function App() {
 
   const dispatch = useDispatch();
   const connectWebSocket = useCallback(() => {
-      dispatch(setIsVisible(false));
-      dispatch({type: 'webSocket/connect'});
+    dispatch(setIsVisible(false));
+    dispatch({type: 'webSocket/connect'});
   }, [authUser]);
 
   useEffect(() => {

@@ -12,7 +12,7 @@ export default function MessageNotification({message}) {
       <h2>Нове сповіщення</h2>
       <div className={`${styles.textWrapper}`}>
         <Avatar name={message.sender.name + " " + message.sender.username} photo={message.sender.avatar}
-                additionalClass={`${styles.avatar}`}/>
+          additionalClass={`${styles.avatar}`}/>
 
         <NavLink to={`/messages/${message.chat.id}`} className={`${styles.text}`}>
           <p>Нове повідомлення від {message.sender.name} {message.sender.surname}</p>
@@ -27,4 +27,4 @@ export default function MessageNotification({message}) {
 
 MessageNotification.propTypes = {
   message: PropTypes.object.isRequired,
-}
+};

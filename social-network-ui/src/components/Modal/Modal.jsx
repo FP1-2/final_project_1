@@ -11,10 +11,10 @@ export default function Modal({hideModal, children}) {
         <Close clickHadler={hideModal}/>
       </div>
     </div>
-  )
+  );
 }
 
 Modal.propTypes = {
   hideModal: PropTypes.func,
   children: PropTypes.node
-}
+};

@@ -14,8 +14,7 @@ const ChatLoader = () => {
       </div>
       <div className={styles.chatNavSection__search}>
         <div className={styles.chatNavSection__search__input}>
-                <span>
-                </span>
+          <span/>
           <input type="text"/>
         </div>
       </div>
