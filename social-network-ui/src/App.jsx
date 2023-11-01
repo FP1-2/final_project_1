@@ -12,13 +12,13 @@ function App() {
   const connectWebSocket = useCallback(() => {
       dispatch(setIsVisible(false));
       dispatch({type: 'webSocket/connect'});
-  }, [authUser, dispatch]);
+  }, [authUser]);
 
   useEffect(() => {
     if (isAuth) {
       connectWebSocket();
     }
-  }, [isAuth, authUser, dispatch]);
+  }, [isAuth]);
 
   return (
     <div className="App">
