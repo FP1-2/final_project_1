@@ -178,7 +178,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """, nativeQuery = true)
     Optional<Post> findPostWithMoreThanFourComments();
 
-//    @Query(value = "SELECT * FROM posts WHERE original_post_id = :originalPostId")
     List<Post> findByOriginalPostId(Long originalPostId);
 
 }
