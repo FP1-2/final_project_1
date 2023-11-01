@@ -122,7 +122,6 @@ public class Gen {
         this.likes = genLikes();
         genFriends();
         genFavorites();
-
         this.chats = genChats();
         this.messages = genMessages();
     }
@@ -435,16 +434,17 @@ public class Gen {
         });
         return messageRepository.findAll();
     }
-    private void genFavorites() {
-        appUsers1.forEach(user -> {
-            int randomFavoritesCount = MathUtils.random(0, 10);
-            for (int i = 0; i < randomFavoritesCount; i++) {
-                PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
 
-                try {
-                    favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
-                } catch (AlreadyExistsException e) {}
-            }
-        });
-    }
+    private void genFavorites() {
+            appUsers1.forEach(user -> {
+                int randomFavoritesCount = MathUtils.random(0, 10);
+                for (int i = 0; i < randomFavoritesCount; i++) {
+                    PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+
+                    try {
+                        favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
+                    } catch (AlreadyExistsException e) {}
+                }
+            });
+        }
 }

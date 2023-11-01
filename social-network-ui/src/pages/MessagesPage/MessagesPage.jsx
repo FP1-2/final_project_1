@@ -1,121 +1,114 @@
 import styles from './MessagesPage.module.scss';
 import ChatNavigation from "../../components/ChatNavigation/ChatNavigation";
-import { useDispatch, useSelector } from "react-redux";
-import { loadChat, loadChats, loadUnreadMessagesQt } from "../../redux-toolkit/messenger/asyncThunk";
-import { useEffect, useMemo, useState } from "react";
-import { updateChats, updateChatsLastMessage, addChat } from '../../redux-toolkit/messenger/slice';
-import { Outlet, useNavigate } from 'react-router-dom';
-import { useParams } from "react-router";
-import { getDate } from "../../utils/formatData";
-import { setNewMessage } from '../../redux-toolkit/ws/slice';
+import {useDispatch, useSelector} from "react-redux";
+import {loadChats} from "../../redux-toolkit/messenger/asyncThunk";
+import {useEffect, useMemo, useState} from "react";
+import {updateChats, updateChatsLastMessage, resetChat, resetMessages} from '../../redux-toolkit/messenger/slice';
+import {Outlet, useNavigate, useParams} from 'react-router-dom';
+import {getDate} from "../../utils/formatData";
+import {setNewMessage} from '../../redux-toolkit/ws/slice';
+import {useLocation} from "react-router-dom";
+import {checkReadStatus} from "../../utils/statusType";
+
 export default function MessagesPage() {
-    const dispatch = useDispatch();
-    const { id } = useParams();
-    const chats = useSelector(state => state.messenger.chats);
-    const chat = useSelector(state => state.messenger.chat.obj);
-    const authUser = useSelector(state => state.messenger.user.obj);
-    const newMess = useSelector(state => state.webSocket.newMessage);
-    const newStatus = useSelector(state => state.webSocket.messageWithNewStatus);
-    const unreadQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
-    // const [sortedChats, setSortedChats] = useState([]);
-    const [isChatClicked, setIsChatClicked] = useState(false);
-    const [pageNumber, setPageNumber] = useState(0);
-    const PAGE_SIZE = 10;
-    const navigate = useNavigate();
-    useEffect(() => {
-        dispatch(loadChats({ page: pageNumber, size: PAGE_SIZE }));
-    }, [dispatch]);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {chatId} = useParams();
 
-    const handleLoadMoreChats = () => {
-        dispatch(loadChats({ page: pageNumber+1, size: PAGE_SIZE }));
-        setPageNumber((prev) => prev + 1)
-    };
+  const authUser = useSelector(state => state.auth.user.obj);
+  const {chats, unreadMessagesQt} = useSelector(state => state.messenger);
+  const {newMessage, messageWithNewStatus} = useSelector(state => state.webSocket);
 
-    // useEffect(() => {
-    //     if (chats.status === 'fulfilled') {
-    //         const filteredChats = chats.obj.filter(chat => chat.lastMessage);
-    //         const sortedChats = [...filteredChats].sort((a, b) => getDate(b.lastMessage.createdAt) - getDate(a.lastMessage.createdAt));
-    //         setSortedChats(sortedChats);
-    //     }
-    // }, [chats]);
-    const sortedChats = useMemo(()=>{
-        if (chats.status === 'fulfilled') {
-            const filteredChats = chats.obj.filter(chat => chat.lastMessage);
-            return [...filteredChats].sort((a, b) => getDate(b.lastMessage.createdAt) - getDate(a.lastMessage.createdAt));
-        }
-        return [];
-    }, [chats])
+  const showChat = location.pathname.startsWith('/messages/') && location.pathname.includes('/messages');
+  const [hasMore, setHasMore] = useState(true);
+  const [pageNumber, setPageNumber] = useState(0);
+  const PAGE_SIZE = 10;
 
-    const handleLoadChat = (id) => {
-        dispatch(loadChat({ id }));
-        setIsChatClicked(true)
-    };
-    useEffect(() => {
-        if (!isChatClicked && id && id !== 'new') {
-            dispatch(loadChat({ id }));
-        }
-    }, [id, dispatch]);
-    
-    useEffect(() => {
-        if (Object.keys(chat).length > 0) {
-            addChat(chat);
-            navigate(`/messages/${chat.id}`);
-        }
-    }, [chat]);
-    
-    useEffect(() => {
-        if (newMess !== null) {
-            dispatch(updateChats(newMess));
-            dispatch(setNewMessage(null))
-        }
-    }, [newMess]);
+  useEffect(() => {
+    dispatch(loadChats({page: 0, size: PAGE_SIZE}));
+    setHasMore(true);
+  }, []);
 
-    useEffect(() => {
-        if (newStatus !== null && newStatus.status !== "READ") {
-            dispatch(updateChatsLastMessage(newMess));
-        }
-    }, [newStatus]);
+  const sortedChats = useMemo(() => {
+    chats.obj.length < PAGE_SIZE && setHasMore(false);
+    if (chats.status === 'fulfilled') {
+      const filteredChats = chats.obj.filter(chat => chat.lastMessage);
+      return [...filteredChats].sort((a, b) => getDate(b.lastMessage.createdAt) - getDate(a.lastMessage.createdAt));
+    }
+    return [];
+  }, [chats]);
 
-    useEffect(() => {
-        dispatch(loadUnreadMessagesQt());
-    }, [dispatch]);
+  function handleLoadPrevChats() {
+    if (pageNumber > 0) {
+      dispatch(loadChats({page: pageNumber - 1, size: PAGE_SIZE}));
+      setPageNumber(p => p - 1);
+      setHasMore(true);
+    }
+  }
 
-    useEffect(() => {
-        if (unreadQt === 0) {
-            document.title = `Messenger | Facebook`;
-        } else {
-            document.title = ` (${unreadQt}) Messenger | Facebook`;
-        }
-    }, [unreadQt]);
-    
-    useEffect(() => {
-        if (window.location.pathname === '/messages') {
-            setIsChatClicked(false)
-        } 
-    }, [window.location.pathname])
-    return (
-        <div className={styles.messengerPage}>
-            <ChatNavigation
-                chatsStatus={chats.status}
-                chats={sortedChats}
-                handleLoadChat={handleLoadChat}
-                authUser={authUser}
-                isChatClick={isChatClicked}
-                handleCreateChatClick={() => {
-                    setIsChatClicked(true)
-                }
-                }
-                handleLoadMoreChats={handleLoadMoreChats}
-                pageSize={PAGE_SIZE}
-            />
-            <section className={(window.location.pathname === '/messages') ? `${styles.chatFieldSection} ${styles.hide}` : styles.chatFieldSection} >
-                {   (window.location.pathname === '/messages')?
-                    <div className={styles.chatFieldSection__empty}>
-                        <h1 >Виберіть чат або почніть нову переписку</h1>
-                    </div>
-                    : <Outlet />}
-            </section>
+  function handleLoadMoreChats() {
+    if (chats.obj.length > 0) {
+      dispatch(loadChats({page: pageNumber + 1, size: PAGE_SIZE}));
+      setPageNumber(p => p + 1);
+    }
+  }
 
-        </div>
-    );
+  // Load chat by ID
+  const handleLoadChat = (id) => {
+    navigate(`/messages/${id}`);
+  };
+
+  // Updating last message
+  useEffect(() => {
+    if (newMessage !== null) {
+      dispatch(updateChats(newMessage));
+      dispatch(setNewMessage(null));
+    }
+  }, [newMessage]);
+  // Updating status of message
+  useEffect(() => {
+    if (messageWithNewStatus !== null && checkReadStatus(messageWithNewStatus.status)) {
+      dispatch(updateChatsLastMessage(messageWithNewStatus));
+    }
+  }, [messageWithNewStatus]);
+  // Show unread message qt
+  useEffect(() => {
+    if (unreadMessagesQt.obj === 0) {
+      document.title = `Messenger | Facebook`;
+    } else {
+      document.title = ` (${unreadMessagesQt.obj}) Messenger | Facebook`;
+    }
+  }, [unreadMessagesQt.obj]);
+
+  useEffect(() => {
+    if (showChat || chatId ==='new') {
+      dispatch(resetChat);
+      dispatch(resetMessages);
+    }
+  }, [location.pathname]);
+  
+  return (
+    <div className={styles.messengerPage}>
+      <ChatNavigation
+        chatsStatus={chats.status}
+        chats={sortedChats}
+        handleLoadChat={handleLoadChat}
+        authUser={authUser}
+        handleLoadPrevChats={handleLoadPrevChats}
+        handleLoadMoreChats={handleLoadMoreChats}
+        hasMore={hasMore}
+        pageNumber={pageNumber}
+      />
+      <section
+        className={(!showChat) ? `${styles.chatFieldSection} ${styles.hide}` : styles.chatFieldSection}>
+        {(!showChat) ?
+          <div className={styles.chatFieldSection__empty}>
+            <h1>Виберіть чат або почніть нову переписку</h1>
+          </div>
+          : <Outlet/>}
+      </section>
+
+    </div>
+  );
 }

@@ -1,0 +1,32 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
+
+
+.container{
+  width:100vw;
+  height:100vh;
+  background-color: $main-background-color;
+  display: flex;
+  flex-direction: column;
+}
+
+.main{
+  background-color: $input-color-main;
+  flex:1;
+  overflow: auto;
+}
+
+@media (min-width: 1025px) {
+   .container{
+     flex-direction: row;
+     flex-wrap: wrap;
+   }
+   .main{
+     flex:0 0 80%;
+     height: calc(100% - 66px);
+   }
+    .mainFullWidth{
+      flex:0 0 100%;
+    }
+}

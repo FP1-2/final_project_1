@@ -1,7 +1,7 @@
 const AddFile = () => {
   return (
     <svg className="x1lliihq x1k90msu x13hzchw x1qfuztq" height="20px" viewBox="0 -1 17 17" width="20px"
-         style={{marginRight: '8px', cursor: 'pointer'}}>
+      style={{marginRight: '8px', cursor: 'pointer'}}>
       <g fill="none" fillRule="evenodd">
         <path
           d="M2.882 13.13C3.476 4.743 3.773.48 3.773.348L2.195.516c-.7.1-1.478.647-1.478 1.647l1.092 11.419c0 .5.2.9.4 1.3.4.2.7.4.9.4h.4c-.6-.6-.727-.951-.627-2.151z"
@@ -16,6 +16,6 @@ const AddFile = () => {
         </path>
       </g>
     </svg>
-  )
-}
+  );
+};
 export default AddFile;

@@ -1,28 +1,21 @@
-import styles from './ChatField.module.scss';
-import { useState, useRef } from "react";
+import styles from './Chat.module.scss';
+import {useState, useRef} from "react";
 import AddFile from "../Icons/AddFile";
 import Send from "../Icons/Send";
-import Like from "../Icons/Like"
+import Like from "../Icons/Like";
 import Emoji from "../Icons/Emoji";
 import PropTypes from 'prop-types';
-import { ContentType } from "../../utils/contentType"
-import data from '@emoji-mart/data'
-import Picker from '@emoji-mart/react'
+import {ContentType} from "../../utils/contentType";
+import data from '@emoji-mart/data';
+import Picker from '@emoji-mart/react';
+import { getPhotoURL } from '../../redux-toolkit/registration/thunks';
 
-export default function MessageInput({ sendMessage, handleMessageChange, message, emojiHandler }) {
+export default function MessageInput({sendMessage, handleMessageChange, message, emojiHandler}) {
   const [isOpen, setIsOpen] = useState(false);
-  const [uploadedFile, setUploadedFile] = useState(null)
-
-
+  const [uploadedFile, setUploadedFile] = useState(null);
   const handleFileUpload = (e) => {
     const file = e.target.files[0];
-    const fileInfo = {
-      name: file.name,
-      size: file.size,
-      type: file.type,
-      url: URL.createObjectURL(file),
-    };
-    setUploadedFile(fileInfo);
+    setUploadedFile(file);
   };
   const handleDeleteFile = () => {
     setUploadedFile(null);
@@ -30,36 +23,44 @@ export default function MessageInput({ sendMessage, handleMessageChange, message
     fileInput.value = '';
   };
 
-  const handleSend = () => {
-    console.log(message)
+  const handleSend = async () => {
     if (uploadedFile && message.trim() !== '') {
-      sendMessage(ContentType.IMAGE, uploadedFile.url);
+      await sendImage(uploadedFile);
       sendMessage(ContentType.TEXT, message);
-      handleDeleteFile();
     } else if (uploadedFile) {
-      sendMessage(ContentType.IMAGE, uploadedFile.url);
-      handleDeleteFile();
+      await sendImage(uploadedFile);
     } else if (message.trim() !== '') {
-      sendMessage("TEXT", message);
+      sendMessage(ContentType.TEXT, message);
     }
   };
+  async function sendImage(file){
+    try {
+      const photoURL = await getPhotoURL(file);
+      sendMessage(ContentType.IMAGE, photoURL);
+      handleDeleteFile();
+    } catch (error) {
+      alert('Сталася помилка під час завантаження, спробуйте ще раз.');
+    }
+  }
 
   function sendLike() {
     sendMessage("LIKE", "LikeBtn");
   }
+
   const handleKeyPress = (e) => {
     if (e.key === 'Enter') {
+      e.preventDefault();
       handleSend();
     }
   };
 
   return (
     <div className={styles.chat__input}>
-      <FileInput handleFileUpload={handleFileUpload} />
+      <FileInput handleFileUpload={handleFileUpload}/>
       <div className={styles.chat__input__area}>
         <div className={styles.chat__input__area__wrap}>
 
-          {uploadedFile && <UploadedFile uploadedFile={uploadedFile} handleDeleteFile={handleDeleteFile} />}
+          {uploadedFile && <UploadedFile uploadedFile={uploadedFile} handleDeleteFile={handleDeleteFile}/>}
 
           <TextInput
             handleMessageChange={handleMessageChange}
@@ -68,16 +69,16 @@ export default function MessageInput({ sendMessage, handleMessageChange, message
           />
         </div>
 
-        <Emoji emojiClickHandler={() => setIsOpen(true)} />
+        <Emoji emojiClickHandler={() => setIsOpen(true)}/>
       </div>
 
       <Like size={"20"} onClick={sendLike} styleClass={styles.likeBtn}></Like>
 
-      <Send sendMessage={handleSend} isVisible={(message.trim() !== '') || !!uploadedFile} />
-      <EmojiPicker isOpen={isOpen} setIsOpen={setIsOpen} emojiHandler={emojiHandler} />
+      <Send sendMessage={handleSend} isVisible={(message.trim() !== '') || !!uploadedFile}/>
+      <EmojiPicker isOpen={isOpen} setIsOpen={setIsOpen} emojiHandler={emojiHandler}/>
 
     </div>
-  )
+  );
 
 }
 
@@ -88,7 +89,7 @@ MessageInput.propTypes = {
   emojiHandler: PropTypes.func.isRequired,
 };
 
-function FileInput({ handleFileUpload }) {
+function FileInput({handleFileUpload}) {
   const fileInputRef = useRef();
 
   const handleIconClick = () => {
@@ -98,39 +99,40 @@ function FileInput({ handleFileUpload }) {
   return (
     <>
       <label htmlFor="fileInput">
-        <AddFile type="file" onClick={handleIconClick} />
+        <AddFile type="file" onClick={handleIconClick}/>
       </label>
       <input
         type="file"
         accept="image/*"
         id="fileInput"
-        style={{ display: 'none' }}
+        style={{display: 'none'}}
         onChange={handleFileUpload}
       />
     </>
-  )
+  );
 }
+
 FileInput.propTypes = {
   handleFileUpload: PropTypes.func.isRequired,
 };
 
-function UploadedFile({ uploadedFile, handleDeleteFile }) {
+function UploadedFile({uploadedFile, handleDeleteFile}) {
   return (
     <div className={styles.chat__input__area__file}>
-      <img src={uploadedFile.url} width="48px" height="48px" />
+      <img src={URL.createObjectURL(uploadedFile)} alt={uploadedFile.name} width="48px" height="48px"/>
       <div className={styles.chat__input__area__file__closeBtn} onClick={handleDeleteFile}>&#10006;</div>
     </div>
   );
 }
+
 UploadedFile.propTypes = {
   uploadedFile: PropTypes.object,
   handleDeleteFile: PropTypes.func.isRequired,
 };
 
-function TextInput({ handleMessageChange, handleKeyPress, message }) {
+function TextInput({handleMessageChange, handleKeyPress, message}) {
   return (
     <textarea
-      type="text"
       placeholder="Aa"
       onChange={handleMessageChange}
       onKeyDown={handleKeyPress}
@@ -138,13 +140,14 @@ function TextInput({ handleMessageChange, handleKeyPress, message }) {
     />
   );
 }
+
 TextInput.propTypes = {
   handleMessageChange: PropTypes.func.isRequired,
   handleKeyPress: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
 };
 
-function EmojiPicker({ isOpen, setIsOpen, emojiHandler }) {
+function EmojiPicker({isOpen, setIsOpen, emojiHandler}) {
   return (
     isOpen &&
     <div className={styles.pickerWrapper}>
@@ -166,6 +169,7 @@ function EmojiPicker({ isOpen, setIsOpen, emojiHandler }) {
     </div>
   );
 }
+
 EmojiPicker.propTypes = {
   isOpen: PropTypes.bool.isRequired,
   setIsOpen: PropTypes.func.isRequired,
