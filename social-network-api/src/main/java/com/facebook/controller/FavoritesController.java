@@ -19,9 +19,9 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Контролер для роботи з улюбленими постами користувача.
  * <ul>
- *     <li>{@link #addToFavorites(Long)} додає пост до вибраного користувача.</li>
- *     <li>{@link #removeFromFavorites(Long)} видаляє пост з вибраного користувача.</li>
- *     <li>{@link #isPostInFavorites(Long)} перевіряє, чи є пост у вибраному користувача.</li>
+ *     <li>{@link #addToFavorites(Long)} додає пост до "обраного" користувача.</li>
+ *     <li>{@link #removeFromFavorites(Long)} видаляє пост з "обраного" користувача.</li>
+ *     <li>{@link #isPostInFavorites(Long)} перевіряє, чи є пост у "обраному" користувача.</li>
  *     <li>{@link #getFavoritePosts(int, int, String)} повертає список улюблених постів користувача з пагінацією.</li>
  * </ul>
  */
