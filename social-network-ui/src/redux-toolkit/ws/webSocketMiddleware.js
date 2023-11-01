@@ -15,7 +15,7 @@ const webSocketMiddleware = (store) => (next) => (action) => {
   
   switch (action.type) {
     case 'webSocket/connect': {
-      const socket = new SockJS('http://localhost:9000/ws');
+      const socket = new SockJS('https://yourhostel.world/ws');
       client = Stomp.over(() => socket);
       client.connect(
         headers,
