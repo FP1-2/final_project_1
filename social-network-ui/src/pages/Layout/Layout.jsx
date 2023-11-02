@@ -1,3 +1,4 @@
+import {useEffect} from 'react';
 import {Outlet} from "react-router";
 import Navigation from "../../components/Navigation/Navigation";
 import Header from "../../components/Header/Header";
@@ -6,6 +7,7 @@ import {useLocation} from "react-router-dom";
 import MessageNotificationList from '../../components/MessageNotification/MessageNotificationList';
 import ErrorConnectionMessage from "../../components/ErrorMessage/ErrorConnectionMessage";
 import {useSelector} from "react-redux";
+import { createPortal } from "react-dom";
 export default function Layout() {
   const isVisible = useSelector(state => state.webSocket.isVisible);
   const authUser = useSelector(state => state.auth.user.obj);
@@ -13,15 +15,20 @@ export default function Layout() {
   const excludedPaths = ['/messages', '/profile', '/login'];
   const showAside = !excludedPaths.some(path => location.pathname.startsWith(path));
 
+  useEffect(() => {
+    const vh = window.innerHeight * 0.01;
+    document.documentElement.style.setProperty('--vh', `${vh}px`);
+  }, []);
+
   return (
     <div className={styles.container}>
-      <Header authUser={authUser}/>
+      <Header authUser={authUser} showMessageIcon={!location.pathname.startsWith('/messages')}/>
       {showAside && <Navigation  authUser={authUser}/>}
       <main  className={`${styles.main} ${!showAside && styles.mainFullWidth}`}>
         <Outlet/>
       </main>
-      <MessageNotificationList/>
-      <ErrorConnectionMessage isVisible={isVisible}/>
+      {createPortal(<MessageNotificationList/>, document.body)}
+      {createPortal(<ErrorConnectionMessage isVisible={isVisible}/>, document.body)}
     </div>
   );
 }

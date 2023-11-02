@@ -1,4 +1,4 @@
-import React, {useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import styles from "./Header.module.scss";
 import {NavLink} from "react-router-dom";
 import Avatar from "../Avatar/Avatar";
@@ -9,32 +9,41 @@ import MessengerIcon from "../Icons/Messenger";
 import Search from "../Icons/Search";
 import {useDispatch, useSelector} from "react-redux";
 import {loadUnreadMessagesQt} from "../../redux-toolkit/messenger/asyncThunk";
-
-export default function Header({authUser}) {
+import SearchUser from "../SearchUser/SearchUser";
+import {createPortal} from "react-dom";
+export default function Header({authUser, showMessageIcon}) {
   const dispatch = useDispatch();
   const unreadMessQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
   const newNotificationsQt = 2;
-
+  const [showSearchField, setShowSearchField] = useState(false);
+  const [textSearch, setTextSearch] = useState("");
+  function openSearchPortal (e){
+    e.stopPropagation();
+    setShowSearchField(true);
+  }
   useEffect(() => {
     dispatch(loadUnreadMessagesQt());
   }, []);
-
+  
   return (
     <header className={styles.header}>
       <div className={styles.header__logoWrap}>
         <NavLink to={"/"} className={styles.header__logoWrap__link}>
           <FacebookIcon size={"40px"} />
         </NavLink>
-        <input type="text" className={styles.header__logoWrap__search} name="search" placeholder="Search on Facebook"/>
+        <input type="text" className={styles.header__logoWrap__search} name="text" placeholder="Search on Facebook" 
+          onClick={openSearchPortal} defaultValue="" />
+        {showSearchField && createPortal(<SearchUser textSearch={textSearch} 
+          setTextSearch={setTextSearch} handleBack={()=> {setShowSearchField(false);}}/>, document.body) }
       </div>
       <div className={styles.header__icons}>
-        <div className={`${styles.header__icons__item} ${styles.desktopNone}`}>
+        <div className={`${styles.header__icons__item} ${styles.desktopNone}`}  onClick={openSearchPortal}>
           <Search/>
         </div>
-        <NavLink to={'/messages'} className={styles.header__icons__item}>
+        {showMessageIcon && <NavLink to={'/messages'} className={styles.header__icons__item}>
           <MessengerIcon/>
           {unreadMessQt > 0 && <span>{unreadMessQt}</span>}
-        </NavLink>
+        </NavLink>}
         <NavLink to={'/notifications'} className={styles.header__icons__item}>
           <NotificationIcon/>
           {newNotificationsQt > 0 && <span>{newNotificationsQt}</span>}
@@ -56,4 +65,5 @@ Header.propTypes = {
     username: PropTypes.string.isRequired,
     avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]).isRequired,
   }).isRequired,
+  showMessageIcon: PropTypes.bool.isRequired
 };

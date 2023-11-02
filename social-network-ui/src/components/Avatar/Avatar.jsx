@@ -11,7 +11,7 @@ export default function Avatar({name, additionalClass, photo}) {
 }
 
 Avatar.propTypes = {
-  photo: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]).isRequired,
+  photo: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]),
   name: PropTypes.string.isRequired,
   additionalClass: PropTypes.string,
 };

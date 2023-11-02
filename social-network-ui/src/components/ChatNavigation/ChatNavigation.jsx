@@ -7,12 +7,12 @@ import PropTypes from 'prop-types';
 import {Link, NavLink, useParams} from 'react-router-dom';
 import ChatLoader from "./ChatLoader";
 import {checkSentStatus, checkReadStatus} from "../../utils/statusType";
-import {useEffect, useState} from "react";
-import useDebounce from "../../utils/useDebounce";
+import {useState} from "react";
 import {searchChat} from "../../redux-toolkit/messenger/asyncThunk";
 import {resetSearchChats} from "../../redux-toolkit/messenger/slice";
 import {useDispatch, useSelector} from "react-redux";
 import {checkContentType} from "../../utils/contentType";
+import InputSearch from "../SearchUser/InputSearch";
 
 export default function ChatNavigation({
   chatsStatus,
@@ -30,32 +30,16 @@ export default function ChatNavigation({
 
   const [searchText, setSearchText] = useState('');
   const [show, setShow] = useState(false);
-  const debouncedSearchText = useDebounce(searchText, 500);
-
-  useEffect(() => {
-    if (debouncedSearchText) {
-      handleSearchChange(debouncedSearchText);
-    }
-  }, [debouncedSearchText]);
-  const handleSearchChange = (input) => {
-    if (searchText.trim() === '') {
-      dispatch(resetSearchChats());
-      return;
-    }
-    dispatch(searchChat({input: input, page: 0, size: 20}));
+  const handleGetSearchResult = (searchValue) => {
+    dispatch(searchChat({input: searchValue, page: 0, size: 20}));
   };
-
-  const handleInputClick = () => {
-    if (searchText.trim() === '') {
-      dispatch(resetSearchChats());
-    }
-    setShow(true);
+  const handleResetSearchResult = () => {
+    dispatch(resetSearchChats());
   };
-
   const handleBackIcon = () => {
     setSearchText('');
     setShow(false);
-    dispatch(resetSearchChats());
+    handleResetSearchResult();
   };
 
   return (
@@ -83,10 +67,17 @@ export default function ChatNavigation({
               <span>
                 <Search/>
               </span>
-              <input type="text" placeholder="Поиск в Messenger"
-                value={searchText}
-                onChange={(e) => setSearchText(e.target.value)}
-                onClick={handleInputClick}/>
+              <InputSearch 
+                textSearch={searchText} 
+                placeholder={"Search in Messenger"} 
+                setTextSearch={setSearchText} 
+                handleGetSearchResult={handleGetSearchResult} 
+                handleResetSearchResult={handleResetSearchResult}
+                openPortal={(e) => {
+                  e.stopPropagation();
+                  setShow(true);
+                }}
+              />
               <span onClick={handleBackIcon}>
                 <Close style={{cursor: "pointer"}}/>
               </span>
@@ -98,7 +89,7 @@ export default function ChatNavigation({
                 ? chats.map(({id, chatParticipant, lastMessage}) => {
                   return (
                     <li key={id} className={styles.chatNavSection__chatList__items__item}>
-                      <NavLink to={`/messages/${id}`}>
+                      <NavLink to={`/messages/${id}`} onClick={handleBackIcon}>
                         <ChatItem
                           additionalClass={styles.chatNavSection__chatList__items__item__avatar}
                           additionalClass2={styles.chatItemContainer__status__read}
