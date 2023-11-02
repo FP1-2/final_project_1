@@ -5,6 +5,7 @@ import com.facebook.service.CurrentUserService;
 import com.facebook.service.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -48,13 +49,24 @@ public class NotificationController {
     }
 
     /**
+     * Отримання одного повідомлення за ID
+    */
+    @GetMapping("/{id}")
+    public ResponseEntity<NotificationResponse> getNotification(@PathVariable Long id) {
+        Long userId = currentUserService.getCurrentUserId();
+        NotificationResponse notification = notificationService.getNotificationById(id, userId);
+        return ResponseEntity.ok(notification);
+    }
+
+    /**
      * Позначення конкретного повідомлення як прочитане.
      *
      * @param notificationId ID повідомлення, яке потрібно позначити як прочитане.
      */
     @PostMapping("/{notificationId}/mark-as-read")
     public void markNotificationAsRead(@PathVariable Long notificationId) {
-        notificationService.markNotificationAsRead(notificationId);
+        Long userId = currentUserService.getCurrentUserId();
+        notificationService.markNotificationAsRead(notificationId, userId);
     }
 
     /**

@@ -1,5 +1,6 @@
 package com.facebook.repository;
 
+import com.facebook.dto.notifications.NotificationSqlResult;
 import com.facebook.model.AppUser;
 import com.facebook.model.notifications.Notification;
 import com.facebook.model.notifications.NotificationType;
@@ -83,7 +84,7 @@ class NotificationRepositoryTest {
      */
     @Test
     void testFindByUserId() {
-        Page<Notification> notifications = notificationRepository
+        Page<NotificationSqlResult> notifications = notificationRepository
                 .findByUserId(user.getId(),
                         PageRequest.of(0, 10));
         assertThat(notifications).hasSize(1);

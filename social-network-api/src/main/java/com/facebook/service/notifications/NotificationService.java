@@ -1,7 +1,9 @@
 package com.facebook.service.notifications;
 
 import com.facebook.dto.notifications.NotificationResponse;
+import com.facebook.dto.notifications.NotificationSqlResult;
 import com.facebook.exception.NotFoundException;
+import com.facebook.exception.UnauthorizedException;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
@@ -36,7 +38,7 @@ import org.springframework.stereotype.Service;
  * <ul>
  *     <li>{@link #getNotificationsByUserId(Long, int, int)} - отримання списку
  *                                             повідомлень для конкретного користувача.</li>
- *     <li>{@link #markNotificationAsRead(Long)} - позначення повідомлення як прочитане.</li>
+ *     <li>{@link #markNotificationAsRead(Long, Long)} - позначення повідомлення як прочитане.</li>
  *     <li>{@link #getUnreadNotificationCount(Long)} - отримання кількості непрочитаних
  *                                                     повідомлень для користувача.</li>
  *     <li>{@link #getApprovedFriendsOfUser(Long)} - отримання списку підтверджених
@@ -78,13 +80,43 @@ public class NotificationService {
      * @return Сторінка з повідомленнями.
      */
     public Page<NotificationResponse> getNotificationsByUserId(Long userId,
-                                                             int page,
-                                                             int size) {
-        Pageable pageable = PageRequest.of(page,
-                size, Sort.by(Sort.Direction.DESC, "createdDate"));
-        return notificationRepository.findByUserId(userId, pageable)
+                                                               int page,
+                                                               int size) {
+        Pageable pageable = PageRequest
+                .of(page, size, Sort.by(Sort.Direction.DESC, "createdDate"));
+
+        Page<NotificationSqlResult> pageNotificationSqlResult = notificationRepository
+                .findByUserId(userId, pageable);
+
+        return pageNotificationSqlResult
+                .map(sqlResult -> modelMapper.map(sqlResult, NotificationResponse.class));
+    }
+
+    /**
+     * Отримує уведомлення за його ідентифікатором, перевіряючи, що запитуваний користувач має до нього доступ.
+     * Якщо уведомлення не знайдено або користувач не має до нього доступу, кидається відповідний виняток.
+     *
+     * @param notificationId ідентифікатор уведомлення, яке потрібно отримати
+     * @param userId ідентифікатор користувача, який робить запит
+     * @return NotificationResponse об'єкт, що містить дані уведомлення
+     * @throws UnauthorizedException якщо користувач не має доступу до уведомлення
+     * @throws NotFoundException якщо уведомлення не знайдено
+     */
+    public NotificationResponse getNotificationById(Long notificationId,
+                                                    Long userId) {
+        return notificationRepository
+                .findByNotificationId(notificationId)
+                .map(notification -> {
+                    if (!notification.getUserId().equals(userId)) {
+                        throw new UnauthorizedException("User does not have access "
+                                + "to this notification");
+                    }
+                    return notification;
+                })
                 .map(notification -> modelMapper.map(notification,
-                        NotificationResponse.class));
+                        NotificationResponse.class))
+                .orElseThrow(() -> new NotFoundException("Notification not found with id: "
+                        + notificationId));
     }
 
     /**
@@ -92,12 +124,17 @@ public class NotificationService {
      *
      * @param notificationId ID повідомлення.
      */
-    public void markNotificationAsRead(Long notificationId) {
-        Notification notification = notificationRepository
-                .findById(notificationId).orElseThrow(
-                        () -> new NotFoundException("Notification not found"));
-        notification.setRead(true);
-        notificationRepository.save(notification);
+    public void markNotificationAsRead(Long notificationId, Long userId) {
+        notificationRepository.findById(notificationId)
+                .map(notification -> {
+                    if (!notification.getUser().getId().equals(userId)) {
+                        throw new UnauthorizedException("User does not have access to "
+                                + "mark this notification as read");
+                    }
+                    notification.setRead(true);
+                    return notificationRepository.save(notification);
+                })
+                .orElseThrow(() -> new NotFoundException("Notification not found"));
     }
 
     /**
@@ -189,7 +226,8 @@ public class NotificationService {
      * @param initiator Ініціатор дії (користувач, який відправив запит).
      * @param receiver  Користувач, якому прийшов запит в друзі.
      */
-    public void createFriendRequestNotification(AppUser initiator, AppUser receiver) {
+    public void createFriendRequestNotification(AppUser initiator,
+                                                AppUser receiver) {
         createFriendNotification(initiator,
                 receiver,
                 null,
