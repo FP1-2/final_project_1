@@ -199,9 +199,9 @@ class NotificationServiceTest {
                 .thenReturn(Optional.of(notificationSqlResult));
 
         // Виконання тесту та перехоплення виключення
-        assertThrows(UnauthorizedException.class, () -> {
-            notificationService.getNotificationById(notificationId, wrongUserId);
-        });
+        assertThrows(UnauthorizedException.class,
+                () -> notificationService
+                .getNotificationById(notificationId, wrongUserId));
 
         // Перевірка, що метод репозиторію був викликаний
         verify(notificationRepository).findByNotificationId(notificationId);
@@ -223,9 +223,9 @@ class NotificationServiceTest {
                 .thenReturn(Optional.empty());
 
         // Виконання тесту та перехоплення виключення
-        assertThrows(NotFoundException.class, () -> {
-            notificationService.getNotificationById(notificationId, userId);
-        });
+        assertThrows(NotFoundException.class,
+                () -> notificationService
+                .getNotificationById(notificationId, userId));
 
         // Перевірка, що метод репозиторію був викликаний
         verify(notificationRepository).findByNotificationId(notificationId);
