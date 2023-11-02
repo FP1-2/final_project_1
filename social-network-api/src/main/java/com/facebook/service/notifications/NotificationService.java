@@ -125,17 +125,18 @@ public class NotificationService {
      * @param notificationId ID повідомлення.
      */
     public void markNotificationAsRead(Long notificationId, Long userId) {
-        notificationRepository.findById(notificationId)
-                .map(notification -> {
-                    if (!notification.getUser().getId().equals(userId)) {
-                        throw new UnauthorizedException("User does not have access to "
-                                + "mark this notification as read");
-                    }
-                    notification.setRead(true);
-                    return notificationRepository.save(notification);
-                })
+        Notification notification = notificationRepository.findById(notificationId)
                 .orElseThrow(() -> new NotFoundException("Notification not found"));
+
+        if (!notification.getUser().getId().equals(userId)) {
+            throw new UnauthorizedException("User does not have access "
+                    + "to mark this notification as read");
+        }
+
+        notification.setRead(true);
+        notificationRepository.save(notification);
     }
+
 
     /**
      * Отримує кількість непрочитаних повідомлень для користувача.
