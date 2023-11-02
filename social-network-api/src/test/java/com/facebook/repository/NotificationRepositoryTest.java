@@ -1,6 +1,7 @@
 package com.facebook.repository;
 
 import com.facebook.dto.notifications.NotificationSqlResult;
+import com.facebook.dto.post.Author;
 import com.facebook.model.AppUser;
 import com.facebook.model.notifications.Notification;
 import com.facebook.model.notifications.NotificationType;
@@ -16,7 +17,11 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 
+import java.time.temporal.ChronoUnit;
+import java.util.Optional;
+
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Тестовий клас для перевірки роботи репозиторію повідомлень.
@@ -116,6 +121,65 @@ class NotificationRepositoryTest {
                 .countByUserIdAndIsRead(user.getId(),
                         false);
         assertThat(unreadCount).isEqualTo(2L);
+    }
+
+    /**
+     * Перевіряє рівність даних повідомлення та результату SQL-запиту.
+     *
+     * @param expected очікуваний об'єкт {@link Notification}.
+     * @param actual реальний результат {@link NotificationSqlResult}.
+     */
+    private void assertNotificationEquals(Notification expected, NotificationSqlResult actual) {
+        assertEquals(expected.getId(), actual.getId());
+        assertEquals(expected.getUser().getId(), actual.getUserId());
+        assertEquals(expected.getMessage(), actual.getMessage());
+        assertEquals(expected.isRead(), actual.isRead());
+        assertEquals(expected.getType(), actual.getType());
+        assertEquals(expected.getPost().getId(), actual.getPostId());
+        assertEquals(
+                expected.getCreatedDate().truncatedTo(ChronoUnit.MILLIS),
+                actual.getCreatedDate().truncatedTo(ChronoUnit.MILLIS)
+        );
+        assertEquals(
+                expected.getLastModifiedDate().truncatedTo(ChronoUnit.MILLIS),
+                actual.getLastModifiedDate().truncatedTo(ChronoUnit.MILLIS)
+        );
+
+        AppUser initiatorExpected = expected.getInitiator();
+        Author initiatorActual = actual.getInitiator();
+        assertNotNull(initiatorActual);
+        assertEquals(initiatorExpected.getId(), initiatorActual.getUserId());
+        assertEquals(initiatorExpected.getName(), initiatorActual.getName());
+        assertEquals(initiatorExpected.getSurname(), initiatorActual.getSurname());
+        assertEquals(initiatorExpected.getUsername(), initiatorActual.getUsername());
+    }
+
+    /**
+     * Тестує отримання даних повідомлення за його ідентифікатором.
+     */
+    @Test
+    void testFindByNotificationId() {
+        Optional<NotificationSqlResult> result = notificationRepository
+                .findByNotificationId(notification.getId());
+
+        assertTrue(result.isPresent());
+        NotificationSqlResult notificationResult = result.get();
+
+        assertNotificationEquals(notification, notificationResult);
+    }
+
+    /**
+     * Тестує отримання даних повідомлень за ідентифікатором користувача.
+     */
+    @Test
+    void testFindByUserIdWithInitiatorDetails() {
+        Page<NotificationSqlResult> results = notificationRepository
+                .findByUserId(user.getId(), PageRequest.of(0, 10));
+
+        assertThat(results).hasSize(1);
+        NotificationSqlResult notificationResult = results.getContent().get(0);
+
+        assertNotificationEquals(notification, notificationResult);
     }
 
 }
