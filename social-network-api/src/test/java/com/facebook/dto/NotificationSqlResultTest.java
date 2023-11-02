@@ -12,13 +12,13 @@ import java.time.LocalDateTime;
  * Тестовий клас для {@link NotificationSqlResult}.
  * Перевіряє коректність роботи конструктора та методів доступу (getters/setters).
  */
-public class NotificationSqlResultTest {
+class NotificationSqlResultTest {
 
     /**
      * Тестує об'єкт {@link NotificationSqlResult} .
      */
     @Test
-    public void testNotificationSqlResultGettersAndSetters() {
+    void testNotificationSqlResultGettersAndSetters() {
         // Підготовка тестових даних
         Long id = 1L;
         Long userId = 2L;
