@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 
 @DataJpaTest
-public class ChatTest {
+class ChatTest {
     @Autowired
     private TestEntityManager entityManager;
 

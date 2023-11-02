@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = MessageService.class)
-public class MessageServiceTest {
+class MessageServiceTest {
     @MockBean
     private MessageRepository messageRepository;
     @Autowired
@@ -83,7 +83,7 @@ public class MessageServiceTest {
         assertEquals(newStatus, updatedMessage.getStatus());
     }
     @Test
-    public void testUpdateStatusMessageNotFound() {
+    void testUpdateStatusMessageNotFound() {
         Long messageId = 1L;
         when(messageRepository.findById(messageId)).thenReturn(Optional.empty());
 

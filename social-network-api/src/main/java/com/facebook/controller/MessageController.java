@@ -6,8 +6,6 @@ import com.facebook.facade.ChatFacade;
 import com.facebook.facade.MessageFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.chat.MessageStatus;
-import com.facebook.service.ChatService;
-import com.facebook.service.MessageService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -15,7 +13,6 @@ import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
 import java.security.Principal;
@@ -24,15 +21,14 @@ import java.security.Principal;
 @Controller
 @RequiredArgsConstructor
 public class MessageController {
-
-//    private final MessageService messageService;
-//    private final ChatService chatService;
     private final MessageFacade messageFacade;
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatFacade chatFacade;
+    private final String messageNotificationPath = "/queue/notifications";
 
     @MessageMapping("/chat")
     public void sendMessage(@Payload MessageRequest messRq, SimpMessageHeaderAccessor headerAccessor){
+        String sendMessagePath = "/queue/messages";
         Principal principal = headerAccessor.getUser();
         AppUser receiverUser = chatFacade.getReceiverUser(messRq.getChatId(), principal);
         MessageResponse messageResponse = messageFacade.addMessage(messRq, principal);
@@ -40,24 +36,25 @@ public class MessageController {
         try{
             Long unreadMessage = messageFacade.countUnreadMessage(receiverUser);
 
-            sendMessageToUser(receiverUser, "/queue/messages", messageResponse);
-            sendMessageToUser(receiverUser, "/queue/notifications", unreadMessage);
+            sendMessageToUser(receiverUser, sendMessagePath, messageResponse);
+            sendMessageToUser(receiverUser, messageNotificationPath, unreadMessage);
         } catch(Exception ex){
             MessageResponse res = messageFacade.updateStatus(messageResponse.getId(), MessageStatus.FAILED, principal);
-            sendMessageToAuthUser(principal, "/queue/messages", res);
+            sendMessageToAuthUser(principal, sendMessagePath, res);
             log.error("Failed status of sending message with error: "+ ex);
         }
-        sendMessageToAuthUser(principal, "/queue/messages", messageResponse);
+        sendMessageToAuthUser(principal, sendMessagePath, messageResponse);
     }
     @MessageMapping("/updateMessageStatus/{messageId}")
     public void updateMessageStatus(@DestinationVariable Long messageId, String newStatus, SimpMessageHeaderAccessor headerAccessor) {
         MessageResponse messageResponse = messageFacade.updateStatus(messageId, MessageStatus.valueOf(newStatus), headerAccessor.getUser());
         AppUser receiverUser = chatFacade.getReceiverUser(messageResponse.getChat().getId(), headerAccessor.getUser());
-        messagingTemplate.convertAndSendToUser(receiverUser.getUsername(), "/queue/messageStatus", messageResponse);
+        String updateStatusPath = "/queue/messageStatus";
+        messagingTemplate.convertAndSendToUser(receiverUser.getUsername(), updateStatusPath, messageResponse);
         Principal principal = headerAccessor.getUser();
         Long unreadMessage = messageFacade.countUnreadMessage(principal);
         log.info("User have "+unreadMessage +" messages");
-        sendMessageToAuthUser(principal, "/queue/notifications", unreadMessage);
+        sendMessageToAuthUser(principal, messageNotificationPath, unreadMessage);
     }
     private void sendMessageToUser(AppUser user, String destination, Object message) {
         try {
