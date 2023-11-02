@@ -1,5 +1,7 @@
 frontend:
-  url: ${FRONTEND_URL:https://danit-final-project-1.netlify.app}
+  url: ${FRONTEND_URL:http://localhost:3000}
+server:
+  port: ${SERVER_PORT:9000}
 email:
   host: ${EMAIL_HOST}
   port: ${EMAIL_PORT}
@@ -64,11 +66,6 @@ spring:
 #                        Ліниве завантаження після цього викличе помилку.
     open-in-view: false
 
-server:
-  port: ${SERVER_PORT:9000}
-frontend:
-  url: http://localhost:3000
-
 ---
 spring:
   config:
@@ -87,17 +84,11 @@ spring:
     jdbc:
       time_zone: UTC
     open-in-view: false
-#    show-sql: true
-#    properties:
-#      hibernate.format_sql: "true"
-server:
-  port: ${SERVER_PORT:9000}
+
   ssl:
     key-store: classpath:keystore.p12
     key-store-password: ${KEY_STORE_PASSWORD_SSL}
     key-store-type: PKCS12
     key-alias: tomcat
 
-frontend:
-  url: https://danit-final-project-1.netlify.app
 ---
