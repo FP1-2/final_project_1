@@ -116,6 +116,36 @@ class NotificationControllerTest {
     }
 
     /**
+     * Тестує отримання повідомлення за його ідентифікатором.
+     * Перевіряє, що метод getNotification контролера коректно повертає.
+     * об'єкт NotificationResponse для заданого ідентифікатора повідомлення.
+     * @throws Exception якщо виникає помилка під час виконання запиту.
+     */
+    @Test
+    @WithMockUser
+    void getNotificationTest() throws Exception {
+        Long notificationId = 14L;
+        Long userId = 1L;
+
+        NotificationResponse mockResponse = new NotificationResponse();
+        mockResponse.setId(notificationId);
+        mockResponse.setUserId(userId);
+        // ... ініціалізація інших полів mockResponse не додано,
+        // бо мапінг той самий що і для Page
+
+        when(currentUserService.getCurrentUserId()).thenReturn(userId);
+        when(notificationService.getNotificationById(notificationId, userId)).thenReturn(mockResponse);
+
+        mockMvc.perform(get("/api/notifications/{id}", notificationId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(notificationId))
+                .andExpect(jsonPath("$.userId").value(userId))
+                // ...
+                .andExpect(jsonPath("$.message").value(mockResponse.getMessage()));
+    }
+
+
+    /**
      * Тест перевіряє, що метод markNotificationAsRead сервісу викликається з
      * правильними параметрами та повертає статус 200 OK при спробі
      * позначити повідомлення як прочитане.

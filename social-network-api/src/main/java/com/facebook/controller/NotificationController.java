@@ -49,8 +49,13 @@ public class NotificationController {
     }
 
     /**
-     * Отримання одного повідомлення за ID
-    */
+     * Отримує повідомлення за ідентифікатором.
+     * Якщо користувач не має доступу до цього повідомлення, кидає UnauthorizedException.
+     * Якщо повідомлення не знайдено, кидає NotFoundException.
+     *
+     * @param id Ідентифікатор повідомлення, яке потрібно отримати
+     * @return NotificationResponse об'єкт, який містить деталі повідомлення
+     */
     @GetMapping("/{id}")
     public ResponseEntity<NotificationResponse> getNotification(@PathVariable Long id) {
         Long userId = currentUserService.getCurrentUserId();
