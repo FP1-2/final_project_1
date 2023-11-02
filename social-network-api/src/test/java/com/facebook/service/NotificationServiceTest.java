@@ -1,5 +1,10 @@
 package com.facebook.service;
 
+import com.facebook.dto.notifications.NotificationResponse;
+import com.facebook.dto.notifications.NotificationSqlResult;
+import com.facebook.dto.post.Author;
+import com.facebook.exception.NotFoundException;
+import com.facebook.exception.UnauthorizedException;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
@@ -8,6 +13,7 @@ import com.facebook.model.posts.Post;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.service.notifications.NotificationService;
+import com.facebook.model.notifications.NotificationType;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -16,8 +22,11 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -114,6 +123,113 @@ class NotificationServiceTest {
         notificationService.createFriendRequestNotification(initiator, user);
 
         verify(notificationRepository).save(any(Notification.class));
+    }
+
+    /**
+     * Перевіряє, що метод getNotificationById повертає коректний об'єкт NotificationResponse,
+     * коли повідомлення знайдено і користувач має до нього доступ.
+     */
+    @Test
+    void testGetNotificationById() {
+        // Підготовка даних
+        Long notificationId = 1L;
+        Long userId = user.getId();
+        NotificationSqlResult notificationSqlResult = new NotificationSqlResult(
+                notificationId,
+                userId,
+                "Test message",
+                false,
+                NotificationType.POST_LIKED,
+                post.getId(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                new Author(initiator.getId(),
+                        initiator.getName(),
+                        initiator.getSurname(),
+                        initiator.getUsername(),
+                        initiator.getAvatar())
+        );
+        NotificationResponse expectedResponse = new NotificationResponse();
+        expectedResponse.setMessage("Test message");
+
+        // Налаштування поведінки моків
+        when(notificationRepository.findByNotificationId(notificationId))
+                .thenReturn(Optional.of(notificationSqlResult));
+        when(modelMapper.map(notificationSqlResult, NotificationResponse.class))
+                .thenReturn(expectedResponse);
+
+        // Виконання тесту
+        NotificationResponse actualResponse = notificationService
+                .getNotificationById(notificationId, userId);
+
+        // Перевірка результатів
+        assertNotNull(actualResponse);
+        assertEquals(expectedResponse.getMessage(), actualResponse.getMessage());
+        verify(notificationRepository).findByNotificationId(notificationId);
+        verify(modelMapper).map(notificationSqlResult, NotificationResponse.class);
+    }
+
+    /**
+     * Перевіряє, що метод getNotificationById кидає {@link  UnauthorizedException},
+     * коли користувач намагається отримати доступ до повідомлення, яке йому не належить.
+     */
+    @Test
+    void testGetNotificationByIdUnauthorized() {
+        // Підготовка даних
+        Long notificationId = 1L;
+        Long wrongUserId = 99L; // ID, який не відповідає користувачу повідомлення
+        NotificationSqlResult notificationSqlResult = new NotificationSqlResult(
+                notificationId,
+                user.getId(),
+                "Test message",
+                false,
+                NotificationType.POST_LIKED,
+                post.getId(),
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                new Author(initiator.getId(),
+                        initiator.getName(),
+                        initiator.getSurname(),
+                        initiator.getUsername(),
+                        initiator.getAvatar())
+        );
+
+        // Налаштування поведінки моків
+        when(notificationRepository.findByNotificationId(notificationId))
+                .thenReturn(Optional.of(notificationSqlResult));
+
+        // Виконання тесту та перехоплення виключення
+        assertThrows(UnauthorizedException.class, () -> {
+            notificationService.getNotificationById(notificationId, wrongUserId);
+        });
+
+        // Перевірка, що метод репозиторію був викликаний
+        verify(notificationRepository).findByNotificationId(notificationId);
+        verify(modelMapper, never()).map(any(), any());
+    }
+
+    /**
+     * Перевіряє, що метод getNotificationById кидає {@link  NotFoundException},
+     * коли повідомлення з вказаним ідентифікатором не знайдено.
+     */
+    @Test
+    void testGetNotificationByIdNotFound() {
+        // Підготовка даних
+        Long notificationId = 1L;
+        Long userId = user.getId();
+
+        // Налаштування поведінки моків
+        when(notificationRepository.findByNotificationId(notificationId))
+                .thenReturn(Optional.empty());
+
+        // Виконання тесту та перехоплення виключення
+        assertThrows(NotFoundException.class, () -> {
+            notificationService.getNotificationById(notificationId, userId);
+        });
+
+        // Перевірка, що метод репозиторію був викликаний
+        verify(notificationRepository).findByNotificationId(notificationId);
+        verify(modelMapper, never()).map(any(), any());
     }
 
 }
