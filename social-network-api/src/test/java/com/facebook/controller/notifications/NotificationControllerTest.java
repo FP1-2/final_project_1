@@ -1,6 +1,8 @@
 package com.facebook.controller.notifications;
 
 import com.facebook.dto.notifications.NotificationResponse;
+import com.facebook.dto.post.Author;
+import com.facebook.exception.UnauthorizedException;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.EmailHandlerService;
 import com.facebook.service.notifications.NotificationService;
@@ -19,6 +21,7 @@ import java.util.List;
 
 import static org.hamcrest.Matchers.hasSize;
 
+import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -67,7 +70,11 @@ class NotificationControllerTest {
         NotificationResponse mockResponse = new NotificationResponse();
         mockResponse.setId(14L);
         mockResponse.setUserId(userId);
-        mockResponse.setInitiatorId(2L);
+
+        Author initiator = new Author();
+        initiator.setUserId(2L);
+
+        mockResponse.setInitiator(initiator);
         mockResponse.setPostId(3L);
         mockResponse.setMessage("Clementina DuBuque Liked my post");
         mockResponse.setRead(false);
@@ -88,7 +95,7 @@ class NotificationControllerTest {
                 .andExpect(jsonPath("$.content", hasSize(1)))
                 .andExpect(jsonPath("$.content[0].id").value(14L))
                 .andExpect(jsonPath("$.content[0].userId").value(1L))
-                .andExpect(jsonPath("$.content[0].initiatorId").value(2L))
+                .andExpect(jsonPath("$.content[0].initiator.userId").value(2L))
                 .andExpect(jsonPath("$.content[0].postId").value(3L))
                 .andExpect(jsonPath("$.content[0].message").value("Clementina DuBuque Liked my post"))
                 .andExpect(jsonPath("$.content[0].type").value("POST_LIKED"))
@@ -109,19 +116,77 @@ class NotificationControllerTest {
     }
 
     /**
-     * Тест для перевірки позначення сповіщення як прочитаного.
-     * Перевіряється статус відповіді та виклик відповідного методу сервісу.
+     * Тестує отримання повідомлення за його ідентифікатором.
+     * Перевіряє, що метод getNotification контролера коректно повертає.
+     * об'єкт NotificationResponse для заданого ідентифікатора повідомлення.
+     * @throws Exception якщо виникає помилка під час виконання запиту.
      */
     @Test
     @WithMockUser
+    void getNotificationTest() throws Exception {
+        Long notificationId = 14L;
+        Long userId = 1L;
+
+        NotificationResponse mockResponse = new NotificationResponse();
+        mockResponse.setId(notificationId);
+        mockResponse.setUserId(userId);
+        // ... ініціалізація інших полів mockResponse не додано,
+        // бо мапінг той самий що і для Page
+
+        when(currentUserService.getCurrentUserId()).thenReturn(userId);
+        when(notificationService.getNotificationById(notificationId, userId)).thenReturn(mockResponse);
+
+        mockMvc.perform(get("/api/notifications/{id}", notificationId))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id").value(notificationId))
+                .andExpect(jsonPath("$.userId").value(userId))
+                // ...
+                .andExpect(jsonPath("$.message").value(mockResponse.getMessage()));
+    }
+
+
+    /**
+     * Тест перевіряє, що метод markNotificationAsRead сервісу викликається з
+     * правильними параметрами та повертає статус 200 OK при спробі
+     * позначити повідомлення як прочитане.
+     */
+    @Test
+    @WithMockUser(username="user1", roles={"USER"})
     void markNotificationAsReadTest() throws Exception {
         Long notificationId = 1L;
+        Long userId = 2L;
+
+        when(currentUserService.getCurrentUserId()).thenReturn(userId);
 
         mockMvc.perform(post("/api/notifications/" + notificationId + "/mark-as-read"))
                 .andExpect(status().isOk());
 
         verify(notificationService, times(1))
-                .markNotificationAsRead(notificationId);
+                .markNotificationAsRead(notificationId, userId);
+    }
+
+    /**
+     * Тест перевіряє, що система правильно обробляє ситуацію, коли користувач без належних прав
+     * намагається позначити повідомлення як прочитане. Очікується, що в такому випадку
+     * буде кинуто UnauthorizedException і повернуто статус відповіді 401 Unauthorized.
+     *
+     * @throws UnauthorizedException якщо виникає помилка під час виконання запиту
+     */
+    @Test
+    @WithMockUser(username="user1", roles={"USER"})
+    void markNotificationAsReadUnauthorizedTest() throws Exception {
+        Long notificationId = 1L;
+        Long userId = 2L;
+
+        when(currentUserService.getCurrentUserId()).thenReturn(userId);
+        doThrow(new UnauthorizedException("User does not have access to mark this notification as read"))
+                .when(notificationService).markNotificationAsRead(notificationId, userId);
+
+        mockMvc.perform(post("/api/notifications/" + notificationId + "/mark-as-read"))
+                .andExpect(status().isUnauthorized());
+
+        verify(notificationService, times(1))
+                .markNotificationAsRead(notificationId, userId);
     }
 
     /**
