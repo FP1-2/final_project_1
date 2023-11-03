@@ -15,6 +15,7 @@ import Layout from "./pages/Layout/Layout";
 import PropTypes from "prop-types";
 import Chat from "./components/Chat/Chat";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
+import FriendsPage from './pages/FriendsPage/FriendsPage';
 
 function AppRoutes({ isAuth }) {
   return (
@@ -33,6 +34,7 @@ function AppRoutes({ isAuth }) {
         <Route path={'*'} element={<PageNotFound />} />
       </Route>
       <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
+      <Route path="/friends" element={<FriendsPage/>}/>
       <Route path='/registration' element={<RegistrationForm />} />
       <Route path='/registration/confirm' element={<ConfirmRegistration />} />
     </Routes>
