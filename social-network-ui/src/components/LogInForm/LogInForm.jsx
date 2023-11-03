@@ -9,7 +9,7 @@ import Input from '../Input/Input';
 
 const validationSchema = Yup.object().shape({
   username: string() 
-    .required('Username is required'),
+    .required('E-mail is required'),
   password: Yup.string().required("Enter the password"),
 });
 
@@ -23,7 +23,7 @@ const LoginForm = ({ handleSubmit }) => {
       >
         <Form>
           <div>
-            <Input type="text" name="username" placeholder="Username" />
+            <Input type="text" name="username" placeholder="E-mail" />
           </div>
           <div className={styles.passwordInputWrapper}>
             <Input type="password" name="password" placeholder="Password" />

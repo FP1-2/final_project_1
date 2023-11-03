@@ -46,4 +46,3 @@ export default LoginPage;
 LoginPage.propTypes = {
   isAuth: PropTypes.bool.isRequired
 };
-

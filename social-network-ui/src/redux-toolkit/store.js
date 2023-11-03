@@ -3,6 +3,10 @@ import {persistReducer, persistStore} from "redux-persist";
 import storage from 'redux-persist/lib/storage';
 import registrationReducer from "./registration/slice";
 import loginReducer from "./login/slice";
+import profileReducer from "./profile/slice";
+import postReducer from "./post/slice";
+import friendsReducer from "./friend/slice";
+import favouritesReducer from "./favourite/slice";
 import chatsReducer from "./messenger/slice";
 import webSocketReducer from "./ws/slice"
 import webSocketMiddleware from "./ws/webSocketMiddleware"
@@ -14,12 +18,21 @@ const rootReducer = (state, action) => {
         return {
             registration: undefined,
             auth: undefined,
+            profile:undefined,
+            post:undefined,
+            friend:undefined,
+            favourites:undefined,
             messenger: undefined
+
         };
     }
     return combineReducers({
         registration: registrationReducer,
         auth: loginReducer,
+        profile:profileReducer,
+        post:postReducer,
+        friends:friendsReducer,
+        favourites:favouritesReducer,
         messenger: chatsReducer,
         webSocket: webSocketReducer
     })(state, action);
