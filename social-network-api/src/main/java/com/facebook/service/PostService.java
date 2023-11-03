@@ -17,6 +17,7 @@ import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
 import com.facebook.model.posts.PostType;
 import com.facebook.repository.AppUserRepository;
+import com.facebook.repository.favorites.FavoriteRepository;
 import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
@@ -70,6 +71,8 @@ public class PostService {
     private final NotificationRepository notificationRepository;
 
     private final NotificationService notificationService;
+
+    private final FavoriteRepository favoriteRepository;
 
     /**
      * Отримує усі пости з бази даних.
@@ -359,6 +362,49 @@ public class PostService {
         return postRepository.findPostDetailsById(savedPost.getId())
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
+    }
+
+    public void performRepostCascadeDeletion(Long postId) {
+        List<Post> repostRepo = postRepository.findByOriginalPostId(postId);
+        List<Long> repostIds = repostRepo.stream().map(Post::getId).toList();
+
+        Optional.of(notificationRepository.findAllByPostIdIn(repostIds))
+                .filter(notifications -> !notifications.isEmpty())
+                .ifPresent(notificationRepository::deleteAllInBatch);
+
+        Optional.of(postRepository.findByOriginalPostId(postId))
+                .filter(reposts -> !reposts.isEmpty())
+                .ifPresent(postRepository::deleteAllInBatch);
+
+        Optional.of(commentRepository.findAllByPostIdIn(repostIds))
+                .filter(comments -> !comments.isEmpty())
+                .ifPresent(commentRepository::deleteAllInBatch);
+
+        Optional.of(likeRepository.findAllByPostIdIn(repostIds))
+                .filter(likes -> !likes.isEmpty())
+                .ifPresent(likeRepository::deleteAllInBatch);
+
+        Optional.of(favoriteRepository.findAllByPostIdIn(repostIds))
+                .filter(favorites -> !favorites.isEmpty())
+                .ifPresent(favoriteRepository::deleteAllInBatch);
+    }
+
+    public void performAllCascadeDeletion(Long postId) {
+        favoriteRepository.deleteByPostId(postId);
+        performCascadeDeletion(postId);
+        performRepostCascadeDeletion(postId);
+    }
+
+    @Transactional
+    public void deletePost(Long userId, Long postId) {
+        Post existedPost = postRepository.findById(postId)
+                .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
+
+        if(userId.equals(existedPost.getUser().getId())) {
+            performAllCascadeDeletion(postId);
+        } else {
+            throw new UnauthorizedException("User not authorised to delete this post!");
+        }
     }
 
 }

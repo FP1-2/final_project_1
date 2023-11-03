@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from "react";
+import React, { useRef, useState} from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import Textarea from "../Textarea/Textarea";
@@ -13,27 +13,14 @@ import { addPost } from "../../redux-toolkit/post/thunks";
 
 const validationSchema = object({
   text: string().required("Text is required").min(3, "Must be more than 2 characters"),
-  // name: string().required("Name is required").min(2, "Must be more than 1 characters"),
 });
 
 const ModalAddPost = () => {
 
-  const [scroll, setScroll] = useState(null);
   const [errorValidation, setErrorValidation] = useState(false);
   const img = useRef();
   const modalAddPost = useSelector((state) => state.post.modalAddPost);
   const userObject = useSelector(state => state.profile.profileUser.obj);
-
-  const handleScroll = () => {
-    setScroll(Math.round(window.scrollY));
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
-
 
 
   const clickDownloadImg = () => {
@@ -73,13 +60,13 @@ const ModalAddPost = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
       {({ setFieldValue, values }) => (
-        <div className={modalAddPost ? style.modalWrapper : style.displayNone} style={{ top: `${scroll - 492}px` }}>
+        <div className={modalAddPost ? style.modalWrapper : style.displayNone} >
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>
                 <div className={style.modalHeaderTitleWrapper}>
                   <h2 className={style.modalHeaderTitle}>Create a publication</h2>
-                  <button className={style.modalHeaderCloseBtn} onClick={modalAddPostClose}>
+                  <button type="button" className={style.modalHeaderCloseBtn} onClick={modalAddPostClose}>
                     <Cross className={style.modalHeaderCloseBtnImg} />
                   </button>
                 </div>

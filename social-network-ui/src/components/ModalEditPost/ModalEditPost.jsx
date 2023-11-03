@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef} from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import Textarea from "../Textarea/Textarea";
@@ -19,7 +19,6 @@ const ModalEditPost = () => {
 
   const dispatch = useDispatch();
 
-  const [scroll, setScroll] = useState(null);
   const [errorValidation, setErrorValidation] = useState(false);
   const img = useRef();
 
@@ -28,14 +27,6 @@ const ModalEditPost = () => {
   const userObject = useSelector(state => state.profile.profileUser.obj);
   const post = useSelector((state) => state.post.postObj);
 
-  const handleScroll = () => {
-    setScroll(Math.round(window.scrollY));
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const clickDownloadImg = () => {
     img.current.click();
@@ -67,7 +58,7 @@ const ModalEditPost = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
       {({ setFieldValue, values }) => (
-        <div style={{ top: `${scroll - 492}px` }} className={modalEditPost ? style.modalWrapper : style.displayNone} >
+        <div  className={modalEditPost ? style.modalWrapper : style.displayNone}>
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>

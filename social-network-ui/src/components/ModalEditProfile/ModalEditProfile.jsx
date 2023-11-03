@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import { Formik, Form } from 'formik';
 import { object, string, number } from "yup";
 import style from "./ModalEditProfile.module.scss";
@@ -25,7 +25,6 @@ const ModalEditProfile = () => {
   const avatar = useRef();
   const headerPhoto = useRef();
 
-  const [scroll, setScroll] = useState(null);
   const [nameInput, setNameInput] = useState(false);
   const [surnameInput, setSurnameInput] = useState(false);
   const [dateOfBirthInput, setDateOfBirthInput] = useState(false);
@@ -35,16 +34,6 @@ const ModalEditProfile = () => {
 
   const modalEditProfile = useSelector((state) => state.profile.modalEditProfile.state);
   const userObject = useSelector(state => state.profile.profileUser.obj);
-
-
-  const handleScroll = () => {
-    setScroll(Math.round(window.scrollY));
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
 
   const downloadInputAvatarPicture = async (e) => {
@@ -95,7 +84,7 @@ const ModalEditProfile = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
       {({ isValid }) => (
-        <div className={modalEditProfile ? style.modalWrapper : style.displayNone} style={{ top: `${scroll}px` }} >
+        <div className={modalEditProfile ? style.modalWrapper : style.displayNone} >
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>

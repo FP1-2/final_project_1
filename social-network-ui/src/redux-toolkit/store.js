@@ -7,6 +7,9 @@ import profileReducer from "./profile/slice";
 import postReducer from "./post/slice";
 import friendsReducer from "./friend/slice";
 import favouritesReducer from "./favourite/slice";
+import chatsReducer from "./messenger/slice";
+import webSocketReducer from "./ws/slice"
+import webSocketMiddleware from "./ws/webSocketMiddleware"
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -19,6 +22,8 @@ const rootReducer = (state, action) => {
             post:undefined,
             friend:undefined,
             favourites:undefined,
+            messenger: undefined
+
         };
     }
     return combineReducers({
@@ -28,6 +33,8 @@ const rootReducer = (state, action) => {
         post:postReducer,
         friends:friendsReducer,
         favourites:favouritesReducer,
+        messenger: chatsReducer,
+        webSocket: webSocketReducer
     })(state, action);
 }
 
@@ -40,12 +47,13 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(webSocketMiddleware),
 });
 
 export const persist = persistStore(store);
 
 export const logout = async () => {
+    store.dispatch({type: 'webSocket/close'})
     store.dispatch({type: RESET_STATE});
     await persist.purge();
 }

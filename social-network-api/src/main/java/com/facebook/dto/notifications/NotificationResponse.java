@@ -1,5 +1,6 @@
 package com.facebook.dto.notifications;
 
+import com.facebook.dto.post.Author;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,12 +12,13 @@ import java.time.LocalDateTime;
 public class NotificationResponse {
     private Long id;
     private Long userId;
-    private Long initiatorId;
+    private Author initiator;
     private Long postId;
     private String message;
     private boolean isRead;
     private String type;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
+
 }
 

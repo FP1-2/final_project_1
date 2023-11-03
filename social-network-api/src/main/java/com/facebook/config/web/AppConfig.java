@@ -2,6 +2,7 @@ package com.facebook.config.web;
 
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+
 import org.modelmapper.AbstractConverter;
 import org.modelmapper.Converter;
 import org.modelmapper.ModelMapper;
@@ -32,9 +33,7 @@ public class AppConfig {
             }
         };
         mapper.addConverter(timestampToLocalDateTime);
-
         return mapper;
     }
-
 }
 

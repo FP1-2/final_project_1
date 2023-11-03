@@ -1,4 +1,4 @@
-import React, {useEffect,useState} from "react";
+import React from "react";
 import style from "./ModalDeleteFriend.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
@@ -6,16 +6,6 @@ import { modalDeleteFriendState} from "../../redux-toolkit/friend/slice";
 import { deleteMyFriend } from "../../redux-toolkit/friend/thunks";
 
 const ModalDeleteFriend = () => {
-  const [scroll,setScroll]=useState(null);
-
-  const handleScroll = () => {
-    setScroll(Math.round(window.scrollY));
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const dispatch=useDispatch();
 

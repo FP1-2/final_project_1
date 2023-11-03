@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import style from "./ModalAddRepost.module.scss";
@@ -12,21 +12,11 @@ const validationSchema = object({
 });
 
 const ModalAddRepost = () => {
-
-  const [scroll, setScroll] = useState(null);
   const dispatch = useDispatch();
   const modalAddRepost = useSelector((state) => state.post.modalAddRepost);
   const userObject = useSelector(state => state.auth.user.obj);
   const post = useSelector((state) => state.post.postObj);
 
-  const handleScroll = () => {
-    setScroll(Math.round(window.scrollY));
-  };
-
-  useEffect(() => {
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
 
   const initialValues = {
     text: "",
@@ -51,7 +41,7 @@ const ModalAddRepost = () => {
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
       {({ setFieldValue, errors, isValid }) => (
-        <div className={modalAddRepost ? style.modalWrapper : style.displayNone} style={{ top: `${scroll - 492}px` }}>
+        <div className={modalAddRepost ? style.modalWrapper : style.displayNone}>
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>

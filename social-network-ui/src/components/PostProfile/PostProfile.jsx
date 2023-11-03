@@ -24,16 +24,12 @@ import { useDispatch } from "react-redux";
 const PostProfile = ({ el }) => {
   const dispatch = useDispatch();
 
-  const [clickLike, setClickLike] = useState(false);
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
   const commenttext = useRef();
   
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  // const addLikeStatus = useSelector(state => state.post.addLike.status);
-
-
 
   const {
     getCommentsPost: {
@@ -45,7 +41,6 @@ const PostProfile = ({ el }) => {
 
   const changeClickLike = () => {
     dispatch(addLike(el.postId));
-    setClickLike(state => !state);
   };
 
   const sendComment = () => {
@@ -121,7 +116,7 @@ const PostProfile = ({ el }) => {
           </div>
         </div>
         <div className={style.postFooterBtns}>
-          <button className={clickLike ? style.active : style.postBtn} onClick={changeClickLike}>
+          <button className={style.postBtn} onClick={changeClickLike}>
             <LikePostBtn className={style.postBtnImg} />
             Like
           </button>

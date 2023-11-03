@@ -120,4 +120,8 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
 
     Optional<Favorite> findByUserIdAndPostId(Long userId, Long postId);
 
+    List<Favorite> findAllByPostIdIn(List<Long> postIds);
+
+    void deleteByPostId(Long postId);
+
 }

@@ -1,7 +1,6 @@
 import React from "react";
 import style from "./FriendPageProfile.module.scss";
 import FriendCardProfile from "../FriendCardProfile/FriendCardProfile";
-import ModalDeleteFriend from "../ModalDeleteFriend/ModalDeleteFriend";
 import { useSelector} from "react-redux";
 import ErrorPage from "../ErrorPage/ErrorPage";
 
@@ -16,7 +15,6 @@ const FriendProfile = () => {
   } = useSelector(state => state.friends);
 
   return (<>
-    <ModalDeleteFriend />
     {status === "rejected" ?
       <ErrorPage message={error.message ? error.message : "Oops something went wrong!"} />
       :

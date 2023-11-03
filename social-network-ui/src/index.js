@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {PersistGate} from "redux-persist/integration/react";
 import {persist} from "./redux-toolkit/store";
 import store from "./redux-toolkit/store"
+import ".//styles/style.scss"
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
@@ -13,9 +14,9 @@ root.render(
     <Provider store={store}>
         <BrowserRouter>
             <PersistGate loading={null} persistor={persist}>
-                <React.StrictMode>
+                {/*<React.StrictMode>*/}
                     <App/>
-                </React.StrictMode>
+                {/*</React.StrictMode>*/}
             </PersistGate>
         </BrowserRouter>
     </Provider>

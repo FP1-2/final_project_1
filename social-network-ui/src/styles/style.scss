@@ -1,0 +1,24 @@
+@import "variables";
+@import "mixin";
+*{
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  box-sizing: border-box;
+  list-style:  none;
+  text-decoration: none;
+}
+body{
+  background: $main-background-color;
+  line-height: 1.34;
+  text-decoration: none;
+  color: $main-text-color;
+}
+a{
+  cursor: pointer;
+  color: $main-text-color;
+}

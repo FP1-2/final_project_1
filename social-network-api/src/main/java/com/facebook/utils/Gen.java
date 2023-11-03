@@ -11,13 +11,21 @@ import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
+import com.facebook.model.chat.Chat;
+import com.facebook.model.chat.ContentType;
+import com.facebook.model.chat.Message;
+import com.facebook.model.chat.MessageStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.PostStatus;
+import com.facebook.repository.ChatRepository;
+import com.facebook.repository.MessageRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.FriendsService;
+import com.facebook.service.ChatService;
+import com.facebook.service.MessageService;
 import com.facebook.service.PostService;
 import com.facebook.service.favorites.FavoritesService;
 import com.github.javafaker.Faker;
@@ -84,6 +92,13 @@ public class Gen {
 
     private List<Like> likes;
 
+
+    private final ChatService chatService;
+    private final ChatRepository chatRepository;
+    private final MessageService messageService;
+    private final MessageRepository messageRepository;
+    private List<Chat> chats;
+    private List<Message> messages;
     private Gen(ApplicationContext context) {
         this.context = context;
 
@@ -93,9 +108,13 @@ public class Gen {
         this.postService = context.getBean(PostService.class);
         this.favoritesService = context.getBean(FavoritesService.class);
         this.friendsService = context.getBean(FriendsService.class);
+        this.chatService = context.getBean(ChatService.class);
+        this.messageService = context.getBean(MessageService.class);
 
         this.likeRepository = context.getBean(LikeRepository.class);
         this.commentRepository = context.getBean(CommentRepository.class);
+        this.chatRepository = context.getBean(ChatRepository.class);
+        this.messageRepository = context.getBean(MessageRepository.class);
 
         this.appUsers1 = genAppUser();
         this.posts = genPostsAndReposts();
@@ -103,6 +122,8 @@ public class Gen {
         this.likes = genLikes();
         genFriends();
         genFavorites();
+        this.chats = genChats();
+        this.messages = genMessages();
     }
 
     public static Gen of(ApplicationContext context) {
@@ -389,18 +410,41 @@ public class Gen {
             log.info("Friend request already exists between default users.");
         }
     }
+    private List<Chat> genChats() {
+        Optional<AppUser> test = appUserService.findByUsername("test");
+        Optional<AppUser> greak = appUserService.findByUsername("Greak");
+        Optional<AppUser> bretNickname = appUserService.findByUsername("BretNickname");
 
-    private void genFavorites() {
-        appUsers1.forEach(user -> {
-            int randomFavoritesCount = MathUtils.random(0, 10);
-            for (int i = 0; i < randomFavoritesCount; i++) {
-                PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+        Chat chat1 = Chat.of(test.get(), greak.get());
+        chatRepository.save(chat1);
+        Chat chat2 = Chat.of(bretNickname.get(), test.get());
+        chatRepository.save(chat2);
 
-                try {
-                    favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
-                } catch (AlreadyExistsException e) {}
-            }
-        });
+        return chatRepository.findAll();
     }
 
+    private List<Message> genMessages() {
+        Faker faker = new Faker();
+        chats.forEach(chat -> {
+            chat.getChatParticipants().forEach(participant -> {
+                String text = faker.lorem().sentence();
+                Message message = Message.of(ContentType.TEXT, text, participant, chat, MessageStatus.SENT);
+                messageRepository.save(message);
+            });
+        });
+        return messageRepository.findAll();
+    }
+
+    private void genFavorites() {
+            appUsers1.forEach(user -> {
+                int randomFavoritesCount = MathUtils.random(0, 10);
+                for (int i = 0; i < randomFavoritesCount; i++) {
+                    PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+
+                    try {
+                        favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
+                    } catch (AlreadyExistsException e) {}
+                }
+            });
+        }
 }

@@ -15,7 +15,7 @@ const PostPageProfile = () => {
 
   const dispatch = useDispatch();
   const userObject = useSelector(state => state.profile.profileUser.obj);
-  const userPosts = useSelector(state => state.profile.postsUser.obj);
+  const userPosts = useSelector(state => state.post.postsUser.obj);
 
 
   const modalAddPostOpen = () => {

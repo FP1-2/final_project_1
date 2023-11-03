@@ -1,0 +1,129 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
+.messageWrapper{
+  @include flex-center-row;
+  font-size:15px;
+  width:100%;
+  &__cont{
+    @include flex-center-row;
+    flex: 1;
+    
+    &__text {
+      @include input-field;
+      @include flex-center;
+      padding:8px;
+      max-width: 70%;
+      position: relative;
+      height: auto;
+      & p{
+        overflow-wrap: anywhere;
+      }
+      & img{
+        height: 200px;
+        width: auto;
+        border-radius: $main-border-radius;
+      }
+      
+      &:hover div{
+        display: flex;
+      }
+      &__datatime{
+        position: absolute;
+        background-color: $text-color-gray;
+        display:none;
+        border-radius: $main-border-radius;
+        width: fit-content;
+        opacity: 0.8;
+        & p{
+          padding:6px;
+          color:$main-text-color;
+          width:max-content;
+        }
+      }
+    }
+  }
+  &__avatar{
+    @include size(28px);
+    margin-right:8px;
+  }
+
+}
+
+
+.auth{
+        justify-content: flex-end;
+        &__authUser{
+          background-color: $btn-main-color;
+          color: $text-color-on-dark-background;
+          &__date{
+            right: 0;
+            bottom: -100%;
+          }
+        }
+        &__chatUser {
+          background-color: $background-color-receiver-message;
+          color: $main-text-color;
+          &__date{
+            left: 0;
+            bottom: -100%;
+        }
+        }
+    }
+
+.image{
+  background-color: $main-background-color;
+}
+
+.messageStatus{
+  font-size:13px;
+  width: 100%;
+  display: flex;
+  justify-content: flex-end;
+  padding-top:8px;
+  &__unread{
+    color: $text-color-gray;
+  }
+  &__read{
+    @include size(16px);
+  }
+  &__error{
+    color: red;
+  }
+}
+.img{
+  cursor:pointer;
+}
+
+.none{
+  display:none;
+}
+
+@media (min-width: 768px) {
+  .auth{
+    &__authUser{
+      &__date{
+      right: 100%;
+      bottom: 0;
+      }
+    }
+  &__chatUser {
+    &__date{
+    left: 100%;
+    bottom: 0;
+    }
+    }
+  }
+  .messageWrapper{
+    &__cont{
+      &__text {
+        max-width: 60%;
+      }}}
+}
+@media (min-width: 1025px) {
+  .messageWrapper{
+    &__cont{
+      &__text {
+        max-width: 588px;
+      }}}
+}

@@ -49,6 +49,7 @@
         justify-content: center;
         align-items: center;
         box-sizing: border-box;
+        background-color: white;
 
         .header {
             position: relative;
@@ -124,6 +125,7 @@
         display: flex;
         justify-content: center;
         align-items: center;
+        background-color: white;
 
         .info {
             width: 940px;
@@ -386,7 +388,8 @@
         display: flex;
         justify-content: center;
         box-sizing: border-box;
-        margin-top: 5px;
+        padding-top: 5px;
+        background-color: white;
 
         .linksList {
             display: flex;

@@ -1,7 +1,6 @@
 import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
-import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
 import { Link, Outlet } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
@@ -14,12 +13,13 @@ import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
 import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
-import { editUser, loadUserProfile} from "../../redux-toolkit/profile/thunks";
+import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
 import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
+import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -40,6 +40,7 @@ const ProfilePage = () => {
   const [linkFriends, setLinkFriends] = useState("unfocus");
 
 
+
   const indexSlash = window.location.pathname.lastIndexOf('/');
   const word = window.location.pathname.slice(indexSlash + 1);
 
@@ -52,6 +53,8 @@ const ProfilePage = () => {
 
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
+
+
 
 
   useEffect(() => {
@@ -133,7 +136,7 @@ const ProfilePage = () => {
     clickLinkPosts();
   } else if (linkFriends !== "focus" && word === "friends") {
     clickLinkFriends();
-  }else if (word !== "friends" && linkFriends === "focus"){
+  } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
 
@@ -157,8 +160,8 @@ const ProfilePage = () => {
         <ErrorPage message={error ? error : "Oops something went wrong!"} />
         :
         <>
-          <ModalEditProfile />
           <ModalDeleteFriend />
+          <ModalEditProfile />
           <div className={style.profilePage}>
             <div className={style.headerWrapper}>
               <header className={style.header}>
