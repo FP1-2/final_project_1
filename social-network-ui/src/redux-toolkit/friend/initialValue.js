@@ -4,7 +4,7 @@ const initialValue = {
         status: '',
         error: '',
     },
-    deleteFriend:{
+    deleteMyFriend:{
         obj: {},
         status: '',
         error: '',
@@ -25,7 +25,7 @@ const initialValue = {
         error: '',
     },
     requestsToMe:{
-        obj: {},
+        obj: [],
         status: '',
         error: '',
     },

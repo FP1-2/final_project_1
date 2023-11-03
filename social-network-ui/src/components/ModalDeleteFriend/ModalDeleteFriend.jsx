@@ -2,7 +2,8 @@ import React, {useEffect,useState} from "react";
 import style from "./ModalDeleteFriend.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
-import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
+import { modalDeleteFriendState} from "../../redux-toolkit/friend/slice";
+import { deleteMyFriend } from "../../redux-toolkit/friend/thunks";
 
 const ModalDeleteFriend = () => {
   const [scroll,setScroll]=useState(null);
@@ -26,7 +27,7 @@ const ModalDeleteFriend = () => {
   };
 
   const deleteFriend=()=>{
-    dispatch(deleteFriend({friendId:el.id}));
+    dispatch(deleteMyFriend({friendId:el.id}));
     dispatch(modalDeleteFriendState(false));
   };
 

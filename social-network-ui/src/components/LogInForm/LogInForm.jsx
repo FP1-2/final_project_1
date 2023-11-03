@@ -23,7 +23,7 @@ const LoginForm = ({ handleSubmit }) => {
       >
         <Form>
           <div>
-            <Input type="text" name="username" placeholder="Username" />
+            <Input type="text" name="username" placeholder="E-mail" />
           </div>
           <div className={styles.passwordInputWrapper}>
             <Input type="password" name="password" placeholder="Password" />

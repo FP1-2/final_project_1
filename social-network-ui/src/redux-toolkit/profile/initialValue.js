@@ -4,11 +4,6 @@ const initialValue = {
         status: '',
         error: '',
     },
-    postsUser:{
-        obj: [],
-        status: '',
-        error: '',
-    },
     modalEditProfile: {
         state: false,
     },

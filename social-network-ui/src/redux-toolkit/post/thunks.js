@@ -85,3 +85,29 @@ export const addLike = createAsyncThunk(
         }
     }
 );
+
+export const deletePost = createAsyncThunk(
+    'post/deletePost',
+    async (id, { rejectWithValue }) => {
+        try {
+            console.log(id);
+            const response = await workAx("delete",`api/posts/delete/${id}`,);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const postsUser = createAsyncThunk(
+    "profile/postsUse",
+    async (id,{rejectWithValue}) => {
+        try{
+            const response = await workAx("get",`api/posts/by_user_id/${id}`);
+            return response.data.content;
+        }
+        catch(err){
+            return rejectWithValue (err.response.data);
+        }
+    }
+)

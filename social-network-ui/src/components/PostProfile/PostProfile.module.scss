@@ -1,3 +1,4 @@
+@import "../../styles/mixin.scss";
 .post {
     background-color: white;
     border-radius: 5px;
@@ -213,12 +214,22 @@
                 font-size: 15px;
                 font-weight: 600;
 
-                .postLikeBtnImg {
+                .postBtnImg {
                     width: 25px;
                     height: 25px;
 
                     path {
                         stroke: #65676B;
+                    }
+                }
+
+                @include width_576 {
+                    font-size: 12px;
+                    gap: 2px;
+
+                    .postBtnImg {
+                        width: 18px;
+                        height: 18px;
                     }
                 }
 

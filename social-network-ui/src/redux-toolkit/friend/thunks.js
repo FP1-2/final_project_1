@@ -13,7 +13,7 @@ export const getFriends = createAsyncThunk(
         }
     }
 );
-export const deleteFriend = createAsyncThunk(
+export const deleteMyFriend = createAsyncThunk(
     'friends/deleteFriend',
     async (obj, { rejectWithValue }) => {
         try {
@@ -53,7 +53,6 @@ export const friend = createAsyncThunk(
     'friends/friend',
     async (id, { rejectWithValue }) => {
         try {
-            console.log(id);
             const response = await workAx("get",`api/users/${id}`);
             return response.data;
         } catch (err) {
@@ -64,7 +63,7 @@ export const friend = createAsyncThunk(
 
 export const requestsToMe = createAsyncThunk(
     'friends/requestsToMe',
-    async ({ rejectWithValue }) => {
+    async (text,{ rejectWithValue }) => {
         try {
             const response = await workAx("get",`api/friends/list/friend-requests`);
             return response.data;

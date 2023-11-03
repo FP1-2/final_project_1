@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef} from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
@@ -10,12 +10,14 @@ import { ReactComponent as SendCommentPost } from "../../img/sendCommentPost.svg
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
 import { ReactComponent as Delete } from "../../img/delete.svg";
 import { ReactComponent as Dots } from "../../img/dots.svg";
+import { ReactComponent as SavePost } from "../../img/savePost.svg";
 import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
 import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
-import { addLike, getCommentsPost, addComment } from "../../redux-toolkit/post/thunks";
+import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
+import { addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { useDispatch } from "react-redux";
 
 
@@ -26,9 +28,12 @@ const PostProfile = ({ el }) => {
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
   const commenttext = useRef();
-
+  
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
+  // const addLikeStatus = useSelector(state => state.post.addLike.status);
+
+
 
   const {
     getCommentsPost: {
@@ -48,7 +53,6 @@ const PostProfile = ({ el }) => {
       postId: el.postId,
       content: commenttext.current.value
     };
-    setClickComment(false);
     dispatch(addComment(obj));
   };
 
@@ -66,6 +70,14 @@ const PostProfile = ({ el }) => {
   const modalEditPostOpen = () => {
     dispatch(setPost(el));
     dispatch(modalEditPostState(true));
+  };
+
+  const deletePostThunk=()=>{
+    dispatch(deletePost(el.postId));
+  };
+
+  const savePostThunk=()=>{
+    dispatch(addToFavourites(el.postId));
   };
 
   return (
@@ -88,13 +100,12 @@ const PostProfile = ({ el }) => {
             <Pencil className={style.postHeaderBtnImg} />
             Edit post
           </button>
-          <button className={style.postHeaderBtn}>
+          <button className={style.postHeaderBtn} onClick={deletePostThunk}>
             <Delete className={style.postHeaderBtnImg} />
             Delete post
           </button>
         </div>
           : null}
-
       </header>
       <p className={style.postText}>{el.body}</p>
       {el.imageUrl ? <img src={el.imageUrl} alt="Photo of post" className={style.postImg} /> : null}
@@ -111,16 +122,20 @@ const PostProfile = ({ el }) => {
         </div>
         <div className={style.postFooterBtns}>
           <button className={clickLike ? style.active : style.postBtn} onClick={changeClickLike}>
-            <LikePostBtn className={style.postLikeBtnImg} />
+            <LikePostBtn className={style.postBtnImg} />
             Like
           </button>
           <button className={style.postBtn} onClick={commentClick}>
-            <CommentPostBtn className={style.postCommentBtnImg} />
+            <CommentPostBtn className={style.postBtnImg} />
             Comment
           </button>
           <button className={style.postBtn} onClick={sharePost}>
-            <SharePostBtn className={style.postLikeBtnImg} />
+            <SharePostBtn className={style.postBtnImg} />
             Share
+          </button>
+          <button className={style.postBtn} onClick={savePostThunk}>
+            <SavePost className={style.postBtnImg} />
+            Save
           </button>
         </div>
         {clickComment ? <div className={style.postFooterComents}>

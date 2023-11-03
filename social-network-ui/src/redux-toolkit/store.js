@@ -6,6 +6,7 @@ import loginReducer from "./login/slice";
 import profileReducer from "./profile/slice";
 import postReducer from "./post/slice";
 import friendsReducer from "./friend/slice";
+import favouritesReducer from "./favourite/slice";
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -17,6 +18,7 @@ const rootReducer = (state, action) => {
             profile:undefined,
             post:undefined,
             friend:undefined,
+            favourites:undefined,
         };
     }
     return combineReducers({
@@ -25,6 +27,7 @@ const rootReducer = (state, action) => {
         profile:profileReducer,
         post:postReducer,
         friends:friendsReducer,
+        favourites:favouritesReducer,
     })(state, action);
 }
 

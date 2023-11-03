@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import {getPost,addPost,addRepost,getCommentsPost,addComment,addLike, editPost} from "./thunks";
+import {addPost,addRepost,getCommentsPost,addComment,addLike, editPost, deletePost, postsUser} from "./thunks";
 import builders from "../builders";
 
 const postReducer = createSlice({
@@ -24,13 +24,14 @@ const postReducer = createSlice({
         },
     },
     extraReducers:(builder)=>{
+        builders(builder, postsUser,'postsUser');
         builders(builder, addPost,'addPost');
         builders(builder, addRepost,'addRepost');
         builders(builder, editPost,'editPost');
         builders(builder, getCommentsPost,'getCommentsPost');
         builders(builder, addComment,'addComment');
         builders(builder, addLike,'addLike');
-        // builders(builder, getPost,'getPost');
+        builders(builder, deletePost,'deletePost');
     }
 });
 

@@ -90,15 +90,18 @@
                             width: 16px;
                             height: auto;
                             fill: #606770;
-                            padding-left: 10px;
+                            padding-right: 10px;
+                            &:hover{
+                                cursor: pointer;
+                            }
                         }
 
                         .profileFriendsHeaderInput {
-                            padding: 7px 6px 9px;
+                            padding: 7px 6px 9px 10px;
                             border: none;
                             background-color: #F0F2F5;
-                            border-top-right-radius: 50px;
-                            border-bottom-right-radius: 50px;
+                            border-top-left-radius: 50px;
+                            border-bottom-left-radius: 50px;
                             color: #050505;
                             font-size: 15px;
 

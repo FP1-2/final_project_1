@@ -14,7 +14,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
 import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
-import { editUser, loadUserProfile, postsUser } from "../../redux-toolkit/profile/thunks";
+import { editUser, loadUserProfile} from "../../redux-toolkit/profile/thunks";
+import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
 import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
@@ -30,15 +31,18 @@ const ProfilePage = () => {
       error
     }
   } = useSelector(state => state.profile);
+  const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
+  const editUserStatus = useSelector(state => state.profile.editUser.obj);
+  const friends = useSelector(state => state.friends.getFriends.obj);
+  const myId = useSelector(state => state.auth.user.obj.id);
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
-  const [linkLiked, setLinkLiked] = useState("unfocus");
+
 
   const indexSlash = window.location.pathname.lastIndexOf('/');
   const word = window.location.pathname.slice(indexSlash + 1);
-  const friends = useSelector(state => state.friends.getFriends.obj);
-  const myId = useSelector(state => state.auth.user.obj.id);
+
   let isMyFriend;
   for (const el of friends) {
     if (el.id === myId) {
@@ -60,7 +64,7 @@ const ProfilePage = () => {
     getUser(userId, token);
     dispatch(getFriends(id));
     dispatch(postsUser(id));
-  }, [id]);
+  }, [id, deleteStatus, editUserStatus]);
 
   const getUser = (userId) => {
     let newObj = {};
@@ -109,36 +113,30 @@ const ProfilePage = () => {
   };
 
   const addFriend = () => {
-    dispatch(requestToFriend({friendId:id}));
+    dispatch(requestToFriend({ friendId: id }));
   };
 
 
   const clickLinkPosts = () => {
     setLinkPosts("focus");
     setLinkFriends("unfocus");
-    setLinkLiked("unfocus");
   };
 
   const clickLinkFriends = () => {
     setLinkPosts("unfocus");
     setLinkFriends("focus");
-    setLinkLiked("unfocus");
   };
 
-  const clickLinkLiked = () => {
-    setLinkPosts("unfocus");
-    setLinkFriends("unfocus");
-    setLinkLiked("focus");
-  };
 
 
   if (word === "profile" && linkPosts !== "focus") {
     clickLinkPosts();
-  } else if (word === "friends" && linkFriends !== "focus") {
+  } else if (linkFriends !== "focus" && word === "friends") {
     clickLinkFriends();
-  } else if (word === "liked" && linkLiked !== "focus") {
-    clickLinkLiked();
+  }else if (word !== "friends" && linkFriends === "focus"){
+    clickLinkPosts();
   }
+
 
   function parseJwt(token) {
     const base64Url = token.split('.')[1];
@@ -156,7 +154,7 @@ const ProfilePage = () => {
         <div className={style.loder}></div>
       </div>
       : status === "rejected" ?
-        <ErrorPage message={error.message ? error.message : "Oops something went wrong!"} />
+        <ErrorPage message={error ? error : "Oops something went wrong!"} />
         :
         <>
           <ModalEditProfile />
@@ -193,7 +191,7 @@ const ProfilePage = () => {
                 </button>
                   :
                   <div className={style.infoBtnsWrapper}>
-                    {isMyFriend ?
+                    {isMyFriend && deleteStatus !== "fulfilled" ?
                       <button className={style.infoBtnDeleteFriend} onClick={modalDeleteFriendOpen}>
                         <DeleteFriend className={style.infoBtnDeleteFriendImg} />
                         Delete
@@ -216,10 +214,9 @@ const ProfilePage = () => {
                   <Link to="" className={linkPosts === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Posts</Link>
                 </li>
                 <li className={linkFriends === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkFriends}>
-                  <Link to="friends" className={linkFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friends</Link>
-                </li>
-                <li className={linkLiked === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkLiked}>
-                  <Link to="liked" className={linkLiked === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Liked</Link>
+                  {obj.user === "myUser" ?
+                    <Link to="/friends" className={linkFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friends</Link>
+                    : <Link to="friends" className={linkFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friends</Link>}
                 </li>
               </ul>
             </div>

@@ -10,7 +10,6 @@ import { ReactComponent as Calendar } from "../../img/calendarProfileInformation
 import { ReactComponent as Home } from "../../img/homeProfileInformation.svg";
 import ModalEditPost from "../ModalEditPost/ModalEditPost";
 import ModalAddRepost from "../ModalAddRepost/ModalAddRepost";
-// import { getPostsUser } from "../../redux-toolkit/profile/thunks";
 
 const PostPageProfile = () => {
 

@@ -9,11 +9,13 @@ import { ReactComponent as Dots } from "../../img/dots.svg";
 import { ReactComponent as SharePostBtn } from "../../img/sharePostBtn.svg";
 import { ReactComponent as SendCommentPost } from "../../img/sendCommentPost.svg";
 import { ReactComponent as BlueComment } from "../../img/blueComment.svg";
+import { ReactComponent as SavePost } from "../../img/savePost.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { addLike,getCommentsPost, addComment } from "../../redux-toolkit/post/thunks";
+import { addLike,getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost,modalAddRepostState,modalEditPostState } from "../../redux-toolkit/post/slice";
+import { clearComments, setPost,modalAddRepostState,modalEditPostState} from "../../redux-toolkit/post/slice";
+import { addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
@@ -69,6 +71,14 @@ const RepostProfile = ({ el }) => {
     dispatch(modalEditPostState(true));
   };
 
+  const deletePostThunk=()=>{
+    dispatch(deletePost(el.postId));
+  };
+
+  const savePostThunk=()=>{
+    dispatch(addToFavourites(el.postId));
+  };
+
   return (
     <div className={style.post}>
       <header className={style.postHeader}>
@@ -89,7 +99,7 @@ const RepostProfile = ({ el }) => {
             <Pencil className={style.postHeaderBtnImg} />
             Edit post
           </button>
-          <button className={style.postHeaderBtn}>
+          <button className={style.postHeaderBtn} onClick={deletePostThunk}>
             <Delete className={style.postHeaderBtnImg} />
             Delete post
           </button>
@@ -125,16 +135,20 @@ const RepostProfile = ({ el }) => {
         </div>
         <div className={style.postFooterBtns}>
           <button className={clickLike ? style.active : style.postBtn} onClick={changeClickLike}>
-            <LikePostBtn className={style.postLikeBtnImg} />
+            <LikePostBtn className={style.postBtnImg} />
             Like
           </button>
           <button className={style.postBtn} onClick={commentClick}>
-            <CommentPostBtn className={style.postCommentBtnImg} />
+            <CommentPostBtn className={style.postBtnImg} />
             Comment
           </button>
           <button className={style.postBtn} onClick={sharePost}>
-            <SharePostBtn className={style.postLikeBtnImg} />
+            <SharePostBtn className={style.postBtnImg} />
             Share
+          </button>
+          <button className={style.postBtn} onClick={savePostThunk}>
+            <SavePost className={style.postBtnImg} />
+            Save
           </button>
         </div>
         {clickComment ? <div className={style.postFooterComents}>

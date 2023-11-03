@@ -10,7 +10,6 @@ import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
 import PostsPageProfile from "./components/PostsPageProfile/PostsPageProfile";
 import FriendPageProfile from "./components/FriendPageProfile/FriendPageProfile";
-import LikedPageProfile from "./components/LikedPageProfile/LikedPageProfile";
 import PostPage from './pages/PostPage/PostPage';
 
 function AppRoutes() {
@@ -24,11 +23,11 @@ function AppRoutes() {
       <Route exact path='/profile/:id/*' element={<ProfilePage/>}>
         <Route path='' element={<PostsPageProfile />} />
         <Route path='friends' element={<FriendPageProfile />} />
-        <Route path='liked' element={<LikedPageProfile />} />
       </Route>
       <Route path='/post' element={<PostPage/>} />
       <Route path='/registration' element={<RegistrationForm />} />
       <Route path='/registration/confirm' element={<ConfirmRegistration />} />
+      <Route path='/friends' />
     </Routes>
   );
 }

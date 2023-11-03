@@ -8,7 +8,7 @@ import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { modalAddPostState } from "../../redux-toolkit/post/slice";
-import { getPhotoURL } from "../../redux-toolkit/registration/thunks";
+import { getPhotoURL } from "../../utils/thunks";
 import { addPost } from "../../redux-toolkit/post/thunks";
 
 const validationSchema = object({
@@ -92,7 +92,7 @@ const ModalAddPost = () => {
               </div>
               <div className={style.modalMain}>
                 <Textarea type="text" name="text" placeholder="Anything new?" />
-                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = "" }}>Clear photo</button>}
+                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = "";}}>Clear photo</button>}
                 {values.img && <PreviewImage file={values.img} />}
               </div>
             </div>

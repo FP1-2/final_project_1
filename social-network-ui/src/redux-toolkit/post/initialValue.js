@@ -4,6 +4,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    savePost:{
+        obj: {},
+        status: '',
+        error: '',
+    },
     getCommentsPost:{
         obj: {},
         status: '',
@@ -32,6 +37,11 @@ const initialValue = {
     },
     deletePost:{
         obj: {},
+        status: '',
+        error: '',
+    },
+    postsUser:{
+        obj: [],
         status: '',
         error: '',
     },
