@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -12,7 +12,7 @@ import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
-import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
+// import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
@@ -40,9 +40,11 @@ const ProfilePage = () => {
   const [linkFriends, setLinkFriends] = useState("unfocus");
 
 
-
-  const indexSlash = window.location.pathname.lastIndexOf('/');
-  const word = window.location.pathname.slice(indexSlash + 1);
+  const location = useLocation();
+  const indexSlash = location.pathname.lastIndexOf('/');
+  const word = location.pathname.slice(indexSlash + 1);
+  // const indexSlash = window.location.pathname.lastIndexOf('/');
+  // const word = window.location.pathname.slice(indexSlash + 1);
 
   let isMyFriend;
   for (const el of friends) {
@@ -58,13 +60,13 @@ const ProfilePage = () => {
 
 
   useEffect(() => {
-    const token = getTokenFromLocalStorage();
-    const decodedToken = parseJwt(token);
-    const userId = decodedToken.sub;
+    // const token = getTokenFromLocalStorage();
+    // const decodedToken = parseJwt(token);
+    // const userId = decodedToken.sub;
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
-    getUser(userId, token);
+    getUser(myId);
     dispatch(getFriends(id));
     dispatch(postsUser(id));
   }, [id, deleteStatus, editUserStatus]);
@@ -84,8 +86,6 @@ const ProfilePage = () => {
     }
     dispatch(loadUserProfile(newObj));
   };
-
-
 
   const downloadInputHeaderPicture = async (e) => {
     const file = e.target.files[0];
@@ -140,16 +140,15 @@ const ProfilePage = () => {
     clickLinkPosts();
   }
 
-
-  function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
-  }
+  // function parseJwt(token) {
+  //   const base64Url = token.split('.')[1];
+  //   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+  //   const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
+  //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+  //   }).join(''));
+  //
+  //   return JSON.parse(jsonPayload);
+  // }
 
   return (<>
     {status === "pending" ?
