@@ -12,7 +12,6 @@ import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
-import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
@@ -22,8 +21,10 @@ import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 
 const ProfilePage = () => {
+
   const dispatch = useDispatch();
-  const { id } = useParams();
+  let { id } = useParams();
+
   const {
     profileUser: {
       obj,
@@ -31,6 +32,7 @@ const ProfilePage = () => {
       error
     }
   } = useSelector(state => state.profile);
+
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
   const editUserStatus = useSelector(state => state.profile.editUser.obj);
   const friends = useSelector(state => state.friends.getFriends.obj);
@@ -38,8 +40,6 @@ const ProfilePage = () => {
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
-
-
 
   const indexSlash = window.location.pathname.lastIndexOf('/');
   const word = window.location.pathname.slice(indexSlash + 1);
@@ -54,38 +54,31 @@ const ProfilePage = () => {
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
 
-
-
-
   useEffect(() => {
-    const token = getTokenFromLocalStorage();
-    const decodedToken = parseJwt(token);
-    const userId = decodedToken.sub;
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
-    getUser(userId, token);
+    getUser(myId);
     dispatch(getFriends(id));
     dispatch(postsUser(id));
   }, [id, deleteStatus, editUserStatus]);
 
   const getUser = (userId) => {
     let newObj = {};
+    id = parseInt(id);
     if (userId === id) {
       newObj = {
         user: "myUser",
-        id: id
+        id: id + ''
       };
     } else {
       newObj = {
         user: "anotherUser",
-        id: id
+        id: id + ''
       };
     }
     dispatch(loadUserProfile(newObj));
   };
-
-
 
   const downloadInputHeaderPicture = async (e) => {
     const file = e.target.files[0];
@@ -110,6 +103,7 @@ const ProfilePage = () => {
   const modalEditProfileOpen = () => {
     dispatch(modalEditProfileState(true));
   };
+
   const modalDeleteFriendOpen = () => {
     dispatch(friend(id));
     dispatch(modalDeleteFriendState(true));
@@ -118,7 +112,6 @@ const ProfilePage = () => {
   const addFriend = () => {
     dispatch(requestToFriend({ friendId: id }));
   };
-
 
   const clickLinkPosts = () => {
     setLinkPosts("focus");
@@ -130,25 +123,12 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
-
-
   if (word === "profile" && linkPosts !== "focus") {
     clickLinkPosts();
   } else if (linkFriends !== "focus" && word === "friends") {
     clickLinkFriends();
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
-  }
-
-
-  function parseJwt(token) {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
-
-    return JSON.parse(jsonPayload);
   }
 
   return (<>
@@ -186,7 +166,7 @@ const ProfilePage = () => {
                 </div>
                 <div className={style.infoNameWrapper}>
                   <h2 className={style.infoName}>{`${obj.name} ${obj.surname}`}</h2>
-                  <p className={style.infoFriends} href="">Friends: {friends.length}</p>
+                  <p className={style.infoFriends}>Friends: {friends.length}</p>
                 </div>
                 {obj.user === "myUser" ? <button className={style.infoBtnEdit} onClick={modalEditProfileOpen}>
                   <Pencil className={style.infoBtnPencil} />
@@ -229,4 +209,5 @@ const ProfilePage = () => {
     }
   </>);
 };
+
 export default ProfilePage;

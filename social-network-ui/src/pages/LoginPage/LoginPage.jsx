@@ -4,24 +4,20 @@ import {loadAuthToken, loadAuthUser} from '../../redux-toolkit/login/thunks';
 import styles from "./LoginPage.module.scss";
 import LoginForm from '../../components/LogInForm/LogInForm.jsx';
 import {ReactComponent as FacebookLogo} from '../../img/FacebookLogo.svg';
-import {startLogoutTimer} from "../../redux-toolkit/store";
 import PropTypes from "prop-types";
 import {Navigate} from "react-router-dom";
 
 const LoginPage = ({isAuth}) => {
+
   const dispatch = useDispatch();
   const {id} = useSelector(state => state.auth.token.obj) || null;
+
   const handleSubmit = (values) => {
     dispatch(loadAuthToken(values));
-    startLogoutTimer();
   };
-  useEffect(() => {
-    
-    if (id) {
-      // console.log(id)
-      dispatch(loadAuthUser(id));
-    }
-  }, [id, dispatch]);
+
+  useEffect(() => {if (id) dispatch(loadAuthUser(id));}, [id, dispatch]);
+
   return (
     isAuth ? <Navigate to="/" replace/> :
       <section className={styles.container}>
