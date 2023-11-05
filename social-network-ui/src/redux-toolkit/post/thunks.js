@@ -90,7 +90,6 @@ export const deletePost = createAsyncThunk(
     'post/deletePost',
     async (id, { rejectWithValue }) => {
         try {
-            console.log(id);
             const response = await workAx("delete",`api/posts/delete/${id}`,);
             return response.data;
         } catch (err) {
