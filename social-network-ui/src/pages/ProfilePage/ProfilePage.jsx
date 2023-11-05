@@ -23,7 +23,7 @@ import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFri
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const { id } = useParams();
+  let { id } = useParams();
   const {
     profileUser: {
       obj,
@@ -56,9 +56,6 @@ const ProfilePage = () => {
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
 
-
-
-
   useEffect(() => {
     // const token = getTokenFromLocalStorage();
     // const decodedToken = parseJwt(token);
@@ -73,6 +70,7 @@ const ProfilePage = () => {
 
   const getUser = (userId) => {
     let newObj = {};
+    id = parseInt(id);
     if (userId === id) {
       newObj = {
         user: "myUser",
