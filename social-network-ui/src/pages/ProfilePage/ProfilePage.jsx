@@ -12,7 +12,6 @@ import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
-// import { getTokenFromLocalStorage } from "../../utils/localStorageHelper";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
@@ -43,8 +42,7 @@ const ProfilePage = () => {
   const location = useLocation();
   const indexSlash = location.pathname.lastIndexOf('/');
   const word = location.pathname.slice(indexSlash + 1);
-  // const indexSlash = window.location.pathname.lastIndexOf('/');
-  // const word = window.location.pathname.slice(indexSlash + 1);
+
 
   let isMyFriend;
   for (const el of friends) {
@@ -60,9 +58,6 @@ const ProfilePage = () => {
 
 
   useEffect(() => {
-    // const token = getTokenFromLocalStorage();
-    // const decodedToken = parseJwt(token);
-    // const userId = decodedToken.sub;
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
@@ -139,16 +134,6 @@ const ProfilePage = () => {
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
-
-  // function parseJwt(token) {
-  //   const base64Url = token.split('.')[1];
-  //   const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-  //   const jsonPayload = decodeURIComponent(atob(base64).split('').map(function (c) {
-  //     return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-  //   }).join(''));
-  //
-  //   return JSON.parse(jsonPayload);
-  // }
 
   return (<>
     {status === "pending" ?
