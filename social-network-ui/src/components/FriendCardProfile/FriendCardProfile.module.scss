@@ -1,0 +1,85 @@
+@import "../../styles/mixin.scss";
+.friendCardWrapper {
+    padding: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+
+    @include width_992 {
+        padding: 15px;
+    }
+
+    @include width_768 {
+        margin-bottom: 15px;
+        
+        &:last-child{
+            margin-bottom: 0;
+        }
+    }
+
+    .friendCard {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        gap: 16px;
+        width: 100%;
+        text-decoration: none;
+
+        .friendCardImg {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .friendCardInformWrapper{
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 100%;
+
+            .friendCardInformTitle{
+                width: 100%;
+                text-decoration: none;
+                color: #050505;
+                line-height: 1.1765;
+                font-size: 20px;
+                font-weight: 600;
+
+                &:hover{
+                    text-decoration: underline;
+                }
+            }
+            .friendCardInformText{
+                margin-top: 5px;
+                margin-bottom: 0;
+                font-size: 13px;
+                font-weight: 400;
+                line-height: 1.2308;
+                color: #65676B;
+            }
+        }
+    }
+    .friendCardBtn{
+        border: none;
+        background-color: transparent;
+        border-radius: 50%;
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        &:hover{
+            background-color: #F0F2F5;
+            cursor: pointer;
+        }
+
+        .friendCardBtnImg{
+            width: 20px;
+            max-height: 20px;
+        }
+    }
+}

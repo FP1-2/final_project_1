@@ -1,0 +1,155 @@
+@import "../../styles/mixin.scss";
+.profileBodyWrapper {
+    background-color: #F0F2F5;
+    height: auto;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-top: 15px;
+    padding-bottom: 15px;
+    box-sizing: border-box;
+
+    @include width_992 {
+        padding: 15px;
+    }
+
+    .profileBody {
+        width: 895px;
+        display: flex;
+        justify-content: center;
+
+        @include width_992 {
+            width:  100%;
+        }
+
+        .profileFriendsWrapper {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            width: 865px;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            padding: 20px 15px 15px;
+
+            @include width_992 {
+                width: 96%;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            @include width_576 {
+                padding-left: 15px;
+            }
+
+            .profileFriendsHeader {
+                display: flex;
+                align-items: center;
+                justify-content: space-between;
+                margin-bottom: 16px;
+
+                @include width_576 {
+                    flex-direction: column;
+                    align-items: start;
+                    gap: 5px;
+                }
+
+                .profileFriendsHeaderLink {
+                    padding-top: 6px;
+                    padding-bottom: 6px;
+                    font-weight: 700;
+                    font-size: 20px;
+                    line-height: 1.2;
+                    color: #050505;
+                    text-decoration: none;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+
+                .profileFriendsHeaderBtnWrapper {
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    gap: 8px;
+
+                    @include width_576 {
+                        gap: 15px;
+                    }
+
+                    .profileFriendsHeaderInputWrapper {
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        background-color: #F0F2F5;
+                        border-radius: 50px;
+
+                        .profileFriendsHeaderInputImg {
+                            width: 16px;
+                            height: auto;
+                            fill: #606770;
+                            padding-right: 10px;
+                            &:hover{
+                                cursor: pointer;
+                            }
+                        }
+
+                        .profileFriendsHeaderInput {
+                            padding: 7px 6px 9px 10px;
+                            border: none;
+                            background-color: #F0F2F5;
+                            border-top-left-radius: 50px;
+                            border-bottom-left-radius: 50px;
+                            color: #050505;
+                            font-size: 15px;
+
+                            &::placeholder {
+                                color: #606770;
+                            }
+
+                            &:focus{
+                                outline: none;
+                            }
+                        }
+                    }
+                    .profileFriendsHeaderBtn{
+                        color: #0064D1;
+                        border: none;
+                        border-radius: 5px;
+                        font-size: 15px;
+                        font-weight: 600;
+                        line-height: 1.3333;
+                        padding:10px 12px;
+                        min-width: 200px;
+                        background-color: transparent;
+
+                        @include width_576 {
+                            padding-left: 0;
+                            padding-right: 0;
+                            min-width: 0px;
+                        }
+
+                        &:hover{
+                            background-color: #F0F2F5;
+                            cursor: pointer;
+                        }
+                    }
+                }
+            }
+            .profileRequests{
+                
+            }
+            .profileFriends{
+                display: grid;
+                grid-template-columns: repeat(2, 1fr);
+                gap: 10px;
+
+                @include width_768 {
+                    display: block;
+                }
+            }
+        }
+    }
+}

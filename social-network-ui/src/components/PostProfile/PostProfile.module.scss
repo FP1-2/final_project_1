@@ -1,0 +1,434 @@
+@import "../../styles/mixin.scss";
+.post {
+    background-color: white;
+    border-radius: 5px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+
+
+    .postHeader {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        position: relative;
+
+        .postHeaderLinksWrapper {
+
+            padding: 12px 16px;
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            gap: 8px;
+
+            .postAvatarLink {
+                width: 40px;
+                height: 40px;
+
+                .postAvatar {
+                    width: 40px;
+                    height: 40px;
+                    border-radius: 50%;
+                    object-fit: cover;
+                }
+            }
+
+            .postNameLink {
+                font-weight: 600;
+                font-size: 15px;
+                color: #050505;
+                text-decoration: none;
+
+                &:hover {
+                    text-decoration: underline;
+                }
+            }
+        }
+
+        .postHeaderAlsoBtn {
+            border: none;
+            background-color: transparent;
+            border-radius: 50%;
+            padding: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 12px 16px;
+
+            &:hover {
+                background-color: #F0F2F5;
+                cursor: pointer;
+            }
+
+            .postHeaderAlsoBtnImg {
+                width: 20px;
+                max-height: 20px;
+            }
+        }
+
+        .postHeaderBtnWrapper {
+            position: absolute;
+            right: 0;
+            top: 60px;
+            box-shadow:  0px 5px 10px 0px rgba(0, 0, 0, 0.5);
+            padding: 8px;
+            background-color: white;
+            border-radius: 5px;
+
+            .postHeaderBtn {
+                display: flex;
+                align-items: center;
+                justify-content: flex-start;
+                color: #050505;
+                font-weight: 600;
+                font-size: 15px;
+                padding: 8px 8px;
+                gap: 12px;
+                width: 312px;
+                border-radius: 5px;
+                background-color: transparent;
+                border: none;
+                
+
+
+                &:hover {
+                    background-color: #F0F2F5;
+                    cursor: pointer;
+                }
+
+                .postHeaderBtnImg {
+                    width: 20px;
+                    max-height: 20px;
+                }
+            }
+        }
+    }
+
+    .postText {
+        padding: 8px 16px;
+        margin: 0;
+        color: #050505;
+        line-height: 1.3333;
+        font-size: 15px;
+    }
+
+    .postImg {
+        width: 100%;
+        max-height: 360px;
+        object-fit: cover;
+    }
+
+    .postFooterWrapper {
+        padding: 10px 16px;
+        gap: 15px;
+        position: relative;
+
+        .postFooterInfo {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            gap: 15px;
+
+            .postFooterLikes {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-start;
+                gap: 5px;
+                position: relative;
+
+                .postFooterLikesImg {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                .postFooterLikesText {
+                    font-size: 15px;
+                    color: inherit;
+                    margin: 0;
+                }
+
+
+            }
+
+            .postFooterComments {
+                padding-top: 10px;
+                padding-bottom: 10px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: flex-start;
+                gap: 5px;
+                position: relative;
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                .postFooterCommentsImg {
+                    width: 18px;
+                    height: 18px;
+                }
+
+                .postFooterCommentsText {
+                    font-size: 15px;
+                    color: inherit;
+                    margin: 0;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+
+            .displayNone {
+                display: none;
+            }
+
+            
+        }
+
+
+
+        .postFooterBtns {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 4px;
+            margin-top: 5px;
+            margin-bottom: 5px;
+            position: relative;
+
+            .postBtn {
+                width: 100%;
+                border: none;
+                border-radius: 5px;
+                padding-top: 5px;
+                padding-bottom: 5px;
+                background-color: white;
+                max-height: 32px;
+                display: flex;
+                align-items: flex-end;
+                justify-content: center;
+                gap: 5px;
+                line-height: 1.3333;
+                color: #65676B;
+                font-size: 14px;
+                font-weight: 600;
+
+                .postBtnImg {
+                    width: 25px;
+                    height: 25px;
+
+                    path {
+                        stroke: #65676B;
+                    }
+                }
+
+                @include width_576 {
+                    font-size: 12px;
+                    gap: 2px;
+
+                    .postBtnImg {
+                        width: 18px;
+                        height: 18px;
+                    }
+                }
+
+                .postCommentBtnImg {
+                    width: 25px;
+                    height: 25px;
+                    transform: scaleX(-1);
+
+                    path {
+                        fill: #65676B;
+                    }
+                }
+
+                &:hover {
+                    cursor: pointer;
+                    background-color: #F0F2F5;
+                }
+
+
+            }
+
+            &::after {
+                content: "";
+                border-bottom: 1px solid #ced0d4;
+                position: absolute;
+                width: 100%;
+                top: 37px;
+                z-index: 1;
+            }
+
+            &::before {
+                content: "";
+                border-bottom: 1px solid #ced0d4;
+                position: absolute;
+                width: 100%;
+                top: -5px;
+            }
+        }
+
+
+        .active {
+            width: 100%;
+            border: none;
+            border-radius: 5px;
+            padding-top: 5px;
+            padding-bottom: 5px;
+            background-color: white;
+            max-height: 32px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 5px;
+            line-height: 1.3333;
+            color: #0866FF;
+            font-size: 15px;
+            font-weight: 600;
+            position: relative;
+
+
+            .postLikeBtnImg {
+                width: 25px;
+                height: 25px;
+
+                path {
+                    fill: #0866FF;
+                }
+            }
+
+            .postCommentBtnImg {
+                width: 25px;
+                height: 25px;
+                transform: scaleX(-1);
+
+                path {
+                    fill: #0866FF;
+                }
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+
+            &::after {
+                content: "";
+                border-bottom: 1px solid #ced0d4;
+                position: absolute;
+                width: 100%;
+                top: 37px;
+            }
+
+        }
+
+        .postFooterComents {
+            padding-top: 8px;
+            padding-bottom: 8px;
+
+
+            .loderWrapper{
+                width: 100%;
+                height: 100%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            
+
+                @keyframes rotating {
+                    from {
+                        transform: rotate(360deg)
+                    }
+                
+                    to {
+                        transform: rotate(0deg)
+                    }
+                }
+
+                .loder { 
+                    width: 30px;
+                    height: 30px;
+                    border-radius: 50%;
+                    background: conic-gradient(#0866FF, transparent);
+                    position: relative;
+                    animation: rotating 1s linear infinite;
+                
+                    &::before {
+                        content: "";
+                        position: absolute;
+                        width: 16px;
+                        height: 16px;
+                        border-radius: 50%;
+                        background-color: white;
+                        left: 7px;
+                        top: 7px;
+                    }
+                
+                
+                }
+            }
+
+            .postFooterAddComents {
+                margin-top: 8px;
+                display: flex;
+                align-items: flex-start;
+                justify-content: flex-start;
+                gap: 6px;
+                position: relative;
+
+                .postFooterAddComentsImg {
+                    width: 32px;
+                    height: 32px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .postFooterAddComentsText {
+                    background-color: #F0F2F5;
+                    padding: 8px 12px;
+                    border-radius: 18px;
+                    border: none;
+                    font-weight: 400;
+                    font-size: 15px;
+                    color: #050505;
+                    width: 100%;
+
+                    &::placeholder {
+                        color: #65676B;
+                    }
+
+                    &:focus {
+                        outline: none;
+                    }
+                }
+
+                .postFooterAddComentBtn {
+                    width: 25px;
+                    height: 25px;
+                    position: absolute;
+                    right: 10px;
+                    top: 5px;
+                    display: flex;
+                    align-items: center;
+                    justify-content: center;
+                    padding: 0;
+                    border: none;
+
+                    &:hover {
+                        cursor: pointer;
+                    }
+
+                    .postFooterAddComentBtnImg {
+                        width: 25px;
+                        height: 25px;
+
+                        path {
+                            stroke: rgba(0, 0, 0, 0.4);
+                            ;
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

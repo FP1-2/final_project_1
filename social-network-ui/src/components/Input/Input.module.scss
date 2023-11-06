@@ -9,6 +9,32 @@
         margin-bottom: 0;
     }
 
+    .inputAddPhotoBtn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 54px;
+        min-width: 229px;
+        border: 1px solid #dfe0e2;
+        border-radius: 5px;
+        gap: 5px;
+        background-color: transparent;
+        font-size: 15px;
+        font-weight: 600;
+        line-height: 1.3333;
+        color: #050505;
+        ;
+
+        &:hover {
+            cursor: pointer;
+        }
+
+        .inputAddPhotoImg {
+            width: 24px;
+            max-height: 24px;
+        }
+    }
+
 
     .input {
         width: 100%;
@@ -21,9 +47,8 @@
         height: 40px;
         font-size: 15px;
         line-height: 16px;
-        
 
-        &::placeholder {
+        &:placeholder {
             color: #8d949e;
         }
     }
@@ -39,6 +64,33 @@
             width: 100%;
             justify-content: space-between;
             margin-bottom: 25px;
+        }
+
+        .modalMainInputEditProfile {
+            width: 100%;
+            padding: 18px 16px;
+            color: #050505;
+            font-size: 16px;
+            line-height: 1.25;
+            border-radius: 5px;
+            border: 2px solid #ced0d4;
+
+            &::placeholder {
+                color: #65676B;
+            }
+
+            &:hover {
+                border-color: #65676b;
+            }
+
+            &:focus {
+                border: 2px solid #0866ff;
+                outline: none;
+            }
+
+            .displayNone {
+                display: none;
+            }
         }
 
         .textInput {
