@@ -15,13 +15,17 @@ const webSocketReducer = createSlice({
     setIsVisible: (state, action) => {
       state.isVisible = action.payload;
     },
+    setNotification: (state, action) => {
+      state.isVisible = action.payload;
+    },
   }
 });
 
 export const {
   setNewMessage,
   setMessageWithNewStatus,
-  setIsVisible
+  setIsVisible,
+  setNotification
 } = webSocketReducer.actions;
 
 export default webSocketReducer.reducer;

@@ -16,12 +16,12 @@ export default function Layout() {
   const showAside = !excludedPaths.some(path => location.pathname.startsWith(path));
 
 
-  useEffect(() => {
-    const vh = window.innerHeight * 0.01;
-    const vw = window.innerWidth * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    document.documentElement.style.setProperty('--vw', `${vw}px`);
-  }, []);
+  // useEffect(() => {
+  //   const vh = window.innerHeight * 0.01;
+  //   const vw = window.innerWidth * 0.01;
+  //   document.documentElement.style.setProperty('--vh', `${vh}px`);
+  //   document.documentElement.style.setProperty('--vw', `${vw}px`);
+  // }, []);
 
   return (
     <div className={styles.container}>
