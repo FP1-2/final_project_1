@@ -24,7 +24,7 @@ public class MessageController {
     private final MessageFacade messageFacade;
     private final SimpMessagingTemplate messagingTemplate;
     private final ChatFacade chatFacade;
-    private final String messageNotificationPath = "/queue/notifications";
+    private final String messageNotificationPath = "/queue/messageNotification";
 
     @MessageMapping("/chat")
     public void sendMessage(@Payload MessageRequest messRq, SimpMessageHeaderAccessor headerAccessor){
