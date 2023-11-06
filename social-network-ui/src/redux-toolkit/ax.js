@@ -1,13 +1,12 @@
 import axios from 'axios';
-import { getTokenFromLocalStorage } from '../utils/localStorageHelper';
-
 
 export const basicAx = axios.create({
   baseURL: 'https://yourhostel.world',
 });
 
 export const workAx = async (method, url, data) => {
-  const token = getTokenFromLocalStorage();
+  const { getToken } = await import('./store');
+  const token = getToken();
   return basicAx({
     method: method,
     url: url,

@@ -1,87 +1,59 @@
-import React from "react";
-
-import { NavLink } from "react-router-dom";
+import React, {useEffect} from "react";
 import styles from "./Header.module.scss";
-import facebookIcon from "../../assets/facebook_icon.png";
-import NotificationIcon from "../../assets/notificationIcon.png";
-import PostsIcon from "../../assets/postsIcon.png";
-import MessagesIcon from "../../assets/messagesIcon.png";
-import ProfileIcon from "../../assets/profileIcon.png";
-import FavoritsIcon from "../../assets/favoriteIcon.png";
-import Cookie from "js-cookie";
-import LogInForm from "../LogInForm/LogInForm";
+import {NavLink} from "react-router-dom";
+import Avatar from "../Avatar/Avatar";
+import PropTypes from "prop-types";
+import FacebookIcon from "../Icons/FacebookIcon";
+import NotificationIcon from "../Icons/NotificationIcon";
+import MessengerIcon from "../Icons/Messenger";
+import Search from "../Icons/Search";
+import {useDispatch, useSelector} from "react-redux";
+import {loadUnreadMessagesQt} from "../../redux-toolkit/messenger/asyncThunk";
 
-function logout() {
-  localStorage.clear();
-  Cookie.remove("token");
-}
-function Header() {
-  const isAuthorized =  localStorage.getItem('token');
-  if (isAuthorized){
-    return (
-      <header className={styles.header}>
-        <div>
-          <img src={facebookIcon} alt="" />
-          <input type="text" className={styles.searc} name="search" placeholder="Search on Facebook" />
+export default function Header({authUser}) {
+  const dispatch = useDispatch();
+  const unreadMessQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
+  const newNotificationsQt = 2;
+
+  useEffect(() => {
+    dispatch(loadUnreadMessagesQt());
+  }, []);
+
+  return (
+    <header className={styles.header}>
+      <div className={styles.header__logoWrap}>
+        <NavLink to={"/"} className={styles.header__logoWrap__link}>
+          <FacebookIcon size={"40px"} />
+        </NavLink>
+        <input type="text" className={styles.header__logoWrap__search} name="search" placeholder="Search on Facebook"/>
+      </div>
+      <div className={styles.header__icons}>
+        <div className={`${styles.header__icons__item} ${styles.desktopNone}`}>
+          <Search/>
         </div>
-        <nav>
-          <ul>
-            <li>
-              <NavLink to="/">
-                <img src={PostsIcon} alt="" />
-                Posts
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/messages">
-                <img src={MessagesIcon} alt="" />
-                  Messages</NavLink>
-            </li>
-            <li>
-              <NavLink to="/favorites">
-                <img src={FavoritsIcon} alt="" />
-                  Favorites</NavLink>
-            </li>
-            <li>
-              <NavLink to="/notifications">
-                <img src={NotificationIcon} alt="" />
-                Notifications
-              </NavLink>
-            </li>
-            <li>
-              <NavLink to="/profile">
-                <img src={ProfileIcon} alt="" />
-                  Profile</NavLink>
-            </li>
-          </ul>
-        </nav>
-        <button className={styles.logOut}onClick={() => logout()}>Log out</button>
-      </header>
-    );
-  } return(
-    <>
-      <header className={styles.header}>
-        <div>
-          <img src={facebookIcon} alt="" />
-          <input type="text" name="search" placeholder="Search on Facebook" />
-        </div>
-      
-        <nav>
-          <ul>
-            <li>
-              <NavLink to="/">
-                <img src={PostsIcon} alt="" />
-                Posts
-              </NavLink>
-            </li>
-          </ul>
-        </nav>
-           
-           
-      </header>
-      <LogInForm/>
-    </>
+        <NavLink to={'/messages'} className={styles.header__icons__item}>
+          <MessengerIcon/>
+          {unreadMessQt > 0 && <span>{unreadMessQt}</span>}
+        </NavLink>
+        <NavLink to={'/notifications'} className={styles.header__icons__item}>
+          <NotificationIcon/>
+          {newNotificationsQt > 0 && <span>{newNotificationsQt}</span>}
+        </NavLink>
+        <NavLink to={`/profile/${authUser.id}`} className={styles.header__icons__item}>
+          <Avatar name={authUser.name} photo={authUser.avatar} additionalClass={styles.header__icons__item__avatar}/>
+        </NavLink>
+      </div>
+
+    </header>
   );
 }
 
-export default Header;
+Header.propTypes = {
+  authUser: PropTypes.shape({
+    id: PropTypes.number.isRequired,
+    name: PropTypes.string.isRequired,
+    surname: PropTypes.string.isRequired,
+    username: PropTypes.string.isRequired,
+    avatar: PropTypes.oneOfType([PropTypes.string, PropTypes.oneOf([null])]).isRequired,
+  }).isRequired,
+};

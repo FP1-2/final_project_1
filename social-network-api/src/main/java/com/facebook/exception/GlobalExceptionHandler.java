@@ -1,9 +1,5 @@
 package com.facebook.exception;
 
-import java.time.LocalDateTime;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
 import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -13,6 +9,11 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.time.LocalDateTime;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 @Log4j2
 @RestControllerAdvice
@@ -100,9 +101,19 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
-    @ExceptionHandler(UnauthorizedAccessException.class)
+    /**
+     * Оброблює винятки типу {@link UnauthorizedException}.
+     *
+     * <p>Перехоплює та формує відповідь для клієнта
+     * з повідомленням та HTTP статусом 401 (Unauthorized).</p>
+     *
+     * @param ex екземпляр винятка.
+     * @return відповідь для клієнта із мапою даних,
+     * що містить тип винятка та повідомлення.
+     */
+    @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<Map<String, Object>>
-    handleUnauthorizedAccessException(UnauthorizedAccessException ex) {
+    handleUnauthorizedAccessException(UnauthorizedException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("type", "Unauthorized Access Error");
         body.put("message", ex.getMessage());
@@ -138,5 +149,10 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body("Failed to send email: " + ex.getMessage());
     }
-
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<String> handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        log.warn(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body("Invalid value type: " + ex.getMessage());
+    }
 }

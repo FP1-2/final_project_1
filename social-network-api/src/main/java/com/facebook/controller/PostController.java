@@ -4,24 +4,18 @@ import com.facebook.dto.post.ActionResponse;
 import com.facebook.dto.post.CommentDTO;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.CommentResponse;
+import com.facebook.dto.post.PostPatchRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
+import com.facebook.dto.post.RepostRequest;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.PostService;
-
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
-
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 
 /**
@@ -80,25 +74,6 @@ public class PostController {
     public ResponseEntity<ActionResponse> likePost(@PathVariable Long postId) {
         Long userId = currentUserService.getCurrentUserId();
         return postService.likePost(userId, postId)
-                .map(ResponseEntity::ok)
-                .orElse(ResponseEntity.notFound().build());
-    }
-
-    /**
-     * Створює репост поста з заданим ID від поточного користувача.
-     *
-     * @param postId Ідентифікатор поста, який потрібно репостити.
-     * @return Відгук про дію.
-     *
-     * <p>
-     * <strong>Приклад:</strong>
-     *   /api/posts/repost/4
-     * </p>
-     */
-    @PostMapping("/repost/{postId}")
-    public ResponseEntity<ActionResponse> repost(@PathVariable Long postId) {
-        Long userId = currentUserService.getCurrentUserId();
-        return postService.repost(userId, postId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
     }
@@ -184,13 +159,61 @@ public class PostController {
      *  "body": "Тут міститься вміст мого поста."}
      * </p>
      */
-    @PostMapping("/")
+    @PostMapping("/post")
     public ResponseEntity<PostResponse> createPost(@Validated
                                                    @RequestBody
                                                    PostRequest postRequest) {
         Long userId = currentUserService.getCurrentUserId();
         PostResponse postResponse = postService.createPost(postRequest, userId);
         return ResponseEntity.ok(postResponse);
+    }
+
+    /**
+     * Обробляє запит на репост поста.
+     * <p>
+     * Цей метод використовує логіку, описану в {@link PostService#createRepost}.
+     * </p>
+     * <p>
+     * Додатково, цей метод використовує валідацію вхідних даних за допомогою моделі
+     * {@link RepostRequest}.
+     * </p>
+     *
+     * @param repostRequest Об'єкт запиту на репост, який містить інформацію про допис, який необхідно репостити.
+     * @return {@code ResponseEntity<ActionResponse>} Якщо репост був успішно створено чи видалено,
+     *         повертає статус OK (200) з відповіддю. В іншому випадку повертає статус Not Found (404).
+     */
+    @PostMapping("/repost")
+    public ResponseEntity<ActionResponse> createRepost(@Validated
+                                                       @RequestBody
+                                                       RepostRequest repostRequest) {
+        Long userId = currentUserService.getCurrentUserId();
+        return postService.createRepost(repostRequest, userId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Контролер для обробки запиту на часткове оновлення існуючого поста.
+     *
+     * @param postId       ідентифікатор поста, який потрібно оновити.
+     * @param patchRequest DTO з даними для часткового оновлення поста.
+     * @return об'єкт {@link PostResponse} з даними оновленого поста.
+     */
+    @PatchMapping("/update/{postId}")
+    public ResponseEntity<PostResponse> updatePost(@PathVariable Long postId,
+                                                   @Validated
+                                                   @RequestBody
+                                                   PostPatchRequest patchRequest) {
+        Long userId = currentUserService.getCurrentUserId();
+        PostResponse postResponse = postService.updatePost(patchRequest, postId, userId);
+        return ResponseEntity.ok(postResponse);
+    }
+
+    @DeleteMapping("/delete/{postId}")
+    public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+        Long userId = currentUserService.getCurrentUserId();
+        postService.deletePost(userId, postId);
+        return ResponseEntity.ok("Post deleted successfully!");
     }
 
 }

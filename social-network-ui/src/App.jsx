@@ -1,17 +1,28 @@
-import React from 'react';
-import Header from './components/Header/Header';
+import React, {useEffect} from 'react';
 import AppRoutes from './AppRoutes';
+import {useSelector, useDispatch} from "react-redux";
+import {useCallback} from 'react';
+import { setIsVisible } from './redux-toolkit/ws/slice';
 
 function App() {
-  const isLoginPageLogin = window.location.pathname.includes('/login');
-  const isLoginPageRegister = window.location.pathname.includes('/registration');
-  const isLoginPageReset = window.location.pathname.includes('/reset-password');
-  const isLoginPageUpdatePass = window.location.pathname.includes('/change_password/:token');
+  const authUser = useSelector(state => state.auth.user.obj);
+  const isAuth = Object.keys(authUser).length > 0;
+
+  const dispatch = useDispatch();
+  const connectWebSocket = useCallback(() => {
+    dispatch(setIsVisible(false));
+    dispatch({type: 'webSocket/connect'});
+  }, [authUser]);
+
+  useEffect(() => {
+    if (isAuth) {
+      connectWebSocket();
+    }
+  }, [isAuth]);
 
   return (
     <div className="App">
-      {!isLoginPageLogin && !isLoginPageRegister && !isLoginPageReset && !isLoginPageUpdatePass && <Header />}
-      <AppRoutes />
+      <AppRoutes isAuth={isAuth}/>
     </div>
   );
 }

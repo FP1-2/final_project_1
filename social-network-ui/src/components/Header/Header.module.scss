@@ -1,64 +1,121 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
 .header {
-  position: relative;
-  div {
-    padding: 10px 15px;
-    display: flex;
-    align-items: center;
-    background-color: #fff;
-    input {
-      max-width: 300px;
-      min-height: 30px;
-      font-size: 18px;
-      padding: 6px 0 4px 10px;
-      border: 1px solid #cecece;
-      // background: #F6F6f6;
-      border-radius: 25px;
-    }
-    img {
+  width: 100%;
+  border-bottom: 1px solid $input-color-main;
+  box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);
+  @include flex-center-row;
+  justify-content: space-between;
+  padding: 10px 15px;
+
+  &__logoWrap {
+    @include flex-center-row;
+    background-color: $main-background-color;
+
+    & svg {
       height: 40px;
-      width: 40px;
-      margin-right: 8px;
+      width: auto;
+    }
+
+    &__link {
+      cursor:pointer;
+    }
+
+    &__search {
+      display: none;
     }
   }
- 
 
-  nav {
-    background-color: #f6f6f6;
-    font-size: 22px;
-    font-weight: 400;
-    padding-left: 50px;
-    line-height: 1.6;
-  
-    ul {
-      li {
-        padding: 15px;
+  &__nav {
+    display: none
+  }
 
-        img {
-          height: 20px;
-          width: 20px;
-          margin-right: 7px;
-        }
+  &__icons {
+    @include flex-center-row;
+    gap: 8px;
+
+    &__item {
+      background-color: $background-color-receiver-message;
+      cursor: pointer;
+      position: relative;
+      @include flex-center;
+      justify-content: center;
+      @include sizeCircle(40px);
+
+      &:hover {
+        background-color: $hover-background-color;
+      }
+
+      & svg {
+        @include size(20px);
+      }
+
+      & span {
+        position: absolute;
+        @include sizeCircle(20px);
+        color: $main-background-color;
+        background-color: red;
+        @include flex-center;
+        top: -6px;
+        right: -6px;
+        font-size: 14px;
+        font-weight: 600;
+
+      }
+
+      &__avatar {
+        @include size(40px);
       }
     }
 
-    @media only screen and (max-width: 993px){
-      
+  }
+
+}
+
+.smallLogo {
+  display: none;
+}
+
+.mobile {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .header {
+    padding-left: 30px;
+    padding-right: 30px;
+
+    &__logoWrap {
+      &__search {
+        display: flex;
+        @include input-field;
+        padding: 0 16px;
+      }
     }
-    @media only screen and (max-width: 481px){}
-  }
-  .logOut{
-    background-color: #4172ed;
-    color: #fff;
-    font-size: 18px;
-    border-radius: 10px;
-   
-    border-color: #fff;
-    padding: 5px;
-    min-width: 150px;
-    margin-left: 70px;
-    margin-top: 70px;
-    font-weight: 550;
 
+    &__icons {
+      gap: 16px;
+    }
   }
 
+  .desktopNone {
+    display: none;
+  }
+}
+
+@media (min-width: 1020px) {
+  .header {
+    max-height: 66px;
+  }
+
+  .smallLogo {
+    display: block;
+    padding-right: 16px;
+  }
+
+  .largeLogo {
+    display: none;
+
+  }
 }

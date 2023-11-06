@@ -1,5 +1,5 @@
 frontend:
-  url: ${FRONTEND_URL:http://localhost:3000}
+  url: ${FRONTEND_URL:https://danit-final-project-1.netlify.app}
 email:
   host: ${EMAIL_HOST}
   port: ${EMAIL_PORT}
@@ -19,6 +19,11 @@ logging:
 #  Це може бути корисно при налаштуванні та виправленні тестів,
 #  особливо якщо у вас є проблеми або питання щодо життєвого циклу контексту тестування або його кешування.
 #       org.springframework.test.context.cache: DEBUG
+springdoc:
+  api-docs:
+    path: /api-docs
+  swagger-ui:
+    path: /swagger-ui.html
 
 ---
 spring:
@@ -35,9 +40,9 @@ spring:
       enabled: true
       path: /h2
   jpa:
-    show-sql: true
+    show-sql: false
     properties:
-      hibernate.format_sql: "true"
+      hibernate.format_sql: "false"
     hibernate:
 
 #  Що робить update:
@@ -61,6 +66,8 @@ spring:
 
 server:
   port: ${SERVER_PORT:9000}
+frontend:
+  url: http://localhost:3000
 
 ---
 spring:
@@ -80,9 +87,17 @@ spring:
     jdbc:
       time_zone: UTC
     open-in-view: false
-    show-sql: true
-    properties:
-      hibernate.format_sql: "true"
+#    show-sql: true
+#    properties:
+#      hibernate.format_sql: "true"
 server:
   port: ${SERVER_PORT:9000}
+  ssl:
+    key-store: classpath:keystore.p12
+    key-store-password: ${KEY_STORE_PASSWORD_SSL}
+    key-store-type: PKCS12
+    key-alias: tomcat
+
+frontend:
+  url: https://danit-final-project-1.netlify.app
 ---

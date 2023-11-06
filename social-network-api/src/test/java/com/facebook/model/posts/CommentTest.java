@@ -37,6 +37,12 @@ class CommentTest {
         return tem.persistAndFlush(user);
     }
 
+    /**
+     * Створює та зберігає тестовий пост для вказаного користувача.
+     *
+     * @param user Користувач, для якого потрібно створити пост.
+     * @return Створений та збережений пост.
+     */
     private Post createAndSaveTestPost(AppUser user) {
         Post post = new Post();
         post.setTitle("Title");
@@ -44,6 +50,7 @@ class CommentTest {
         post.setStatus(PostStatus.DRAFT);
         post.setUser(user);
         post.setImageUrl("image.jpg");
+        post.setType(PostType.POST);
         return tem.persistAndFlush(post);
     }
 

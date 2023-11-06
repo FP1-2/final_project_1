@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Optional;
 
+import com.facebook.service.notifications.NotificationService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mockito;
@@ -35,12 +36,10 @@ import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.Repost;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.LikeRepository;
 import com.facebook.repository.posts.PostRepository;
-import com.facebook.repository.posts.RepostRepository;
 
 
 /**
@@ -58,8 +57,6 @@ import com.facebook.repository.posts.RepostRepository;
  *  <li>{@link #testFindPostDetailsByUserId()} - Отримання деталей постів за ID користувача</li>
  *  <li>{@link #testLikePostWhenNoExistingLike()} - Додавання лайку до посту, коли лайка ще не існує</li>
  *  <li>{@link #testLikePostWhenExistingLike()} - Видалення лайку з посту, якщо лайк вже існує</li>
- *  <li>{@link #testAddRepostIfNotExists()} - Додавання репосту до посту, коли репост ще не існує</li>
- *  <li>{@link #testRemoveRepostIfExists()} - Видалення репосту з посту, якщо репост вже існує</li>
  *  <li>{@link #testAddComment()} - Додавання коментаря до посту</li>
  *  <li>{@link #testAddCommentWithMissingUser()} - Додавання коментаря користувачем,
  *      який відсутній в базі даних</li>
@@ -85,14 +82,13 @@ class PostServiceTest {
     private CommentRepository commentRepository;
 
     @MockBean
-    private RepostRepository repostRepository;
-
-    @MockBean
     private AppUserRepository appUserRepository;
 
     @MockBean
     private PostFacade postFacade;
 
+    @MockBean
+    private NotificationService notificationService;
     /**
      * Тестує отримання всіх постів.
      *
@@ -228,7 +224,7 @@ class PostServiceTest {
 
         assertTrue(result.isPresent());
         assertTrue(result.get().added());
-        assertEquals("Action added", result.get().message());
+        assertEquals("Like added", result.get().message());
         Mockito
                 .verify(likeRepository)
                 .save(any());
@@ -272,96 +268,10 @@ class PostServiceTest {
 
         assertTrue(result.isPresent());
         assertFalse(result.get().added());
-        assertEquals("Action removed", result.get().message());
+        assertEquals("Like removed", result.get().message());
         Mockito
                 .verify(likeRepository)
                 .delete(existingLike);
-    }
-
-    /**
-     * Тестує додавання репосту до посту,
-     * коли репост ще не існує.
-     * <p>
-     * Основні кроки:
-     * 1. Імітуємо наявність користувача
-     *    та посту в базі даних.
-     * 2. Забезпечуємо, що репост від користувача
-     *    для даного посту відсутній.
-     * 3. Викликаємо метод для додавання репосту.
-     * 4. Перевіряємо, що результат не пустий і містить
-     *    відомості про успішне додавання репосту.
-     * </p>
-     */
-    @Test
-    void testAddRepostIfNotExists() {
-        Long userId = 1L;
-        Long postId = 2L;
-
-        AppUser user = new AppUser();
-        Post post = new Post();
-
-        Mockito
-                .when(appUserRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-        Mockito
-                .when(postRepository.findById(postId))
-                .thenReturn(Optional.of(post));
-        Mockito
-                .when(repostRepository.findByUserAndPost(user, post))
-                .thenReturn(Optional.empty());
-        Mockito
-                .when(repostRepository.save(any(Repost.class)))
-                .thenReturn(new Repost());
-
-        Optional<ActionResponse> result = postService.repost(userId, postId);
-
-        assertTrue(result.isPresent());
-        assertTrue(result.get().added());
-        assertEquals("Action added", result.get().message());
-    }
-
-    /**
-     * Тестує видалення репосту з посту,
-     * якщо репост вже існує.
-     * <p>
-     * Основні кроки:
-     * 1. Імітуємо наявність користувача, посту та
-     *    існуючого репосту в базі даних.
-     * 2. Викликаємо метод для додавання репосту,
-     *    який має видалити існуючий репост.
-     * 3. Перевіряємо, що результат не пустий і містить
-     *    відомості про успішне видалення репосту.
-     * 4. Підтверджуємо, що метод видалення репосту
-     *    був викликаний для існуючого репосту.
-     * </p>
-     */
-    @Test
-    void testRemoveRepostIfExists() {
-        Long userId = 1L;
-        Long postId = 2L;
-
-        AppUser user = new AppUser();
-        Post post = new Post();
-        Repost existingRepost = new Repost();
-
-        Mockito
-                .when(appUserRepository.findById(userId))
-                .thenReturn(Optional.of(user));
-        Mockito
-                .when(postRepository.findById(postId))
-                .thenReturn(Optional.of(post));
-        Mockito
-                .when(repostRepository.findByUserAndPost(user, post))
-                .thenReturn(Optional.of(existingRepost));
-
-        Optional<ActionResponse> result = postService.repost(userId, postId);
-
-        assertTrue(result.isPresent());
-        assertFalse(result.get().added());
-        assertEquals("Action removed", result.get().message());
-        Mockito
-                .verify(repostRepository)
-                .delete(existingRepost);
     }
 
     /**
@@ -474,4 +384,3 @@ class PostServiceTest {
     }
 
 }
-
