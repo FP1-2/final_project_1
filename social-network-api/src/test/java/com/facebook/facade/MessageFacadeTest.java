@@ -72,7 +72,6 @@ class MessageFacadeTest {
         when(messageService.getAllMessages(chatId, pageable)).thenReturn(new PageImpl<>(List.of(testMessage)));
         when(modelMapper.map(testMessage, MessageResponse.class)).thenReturn(testMessageR);
         when(chatFacade.convertToChatResponse(chat, receiverUser)).thenReturn(chatR);
-
         List<MessageResponse> result = messageFacade.getAllMessages(chatId, pageable);
 
         assertEquals(List.of(testMessageR), result);
