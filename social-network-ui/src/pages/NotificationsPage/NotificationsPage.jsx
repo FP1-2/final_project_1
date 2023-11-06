@@ -1,39 +1,39 @@
-import React from 'react';
+import React, {useEffect} from 'react';
+import Notification from '../../components/Notification/Notification';
+import styles from './NotificationsPage.module.scss';
 import { loadNotifications,
-  loadNotification,
-  notificationMarkAsRead,
-  loadUnreadCount,} from '../../redux-toolkit/notification/thunks';
-import {useDispatch} from "react-redux";
+  // loadNotification,
+  // notificationMarkAsRead,
+  // loadUnreadCount,
+} from '../../redux-toolkit/notification/thunks';
+import {useDispatch, useSelector} from "react-redux";
 
 function NotificationsPage() {
 
-  const buttonStyle = {
-    display: 'block',
-    margin: '10px',
-    padding: '10px 20px',
-    cursor: 'pointer',
-    border: '1px solid black'
-  };
-
   const dispatch = useDispatch();
 
-  const testNotificationId = '459';
+  const notifications = useSelector((state) => state.notifications.notifications.obj.content);
+  const loading = useSelector((state) => state.notifications.loading);
+  const error = useSelector((state) => state.notifications.error);
+
+  useEffect(() => {
+    dispatch(loadNotifications());
+  }, [dispatch]);
+
+
+  if (loading) {
+    return <div>Loading...</div>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
-    <div>
-      <h1>NotificationsPage</h1>
-      <button style={buttonStyle} onClick={() => dispatch(loadNotifications())}>
-                Загрузить все уведомления
-      </button>
-      <button style={buttonStyle} onClick={() => dispatch(loadNotification(testNotificationId))}>
-                Загрузить уведомление {testNotificationId}
-      </button>
-      <button style={buttonStyle} onClick={() => dispatch(notificationMarkAsRead(testNotificationId))}>
-                Отметить как прочитанное {testNotificationId}
-      </button>
-      <button style={buttonStyle} onClick={() => dispatch(loadUnreadCount())}>
-                Загрузить количество непрочитанных
-      </button>
+    <div className={styles.container}>
+      {notifications.map((notification) => (
+        <Notification key={notification.id} notification={notification} />
+      ))}
     </div>
   );
 }
