@@ -37,7 +37,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @Import(TestConfig.class)
 @AutoConfigureMockMvc
 @WithMockUser(username="testUser", password="test")
-public class ChatControllerTest {
+class ChatControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @MockBean
@@ -139,7 +139,7 @@ public class ChatControllerTest {
                 .andExpect(jsonPath("$").value(5));
     }
     @Test
-    public void testSearchChats() throws Exception {
+    void testSearchChats() throws Exception {
         List<ChatResponse> mockChats = new ArrayList<>();
         mockChats.add(new ChatResponse());
         when(chatFacade.searchChats(anyString(), any(Pageable.class))).thenReturn(mockChats);

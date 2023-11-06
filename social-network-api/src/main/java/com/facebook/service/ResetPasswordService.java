@@ -17,7 +17,8 @@ import java.util.UUID;
 
 @Log4j2
 @Service
-public class ResetPasswordService {
+public class
+ResetPasswordService {
     private final CacheStore<String> resetPasswordTokenCache;
     private final EmailHandlerService emailHandlerService;
     private final AppUserService appUserService;

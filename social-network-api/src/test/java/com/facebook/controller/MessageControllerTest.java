@@ -23,7 +23,7 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MessageController.class)
 @Import(TestConfig.class)
-public class MessageControllerTest {
+class MessageControllerTest {
 
     @MockBean
     private SimpMessagingTemplate messagingTemplate;
@@ -75,7 +75,7 @@ public class MessageControllerTest {
 
         verify(messageFacade, times(1)).updateStatus(messageId, MessageStatus.READ, principal);
         verify(chatFacade, times(1)).getReceiverUser(any(), any());
-        verify(messagingTemplate, times(1)).convertAndSendToUser(eq(receiverUser.getUsername()), eq("/queue/messageStatus"), eq(messageResponse));
+        verify(messagingTemplate, times(1)).convertAndSendToUser(receiverUser.getUsername(), "/queue/messageStatus", messageResponse);
         verify(messageFacade, times(1)).countUnreadMessage(principal);
     }
 }

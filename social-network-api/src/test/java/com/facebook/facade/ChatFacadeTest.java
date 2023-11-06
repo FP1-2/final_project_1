@@ -28,7 +28,7 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 @SpringBootTest(classes = ChatFacade.class)
-public class ChatFacadeTest {
+class ChatFacadeTest {
     @MockBean
     private ModelMapper modelMapper;
     @MockBean
