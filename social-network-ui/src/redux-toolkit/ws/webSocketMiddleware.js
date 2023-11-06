@@ -2,6 +2,7 @@ import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {setNewMessage, setMessageWithNewStatus, setIsVisible} from "./slice";
 import {setUnreadMessagesQt} from "../messenger/slice";
+const baseURL = process.env.REACT_APP_BASE_URL;
 
 let client = null;
 
@@ -15,7 +16,7 @@ const webSocketMiddleware = (store) => (next) => (action) => {
   
   switch (action.type) {
     case 'webSocket/connect': {
-      const socket = new SockJS('https://yourhostel.world/ws');
+      const socket = new SockJS(`${baseURL}/ws`);
       client = Stomp.over(() => socket);
       client.connect(
         headers,
@@ -88,4 +89,5 @@ const webSocketMiddleware = (store) => (next) => (action) => {
       return next(action);
   }
 }
+
 export default webSocketMiddleware;

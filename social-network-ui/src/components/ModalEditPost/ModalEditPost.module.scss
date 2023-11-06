@@ -1,0 +1,219 @@
+@import "../../styles/mixin.scss";
+
+.modalWrapper {
+    position: fixed;
+    left: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255, 255, 255, 0.4);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    z-index: 3;
+    padding: 15px;
+    top:0;
+
+    .modal {
+        width: 500px;
+        min-height: 460px;
+        border-radius: 5px;
+        box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+        background-color: white;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+
+        @include width_576 {
+            width: 100%;
+        }
+
+        .error {
+            font-size: 15px;
+            color: red;
+            display: block;
+            padding-left: 16px;
+            margin-bottom: 0;
+            margin-top: 5px;
+        }
+
+        .errorNames {
+            font-size: 10px;
+            color: red;
+            margin: 0;
+            bottom: -15px;
+            left: 0;
+            display: block;
+            position: absolute;
+        }
+
+        .errorDisplayNone {
+            display: none;
+        }
+
+        .modalHeader {
+            .modalHeaderTitleWrapper {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                position: relative;
+                height: 60px;
+
+                .modalHeaderTitle {
+                    color: #050505;
+                    font-weight: 700;
+                    font-size: 20px;
+                    line-height: 1.2;
+                }
+
+                .modalHeaderCloseBtn {
+                    width: 36px;
+                    height: 36px;
+                    background-color: #E4E6EB;
+                    border: none;
+                    border-radius: 50%;
+                    position: absolute;
+                    right: 16px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+
+                    .modalHeaderCloseBtnImg {
+                        width: 20px;
+                        height: 20px;
+                    }
+
+                    &:hover {
+                        cursor: pointer;
+                        background-color: #d5d8de;
+                    }
+                }
+
+                &::after {
+                    content: "";
+                    width: 100%;
+                    border-bottom: 1px solid #ced0d4;
+                    position: absolute;
+                    top: 60px;
+                }
+            }
+
+            .modalHeaderInfo {
+                display: flex;
+                justify-content: flex-start;
+                align-items: center;
+                padding: 16px;
+                gap: 10px;
+
+
+                .modalHeaderInfoImg {
+                    width: 40px;
+                    height: 40px;
+                    object-fit: cover;
+                    border-radius: 50%;
+                }
+
+                .modalHeaderInfoLink {
+                    text-decoration: none;
+                    color: #050505;
+                    line-height: 1.3333;
+                    font-size: 15px;
+                    font-weight: 600;
+
+                    &:hover {
+                        text-decoration: underline;
+                    }
+                }
+            }
+        }
+
+        .modalMain {
+            overflow: auto;
+            width: 100%;
+            max-height: 217px;
+
+            .modalMainBtn {
+                padding: 8px;
+                border: none;
+                border-radius: 5px;
+                min-width: 115px;
+                color: #0064D1;
+                font-weight: 400;
+                font-size: 17px;
+                line-height: 1.1765;
+                background-color: transparent;
+                margin-bottom: 16px;
+                margin-left: 16px;
+
+                &:hover {
+                    background-color: rgba(0, 0, 0, 0.05);
+                }
+            }
+        }
+
+
+        .modalFooter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 56px;
+            padding: 16px;
+            gap: 10px;
+
+            @include width_576 {
+                flex-direction: column;
+            }
+
+
+            .modalAddPhotoBtn {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                min-height: 100%;
+                width: 229px;
+                border: 1px solid #dfe0e2;
+                border-radius: 5px;
+                gap: 5px;
+                background-color: transparent;
+                font-size: 15px;
+                font-weight: 600;
+                line-height: 1.3333;
+                color: #050505;
+
+                @include width_576 {
+                    width: 100%;
+                    min-height: 50%;
+                }
+
+                &:hover {
+                    cursor: pointer;
+                }
+
+                .modalAddPhotoImg {
+                    width: 24px;
+                    max-height: 24px;
+                }
+            }
+
+            .modalPublish {
+                min-height: 100%;
+                min-width: 229px;
+                border: none;
+                border-radius: 5px;
+                font-size: 15px;
+                font-weight: 600;
+                line-height: 1.3333;
+                color: white;
+                background-color: #0866FF;
+
+                &:hover {
+                    cursor: pointer;
+                }
+            }
+        }
+    }
+}
+
+.displayNone {
+    display: none;
+}

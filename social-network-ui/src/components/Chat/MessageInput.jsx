@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {ContentType} from "../../utils/contentType";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { getPhotoURL } from '../../redux-toolkit/registration/thunks';
+import { getPhotoURL } from '../../utils/thunks';
 
 export default function MessageInput({sendMessage, handleMessageChange, message, emojiHandler}) {
   const [isOpen, setIsOpen] = useState(false);
