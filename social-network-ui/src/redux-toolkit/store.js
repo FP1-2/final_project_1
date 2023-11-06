@@ -10,7 +10,7 @@ import favouritesReducer from "./favourite/slice";
 import chatsReducer from "./messenger/slice";
 import webSocketReducer from "./ws/slice"
 import webSocketMiddleware from "./ws/webSocketMiddleware"
-
+import notificationReducer from "./notification/slice"
 const RESET_STATE = 'RESET_STATE';
 
 const rootReducer = (state, action) => {
@@ -22,8 +22,8 @@ const rootReducer = (state, action) => {
             post:undefined,
             friend:undefined,
             favourites:undefined,
-            messenger: undefined
-
+            messenger: undefined,
+            notifications: undefined,
         };
     }
     return combineReducers({
@@ -34,7 +34,8 @@ const rootReducer = (state, action) => {
         friends:friendsReducer,
         favourites:favouritesReducer,
         messenger: chatsReducer,
-        webSocket: webSocketReducer
+        webSocket: webSocketReducer,
+        notifications: notificationReducer,
     })(state, action);
 }
 
