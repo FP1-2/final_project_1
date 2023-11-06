@@ -103,6 +103,7 @@ export const postsUser = createAsyncThunk(
     async (id,{rejectWithValue}) => {
         try{
             const response = await workAx("get",`api/posts/by_user_id/${id}`);
+            console.log(response);
             return response.data.content;
         }
         catch(err){

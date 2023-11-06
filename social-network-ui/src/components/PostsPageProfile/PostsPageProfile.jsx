@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import style from "./PostsPageProfile.module.scss";
 import PostProfile from "../PostProfile/PostProfile";
 import RepostProfile from "../RepostProfile/RepostProfile";
@@ -10,14 +10,36 @@ import { ReactComponent as Calendar } from "../../img/calendarProfileInformation
 import { ReactComponent as Home } from "../../img/homeProfileInformation.svg";
 import ModalEditPost from "../ModalEditPost/ModalEditPost";
 import ModalAddRepost from "../ModalAddRepost/ModalAddRepost";
+import InfiniteScroll from "react-infinite-scroll-component";
 
 const PostPageProfile = () => {
 
   const dispatch = useDispatch();
+  const [items, setItems] = useState([]);
+  const [noMore, setNoMore] = useState(true);
   const userObject = useSelector(state => state.profile.profileUser.obj);
   const userPosts = useSelector(state => state.post.postsUser.obj);
 
+  useEffect(() => {
+    if (items.length > 0) {
+      setItems(userPosts.filter((e, i) => i < items.length));
+    } else {
+      setItems(userPosts.filter((e, i) => i < 5));
+    }
+  }, [userPosts]);
 
+
+  const fetchData = () => {
+    if (items.length === userPosts.length) {
+      setNoMore(false);
+    } else {
+      const more = userPosts.filter((e, i) => {
+        return i >= items.length && i < items.length + 3;
+      });
+      setItems([...items, ...more]);
+    }
+  };
+  
   const modalAddPostOpen = () => {
     dispatch(modalAddPostState(true));
   };
@@ -57,13 +79,21 @@ const PostPageProfile = () => {
                 <button className={style.profileAddPostBtn} onClick={modalAddPostOpen}>Add post</button>
               </div> : null}
             <ul className={style.profilePosts}>
-              {Object.keys(userPosts) ? userPosts.map((el) =>
-                <li className={style.profilePost} key={el.postId}>
-                  {el.type === "REPOST" ?
-                    <RepostProfile el={el} />
-                    : <PostProfile el={el} />}
-                </li>
-              ) : null}
+              <InfiniteScroll
+                dataLength={items.length}
+                next={fetchData}
+                hasMore={noMore}
+                loader="Loading"
+                showLoader={true}>
+
+                {Object.keys(userPosts) ? items.map((el) =>
+                  <li className={style.profilePost} key={el.postId}>
+                    {el.type === "REPOST" ?
+                      <RepostProfile el={el} />
+                      : <PostProfile el={el} />}
+                  </li>
+                ) : null}
+              </InfiniteScroll>
             </ul>
           </div>
         </div>
