@@ -47,7 +47,8 @@ const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
     reducer: persistedReducer,
-    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false}).concat(webSocketMiddleware),
+    middleware: (getDefaultMiddleware) => getDefaultMiddleware({serializableCheck: false})
+        .concat(webSocketMiddleware),
 });
 
 export const persist = persistStore(store);
@@ -57,18 +58,6 @@ export const logout = async () => {
     store.dispatch({type: RESET_STATE});
     await persist.purge();
 }
-
-export const startLogoutTimer = () => {
-    console.log("startLogoutTimer");
-    setTimeout(async () => {
-        try {
-            await logout();
-            console.log("Timed logout completed successfully");
-        } catch (error) {
-            console.error("Logout time error:", error);
-        }
-    }, 24 * 60 * 60 * 1000);
-};
 
 export const getToken = () => store.getState().auth.token.obj.token;
 
