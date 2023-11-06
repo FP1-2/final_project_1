@@ -1,7 +1,5 @@
-import axios from "axios";
-import { workAx} from "../ax";
+import { workAx } from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-
 
 export const getPost = createAsyncThunk(
     'post/getPost',
@@ -99,11 +97,10 @@ export const deletePost = createAsyncThunk(
 );
 
 export const postsUser = createAsyncThunk(
-    "profile/postsUse",
+    "post/postsUser",
     async (id,{rejectWithValue}) => {
         try{
             const response = await workAx("get",`api/posts/by_user_id/${id}`);
-            console.log(response);
             return response.data.content;
         }
         catch(err){

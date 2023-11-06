@@ -28,10 +28,10 @@
             gap: 8px;
             width: 360px;
             max-height: 160px;
+            min-height: 160px;
             background-color: white;
             border-radius: 5px;
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
-            // padding: 30px 16px;
 
             @include width_992 {
                 width: 350px;

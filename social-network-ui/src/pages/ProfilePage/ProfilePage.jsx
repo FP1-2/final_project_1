@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
-import { Link, Outlet, useLocation } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate} from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -19,9 +19,11 @@ import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
+import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
+  const navigate=useNavigate();
   let { id } = useParams();
   const {
     profileUser: {
@@ -31,9 +33,19 @@ const ProfilePage = () => {
     }
   } = useSelector(state => state.profile);
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
+  const profileName = useSelector(state => state.profile.profileUser.obj);
   const editUserStatus = useSelector(state => state.profile.editUser.obj);
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
+  const chat = useSelector(state => state.messenger.chat.obj.id);
+
+
+  useEffect(()=>{
+    if (chat){
+      navigate(`/messages/${chat}`);
+    }
+  },[chat]);
+
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
@@ -42,7 +54,6 @@ const ProfilePage = () => {
   const location = useLocation();
   const indexSlash = location.pathname.lastIndexOf('/');
   const word = location.pathname.slice(indexSlash + 1);
-
 
   let isMyFriend;
   for (const el of friends) {
@@ -123,6 +134,10 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
+  const newChat=()=>{
+    dispatch(createChat({username:profileName.username}));
+  };
+
 
 
   if (word === "profile" && linkPosts !== "focus") {
@@ -132,6 +147,7 @@ const ProfilePage = () => {
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
+
 
   return (<>
     {status === "pending" ?
@@ -186,7 +202,7 @@ const ProfilePage = () => {
                         <AddFriend className={style.infoBtnAddFriendImg} />
                         Add Friend
                       </button>}
-                    <button className={style.infoBtnMessage}>
+                    <button className={style.infoBtnMessage} onClick={newChat}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />
                       Message
                     </button>

@@ -406,6 +406,9 @@
                 width: 100%;
                 justify-content: center;
             }
+            @include width_576 {
+                gap:10px;
+            }
 
             .linksListElem {
                 list-style: none;

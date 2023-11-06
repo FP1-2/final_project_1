@@ -1,5 +1,4 @@
-import axios from "axios";
-import { basicAx, workAx} from "../ax";
+import {workAx} from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
 export const addToFavourites = createAsyncThunk(

@@ -16,27 +16,21 @@ const PostPageProfile = () => {
 
   const dispatch = useDispatch();
   const [items, setItems] = useState([]);
-  const [noMore, setNoMore] = useState(true);
+  const [noMore, setNoMore] = useState(false);
   const userObject = useSelector(state => state.profile.profileUser.obj);
   const userPosts = useSelector(state => state.post.postsUser.obj);
 
   useEffect(() => {
-    if (items.length > 0) {
-      setItems(userPosts.filter((e, i) => i < items.length));
-    } else {
-      setItems(userPosts.filter((e, i) => i < 5));
+    if (items.length === 0) {
+      setItems(userPosts);
     }
+
   }, [userPosts]);
 
 
   const fetchData = () => {
     if (items.length === userPosts.length) {
-      setNoMore(false);
-    } else {
-      const more = userPosts.filter((e, i) => {
-        return i >= items.length && i < items.length + 3;
-      });
-      setItems([...items, ...more]);
+      setNoMore(true);
     }
   };
   
@@ -80,11 +74,12 @@ const PostPageProfile = () => {
               </div> : null}
             <ul className={style.profilePosts}>
               <InfiniteScroll
-                dataLength={items.length}
+                dataLength={3}
                 next={fetchData}
                 hasMore={noMore}
                 loader="Loading"
-                showLoader={true}>
+                showLoader={true}
+                endMessage={<p>No more data to load.</p>}>
 
                 {Object.keys(userPosts) ? items.map((el) =>
                   <li className={style.profilePost} key={el.postId}>
