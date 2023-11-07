@@ -13,7 +13,9 @@ import com.facebook.model.posts.Post;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
 import java.util.List;
+import java.util.Objects;
 
+import com.facebook.service.WebSocketService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -45,7 +47,7 @@ import org.springframework.stereotype.Service;
  *                                                   друзів користувача.</li>
  *     <li>{@link #createLikeNotification(AppUser, Post)} - створення повідомлення
  *                                                      про "лайк" поста.</li>
- *     <li>{@link #createRepostNotification(AppUser, Post)} - створення повідомлення
+ *     <li>{@link #createRepostNotification(AppUser, Post, AppUser)} - створення повідомлення
  *                                                      про репост поста.</li>
  *     <li>{@link #createCommentNotification(AppUser, Post)} - створення повідомлення
  *                                                      про коментар до поста.</li>
@@ -70,6 +72,7 @@ public class NotificationService {
     private final FriendsRepository friendsRepository;
 
     private final ModelMapper modelMapper;
+    private final WebSocketService webSocketService;
 
     /**
      * Отримує список повідомлень для конкретного користувача.
@@ -182,12 +185,25 @@ public class NotificationService {
      * @param initiator Ініціатор дії (користувач, який зробив репост).
      * @param post      Пост, який було репостнуто.
      */
-    public void createRepostNotification(AppUser initiator, Post post) {
-        createPostNotification(initiator,
+    public void createRepostNotification(AppUser initiator, Post post, AppUser postOwner) {
+
+        createRepostNotification(initiator,
                 post,
+                postOwner,
                 NotificationType.POST_REPOSTED,
                 (n, i, p) -> {
                 });
+
+        List<AppUser> friends = getApprovedFriendsOfUser(initiator.getId())
+                                .stream()
+                                .filter(f-> Objects.equals(f.getId(), postOwner.getId())).toList();
+        for (AppUser friend : friends) {
+            createFriendNotification(initiator,
+                    friend,
+                    post,
+                    NotificationType.FRIEND_POSTED,
+                    (n, i, r, p) -> n.setPost(p));
+        }
     }
 
     /**
@@ -257,7 +273,20 @@ public class NotificationService {
         strategy.apply(notification, initiator, post);
         notificationRepository.save(notification);
     }
-
+    private void createRepostNotification(AppUser initiator,
+                                        Post post,
+                                        AppUser postOwner,
+                                        NotificationType type,
+                                        PostNotificationStrategy strategy) {
+        Notification notification = new Notification();
+        notification.setUser(postOwner);
+        notification.setInitiator(initiator);
+        notification.setPost(post);
+        notification.setType(type);
+        notification.setMessage(initiator.getName() + " " + type.getDescription());
+        strategy.apply(notification, initiator, post);
+        notificationRepository.save(notification);
+    }
     /**
      * Допоміжний метод для створення повідомлення про дії, пов'язані з друзями.
      *
@@ -279,8 +308,11 @@ public class NotificationService {
         notification.setType(type);
         notification.setMessage(initiator.getName() + " " + type.getDescription());
         strategy.apply(notification, initiator, receiver, post);
-        notificationRepository.save(notification);
+        saveAndSendNotification(notification);
     }
-
+    private void saveAndSendNotification(Notification notification){
+        notificationRepository.save(notification);
+        webSocketService.sendNotification(notification.getUser());
+    }
 }
 

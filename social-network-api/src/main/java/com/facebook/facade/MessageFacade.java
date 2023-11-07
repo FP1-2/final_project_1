@@ -17,8 +17,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.List;
 
 @Log4j2
@@ -35,8 +33,7 @@ public class MessageFacade {
         MessageResponse response = modelMapper.map(message, MessageResponse.class);
 
         response.setChat(chatFacade.convertToChatResponse(message.getChat(), chatParticipant));
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(message.getCreatedDate(), ZoneOffset.UTC);
-        response.setCreatedAt(zonedDateTime);
+        response.setCreatedAt(message.getCreatedDate());
         return response;
     }
 
