@@ -1,15 +1,12 @@
 export const formatDate = (nDate) => {
-  const months = [
-    "січня", "лютого", "березня", "квітня", "травня", "червня",
-    "липня", "серпня", "вересня", "жовтня", "листопада", "грудня"
-  ];
   const date = new Date(nDate);
-  const day = date.getDate();
-  const month = months[date.getMonth()];
-  const year = date.getFullYear();
-  const hours = date.getHours();
-  const minutes = date.getMinutes();
-  return `${day} ${month} ${year} р., ${hours}:${minutes.toString().padStart(2, '0')}`
+  return date.toLocaleTimeString('en-UK',{
+    day: "numeric",
+    month: 'long',
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric"
+  });
 }
 
 export const getDate = (date) => {
@@ -17,12 +14,8 @@ export const getDate = (date) => {
 }
 
 export const getTimeAgo = (nDate) => {
-  const months = [
-    "січ.", "лют.", "бер.", "кв.", "тр.", "чер.",
-    "лип.", "серп.", "вер.", "жов.", "лист.", "гр."
-  ];
   const date = new Date(nDate);
-  const now = new Date();
+  const now = new Date().getUTCDate();
 
   const diff = now - date;
 
@@ -37,16 +30,26 @@ export const getTimeAgo = (nDate) => {
 
   switch (true) {
     case years >= 1:
-      result = `${date.getDate()} ${months[date.getMonth()]} ${date.getFullYear()}р.`;
+      result =  date.toLocaleString("en-UK", {
+        day: "numeric",
+        month: "short",
+        year: "numric"
+      });
       break;
     case weeks >= 1:
-      result = `${date.getDate()} ${months[date.getMonth()]}`;
+      result = date.toLocaleString("en-UK", {
+        day: "numeric",
+        month: "short"
+      });
       break;
     case days >= 1:
-      result = `${days} д.`;
+      result = `${days} ago.`;
       break;
     default:
-      result = `${date.getHours()}:${date.getMinutes().toString().padStart(2, '0')}`;
+      result = date.toLocaleTimeString("en-UK", {
+        hour: "numeric",
+        minute: "numeric"
+      });
   }
 
   return result;

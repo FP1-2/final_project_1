@@ -1,4 +1,4 @@
-import {useEffect} from 'react';
+// import {useEffect} from 'react';
 import {Outlet} from "react-router";
 import Navigation from "../../components/Navigation/Navigation";
 import Header from "../../components/Header/Header";
@@ -15,13 +15,6 @@ export default function Layout() {
   const excludedPaths = ['/messages', '/profile', '/login', '/favorites'];
   const showAside = !excludedPaths.some(path => location.pathname.startsWith(path));
 
-
-  useEffect(() => {
-    const vh = window.innerHeight * 0.01;
-    const vw = window.innerWidth * 0.01;
-    document.documentElement.style.setProperty('--vh', `${vh}px`);
-    document.documentElement.style.setProperty('--vw', `${vw}px`);
-  }, []);
 
   return (
     <div className={styles.container}>
