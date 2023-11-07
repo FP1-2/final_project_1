@@ -19,8 +19,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 
 import java.security.Principal;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -90,8 +88,8 @@ public class ChatFacade {
         AppUserChatResponse appUserResponse = modelMapper.map(sender, AppUserChatResponse.class);
         MessageResponseList messageResponse = modelMapper.map(message, MessageResponseList.class);
         messageResponse.setSender(appUserResponse);
-        ZonedDateTime zonedDateTime = ZonedDateTime.of(message.getCreatedDate(), ZoneOffset.UTC);
-        messageResponse.setCreatedAt(zonedDateTime);
+//        ZonedDateTime zonedDateTime = ZonedDateTime.of(message.getCreatedDate(), ZoneOffset.UTC);
+        messageResponse.setCreatedAt( message.getCreatedDate());
         return messageResponse;
     }
     private Optional<MessageResponseList> getLastMessageInChat(Chat chat){

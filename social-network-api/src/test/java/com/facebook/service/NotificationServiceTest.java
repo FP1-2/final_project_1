@@ -45,7 +45,8 @@ class NotificationServiceTest {
 
     @Mock
     private ModelMapper modelMapper;
-
+    @Mock
+    private WebSocketService webSocketService;
     @InjectMocks
     private NotificationService notificationService;
 
@@ -86,7 +87,7 @@ class NotificationServiceTest {
      */
     @Test
     void testCreateRepostNotification() {
-        notificationService.createRepostNotification(initiator, post);
+        notificationService.createRepostNotification(initiator, post, new AppUser());
 
         verify(notificationRepository).save(any(Notification.class));
     }
