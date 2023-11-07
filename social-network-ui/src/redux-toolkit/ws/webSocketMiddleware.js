@@ -2,8 +2,7 @@ import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
 import {setNewMessage, setMessageWithNewStatus, setIsVisible, setNotification} from "./slice";
 import {setUnreadMessagesQt} from "../messenger/slice";
-// const baseURL = process.env.REACT_APP_BASE_URL;
-const baseURL = "http://localhost:9000";
+const baseURL = process.env.REACT_APP_BASE_URL;
 let client = null;
 
 const webSocketMiddleware = (store) => (next) => (action) => {
