@@ -9,6 +9,8 @@ import com.facebook.model.chat.Message;
 import com.facebook.model.chat.MessageStatus;
 
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 
@@ -81,6 +83,8 @@ public class TestDataFactory {
         messageResponse.setContent("content");
         messageResponse.setSender(senderResponse);
         messageResponse.setStatus(MessageStatus.SENT);
+        ZonedDateTime zonedDateTime = ZonedDateTime.of(LocalDateTime.of(2023, 11, 6, 12, 0), ZoneOffset.UTC);
+        messageResponse.setCreatedAt(zonedDateTime);
         return messageResponse;
     }
 
