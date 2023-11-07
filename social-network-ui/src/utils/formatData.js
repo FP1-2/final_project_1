@@ -15,7 +15,7 @@ export const getDate = (date) => {
 
 export const getTimeAgo = (nDate) => {
   const date = new Date(nDate);
-  const now = new Date().getUTCDate();
+  const now = new Date();
 
   const diff = now - date;
 
