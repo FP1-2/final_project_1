@@ -15,6 +15,7 @@ import com.facebook.repository.posts.CommentRepository;
 import com.facebook.repository.posts.PostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.EmailHandlerService;
+import com.facebook.service.WebSocketService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
@@ -93,7 +94,8 @@ class PostControllerTest {
 
     @MockBean
     private EmailHandlerService emailHandlerService;
-
+    @MockBean
+    private WebSocketService webSocketService;
     @Autowired
     private CommentRepository commentRepository;
 

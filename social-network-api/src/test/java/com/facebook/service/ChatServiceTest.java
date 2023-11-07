@@ -23,7 +23,7 @@ import static org.mockito.Mockito.when;
 
 
 @SpringBootTest(classes = ChatService.class)
-public class ChatServiceTest {
+class ChatServiceTest {
     @MockBean
     private ChatRepository chatRepository;
     @Autowired
@@ -62,7 +62,7 @@ public class ChatServiceTest {
         assertEquals(chatList.size(), result.getContent().size());
     }
     @Test
-    public void testGetReceiverUser() {
+    void testGetReceiverUser() {
         AppUser authUser = new AppUser();
         authUser.setId(1L);
         AppUser chatParticipant = new AppUser();
@@ -76,7 +76,7 @@ public class ChatServiceTest {
         assertEquals(chatParticipant, receiverUser);
     }
     @Test
-    public void testGetReceiverUserWithUserNotFoundException() {
+    void testGetReceiverUserWithUserNotFoundException() {
         AppUser authUser = new AppUser();
         authUser.setId(1L);
         Long chatId = 1L;
@@ -87,7 +87,7 @@ public class ChatServiceTest {
         assertThrows(UserNotFoundException.class, () -> chatService.getReceiverUser(authUser, chatId));
     }
     @Test
-    public void testGetReceiverUserWithChatNotContainsAuthUser() {
+    void testGetReceiverUserWithChatNotContainsAuthUser() {
         AppUser authUser = new AppUser();
         authUser.setId(1L);
         AppUser chatParticipant = new AppUser();
@@ -101,7 +101,7 @@ public class ChatServiceTest {
         assertThrows(UserNotFoundException.class, () -> chatService.getReceiverUser(authUser, chatId));
     }
     @Test
-    public void testCreateNewChat() {
+    void testCreateNewChat() {
         AppUser authUser = new AppUser();
         AppUser chatParticipant = new AppUser();
         Chat newChat =  Chat.of(authUser, chatParticipant);
@@ -113,7 +113,7 @@ public class ChatServiceTest {
         assertEquals(newChat, createdChat);
     }
     @Test
-    public void testCreateNewChatIfChatIsExist() {
+    void testCreateNewChatIfChatIsExist() {
         AppUser authUser = new AppUser();
         AppUser chatParticipant = new AppUser();
         Chat chat =  new Chat();
@@ -125,7 +125,7 @@ public class ChatServiceTest {
         assertEquals(chat, createdChat);
     }
     @Test
-    public void testSearchChats() {
+    void testSearchChats() {
         Pageable pageable = PageRequest.of(0, 10);
         AppUser authUser = new AppUser();
         String input = "testName";

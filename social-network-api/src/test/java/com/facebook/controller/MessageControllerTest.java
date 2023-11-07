@@ -8,13 +8,13 @@ import com.facebook.facade.ChatFacade;
 import com.facebook.facade.MessageFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.chat.MessageStatus;
+import com.facebook.service.WebSocketService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.messaging.simp.SimpMessageHeaderAccessor;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 
 import java.security.Principal;
 
@@ -23,10 +23,10 @@ import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = MessageController.class)
 @Import(TestConfig.class)
-public class MessageControllerTest {
+class MessageControllerTest {
 
     @MockBean
-    private SimpMessagingTemplate messagingTemplate;
+    private WebSocketService webSocketService;
 
     @MockBean
     private MessageFacade messageFacade;
@@ -70,12 +70,12 @@ public class MessageControllerTest {
         AppUser receiverUser = new AppUser(){{setUsername("testUsername");}};
         when(chatFacade.getReceiverUser(any(), any())).thenReturn(receiverUser);
         when(messageFacade.updateStatus(any(), any(), any())).thenReturn(messageResponse);
-
+//        doNothing().when(webSocketService).updateMessageStatus(any(AppUser.class), eq(messageResponse));
         messageController.updateMessageStatus(messageId, newStatus, headerAccessor);
 
         verify(messageFacade, times(1)).updateStatus(messageId, MessageStatus.READ, principal);
         verify(chatFacade, times(1)).getReceiverUser(any(), any());
-        verify(messagingTemplate, times(1)).convertAndSendToUser(eq(receiverUser.getUsername()), eq("/queue/messageStatus"), eq(messageResponse));
+        verify(webSocketService, times(1)).updateMessageStatus(receiverUser, messageResponse);
         verify(messageFacade, times(1)).countUnreadMessage(principal);
     }
 }

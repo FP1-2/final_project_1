@@ -88,7 +88,8 @@ public class ChatFacade {
         AppUserChatResponse appUserResponse = modelMapper.map(sender, AppUserChatResponse.class);
         MessageResponseList messageResponse = modelMapper.map(message, MessageResponseList.class);
         messageResponse.setSender(appUserResponse);
-        messageResponse.setCreatedAt(message.getCreatedDate());
+//        ZonedDateTime zonedDateTime = ZonedDateTime.of(message.getCreatedDate(), ZoneOffset.UTC);
+        messageResponse.setCreatedAt( message.getCreatedDate());
         return messageResponse;
     }
     private Optional<MessageResponseList> getLastMessageInChat(Chat chat){

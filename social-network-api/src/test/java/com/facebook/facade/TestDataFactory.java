@@ -8,7 +8,9 @@ import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
 import com.facebook.model.chat.MessageStatus;
 
+import java.time.LocalDateTime;
 import java.util.List;
+
 
 public class TestDataFactory {
     public static AppUser createAuthUser() {
@@ -67,7 +69,9 @@ public class TestDataFactory {
     }
 
     public static Message createTestMessage(AppUser sender, Chat chat) {
-        return Message.of(ContentType.IMAGE, "content", sender, chat, MessageStatus.SENT);
+        Message m = Message.of(ContentType.IMAGE, "content", sender, chat, MessageStatus.SENT);
+        m.setCreatedDate(LocalDateTime.of(2023, 11, 6, 12, 0));
+        return m;
     }
 
     public static MessageResponse createTestMessageResponse(AppUserChatResponse senderResponse) {

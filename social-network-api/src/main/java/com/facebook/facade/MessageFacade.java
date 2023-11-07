@@ -33,7 +33,6 @@ public class MessageFacade {
         MessageResponse response = modelMapper.map(message, MessageResponse.class);
 
         response.setChat(chatFacade.convertToChatResponse(message.getChat(), chatParticipant));
-
         response.setCreatedAt(message.getCreatedDate());
         return response;
     }

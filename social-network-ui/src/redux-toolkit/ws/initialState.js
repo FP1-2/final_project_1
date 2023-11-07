@@ -1,6 +1,7 @@
 const initialState = {
   newMessage: null,
   messageWithNewStatus: null,
-  isVisible: false
+  isVisible: false,
+  notification: null
 }
 export default initialState;
