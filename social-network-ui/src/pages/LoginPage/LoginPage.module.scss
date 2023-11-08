@@ -9,8 +9,8 @@ body {
     align-items: center;
     flex-direction: column;
     justify-content: center;
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
 }
 
 .wrapper {
@@ -85,6 +85,10 @@ body {
 
 }
 @media (min-width: 1025px) {
+    .container {
+        height: 100vh;
+        width: 100vw;
+    }
     .slogan__wrapper {
         width: 580px;
     }
