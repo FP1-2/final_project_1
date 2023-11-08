@@ -12,15 +12,15 @@ export default function Layout() {
   const isVisible = useSelector(state => state.webSocket.isVisible);
   const authUser = useSelector(state => state.auth.user.obj);
   const location = useLocation();
-  const excludedPaths = ['/messages', '/profile', '/login', '/favorites'];
+  const excludedPaths = ['/messages', '/profile'];
   const showAside = !excludedPaths.some(path => location.pathname.startsWith(path));
 
 
   return (
-    <div className={styles.container}>
+    <div className={`${showAside ? styles.container : styles.containerFullWidth}`}>
       <Header authUser={authUser} showMessageIcon={!location.pathname.startsWith('/messages')}/>
       {showAside && <Navigation  authUser={authUser}/>}
-      <main  className={`${styles.main} ${!showAside && styles.mainFullWidth}`}>
+      <main className={styles.main}>
         <Outlet/>
       </main>
       {createPortal(<MessageNotificationList/>, document.body)}

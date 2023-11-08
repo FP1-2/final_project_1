@@ -4,14 +4,29 @@
 
 
 .container{
-  width:100vw;
-  height: 100vh;
+  width:100dvw;
+  height: 100dvh;
   background-color: $main-background-color;
-  display: flex;
-  flex-direction: column;
+  display:grid;
+  grid-template-areas:
+    "header"
+    "main"
+    "nav";
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
 }
-
+.containerFullWidth{
+  display:grid;
+  width:100dvw;
+  height: 100dvh;
+  grid-template-areas:
+      "header"
+      "main";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+}
 .main{
+  grid-area: main;
   background-color: $input-color-main;
   flex:1;
   overflow: auto;
@@ -21,12 +36,14 @@
    .container{
      flex-direction: row;
      flex-wrap: wrap;
+     height: 100vh;
+     grid-template-areas:
+    "header header"
+    "nav main";
+     grid-template-rows: auto 1fr;
+     grid-template-columns: 20% 80%;
    }
    .main{
-     flex:0 0 80%;
-     height: calc(100% - 66px);
+     height: 100%;
    }
-    .mainFullWidth{
-      flex:0 0 100%;
-    }
 }
