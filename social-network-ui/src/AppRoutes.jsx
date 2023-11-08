@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoginPage from "./pages/LoginPage/LoginPage";
-import FavoritsPage from './pages/FavoritsPage/FavoritsPage';
+import FavoritesPage from './pages/FavoritsPage/FavoritesPage';
 import MessagesPage from './pages/MessagesPage/MessagesPage';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import PostsPage from './pages/PostsPage/PostsPage';
@@ -29,7 +29,7 @@ function AppRoutes({ isAuth }) {
         <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
           <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
         </Route>
-        <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritsPage />} />} />
+        <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritesPage />} />} />
         <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
         <Route path={'*'} element={<PageNotFound />} />
       </Route>

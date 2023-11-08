@@ -22,7 +22,7 @@ function App() {
 
   return (
     <div className="App">
-      <AppRoutes isAuth={isAuth}/>
+      <AppRoutes isAuth={true}/>
     </div>
   );
 }
