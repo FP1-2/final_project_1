@@ -12,23 +12,24 @@ import { ReactComponent as BlueComment } from "../../img/blueComment.svg";
 import { ReactComponent as SavePost } from "../../img/savePost.svg";
 import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
-import { addLike,getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
+import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost,modalAddRepostState,modalEditPostState} from "../../redux-toolkit/post/slice";
-import { addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import { clearComments, setPost, modalAddRepostState, modalEditPostState } from "../../redux-toolkit/post/slice";
+import { addToFavourites,isFavourite, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
 
 const RepostProfile = ({ el }) => {
   const dispatch = useDispatch();
-  
+
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
-  const commenttext=useRef();
+  const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
+  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
 
   const {
     getCommentsPost: {
@@ -49,14 +50,14 @@ const RepostProfile = ({ el }) => {
     dispatch(getCommentsPost(el.postId));
   };
 
-  const sendComment=()=>{
-    const obj={
-      postId:el.postId,
-      content:commenttext.current.value
+  const sendComment = () => {
+    const obj = {
+      postId: el.postId,
+      content: commenttext.current.value
     };
     dispatch(addComment(obj));
     setClickComment(false);
-    commenttext.current.value="";
+    commenttext.current.value = "";
   };
   const sharePost = () => {
     dispatch(setPost(el));
@@ -68,12 +69,18 @@ const RepostProfile = ({ el }) => {
     dispatch(modalEditPostState(true));
   };
 
-  const deletePostThunk=()=>{
+  const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
   };
 
-  const savePostThunk=()=>{
-    dispatch(addToFavourites(el.postId));
+  const savePostThunk = async () => {
+    console.log(dispatch(isFavourite(el.postId)));
+    await dispatch(isFavourite(el.postId));
+    if (await postIsFavourite) {
+      dispatch(deleteFavourite(el.postId));
+    } else {
+      dispatch(addToFavourites(el.postId));
+    }
   };
 
   return (
@@ -160,7 +167,7 @@ const RepostProfile = ({ el }) => {
           }
           <div className={style.postFooterAddComents}>
             <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />
-            <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} ref={commenttext}/>
+            <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} ref={commenttext} />
             <button className={style.postFooterAddComentBtn} onClick={sendComment}>
               <SendCommentPost className={style.postFooterAddComentBtnImg} />
             </button>

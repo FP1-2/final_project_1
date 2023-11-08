@@ -35,6 +35,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import static com.facebook.utils.SortUtils.getSorting;
@@ -204,7 +205,7 @@ public class PostService {
                     like.setPost(post);
                     likeRepository.save(like);
 
-                    notificationService.createLikeNotification(user, post);
+                    if(!Objects.equals(user.getId(), post.getUser().getId())) notificationService.createLikeNotification(user, post);
 
                     return new ActionResponse(true, "Like added");
                 }));
@@ -231,7 +232,7 @@ public class PostService {
             comment.setContent(request.getContent());
             Comment savedComment = commentRepository.save(comment);
 
-            notificationService.createCommentNotification(user, post);
+            if(!Objects.equals(user.getId(), post.getUser().getId())) notificationService.createCommentNotification(user, post);
 
             return postFacade.convertToCommentResponse(savedComment);
         });
@@ -297,7 +298,7 @@ public class PostService {
                     Post repost = postFacade.convertRepostRequestToPost(request, user);
                     postRepository.save(repost);
 
-                    notificationService.createRepostNotification(user, repost);
+                    notificationService.createRepostNotification(user, repost, originalPost.getUser());
 
                     return new ActionResponse(true, "Repost added");
                 }));

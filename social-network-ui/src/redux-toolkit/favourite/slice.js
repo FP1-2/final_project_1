@@ -7,9 +7,9 @@ const favouritesReducer = createSlice({
     name: "favourites",
     initialState: initialValue,
     reducers: {
-        // modalDeleteFriendState: (state, action) => {
-        //     state.modalDeleteFriend = action.payload;
-        // },
+        isFavouriteClear: (state, action) => {
+            state.isFavourite.obj = action.payload;
+        },
     },
     extraReducers:(builder)=>{
         builders(builder, addToFavourites,'addToFavourites');
@@ -19,6 +19,6 @@ const favouritesReducer = createSlice({
     }
 });
 
-export const {} = favouritesReducer.actions;
+export const {isFavouriteClear} = favouritesReducer.actions;
 
 export default favouritesReducer.reducer;

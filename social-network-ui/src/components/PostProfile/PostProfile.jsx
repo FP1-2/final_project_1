@@ -17,7 +17,8 @@ import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
 import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
-import { isFavourite, addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
+import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
+// import { isFavouriteClear } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
 
@@ -31,7 +32,7 @@ const PostProfile = ({ el }) => {
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
   const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
-  console.log(postIsFavourite);
+
 
   const {
     getCommentsPost: {

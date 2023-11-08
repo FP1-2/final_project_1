@@ -17,7 +17,7 @@ export const favouritesList = createAsyncThunk(
     'favourites/favouritesList',
     async (id,{ rejectWithValue }) => {
         try {
-            const response = await workAx("get",`api/favorites`);
+            const response = await workAx("get",`api/favorites?sort=id,desc`);
             return response.data.content;
         } catch (err) {
             return rejectWithValue(err.response.data);

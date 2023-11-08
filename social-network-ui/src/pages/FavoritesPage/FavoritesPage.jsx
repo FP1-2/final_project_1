@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from "react-redux";
 import { favouritesList } from '../../redux-toolkit/favourite/thunks';
-import style from "./FavoritsPage.module.scss";
+import style from "./FavoritesPage.module.scss";
 import PostProfile from '../../components/PostProfile/PostProfile';
 import RepostProfile from '../../components/RepostProfile/RepostProfile';
 import ModalAddRepost from '../../components/ModalAddRepost/ModalAddRepost';
 
-function FavoritsPage() {
+function FavoritesPage() {
   const dispatch = useDispatch();
   const favourites = useSelector(state => state.favourites.favouritesList.obj);
 
@@ -30,4 +30,4 @@ function FavoritsPage() {
   );
 }
 
-export default FavoritsPage;
+export default FavoritesPage;
