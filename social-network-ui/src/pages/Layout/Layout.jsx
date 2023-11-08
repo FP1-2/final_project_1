@@ -17,7 +17,7 @@ export default function Layout() {
 
 
   return (
-    <div className={`${styles.container} ${!showAside && styles.containerFullWidth}`}>
+    <div className={`${showAside ? styles.container : styles.containerFullWidth}`}>
       <Header authUser={authUser} showMessageIcon={!location.pathname.startsWith('/messages')}/>
       {showAside && <Navigation  authUser={authUser}/>}
       <main className={styles.main}>

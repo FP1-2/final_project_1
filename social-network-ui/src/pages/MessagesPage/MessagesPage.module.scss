@@ -4,7 +4,7 @@
 .messengerPage{
   @include flex-center-row;
   color: $main-text-color;
-  height: calc(100vh - 66px);
+  height: 100%;
   background-color: $main-background-color;
 }
 .chatFieldSection{

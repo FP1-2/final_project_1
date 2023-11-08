@@ -4,12 +4,9 @@
 
 
 .container{
-  width:100vw;
+  width:100dvw;
   height: 100dvh;
   background-color: $main-background-color;
-  //display: flex;
-  //flex-direction: column;
-  //height:  calc(var(--vh, 1vh) * 100);
   display:grid;
   grid-template-areas:
     "header"
@@ -18,7 +15,16 @@
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr;
 }
-
+.containerFullWidth{
+  display:grid;
+  width:100dvw;
+  height: 100dvh;
+  grid-template-areas:
+      "header"
+      "main";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+}
 .main{
   grid-area: main;
   background-color: $input-color-main;
@@ -38,15 +44,6 @@
      grid-template-columns: 20% 80%;
    }
    .main{
-     //flex:0 0 80%;
-     //height: calc(100% - 66px);
      height: 100%;
    }
-    .containerFullWidth{
-      grid-template-areas:
-      "header"
-      "main";
-      grid-template-rows: auto 1fr;
-      grid-template-columns: 1fr;
-    }
 }
