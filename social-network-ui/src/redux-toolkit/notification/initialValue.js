@@ -1,6 +1,12 @@
 const initialValue = {
     notifications:{
-        obj: {},
+        obj:  {
+            content: [],
+            pageable: {
+                pageNumber: 0
+            },
+            totalPages: 0,
+        },
         status: '',
         error: '',
     },

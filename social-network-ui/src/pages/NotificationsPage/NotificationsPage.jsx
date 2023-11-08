@@ -1,41 +1,50 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useRef} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {loadNotifications} from '../../redux-toolkit/notification/thunks';
+import {resetNotificationsState} from '../../redux-toolkit/notification/slice';
 import Notification from '../../components/Notification/Notification';
 import styles from './NotificationsPage.module.scss';
-import { loadNotifications,
-  // loadNotification,
-  // notificationMarkAsRead,
-  // loadUnreadCount,
-} from '../../redux-toolkit/notification/thunks';
-import {useDispatch, useSelector} from "react-redux";
+import {createHandleScroll} from "../../utils/utils";
 
-function NotificationsPage() {
-
+export default function NotificationsPage() {
+  const scrollContainerRef = useRef(null);
   const dispatch = useDispatch();
 
-  const notifications = useSelector((state) => state.notifications.notifications.obj.content);
-  const loading = useSelector((state) => state.notifications.loading);
-  const error = useSelector((state) => state.notifications.error);
+  const {
+    status,
+    obj: { 
+      content,
+      totalPages, 
+      pageable: { 
+        pageNumber 
+      }
+    } 
+  } = useSelector(state => state.notifications.notifications);
 
   useEffect(() => {
-    dispatch(loadNotifications());
-  }, [dispatch]);
+    dispatch(resetNotificationsState());
+    dispatch(loadNotifications({ page: 0 }));
+  }, []);
 
+  const getMoreNotifications = () => {
+    if (status !== 'pending' && pageNumber < totalPages) {
+      dispatch(loadNotifications({ page: pageNumber + 1 }));
+    }
+  };
 
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
+  const handleScroll = createHandleScroll({
+    scrollRef: scrollContainerRef,
+    status: status,
+    fetchMore:  getMoreNotifications,
+  });
 
   return (
-    <div className={styles.container}>
-      {notifications.map((notification) => (
-        <Notification key={notification.id} notification={notification} />
-      ))}
+    <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
+      <div>
+        {content.map((notification) => (
+          <Notification key={notification.id} notification={notification} />
+        ))}
+      </div>
     </div>
   );
 }
-
-export default NotificationsPage;

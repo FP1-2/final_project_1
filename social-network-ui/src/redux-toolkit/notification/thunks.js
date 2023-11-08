@@ -1,12 +1,18 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { workAx } from '../ax.js';
+import {appendNotifications} from "./slice";
 
 export const loadNotifications = createAsyncThunk(
     'notifications/notifications',
-    async (obj, { rejectWithValue }) => {
+    async ({ page = 0, size = 10 }, { dispatch, rejectWithValue }) => {
+        const params = new URLSearchParams({ page, size });
         try {
-            const response = await workAx('get','api/notifications');
-            return response.data;
+            const response = await workAx('get', `api/notifications?${params}`);
+            if (page > 0) {
+                dispatch(appendNotifications(response.data));
+            } else {
+                return response.data;
+            }
         } catch (err) {
             return rejectWithValue(err.response.data);
         }

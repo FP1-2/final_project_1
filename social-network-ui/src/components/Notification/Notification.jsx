@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './Notification.module.scss';
 import PropTypes from "prop-types";
+import {Link} from "react-router-dom";
 
 function Notification({ notification }) {
   const isFriendRequest = notification.type === "FRIEND_REQUEST";
@@ -14,9 +15,9 @@ function Notification({ notification }) {
         </div>
       </div>
       <div className={styles.card_info}>
-        <a href={`/profile/${notification.initiator.userId}`} className={styles.card_info_link}>
+        <Link to={`/profile/${notification.initiator.userId}`} className={styles.card_info_link}>
           {notification.initiator.name} {notification.initiator.surname}
-        </a>
+        </Link>
         <div className={styles.card_info_date}>
           {new Date(notification.createdDate).toLocaleString()}
         </div>
