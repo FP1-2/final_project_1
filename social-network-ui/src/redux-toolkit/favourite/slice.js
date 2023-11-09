@@ -7,9 +7,16 @@ const favouritesReducer = createSlice({
     name: "favourites",
     initialState: initialValue,
     reducers: {
-        isFavouriteClear: (state, action) => {
+        setIsFavourite: (state, action) => {
             state.isFavourite.obj = action.payload;
         },
+        // deleteLocalFavourite: (state, action) => {
+        //     state.favouritesList.obj.content=state.favouritesList.obj.content.filter(el=>el.postId!==action.payload)
+        // },
+        deleteLocalFavourite: (state, action) => {
+            state.favouritesList.obj.content = state.favouritesList.obj.content.filter(
+              favourite => favourite.postId!== action.payload);
+          },
     },
     extraReducers:(builder)=>{
         builders(builder, addToFavourites,'addToFavourites');
@@ -19,6 +26,6 @@ const favouritesReducer = createSlice({
     }
 });
 
-export const {isFavouriteClear} = favouritesReducer.actions;
+export const {setIsFavourite, deleteLocalFavourite} = favouritesReducer.actions;
 
 export default favouritesReducer.reducer;

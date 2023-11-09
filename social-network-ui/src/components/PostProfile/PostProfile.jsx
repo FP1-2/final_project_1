@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
@@ -18,7 +18,7 @@ import Comment from "../Comment/Comment";
 import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
-// import { isFavouriteClear } from "../../redux-toolkit/favourite/slice";
+import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
 
@@ -42,9 +42,6 @@ const PostProfile = ({ el }) => {
     }
   } = useSelector(state => state.post);
 
-  useEffect(() => {
-
-  }, []);
 
   const changeClickLike = () => {
     dispatch(addLike(el.postId));
@@ -79,11 +76,14 @@ const PostProfile = ({ el }) => {
   };
 
   const savePostThunk = async () => {
-    dispatch(isFavourite(el.postId));
-    if (await postIsFavourite) {
-      dispatch(deleteFavourite(el.postId));
+    await dispatch(isFavourite(el.postId));
+    if (postIsFavourite) {
+      await dispatch(deleteFavourite(el.postId));
+      await dispatch(setIsFavourite(false));
+      dispatch(deleteLocalFavourite(el.postId));
     } else {
       dispatch(addToFavourites(el.postId));
+      await dispatch(setIsFavourite(true));
     }
   };
 
@@ -171,6 +171,7 @@ const PostProfile = ({ el }) => {
 
 PostProfile.propTypes = {
   el: PropTypes.object.isRequired,
+  type: PropTypes.string
 };
 
 

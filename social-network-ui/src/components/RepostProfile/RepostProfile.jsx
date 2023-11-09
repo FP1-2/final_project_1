@@ -16,6 +16,7 @@ import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-to
 import Comment from "../Comment/Comment";
 import { clearComments, setPost, modalAddRepostState, modalEditPostState } from "../../redux-toolkit/post/slice";
 import { addToFavourites,isFavourite, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
+import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
@@ -74,12 +75,14 @@ const RepostProfile = ({ el }) => {
   };
 
   const savePostThunk = async () => {
-    console.log(dispatch(isFavourite(el.postId)));
     await dispatch(isFavourite(el.postId));
-    if (await postIsFavourite) {
-      dispatch(deleteFavourite(el.postId));
+    if (postIsFavourite) {
+      await dispatch(deleteFavourite(el.postId));
+      await dispatch(setIsFavourite(false));
+      dispatch(deleteLocalFavourite(el.postId));
     } else {
       dispatch(addToFavourites(el.postId));
+      await dispatch(setIsFavourite(true));
     }
   };
 
