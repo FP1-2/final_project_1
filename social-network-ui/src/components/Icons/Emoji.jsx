@@ -4,7 +4,7 @@ const Emoji = ({emojiClickHandler}) => {
 
   return (
     <svg className="x1lliihq x1k90msu x13hzchw x1qfuztq" height="20px" viewBox="0 0 38 38" width="20px"
-      onClick={emojiClickHandler} style={{cursor: "pointer"}}>
+      onClick={emojiClickHandler} style={{cursor: "pointer"}} id={"emoji-btn"}>
       <g fill="none" fillRule="evenodd">
         <g transform="translate(-893.000000, -701.000000)">
           <g transform="translate(709.000000, 314.000000)">

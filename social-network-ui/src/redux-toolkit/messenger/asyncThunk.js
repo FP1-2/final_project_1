@@ -17,7 +17,6 @@ export const loadChat = createAsyncThunk(
   async ({id}, {rejectWithValue}) => {
     try {
       const response = await workAx("get", `api/chats/${id}`);
-      console.log("sending chat:"+id)
       return response.data;
     } catch (err) {
       return rejectWithValue(err.response);
