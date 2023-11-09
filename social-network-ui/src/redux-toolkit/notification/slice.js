@@ -1,7 +1,11 @@
 import {createSlice} from '@reduxjs/toolkit';
 import initialValue from './initialValue';
 import builders, {buildersPagination} from '../builders';
-import {loadNotifications, loadNotification, notificationMarkAsRead, loadUnreadCount} from './thunks';
+import {loadNotifications,
+        loadNotification,
+        notificationMarkAsRead,
+        loadUnreadCount,
+        updateFriendRequest} from './thunks';
 
 const notificationReducer = createSlice({
     name: 'notifications',
@@ -45,11 +49,19 @@ const notificationReducer = createSlice({
                 error: '',
             }
         },
+        resetFriendRequest: (state) => {
+            state.update_status_friend = {
+                obj: '',
+                status: '',
+                error: '',
+            }
+        },
     },
     extraReducers: (builder) => {
         buildersPagination(builder, loadNotifications, 'notifications');
-        builders(builder, loadNotification, 'notification');
         builders(builder, notificationMarkAsRead, 'mark_as_read');
+        builders(builder, updateFriendRequest, 'update_status_friend');
+        builders(builder, loadNotification, 'notification');
         builders(builder, loadUnreadCount, 'unread_count');
     }
 });
@@ -59,6 +71,7 @@ export const {
     resetNotificationsState,
     markNotificationAsRead,
     resetMarkAsRead,
+    resetFriendRequest,
 } = notificationReducer.actions;
 
 export default notificationReducer.reducer;

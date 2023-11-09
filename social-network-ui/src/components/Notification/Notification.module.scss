@@ -7,7 +7,10 @@
   display: flex;
   padding: 1rem;
   position: relative;
-  width: 50vw;
+  min-width: 30rem;
+  @media screen and (max-width: 767px) {
+    min-width: 20rem;
+  }
 
   &_aside {
     flex-shrink: 0;
@@ -105,13 +108,11 @@
     height: 0.6rem;
     border-radius: 50%;
     background-color: rgba(0, 0, 0, 0);
-    //cursor: default;
   }
 
   &_status_indicator_unread {
     background-color: #4267B2;
     box-shadow: 0 0 4px #4267B2;
-    //cursor: pointer;
   }
 }
 

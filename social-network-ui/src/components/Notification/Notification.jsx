@@ -3,16 +3,44 @@ import styles from './Notification.module.scss';
 import PropTypes from "prop-types";
 import {Link} from "react-router-dom";
 import {useDispatch, useSelector} from "react-redux";
-import {notificationMarkAsRead} from "../../redux-toolkit/notification/thunks";
+import {notificationMarkAsRead, updateFriendRequest} from "../../redux-toolkit/notification/thunks";
 import {showMessage} from "../../redux-toolkit/popup/slice";
-import {resetMarkAsRead} from "../../redux-toolkit/notification/slice";
+import {resetFriendRequest, resetMarkAsRead} from "../../redux-toolkit/notification/slice";
 
 export default function Notification({ notification }) {
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(resetMarkAsRead());
+    dispatch(resetFriendRequest());
+  }, []);
+
   const { status } = useSelector(state => state.notifications.mark_as_read);
+
+  const {
+    status: friendStatus,
+    obj: friendMassage,
+  } = useSelector(state => state.notifications.update_status_friend);
+
+  const friendStatusRef = useRef(friendStatus);
   const prevStatusRef = useRef(status);
+
   const isFriendRequest = notification.type === "FRIEND_REQUEST";
   const isUnread = !notification.read;
+
+  const handleAcceptRequest = () => {
+    dispatch(updateFriendRequest({ 
+      userId: notification.initiator.userId, 
+      status: true 
+    }));
+  };
+
+  const handleRejectRequest = () => {
+    dispatch(updateFriendRequest({
+      userId: notification.initiator.userId,
+      status: false
+    }));
+  };
 
   const handleMarkAsRead = () => {
     if (!notification.read) {
@@ -20,19 +48,24 @@ export default function Notification({ notification }) {
     }
   };
 
-  useEffect(() => {dispatch(resetMarkAsRead());}, []);
-
+  //Спливаюче повідомлення про обробку "позначено як прочитане"
   useEffect(() => {
-    if (prevStatusRef.current !== status && status === 'fulfilled') {
-      dispatch(showMessage('Notification marked as read.'));
+    if (prevStatusRef.current !== status){
+      if (status === 'fulfilled') dispatch(showMessage('Notification marked as read.'));
+      if(status === 'rejected') dispatch(showMessage('Failed to mark notification as read.'));
+      prevStatusRef.current = status;
     }
-    prevStatusRef.current = status;
   }, [status]);
 
-  if(status === 'rejected') {
-    dispatch(showMessage('Failed to mark notification as read.'));
-  }
-
+  //Повідомлення про обробку відповіді на запит у друзі.
+  useEffect(() => {
+    if (friendStatusRef.current !== friendStatus){
+      if (friendStatus === 'fulfilled') dispatch(showMessage(friendMassage));
+      if(friendStatus === 'rejected') dispatch(showMessage('Failed to the request'));
+      friendStatusRef.current = friendStatus;
+    }
+  }, [friendStatus]);
+  
   return (
     <div className={`${styles.card} 
     ${isUnread ? styles.card_unread : ''}`}
@@ -58,10 +91,12 @@ export default function Notification({ notification }) {
         </div>
         {isFriendRequest && (
           <div className={styles.card_footer}>
-            <button className={styles.card_button}>
+            <button className={styles.card_button}
+              onClick={handleAcceptRequest}>
               Accept Friend Request
             </button>
-            <button className={styles.card_buttonSecondary}>
+            <button className={styles.card_buttonSecondary}
+              onClick={handleRejectRequest}>
               Ignore
             </button>
           </div>

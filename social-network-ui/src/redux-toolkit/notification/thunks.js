@@ -54,3 +54,24 @@ export const loadUnreadCount = createAsyncThunk(
         }
     }
 );
+
+export const updateFriendRequest = createAsyncThunk(
+    'notifications/update_status_friend',
+    async ({ userId, status }, { rejectWithValue }) => {
+        try {
+            const response = await workAx("put",`api/friends/update-status`, {
+                userId,
+                status,
+            });
+            if (response.status === 200) {
+                if (status) {
+                    return 'You have successfully accepted the request.';
+                } else {
+                    return 'You have deleted the friend request.';
+                }
+            }
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);

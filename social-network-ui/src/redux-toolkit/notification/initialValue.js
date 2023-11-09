@@ -1,5 +1,5 @@
 const initialValue = {
-    notifications:{
+    notifications: {
         obj:  {
             content: [],
             pageable: {
@@ -10,7 +10,12 @@ const initialValue = {
         status: '',
         error: '',
     },
-    mark_as_read:{
+    mark_as_read: {
+        obj: '',
+        status: '',
+        error: '',
+    },
+    update_status_friend: {
         obj: '',
         status: '',
         error: '',
