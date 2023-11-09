@@ -387,7 +387,7 @@ public class Gen {
                 friendsList.forEach(friendship -> {
                     boolean acceptFriendship = MathUtils.random(0, 10) < 5;
                     friendsService.changeFriendsStatus(
-                            friendship.getId(),
+                            user.getId(),
                             friendship.getId(),
                             acceptFriendship
                     );
