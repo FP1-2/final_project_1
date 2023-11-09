@@ -35,7 +35,7 @@ public class MessageController {
             Long unreadMessage = messageFacade.countUnreadMessage(receiverUser);
 
             webSocketService.sendNewMessage(receiverUser, messageResponse);
-            webSocketService.sendNewMessage(receiverUser, unreadMessage);
+            webSocketService.sendMessageNotification(receiverUser, unreadMessage);
         } catch(Exception ex){
             MessageResponse res = messageFacade.updateStatus(messageResponse.getId(), MessageStatus.FAILED, principal);
             webSocketService.sendNewMessage(principal, res);
