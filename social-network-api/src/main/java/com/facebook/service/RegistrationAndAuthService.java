@@ -17,6 +17,7 @@ import java.util.UUID;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,9 @@ public class RegistrationAndAuthService {
     private final JwtTokenService tokenService;
     private final CacheStore<String> registrationAndAuthTokenCache;
     private final CacheStore<AppUserRequest> appUserRequestCache;
+
+    @Value("${frontend.url}")
+    private String clientUrl;
 
     @Autowired
     public RegistrationAndAuthService(AppUserService appUserService,
@@ -52,8 +56,6 @@ public class RegistrationAndAuthService {
         this.registrationAndAuthTokenCache = registrationAndAuthTokenCache;
         this.appUserRequestCache = appUserRequestCache;
     }
-
-    private static final String BASE_URL = "http://localhost:3000";
 
     public void confirmRegistration(String token, String email) {
         // Отримати дані з кешу та перевірити їх
@@ -101,7 +103,7 @@ public class RegistrationAndAuthService {
         String token = UUID.randomUUID().toString();
         appUserRequestCache.add(token, appUserRequest);
 
-        String url = BASE_URL + "/registration/confirm?token="
+        String url = clientUrl + "/registration/confirm?token="
                 + token + "&em=" + appUserRequest.getEmail();
         registrationAndAuthTokenCache.add(token, url);
 

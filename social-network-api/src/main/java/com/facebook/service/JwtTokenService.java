@@ -25,7 +25,9 @@ public class JwtTokenService {
 
     private static final Long DAY = 60 * 60 * 24 * 1000L;
 
-    private static final Long WEEK = DAY * 7;
+    private static final Long TWENTY_SECONDS = 20 * 1000L;
+
+    private static final Long WEEK = DAY * 7 + TWENTY_SECONDS;
 
     public String generateToken(Integer userId, boolean rememberMe) {
         Date now = new Date();
