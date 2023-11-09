@@ -1,7 +1,7 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
 import LoginPage from "./pages/LoginPage/LoginPage";
-import FavoritsPage from './pages/FavoritsPage/FavoritsPage';
+import FavoritesPage from './pages/FavoritsPage/FavoritesPage';
 import MessagesPage from './pages/MessagesPage/MessagesPage';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import PostsPage from './pages/PostsPage/PostsPage';
@@ -16,28 +16,32 @@ import PropTypes from "prop-types";
 import Chat from "./components/Chat/Chat";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
+import PopupMessage from "./components/PopupMessage/PopupMessage";
 
 function AppRoutes({ isAuth }) {
   return (
-    <Routes>
-      <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<Layout />} />}>
-        <Route index element={<ProtectedRoute isAuth={isAuth} content={<PostsPage />} />} />
-        <Route exact path='/profile/:id/*' element={<ProfilePage />}>
-          <Route path='' element={<PostsPageProfile />} />
-          <Route path='friends' element={<FriendPageProfile />} />
+    <React.Fragment>
+      <PopupMessage />
+      <Routes>
+        <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<Layout />} />}>
+          <Route index element={<ProtectedRoute isAuth={isAuth} content={<PostsPage />} />} />
+          <Route exact path='/profile/:id/*' element={<ProfilePage />}>
+            <Route path='' element={<PostsPageProfile />} />
+            <Route path='friends' element={<FriendPageProfile />} />
+          </Route>
+          <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
+            <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
+          </Route>
+          <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritesPage />} />} />
+          <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
+          <Route path={'*'} element={<PageNotFound />} />
         </Route>
-        <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
-          <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
-        </Route>
-        <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritsPage />} />} />
-        <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
-        <Route path={'*'} element={<PageNotFound />} />
-      </Route>
-      <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
-      <Route path="/friends" element={<FriendsPage/>}/>
-      <Route path='/registration' element={<RegistrationForm />} />
-      <Route path='/registration/confirm' element={<ConfirmRegistration />} />
-    </Routes>
+        <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
+        <Route path="/friends" element={<FriendsPage/>}/>
+        <Route path='/registration' element={<RegistrationForm />} />
+        <Route path='/registration/confirm' element={<ConfirmRegistration />} />
+      </Routes>
+    </React.Fragment>
   );
 }
 

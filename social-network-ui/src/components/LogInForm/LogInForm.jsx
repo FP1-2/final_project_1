@@ -22,7 +22,7 @@ const LoginForm = ({ handleSubmit }) => {
         onSubmit={handleSubmit}
       >
         <Form>
-          <div>
+          <div >
             <Input type="text" name="username" placeholder="E-mail" />
           </div>
           <div className={styles.passwordInputWrapper}>

@@ -6,7 +6,7 @@ import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.MessageStatus;
 import lombok.Data;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Data
 public class MessageResponse {
@@ -15,6 +15,6 @@ public class MessageResponse {
     private String content;
     private AppUserChatResponse sender;
     private ChatResponse chat;
-    private LocalDateTime createdAt;
+    private ZonedDateTime createdAt;
     private MessageStatus status;
 }

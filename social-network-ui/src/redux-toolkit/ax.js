@@ -34,7 +34,6 @@ export const workAx = async (method, url, data) => {
         headers: token ? {Authorization: `Bearer ${token}`} : {},
     }).catch(async (error) => {
         switch (error.response.status) {
-            case 401: // 401 Unauthorized.
             case 403: // 403 Forbidden.
                 await logout();
                 break; // Виходимо із switch, помилка оброблена.

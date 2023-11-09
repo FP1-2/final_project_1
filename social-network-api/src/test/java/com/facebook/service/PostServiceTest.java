@@ -209,7 +209,7 @@ class PostServiceTest {
         Long postId = 1L;
         AppUser user = new AppUser();
         Post post = new Post();
-
+        post.setUser(new AppUser(){{setId(2L);}});
         Mockito
                 .when(appUserRepository.findById(userId))
                 .thenReturn(Optional.of(user));
@@ -290,6 +290,7 @@ class PostServiceTest {
         CommentRequest request = new CommentRequest();
         request.setPostId(1L);
         request.setContent("Test content");
+
         Comment savedComment = new Comment();
         savedComment.setId(1L);
         savedComment.setContent(request.getContent());
@@ -316,7 +317,7 @@ class PostServiceTest {
 
         Post mockPost = new Post();
         AppUser mockUser = new AppUser();
-
+        mockPost.setUser(new AppUser(){{setId(2L);}});
         // Налаштування моку для отримання користувача
         Mockito
                 .when(appUserRepository.findById(userId))
