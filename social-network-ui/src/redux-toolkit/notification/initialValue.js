@@ -10,12 +10,12 @@ const initialValue = {
         status: '',
         error: '',
     },
-    notification:{
-        obj: {},
+    mark_as_read:{
+        obj: '',
         status: '',
         error: '',
     },
-    mark_as_read:{
+    notification:{
         obj: {},
         status: '',
         error: '',

@@ -1,7 +1,7 @@
 import {createSlice} from '@reduxjs/toolkit';
 import initialValue from './initialValue';
 import builders, {buildersPagination} from '../builders';
-import { loadNotifications, loadNotification, notificationMarkAsRead, loadUnreadCount } from './thunks';
+import {loadNotifications, loadNotification, notificationMarkAsRead, loadUnreadCount} from './thunks';
 
 const notificationReducer = createSlice({
     name: 'notifications',
@@ -30,6 +30,21 @@ const notificationReducer = createSlice({
                 error: '',
             };
         },
+        markNotificationAsRead: (state, action) => {
+            const notificationIndex = state.notifications.obj.content
+                .findIndex((notification) => notification.id === action.payload);
+            console.log("notificationIndex: " + notificationIndex);
+            if (notificationIndex !== -1) {
+                state.notifications.obj.content[notificationIndex].read = true;
+            }
+        },
+        resetMarkAsRead: (state) => {
+            state.mark_as_read = {
+                obj: '',
+                status: '',
+                error: '',
+            }
+        },
     },
     extraReducers: (builder) => {
         buildersPagination(builder, loadNotifications, 'notifications');
@@ -42,6 +57,8 @@ const notificationReducer = createSlice({
 export const {
     appendNotifications,
     resetNotificationsState,
+    markNotificationAsRead,
+    resetMarkAsRead,
 } = notificationReducer.actions;
 
 export default notificationReducer.reducer;

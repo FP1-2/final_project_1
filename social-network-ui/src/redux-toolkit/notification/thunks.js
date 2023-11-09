@@ -1,6 +1,6 @@
 import { createAsyncThunk } from '@reduxjs/toolkit';
 import { workAx } from '../ax.js';
-import {appendNotifications} from "./slice";
+import {appendNotifications, markNotificationAsRead} from "./slice";
 
 export const loadNotifications = createAsyncThunk(
     'notifications/notifications',
@@ -33,10 +33,10 @@ export const loadNotification = createAsyncThunk(
 
 export const notificationMarkAsRead = createAsyncThunk(
     'notifications/mark_as_read',
-    async (notificationId, { rejectWithValue }) => {
+    async (notificationId, { dispatch, rejectWithValue }) => {
         try {
             const response = await workAx("post",`api/notifications/${notificationId}/mark-as-read`);
-            return response.data;
+            if (response.status === 200) dispatch(markNotificationAsRead(notificationId));
         } catch (err) {
             return rejectWithValue(err.response.data);
         }

@@ -45,6 +45,7 @@ export default function NotificationsPage() {
           <Notification key={notification.id} notification={notification} />
         ))}
       </div>
+      {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
     </div>
   );
 }

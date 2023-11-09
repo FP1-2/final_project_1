@@ -5,8 +5,9 @@
   margin-bottom: 1rem;
   overflow: hidden;
   display: flex;
-  width: 30rem;
   padding: 1rem;
+  position: relative;
+  width: 50vw;
 
   &_aside {
     flex-shrink: 0;
@@ -39,6 +40,9 @@
       color: #385898;
       &:hover {
         text-decoration: underline;
+      }
+      &_wrapper{
+        display: inline;
       }
     }
 
@@ -91,6 +95,23 @@
     &:hover {
       background-color: #d8dadf;
     }
+  }
+
+  &_status_indicator {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0);
+    //cursor: default;
+  }
+
+  &_status_indicator_unread {
+    background-color: #4267B2;
+    box-shadow: 0 0 4px #4267B2;
+    //cursor: pointer;
   }
 }
 
