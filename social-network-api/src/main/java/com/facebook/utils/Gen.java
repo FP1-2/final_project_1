@@ -10,8 +10,6 @@ import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
-import com.facebook.model.friends.Friends;
-import com.facebook.model.friends.FriendsStatus;
 import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
