@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import lombok.extern.log4j.Log4j2;
-import org.checkerframework.checker.units.qual.A;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -362,7 +361,11 @@ public class Gen {
         return repostRequest;
     }
 
+    /**
+     * Генерація запитів на додавання та підтвердження дружби між користувачами.
+     */
     private void genFriends() {
+        // Знаходимо користувачів за дефолтом
         AppUser defaultUser1 = appUserService.findByUsername(DEFAULT_USERNAME)
                 .orElseThrow(() -> new NotFoundException("Default user not found!"));
 
@@ -370,12 +373,14 @@ public class Gen {
                 .orElseThrow(() -> new NotFoundException("Default user 2 not found!"));
 
         try {
+            // Надсилаємо запит на дружбу між користувачами та підтверджуємо його
             friendsService.sendFriendRequest(defaultUser1.getId(), defaultUser2.getId());
             friendsService.changeFriendsStatus(defaultUser1.getId(), defaultUser2.getId(), true);
         } catch (AlreadyExistsException e) {
             //log.info("Friend request already exists between default users.");
         }
 
+        // Генерація запитів на додавання друзів для інших користувачів
         appUsers1.forEach(user -> appUsers1.stream()
                 .filter(potentialFriend -> !user.equals(potentialFriend) && MathUtils.random(0, 20) > 17)
                 .forEach(potentialFriend -> {
@@ -387,6 +392,7 @@ public class Gen {
                 })
         );
 
+        // Генерація відповідей на запити на додавання до друзів
         appUsers1.forEach(user -> {
             if (MathUtils.random(0, 10) < 4) {
                 List<AppUserResponse> friendsRequestList = friendsService.getFriendsRequest(user.getId());
