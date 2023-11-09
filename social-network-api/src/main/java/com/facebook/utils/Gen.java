@@ -37,6 +37,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import lombok.extern.log4j.Log4j2;
+import org.checkerframework.checker.units.qual.A;
 import org.springframework.context.ApplicationContext;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
@@ -361,40 +362,7 @@ public class Gen {
         return repostRequest;
     }
 
-
     private void genFriends() {
-        appUsers1.stream()
-                .forEach(user -> {
-                    appUsers1
-                            .stream()
-                            .filter(potentialFriend -> {
-                                return !user.equals(potentialFriend) && MathUtils.random(0, 10) > 7;
-                            })
-                            .forEach(potentialFriend -> {
-                                try {
-                                    friendsService
-                                            .sendFriendRequest(user.getId(),
-                                                    potentialFriend.getId());
-                                } catch (AlreadyExistsException e) {
-                                }
-                            });
-                });
-
-        appUsers1.forEach(user -> {
-            if (MathUtils.random(0, 10) < 3) {
-                List<AppUserResponse> friendsList = friendsService.getFriendsByUserId(user.getId());
-
-                friendsList.forEach(friendship -> {
-                    boolean acceptFriendship = MathUtils.random(0, 10) < 5;
-                    friendsService.changeFriendsStatus(
-                            user.getId(),
-                            friendship.getId(),
-                            acceptFriendship
-                    );
-                });
-            }
-        });
-
         AppUser defaultUser1 = appUserService.findByUsername(DEFAULT_USERNAME)
                 .orElseThrow(() -> new NotFoundException("Default user not found!"));
 
@@ -405,8 +373,38 @@ public class Gen {
             friendsService.sendFriendRequest(defaultUser1.getId(), defaultUser2.getId());
             friendsService.changeFriendsStatus(defaultUser1.getId(), defaultUser2.getId(), true);
         } catch (AlreadyExistsException e) {
-            log.info("Friend request already exists between default users.");
+            //log.info("Friend request already exists between default users.");
         }
+
+        appUsers1.forEach(user -> appUsers1.stream()
+                .filter(potentialFriend -> !user.equals(potentialFriend) && MathUtils.random(0, 20) > 17)
+                .forEach(potentialFriend -> {
+                    try {
+                        friendsService.sendFriendRequest(user.getId(), potentialFriend.getId());
+                    } catch (AlreadyExistsException e) {
+                        //log.info("Запит у друзі вже надіслано: {}", e.getMessage());
+                    }
+                })
+        );
+
+        appUsers1.forEach(user -> {
+            if (MathUtils.random(0, 10) < 4) {
+                List<AppUserResponse> friendsRequestList = friendsService.getFriendsRequest(user.getId());
+                //log.info("user: {} {}", user.getId(), friendsRequestList);
+                try {
+                    friendsRequestList.forEach(friendship -> {
+                        boolean acceptFriendship = MathUtils.random(0, 10) < 5;
+                        friendsService.changeFriendsStatus(
+                                friendship.getId(),
+                                user.getId(),
+                                acceptFriendship
+                        );
+                    });
+                } catch (NotFoundException | AlreadyExistsException e) {
+                    //log.info("Запит на додавання до друзів не прийнято не знайдено id: {}", e.getMessage());
+                }
+            }
+        });
     }
 
     private List<Chat> genChats() {
