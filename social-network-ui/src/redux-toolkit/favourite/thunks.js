@@ -1,5 +1,6 @@
 import {workAx} from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
+import { appendFavourites } from "./slice";
 
 export const addToFavourites = createAsyncThunk(
     'favourites/addToFavourites',
@@ -15,10 +16,15 @@ export const addToFavourites = createAsyncThunk(
 
 export const favouritesList = createAsyncThunk(
     'favourites/favouritesList',
-    async (id,{ rejectWithValue }) => {
+    async ({ page = 0, size = 10 },{dispatch, rejectWithValue }) => {
+        const params = new URLSearchParams({ page, size });
         try {
-            const response = await workAx("get",`api/favorites?sort=id,desc`);
-            return response.data;
+            const response = await workAx("get",`api/favorites?${params}`);
+            if (page > 0) {
+                dispatch(appendFavourites(response.data));
+            } else {
+                return response.data;
+            }
         } catch (err) {
             return rejectWithValue(err.response.data);
         }

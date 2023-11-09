@@ -1,20 +1,25 @@
 @import "../../styles/mixin.scss";
-.favoritsWrapper{
+
+.favoritsWrapper {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
     padding: 20px;
+    overflow:auto;
+    height: 100%;
+    
 
-    .favorits{
+    .favorits {
         display: flex;
         flex-direction: column;
         justify-content: flex-start;
         align-items: center;
         gap: 20px;
+        overflow: auto;
 
-        .favoritsElem{
-            width: 90%;
+        .favoritsElem {
+            width: 65%;
 
             @include width_992 {
                 width: 70%;
@@ -23,6 +28,15 @@
             @include width_768 {
                 width: 90%;
             }
+        }
+
+        &.container_allCard {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            height: 100%;
+            overflow: auto;
+            padding: 2rem;
         }
     }
 }
