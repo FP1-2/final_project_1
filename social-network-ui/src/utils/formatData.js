@@ -33,7 +33,7 @@ export const getTimeAgo = (nDate) => {
       result =  date.toLocaleString("en-UK", {
         day: "numeric",
         month: "short",
-        year: "numric"
+        year: "numeric"
       });
       break;
     case weeks >= 1:
@@ -42,8 +42,11 @@ export const getTimeAgo = (nDate) => {
         month: "short"
       });
       break;
-    case days >= 1:
-      result = `${days} ago.`;
+    case days > 1:
+      result = `${days} days ago.`;
+      break;
+    case days === 1:
+      result = `${days} day ago.`;
       break;
     default:
       result = date.toLocaleTimeString("en-UK", {
