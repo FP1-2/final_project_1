@@ -1,5 +1,6 @@
 package com.facebook.utils;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.PostRequest;
@@ -99,6 +100,7 @@ public class Gen {
     private final MessageRepository messageRepository;
     private List<Chat> chats;
     private List<Message> messages;
+
     private Gen(ApplicationContext context) {
         this.context = context;
 
@@ -368,7 +370,7 @@ public class Gen {
                     appUsers1
                             .stream()
                             .filter(potentialFriend -> {
-                                return !user.equals(potentialFriend) && MathUtils.random(0, 10) == 10;
+                                return !user.equals(potentialFriend) && MathUtils.random(0, 10) > 7;
                             })
                             .forEach(potentialFriend -> {
                                 try {
@@ -382,17 +384,15 @@ public class Gen {
 
         appUsers1.forEach(user -> {
             if (MathUtils.random(0, 10) < 3) {
-                List<Friends> friendsList = friendsService.getFriendsListByUserIdAndStatus(user.getId());
+                List<AppUserResponse> friendsList = friendsService.getFriendsByUserId(user.getId());
 
                 friendsList.forEach(friendship -> {
-                    if (friendship.getStatus() == FriendsStatus.PENDING) {
-                        boolean acceptFriendship = MathUtils.random(0, 10) < 5;
-                        friendsService.changeFriendsStatus(
-                                friendship.getUser().getId(),
-                                friendship.getFriend().getId(),
-                                acceptFriendship
-                        );
-                    }
+                    boolean acceptFriendship = MathUtils.random(0, 10) < 5;
+                    friendsService.changeFriendsStatus(
+                            friendship.getId(),
+                            friendship.getId(),
+                            acceptFriendship
+                    );
                 });
             }
         });
@@ -410,6 +410,7 @@ public class Gen {
             log.info("Friend request already exists between default users.");
         }
     }
+
     private List<Chat> genChats() {
         Optional<AppUser> test = appUserService.findByUsername("test");
         Optional<AppUser> greak = appUserService.findByUsername("Greak");
@@ -436,15 +437,16 @@ public class Gen {
     }
 
     private void genFavorites() {
-            appUsers1.forEach(user -> {
-                int randomFavoritesCount = MathUtils.random(0, 10);
-                for (int i = 0; i < randomFavoritesCount; i++) {
-                    PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+        appUsers1.forEach(user -> {
+            int randomFavoritesCount = MathUtils.random(0, 10);
+            for (int i = 0; i < randomFavoritesCount; i++) {
+                PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
 
-                    try {
-                        favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
-                    } catch (AlreadyExistsException e) {}
+                try {
+                    favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
+                } catch (AlreadyExistsException e) {
                 }
-            });
-        }
+            }
+        });
+    }
 }
