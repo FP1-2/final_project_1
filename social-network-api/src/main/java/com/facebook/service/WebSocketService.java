@@ -21,6 +21,9 @@ public class WebSocketService {
     public void sendNewMessage(Principal user, Object message) {
         sendMessageToAuthUser(user, "/queue/messages", message);
     }
+    public void sendMessageNotification(AppUser user, Object message) {
+        sendMessageToUser(user, "/queue/messageNotification", message);
+    }
     public void sendMessageNotification(Principal user, Object message) {
         sendMessageToAuthUser(user, "/queue/messageNotification", message);
     }

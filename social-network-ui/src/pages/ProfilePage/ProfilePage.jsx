@@ -21,6 +21,7 @@ import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
+import { loadAuthUser } from "../../redux-toolkit/login/thunks";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -38,15 +39,15 @@ const ProfilePage = () => {
     obj: {
       totalPages,
       pageable: {
-        pageNumber
+        pageNumber,
       }
     }
   } = useSelector(state => state.post.postsUser);
-  const posts=useSelector(state => state.post.postsUser);
+  const postsStatus=useSelector(state => state.post.postsUser.status);
 
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
   const profileName = useSelector(state => state.profile.profileUser.obj);
-  const editUserStatus = useSelector(state => state.profile.editUser.obj);
+  const editUserStatus = useSelector(state => state.profile.editUser);
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
   const chat = useSelector(state => state.messenger.chat.obj.id);
@@ -61,7 +62,7 @@ const ProfilePage = () => {
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
-  const [sendRequest, setSendRequest] = useState(false);
+  const [sendRequest, setSendRequest] = useState();
 
 
   const location = useLocation();
@@ -88,6 +89,12 @@ const ProfilePage = () => {
     dispatch(postsUser({ id: id, page: 0 }));
   }, [id, deleteStatus, editUserStatus]);
 
+  useEffect(() => {
+    if(editUserStatus.status==="fulfilled"){
+      dispatch(loadAuthUser(id));
+    }
+  }, [editUserStatus]);
+
   const getUser = (userId) => {
     let newObj = {};
     id = parseInt(id);
@@ -96,6 +103,7 @@ const ProfilePage = () => {
         user: "myUser",
         id: id
       };
+
     } else {
       newObj = {
         user: "anotherUser",
@@ -104,6 +112,7 @@ const ProfilePage = () => {
       dispatch(getFriends(id));
     }
     dispatch(loadUserProfile(newObj));
+
   };
 
   const downloadInputHeaderPicture = async (e) => {
@@ -165,14 +174,14 @@ const ProfilePage = () => {
   }
 
   const getMorePosts = () => {
-    if (posts.status !== 'pending' &&  posts.obj.pageable.pageNumber < posts.obj.totalPages) {
+    if (postsStatus !== 'pending' &&  pageNumber < totalPages) {
       dispatch(postsUser({ page: pageNumber + 1, id: id }));
     }
   };
 
   const handleScroll = createHandleScroll({
     scrollRef: scrollContainerRef,
-    status: posts.status,
+    status: postsStatus,
     fetchMore: getMorePosts,
   });
 
@@ -188,7 +197,7 @@ const ProfilePage = () => {
         <>
           <ModalDeleteFriend />
           <ModalEditProfile />
-          <div className={style.profilePage} onScroll={() => handleScroll()} ref={scrollContainerRef}>
+          <div className={style.profilePage} onScroll={()=>handleScroll()} ref={scrollContainerRef}>
             <div className={style.headerWrapper}>
               <header className={style.header}>
                 <img className={style.headerImg} src={obj.headerPhoto ? obj.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
