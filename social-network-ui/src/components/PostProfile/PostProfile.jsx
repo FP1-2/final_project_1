@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
@@ -27,6 +27,7 @@ const PostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
+  const [isFavouritePost, setIsFavouritePost] = useState(null);
   const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
@@ -41,6 +42,13 @@ const PostProfile = ({ el }) => {
       error
     }
   } = useSelector(state => state.post);
+
+
+
+  useEffect(() => {
+    dispatch(isFavourite(el.postId));
+    setIsFavouritePost(postIsFavourite);
+  }, []);
 
 
   const changeClickLike = () => {
@@ -76,14 +84,15 @@ const PostProfile = ({ el }) => {
   };
 
   const savePostThunk = async () => {
-    await dispatch(isFavourite(el.postId));
-    if (postIsFavourite) {
+    if (isFavouritePost) {
       await dispatch(deleteFavourite(el.postId));
-      await dispatch(setIsFavourite(false));
       dispatch(deleteLocalFavourite(el.postId));
+      await dispatch(setIsFavourite(false));
+      setIsFavouritePost(false);
     } else {
       dispatch(addToFavourites(el.postId));
       await dispatch(setIsFavourite(true));
+      setIsFavouritePost(true);
     }
   };
 
@@ -141,7 +150,7 @@ const PostProfile = ({ el }) => {
             Share
           </button>
           <button className={style.postBtn} onClick={savePostThunk}>
-            <SavePost className={style.postBtnImg} />
+            <SavePost className={isFavouritePost ? style.postBtnImgSaved : style.postBtnImg} />
             Save
           </button>
         </div>

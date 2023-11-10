@@ -17,7 +17,7 @@ export const addToFavourites = createAsyncThunk(
 export const favouritesList = createAsyncThunk(
     'favourites/favouritesList',
     async ({ page = 0, size = 10 },{dispatch, rejectWithValue }) => {
-        const params = new URLSearchParams({ page, size });
+        const params = new URLSearchParams({page, size});
         try {
             const response = await workAx("get",`api/favorites?${params}`);
             if (page > 0) {

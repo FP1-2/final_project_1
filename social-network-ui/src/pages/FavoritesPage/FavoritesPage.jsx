@@ -5,7 +5,7 @@ import style from "./FavoritesPage.module.scss";
 import PostProfile from '../../components/PostProfile/PostProfile';
 import RepostProfile from '../../components/RepostProfile/RepostProfile';
 import ModalAddRepost from '../../components/ModalAddRepost/ModalAddRepost';
-import {setIsFavourite, resetFavouritesState } from '../../redux-toolkit/favourite/slice';
+import { resetFavouritesState } from '../../redux-toolkit/favourite/slice';
 import { createHandleScroll } from "../../utils/utils";
 
 function FavoritesPage() {
@@ -15,7 +15,6 @@ function FavoritesPage() {
   useEffect(() => {
     dispatch(resetFavouritesState());
     dispatch(favouritesList({ page: 0 }));
-    dispatch(setIsFavourite(true));
   }, []);
 
   const {
@@ -52,8 +51,6 @@ function FavoritesPage() {
               : <RepostProfile el={el} type="favourites" />}</li>) : null}
           {pageNumber === totalPages && <li className={style.container_allCard}>That`s all for now!</li>}
         </ul>
-
-       
       </div>
     </>
 
