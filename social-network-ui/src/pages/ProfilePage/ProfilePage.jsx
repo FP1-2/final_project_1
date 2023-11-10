@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
-import { Link, Outlet, useLocation, useNavigate} from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -20,10 +20,11 @@ import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
+import { createHandleScroll } from "../../utils/utils";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const navigate=useNavigate();
+  const navigate = useNavigate();
   let { id } = useParams();
   const {
     profileUser: {
@@ -32,6 +33,17 @@ const ProfilePage = () => {
       error
     }
   } = useSelector(state => state.profile);
+
+  const {
+    obj: {
+      totalPages,
+      pageable: {
+        pageNumber
+      }
+    }
+  } = useSelector(state => state.post.postsUser);
+  const posts=useSelector(state => state.post.postsUser);
+
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
   const profileName = useSelector(state => state.profile.profileUser.obj);
   const editUserStatus = useSelector(state => state.profile.editUser.obj);
@@ -40,15 +52,16 @@ const ProfilePage = () => {
   const chat = useSelector(state => state.messenger.chat.obj.id);
 
 
-  useEffect(()=>{
-    if (chat){
+  useEffect(() => {
+    if (chat) {
       navigate(`/messages/${chat}`);
     }
-  },[chat]);
+  }, [chat]);
 
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
+  const [sendRequest, setSendRequest] = useState(false);
 
 
   const location = useLocation();
@@ -64,14 +77,15 @@ const ProfilePage = () => {
 
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
+
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
     getUser(myId);
-    dispatch(getFriends(id));
-    dispatch(postsUser(id));
+    dispatch(postsUser({ id: id, page: 0 }));
   }, [id, deleteStatus, editUserStatus]);
 
   const getUser = (userId) => {
@@ -87,6 +101,7 @@ const ProfilePage = () => {
         user: "anotherUser",
         id: id
       };
+      dispatch(getFriends(id));
     }
     dispatch(loadUserProfile(newObj));
   };
@@ -121,6 +136,7 @@ const ProfilePage = () => {
 
   const addFriend = () => {
     dispatch(requestToFriend({ friendId: id }));
+    setSendRequest(true);
   };
 
 
@@ -134,8 +150,8 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
-  const newChat=()=>{
-    dispatch(createChat({username:profileName.username}));
+  const newChat = () => {
+    dispatch(createChat({ username: profileName.username }));
   };
 
 
@@ -147,6 +163,18 @@ const ProfilePage = () => {
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
+
+  const getMorePosts = () => {
+    if (posts.status !== 'pending' &&  posts.obj.pageable.pageNumber < posts.obj.totalPages) {
+      dispatch(postsUser({ page: pageNumber + 1, id: id }));
+    }
+  };
+
+  const handleScroll = createHandleScroll({
+    scrollRef: scrollContainerRef,
+    status: posts.status,
+    fetchMore: getMorePosts,
+  });
 
 
   return (<>
@@ -160,7 +188,7 @@ const ProfilePage = () => {
         <>
           <ModalDeleteFriend />
           <ModalEditProfile />
-          <div className={style.profilePage}>
+          <div className={style.profilePage} onScroll={() => handleScroll()} ref={scrollContainerRef}>
             <div className={style.headerWrapper}>
               <header className={style.header}>
                 <img className={style.headerImg} src={obj.headerPhoto ? obj.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
@@ -198,10 +226,16 @@ const ProfilePage = () => {
                         Delete
                       </button>
                       :
-                      <button className={style.infoBtnAddFriend} onClick={addFriend}>
-                        <AddFriend className={style.infoBtnAddFriendImg} />
-                        Add Friend
-                      </button>}
+                      (sendRequest ?
+                        <button className={style.infoBtnAddFriend} >
+                          <AddFriend className={style.infoBtnAddFriendImg} />
+                          Request is send
+                        </button>
+                        : <button className={style.infoBtnAddFriend} onClick={addFriend}>
+                          <AddFriend className={style.infoBtnAddFriendImg} />
+                          Send request
+                        </button>)
+                    }
                     <button className={style.infoBtnMessage} onClick={newChat}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />
                       Message
@@ -222,6 +256,7 @@ const ProfilePage = () => {
               </ul>
             </div>
             <Outlet />
+            {pageNumber === totalPages && <h4 className={style.container_allCard}>That`s all for now!</h4>}
           </div>
         </>
     }

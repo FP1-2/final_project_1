@@ -1,4 +1,5 @@
 @import "../../styles/mixin.scss";
+
 .profileBodyWrapper {
     background-color: #F0F2F5;
     display: flex;
@@ -7,6 +8,8 @@
     padding: 15px;
     box-sizing: border-box;
     width: 100%;
+
+
 
     .profileBody {
         display: flex;
@@ -58,11 +61,11 @@
                     justify-content: flex-start;
                     gap: 5px;
 
-                    &:last-child{
+                    &:last-child {
                         margin-bottom: 0;
                     }
 
-                    .profileInformationElemImg{
+                    .profileInformationElemImg {
                         width: 20px;
                         height: 20px;
                     }
@@ -94,6 +97,15 @@
             width: 500px;
             position: relative;
             z-index: 0;
+
+            .container_allCard {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 2rem;
+                height: 100%;
+                overflow: auto;
+            }
 
             @include width_992 {
                 width: 450px;
@@ -142,15 +154,19 @@
                     }
                 }
             }
+
             .profilePosts {
-                overflow: auto;
                 padding: 0;
                 box-sizing: border-box;
+                overflow: auto;
+                height: 100%;
 
-                .profilePost{
+                .profilePost {
                     list-style: none;
                     margin-bottom: 16px;
                 }
+
+
             }
         }
     }
