@@ -28,6 +28,13 @@ public class FriendsController {
         return ResponseEntity.ok(friendsService.sendFriendRequest(userId, request.getFriendId()));
     }
 
+    @PutMapping("/cancel-request")
+    public ResponseEntity<String> cancelFriendRequest(@Valid @RequestBody FriendsRequest request) {
+        Long userId = currentUserService.getCurrentUserId();
+        friendsService.cancelFriendRequest(userId, request.getFriendId());
+        return ResponseEntity.ok().build();
+    }
+
     @PutMapping("/update-status")
     public ResponseEntity<FriendsResponse> friendsStatus(@Valid @RequestBody FriendsStatusRequest request) {
         Long friendId = currentUserService.getCurrentUserId();

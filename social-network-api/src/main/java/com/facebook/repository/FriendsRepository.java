@@ -22,4 +22,7 @@ public interface FriendsRepository extends JpaRepository<Friends, Long> {
 
     List<Friends> findByUserId(Long userId);
 
+    @Query(value = "SELECT * FROM friends WHERE USER_ID = :userId AND FRIEND_ID = :friendId AND STATUS = 'PENDING'", nativeQuery = true)
+    Optional<Friends> findFriendsByUserIdAndFriendIdAndStatus(@Param("userId") Long userId, @Param("friendId") Long friendId);
+
 }
