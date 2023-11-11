@@ -27,7 +27,7 @@ const rootReducer = (state, action) => {
             messenger: undefined,
             notifications: undefined,
             popup: undefined,
-            posts_in_main: undefined,
+            postsInMain: undefined,
         };
     }
     return combineReducers({
@@ -41,7 +41,7 @@ const rootReducer = (state, action) => {
         webSocket: webSocketReducer,
         notifications: notificationReducer,
         popup: popupReducer,
-        posts_in_main: PostsInMainReducer,
+        postsInMain: PostsInMainReducer,
     })(state, action);
 }
 

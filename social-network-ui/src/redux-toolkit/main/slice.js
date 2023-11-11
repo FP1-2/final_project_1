@@ -4,7 +4,7 @@ import {loadPostsInMain} from './thunks';
 import defaultInitialState from "./defaultState";
 
 const PostsInMainReducer = createSlice({
-    name: 'posts_in_main',
+    name: 'postsInMain',
     initialState: defaultInitialState,
     reducers: {
         appendPostsInMain: (state, action) => {

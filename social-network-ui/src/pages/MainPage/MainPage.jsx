@@ -19,7 +19,7 @@ export default function MainPage() {
         pageNumber
       }
     }
-  } = useSelector(state => state.posts_in_main.posts);
+  } = useSelector(state => state.postsInMain.posts);
 
   useEffect(() => {
     dispatch(resetPostsInMainState());

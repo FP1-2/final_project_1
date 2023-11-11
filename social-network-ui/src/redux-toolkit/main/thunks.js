@@ -3,7 +3,7 @@ import { workAx } from '../ax.js';
 import {appendPostsInMain} from "./slice";
 
 export const loadPostsInMain = createAsyncThunk(
-    'posts_in_main/posts',
+    'postsInMain/posts',
     async ({ page = 0, size = 10 }, { dispatch, rejectWithValue }) => {
         const params = new URLSearchParams({ page, size });
         try {
