@@ -29,7 +29,7 @@ public class FriendsController {
     }
 
     @PutMapping("/cancel-request")
-    public ResponseEntity<String> cancelFriendRequest(@Valid @RequestBody FriendsRequest request) {
+    public ResponseEntity<FriendsResponse> cancelFriendRequest(@Valid @RequestBody FriendsRequest request) {
         Long userId = currentUserService.getCurrentUserId();
         friendsService.cancelFriendRequest(userId, request.getFriendId());
         return ResponseEntity.ok().build();
@@ -71,6 +71,15 @@ public class FriendsController {
     public ResponseEntity<List<AppUserResponse>> getFriendsRequestsByAuh() {
         Long userId = currentUserService.getCurrentUserId();
         return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
+    }
+
+    @PostMapping("isFriend")
+    public ResponseEntity<Boolean> isFriend(@Valid @RequestBody FriendsRequest request) {
+        Long userId = currentUserService.getCurrentUserId();
+        if(friendsService.isFriend(userId, request.getFriendId())){
+            return ResponseEntity.ok(true);
+        }
+        return ResponseEntity.ok(false);
     }
 
 }
