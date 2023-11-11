@@ -42,6 +42,8 @@
 
 .profilePage {
     position: relative;
+    overflow:auto;
+    height: 100%;
 
     .headerWrapper {
         width: 100%;
@@ -144,7 +146,7 @@
             }
 
             @include width_992 {
-                gap: 60px;
+                gap: 15px;
             }
 
             @include width_880 {
@@ -406,6 +408,9 @@
                 width: 100%;
                 justify-content: center;
             }
+            @include width_576 {
+                gap:10px;
+            }
 
             .linksListElem {
                 list-style: none;
@@ -474,5 +479,14 @@
             }
         }
     }
+
+    .container_allCard {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 2rem;
+        height: 100%;
+        overflow:auto;
+      }
 
 }

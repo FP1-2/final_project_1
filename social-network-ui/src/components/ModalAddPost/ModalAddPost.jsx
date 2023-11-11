@@ -1,4 +1,4 @@
-import React, { useRef, useState} from "react";
+import React, { useRef, useState } from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import Textarea from "../Textarea/Textarea";
@@ -72,15 +72,17 @@ const ModalAddPost = () => {
                 </div>
                 <div className={style.modalHeaderInfo}>
                   <img src={userObject.avatar ? userObject.avatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="" className={style.modalHeaderInfoImg} />
-                  <h3  className={style.modalHeaderInfoTitle}>
+                  <h3 className={style.modalHeaderInfoTitle}>
                     {`${userObject.name} ${userObject.surname}`}
                   </h3>
                 </div>
               </div>
               <div className={style.modalMain}>
                 <Textarea type="text" name="text" placeholder="Anything new?" />
-                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = "";}}>Clear photo</button>}
-                {values.img && <PreviewImage file={values.img} />}
+                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => {
+                  values.img = "";}}>
+                  Clear photo</button>}
+                {values.img && <PreviewImage file={values.img}/>}
               </div>
             </div>
             <div>
