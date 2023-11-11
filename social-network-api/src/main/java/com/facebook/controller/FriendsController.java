@@ -73,13 +73,4 @@ public class FriendsController {
         return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
     }
 
-    @PostMapping("isFriend")
-    public ResponseEntity<Boolean> isFriend(@Valid @RequestBody FriendsRequest request) {
-        Long userId = currentUserService.getCurrentUserId();
-        if(friendsService.isFriend(userId, request.getFriendId())){
-            return ResponseEntity.ok(true);
-        }
-        return ResponseEntity.ok(false);
-    }
-
 }

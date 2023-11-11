@@ -126,9 +126,4 @@ public class FriendsService {
         return friendsRepository.findByUserId(userId);
     }
 
-    public Boolean isFriend(Long userId, Long friendId) {
-        System.out.println(friendsRepository.findFriendsPair(userId, friendId));
-        return friendsRepository.findFriendsPair(userId, friendId);
-    }
-
 }
