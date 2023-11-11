@@ -1,5 +1,5 @@
 import {createSlice} from '@reduxjs/toolkit';
-import initialValue from './initialValue';
+import defaultInitialState from './defaultState';
 import builders, {buildersPagination} from '../builders';
 import {loadNotifications,
         loadNotification,
@@ -9,7 +9,7 @@ import {loadNotifications,
 
 const notificationReducer = createSlice({
     name: 'notifications',
-    initialState: initialValue,
+    initialState: defaultInitialState,
     reducers: {
         appendNotifications: (state, action) => {
             state.notifications.obj.content = [
@@ -21,18 +21,7 @@ const notificationReducer = createSlice({
             state.notifications.obj.totalElements = action.payload.totalElements;
         },
         resetNotificationsState: (state) => {
-            state.notifications = {
-                obj: {
-                    content: [],
-                    pageable: {
-                        pageNumber: 0
-                    },
-                    totalPages: 0,
-                    totalElements: 0,
-                },
-                status: '',
-                error: '',
-            };
+            state.notifications = defaultInitialState.notifications;
         },
         markNotificationAsRead: (state, action) => {
             const notificationIndex = state.notifications.obj.content

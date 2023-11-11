@@ -4,7 +4,6 @@ import LoginPage from "./pages/LoginPage/LoginPage";
 import FavoritesPage from './pages/FavoritesPage/FavoritesPage';
 import MessagesPage from './pages/MessagesPage/MessagesPage';
 import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
-import PostsPage from './pages/PostsPage/PostsPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
@@ -17,6 +16,7 @@ import Chat from "./components/Chat/Chat";
 import PageNotFound from './pages/PageNotFound/PageNotFound';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import PopupMessage from "./components/PopupMessage/PopupMessage";
+import MainPage from "./pages/MainPage/MainPage";
 
 function AppRoutes({ isAuth }) {
   return (
@@ -24,7 +24,7 @@ function AppRoutes({ isAuth }) {
       <PopupMessage />
       <Routes>
         <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<Layout />} />}>
-          <Route index element={<ProtectedRoute isAuth={isAuth} content={<PostsPage />} />} />
+          <Route index element={<ProtectedRoute isAuth={isAuth} content={<MainPage />} />} />
           <Route exact path='/profile/:id/*' element={<ProfilePage />}>
             <Route path='' element={<PostsPageProfile />} />
             <Route path='friends' element={<FriendPageProfile />} />

@@ -12,6 +12,7 @@ import webSocketReducer from "./ws/slice"
 import webSocketMiddleware from "./ws/webSocketMiddleware"
 import notificationReducer from "./notification/slice"
 import popupReducer from "./popup/slice"
+import PostsInMainReducer from "./main/slice"
 const RESET_STATE = 'RESET_STATE';
 
 const rootReducer = (state, action) => {
@@ -26,6 +27,7 @@ const rootReducer = (state, action) => {
             messenger: undefined,
             notifications: undefined,
             popup: undefined,
+            posts_in_main: undefined,
         };
     }
     return combineReducers({
@@ -39,6 +41,7 @@ const rootReducer = (state, action) => {
         webSocket: webSocketReducer,
         notifications: notificationReducer,
         popup: popupReducer,
+        posts_in_main: PostsInMainReducer,
     })(state, action);
 }
 
