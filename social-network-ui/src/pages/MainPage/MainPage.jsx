@@ -40,15 +40,15 @@ export default function MainPage() {
   
   return (
     <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
-      <div className={styles.container_cards_bloc}>
+      <ul className={styles.container_cards_bloc}>
         {content.map((post) => (
-          <React.Fragment key={post.postId}>
+          <li key={post.postId}>
             {post.type === "REPOST" ?
               <RepostProfile  el={post} /> : 
               <PostProfile el={post} />}
-          </React.Fragment>
+          </li>
         ))}
-      </div>
+      </ul>
       {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
     </div>
   );
