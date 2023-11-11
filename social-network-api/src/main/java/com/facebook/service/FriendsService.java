@@ -122,8 +122,4 @@ public class FriendsService {
                 .toList();
     }
 
-    public List<Friends> getFriendsListByUserIdAndStatus(Long userId) {
-        return friendsRepository.findByUserId(userId);
-    }
-
 }
