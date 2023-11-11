@@ -10,6 +10,7 @@
   left: 0;
   background-color: $main-background-color;
   @include flex-center;
+  z-index: 2;
 
   &__search {
     width: 100%;
