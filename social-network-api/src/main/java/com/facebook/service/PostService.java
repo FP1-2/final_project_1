@@ -365,6 +365,27 @@ public class PostService {
                 .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
     }
 
+    /**
+     * Знаходить усі пости з заданою пагінацією та сортуванням.
+     *
+     * @param page Номер сторінки для пагінації.
+     * @param size Розмір сторінки для пагінації.
+     * @param sort Строка сортування.
+     * @return Сторінка з постами.
+     */
+    public Page<PostResponse> findAllPosts(int page, int size, String sort) {
+        Sort sorting = getSorting(sort);
+        Pageable pageable = PageRequest.of(page, size, sorting);
+
+        List<Map<String, Object>> results = postRepository.findAllPostDetails(pageable);
+
+        List<PostResponse> postResponses = results
+                .stream().map(postFacade::convertToPostResponse).toList();
+        Long totalElements = postRepository.countAllPosts();
+
+        return new PageImpl<>(postResponses, pageable, totalElements);
+    }
+
     public void performRepostCascadeDeletion(Long postId) {
         List<Post> repostRepo = postRepository.findByOriginalPostId(postId);
         List<Long> repostIds = repostRepo.stream().map(Post::getId).toList();
