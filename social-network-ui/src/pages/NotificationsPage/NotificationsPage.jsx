@@ -40,7 +40,7 @@ export default function NotificationsPage() {
 
   return (
     <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
-      <div>
+      <div >
         {content.map((notification) => (
           <Notification key={notification.id} notification={notification} />
         ))}
