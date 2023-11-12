@@ -14,7 +14,8 @@ export const resetThunkRequest = createAsyncThunk(
       });
       return response.data;
     } catch (error) {
-      return rejectWithValue(error.response ? error.response.data : error.message);
+      console.error('Error in resetThunkRequest:', error);
+      return rejectWithValue(error.response ? error.response.data : 'User not found!');
     }
   }
 )

@@ -9,67 +9,82 @@ import style from "./ResetPassword.module.scss";
 
 
 const validationSchema = object({
-     email: string().email().required('Please enter your Email'),
-  
-    });
-  
-   
+  email: string().email().required('Please enter your Email'),
+});
+
 const ResetPassword = () => {
- 
   const dispatch = useDispatch();
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [formSubmitted, setFormSubmitted] = useState(false);
-  
-  const handleSubmit = async (values , { resetForm }) => {
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
+
+  const handleSubmit = async (values, { resetForm }) => {
     setIsSubmitting(true);
     setFormSubmitted(true);
     try {
       const email = values.email;
-      await dispatch(resetThunkRequest({ email }));
-      resetForm();
+      const response = await dispatch(resetThunkRequest({ email }));
+
+      console.log('Response:', response);
+
+      if (response.type === 'resetPassword/data/fulfilled') {
+        console.log('Password reset successful.');
+        setSuccess(true);
+        setError(null); // Очищаем ошибку
+        resetForm();
+      } else {
+        console.log('Password reset failed.');
+        setError('User not found. Please check your email and try again.');
+      }
     } catch (error) {
-      // Handle error
+      console.error('Error in handleSubmit:', error);
+      setError('User not found. Please check your email and try again.');
     } finally {
-      setIsSubmitting(false); 
+      setIsSubmitting(false);
     }
-     
   };
- 
+
+  const handleReload = () => {
+    window.location.reload();
+  };
 
   return (
     <div className={style.reset}>
-    {!formSubmitted ? (
+      {!formSubmitted ? (
         <Formik
-          initialValues={{ email: "" }}
+          initialValues={{ email: '' }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
-
-            <div className={style.reset}>
-              <Form className={style.resetForm}>
-                <div className={style.resetFormTitleWrapper}>
-                  <h2 className={style.resetFormTitle}>Forgot Password</h2>
-                  <p className={style.resetFormSubtitle}>
-                    Enter your email address below to receive a link to reset
-                    your password.
-                  </p>
-                </div>
-                <Input name="email" placeholder="Enter your e-mail" type="email" />
-                <NavLink to="/login" className={style.resetWrapperLink}>Back to login?</NavLink>
-                <button
-              className={style.resetBtnSubmit}
-              type="submit"
-              disabled={isSubmitting}
-            >
-              {isSubmitting ? 'Submitting...' : 'Reset now'}
-            </button>
-            
-              </Form>
-            </div>
+          <div className={style.reset}>
+            <Form className={style.resetForm}>
+              <div className={style.resetFormTitleWrapper}>
+                <h2 className={style.resetFormTitle}>Forgot Password</h2>
+                <p className={style.resetFormSubtitle}>
+                  Enter your email address below to receive a link to reset your password.
+                </p>
+              </div>
+              <Input name="email" placeholder="Enter your e-mail" type="email" />
+              <NavLink to="/login" className={style.resetWrapperLink}>
+                Back to login?
+              </NavLink>
+              <button className={style.resetBtnSubmit} type="submit" disabled={isSubmitting}>
+                {isSubmitting ? 'Submitting...' : 'Reset now'}
+              </button>
+            </Form>
+          </div>
         </Formik>
-        ) : (
-          <div className={style.resetMessage}>Email sent! Check your inbox.</div>
-          )}
+      ) : error ? (
+        <div className={style.resetError}>
+          {error}
+          <button className={style.errorBtn} onClick={handleReload}>
+            Reload
+          </button>
+        </div>
+      ) : success ? (
+        <div className={style.resetMessage}>Email sent! Check your inbox.</div>
+      ) : null}
     </div>
   );
 };

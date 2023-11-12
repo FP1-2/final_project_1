@@ -56,7 +56,7 @@ import style from "./UpdatePassword.module.scss";
                 validationSchema={validationSchema}
                 onSubmit={handleSubmit}
               >
-                <Form className={style.updateForm}>
+                {({ isValid }) => (<Form className={style.updateForm}>
                   <div className={style.updateFormTitleWrapper}>
                     <h2 className={style.updateFormTitle}>Reset Password</h2>
                     <p className={style.updateFormSubtitle}> To reset your password, enter a new one below. You will be logged in with your new password.</p>
@@ -64,8 +64,8 @@ import style from "./UpdatePassword.module.scss";
                   <Input name="password" placeholder="Password" type='password' />
                   <Input name="confirmPassword" placeholder="Confirm Password" type="password" />
                   <NavLink to="/login" className={style.updateWrapperLink}>Back to Login</NavLink>
-                  <button className={style.updateBtnSubmit} type="submit">Submit</button>
-                </Form>
+                  <button className={style.updateBtnSubmit} type="submit" disabled={!isValid}>Submit</button>
+                </Form>)}
               </Formik>
                  {isUpdating && <p>Updating password...</p>}
                  {updateErrorMessage && <p>Error: {updateErrorMessage}</p>}
