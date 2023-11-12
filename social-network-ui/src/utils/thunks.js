@@ -1,3 +1,5 @@
+import axios from 'axios';
+
 export const getPhotoURL = async (file) => {
     const formFIle = new FormData();
     formFIle.append("file", file);

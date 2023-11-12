@@ -41,7 +41,13 @@ const initialValue = {
         error: '',
     },
     postsUser:{
-        obj: [],
+        obj: {
+            content:[],
+            totalPages:0,
+            pageable: {
+              pageNumber:0,
+            },
+          },
         status: '',
         error: '',
     },

@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
 import {addPost,addRepost,getCommentsPost,addComment,addLike, editPost, deletePost, postsUser} from "./thunks";
-import builders from "../builders";
+import builders, {buildersPagination} from '../builders';
 
 const postReducer = createSlice({
     name: "post",
@@ -22,9 +22,32 @@ const postReducer = createSlice({
         setPost: (state, action) => {
             state.postObj= action.payload;
         },
+        appendPosts: (state, action) => {
+            state.postsUser.obj.content = [
+                ...state.postsUser.obj.content,
+                ...action.payload.content
+            ];
+            state.postsUser.obj.pageable.pageNumber = action.payload.pageable.pageNumber;
+            state.postsUser.obj.totalPages = action.payload.totalPages;
+            state.postsUser.obj.totalElements = action.payload.totalElements;
+        },
+        resetPostsState: (state) => {
+            state.postsUser = {
+                obj: {
+                    content: [],
+                    pageable: {
+                        pageNumber: 0
+                    },
+                    totalPages: 0,
+                    totalElements: 0,
+                },
+                status: '',
+                error: '',
+            };
+        },
     },
     extraReducers:(builder)=>{
-        builders(builder, postsUser,'postsUser');
+        buildersPagination(builder, postsUser, 'postsUser');
         builders(builder, addPost,'addPost');
         builders(builder, addRepost,'addRepost');
         builders(builder, editPost,'editPost');
@@ -35,6 +58,6 @@ const postReducer = createSlice({
     }
 });
 
-export const {clearComments, modalEditPostState, setPost, modalAddPostState, modalAddRepostState} = postReducer.actions;
+export const {clearComments, modalEditPostState, setPost, modalAddPostState, modalAddRepostState, appendPosts, resetPostsState} = postReducer.actions;
 
 export default postReducer.reducer;

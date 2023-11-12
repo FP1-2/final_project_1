@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -19,12 +19,14 @@ import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
+import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
+import { createHandleScroll } from "../../utils/utils";
+import { loadAuthUser } from "../../redux-toolkit/login/thunks";
 
 const ProfilePage = () => {
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   let { id } = useParams();
-
   const {
     profileUser: {
       obj,
@@ -33,16 +35,39 @@ const ProfilePage = () => {
     }
   } = useSelector(state => state.profile);
 
+  const {
+    obj: {
+      totalPages,
+      pageable: {
+        pageNumber,
+      }
+    }
+  } = useSelector(state => state.post.postsUser);
+  const postsStatus=useSelector(state => state.post.postsUser.status);
+
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
-  const editUserStatus = useSelector(state => state.profile.editUser.obj);
+  const profileName = useSelector(state => state.profile.profileUser.obj);
+  const editUserStatus = useSelector(state => state.profile.editUser);
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
+  const chat = useSelector(state => state.messenger.chat.obj.id);
+
+
+  useEffect(() => {
+    if (chat) {
+      navigate(`/messages/${chat}`);
+    }
+  }, [chat]);
+
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
+  const [sendRequest, setSendRequest] = useState();
 
-  const indexSlash = window.location.pathname.lastIndexOf('/');
-  const word = window.location.pathname.slice(indexSlash + 1);
+
+  const location = useLocation();
+  const indexSlash = location.pathname.lastIndexOf('/');
+  const word = location.pathname.slice(indexSlash + 1);
 
   let isMyFriend;
   for (const el of friends) {
@@ -53,15 +78,22 @@ const ProfilePage = () => {
 
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
+  const scrollContainerRef = useRef(null);
 
   useEffect(() => {
+
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
     getUser(myId);
-    dispatch(getFriends(id));
-    dispatch(postsUser(id));
+    dispatch(postsUser({ id: id, page: 0 }));
   }, [id, deleteStatus, editUserStatus]);
+
+  useEffect(() => {
+    if(editUserStatus.status==="fulfilled"){
+      dispatch(loadAuthUser(id));
+    }
+  }, [editUserStatus]);
 
   const getUser = (userId) => {
     let newObj = {};
@@ -69,15 +101,18 @@ const ProfilePage = () => {
     if (userId === id) {
       newObj = {
         user: "myUser",
-        id: id + ''
+        id: id
       };
+
     } else {
       newObj = {
         user: "anotherUser",
-        id: id + ''
+        id: id
       };
+      dispatch(getFriends(id));
     }
     dispatch(loadUserProfile(newObj));
+
   };
 
   const downloadInputHeaderPicture = async (e) => {
@@ -103,7 +138,6 @@ const ProfilePage = () => {
   const modalEditProfileOpen = () => {
     dispatch(modalEditProfileState(true));
   };
-
   const modalDeleteFriendOpen = () => {
     dispatch(friend(id));
     dispatch(modalDeleteFriendState(true));
@@ -111,7 +145,9 @@ const ProfilePage = () => {
 
   const addFriend = () => {
     dispatch(requestToFriend({ friendId: id }));
+    setSendRequest(true);
   };
+
 
   const clickLinkPosts = () => {
     setLinkPosts("focus");
@@ -123,6 +159,12 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
+  const newChat = () => {
+    dispatch(createChat({ username: profileName.username }));
+  };
+
+
+
   if (word === "profile" && linkPosts !== "focus") {
     clickLinkPosts();
   } else if (linkFriends !== "focus" && word === "friends") {
@@ -130,6 +172,19 @@ const ProfilePage = () => {
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
+
+  const getMorePosts = () => {
+    if (postsStatus !== 'pending' &&  pageNumber < totalPages) {
+      dispatch(postsUser({ page: pageNumber + 1, id: id }));
+    }
+  };
+
+  const handleScroll = createHandleScroll({
+    scrollRef: scrollContainerRef,
+    status: postsStatus,
+    fetchMore: getMorePosts,
+  });
+
 
   return (<>
     {status === "pending" ?
@@ -142,7 +197,7 @@ const ProfilePage = () => {
         <>
           <ModalDeleteFriend />
           <ModalEditProfile />
-          <div className={style.profilePage}>
+          <div className={style.profilePage} onScroll={()=>handleScroll()} ref={scrollContainerRef}>
             <div className={style.headerWrapper}>
               <header className={style.header}>
                 <img className={style.headerImg} src={obj.headerPhoto ? obj.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
@@ -166,7 +221,7 @@ const ProfilePage = () => {
                 </div>
                 <div className={style.infoNameWrapper}>
                   <h2 className={style.infoName}>{`${obj.name} ${obj.surname}`}</h2>
-                  <p className={style.infoFriends}>Friends: {friends.length}</p>
+                  <p className={style.infoFriends} href="">Friends: {friends.length}</p>
                 </div>
                 {obj.user === "myUser" ? <button className={style.infoBtnEdit} onClick={modalEditProfileOpen}>
                   <Pencil className={style.infoBtnPencil} />
@@ -180,11 +235,17 @@ const ProfilePage = () => {
                         Delete
                       </button>
                       :
-                      <button className={style.infoBtnAddFriend} onClick={addFriend}>
-                        <AddFriend className={style.infoBtnAddFriendImg} />
-                        Add Friend
-                      </button>}
-                    <button className={style.infoBtnMessage}>
+                      (sendRequest ?
+                        <button className={style.infoBtnAddFriend} >
+                          <AddFriend className={style.infoBtnAddFriendImg} />
+                          Request is send
+                        </button>
+                        : <button className={style.infoBtnAddFriend} onClick={addFriend}>
+                          <AddFriend className={style.infoBtnAddFriendImg} />
+                          Send request
+                        </button>)
+                    }
+                    <button className={style.infoBtnMessage} onClick={newChat}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />
                       Message
                     </button>
@@ -204,10 +265,10 @@ const ProfilePage = () => {
               </ul>
             </div>
             <Outlet />
+            {pageNumber === totalPages && <h4 className={style.container_allCard}>That`s all for now!</h4>}
           </div>
         </>
     }
   </>);
 };
-
 export default ProfilePage;

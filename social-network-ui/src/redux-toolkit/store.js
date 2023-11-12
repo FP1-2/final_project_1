@@ -10,6 +10,9 @@ import favouritesReducer from "./favourite/slice";
 import chatsReducer from "./messenger/slice";
 import webSocketReducer from "./ws/slice"
 import webSocketMiddleware from "./ws/webSocketMiddleware"
+import notificationReducer from "./notification/slice"
+import popupReducer from "./popup/slice"
+import PostsInMainReducer from "./main/slice"
 import resetPasswordSlice from "./ResetPassword/slice"
 import passwordUpdateReducer from "./UpdatePassword/slice"
 
@@ -24,8 +27,10 @@ const rootReducer = (state, action) => {
             post:undefined,
             friend:undefined,
             favourites:undefined,
-            messenger: undefined
-
+            messenger: undefined,
+            notifications: undefined,
+            popup: undefined,
+            postsInMain: undefined,
         };
     }
     return combineReducers({
@@ -33,14 +38,16 @@ const rootReducer = (state, action) => {
         login: loginReducer,
         resetPassword: resetPasswordSlice,
         passwordUpdate: passwordUpdateReducer,
-
         auth: loginReducer,
         profile:profileReducer,
         post:postReducer,
         friends:friendsReducer,
         favourites:favouritesReducer,
         messenger: chatsReducer,
-        webSocket: webSocketReducer
+        webSocket: webSocketReducer,
+        notifications: notificationReducer,
+        popup: popupReducer,
+        postsInMain: PostsInMainReducer,
     })(state, action);
 }
 

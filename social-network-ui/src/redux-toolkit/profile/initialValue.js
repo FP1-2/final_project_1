@@ -12,6 +12,5 @@ const initialValue = {
         status: '',
         error: '',
     },
-
 }
 export default initialValue;

@@ -1,0 +1,9 @@
+@import "../../styles/mixin.scss";
+
+.container {
+  @include pageableContainer;
+
+  &_allCard {
+    padding: 2rem;
+  }
+}

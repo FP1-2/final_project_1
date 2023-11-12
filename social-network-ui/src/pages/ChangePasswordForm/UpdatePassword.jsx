@@ -64,7 +64,10 @@ import style from "./UpdatePassword.module.scss";
                   <Input name="password" placeholder="Password" type='password' />
                   <Input name="confirmPassword" placeholder="Confirm Password" type="password" />
                   <NavLink to="/login" className={style.updateWrapperLink}>Back to Login</NavLink>
-                  <button className={style.updateBtnSubmit} type="submit" disabled={!isValid}>Submit</button>
+                  <button className={style.updateBtnSubmit} 
+                  type="submit" 
+                  disabled={!isValid}
+                  >Submit</button>
                 </Form>)}
               </Formik>
                  {isUpdating && <p>Updating password...</p>}
