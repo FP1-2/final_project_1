@@ -1,5 +1,6 @@
 package com.facebook.repository.notifications;
 
+import com.facebook.dto.notifications.NotificationSqlResult;
 import com.facebook.model.notifications.Notification;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -8,6 +9,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Репозиторій для роботи з повідомленнями.
@@ -15,11 +17,32 @@ import java.util.List;
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
 
     /**
-     * Видаляє всі повідомлення, пов'язані з певним постом.
-     *
-     * @param postId Ідентифікатор поста.
+     * Базовий запит SQL для отримання даних про повідомлення.
+     * Цей запит використовується як основа і потребує додавання конкретних умов WHERE для завершення запиту.
+     * Використовується в методах {@link NotificationRepository#findByUserId(Long, Pageable)}
+     * та {@link NotificationRepository#findByNotificationId(Long)}.
      */
-    void deleteByPostId(Long postId);
+    String BASE_NOTIFICATION_QUERY = """
+                SELECT new com.facebook.dto.notifications.NotificationSqlResult(
+                       n.id,
+                       n.user.id,
+                       n.message,
+                       n.isRead,
+                       n.type,
+                       n.post.id,
+                       n.createdDate,
+                       n.lastModifiedDate,
+                       new com.facebook.dto.post.Author(
+                           i.id,
+                           i.name,
+                           i.surname,
+                           i.username,
+                           i.avatar
+                       )
+                   )
+                   FROM Notification n
+                   LEFT JOIN n.initiator i
+            """;
 
     /**
      * Знаходить всі повідомлення для певного користувача.
@@ -28,8 +51,24 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
      * @param pageable Параметри пагінації.
      * @return Сторінка з повідомленнями.
      */
-    @Query("SELECT n FROM Notification n WHERE n.user.id = :userId")
-    Page<Notification> findByUserId(@Param("userId") Long userId, Pageable pageable);
+    @Query(BASE_NOTIFICATION_QUERY + " WHERE n.user.id = :userId")
+    Page<NotificationSqlResult> findByUserId(@Param("userId") Long userId, Pageable pageable);
+
+    /**
+     * Знаходить запис про повідомлення за ідентифікатором.
+     *
+     * @param notificationId Ідентифікатор повідомлення, яке потрібно знайти.
+     * @return Опціональний результат, який містить {@link NotificationSqlResult}, якщо повідомлення з таким ідентифікатором існує.
+     */
+    @Query(BASE_NOTIFICATION_QUERY + " WHERE n.id = :notificationId")
+    Optional<NotificationSqlResult> findByNotificationId(@Param("notificationId") Long notificationId);
+
+    /**
+     * Видаляє всі повідомлення, пов'язані з певним постом.
+     *
+     * @param postId Ідентифікатор поста.
+     */
+    void deleteByPostId(Long postId);
 
     /**
      * Підраховує кількість прочитаних або непрочитаних повідомлень для певного користувача.

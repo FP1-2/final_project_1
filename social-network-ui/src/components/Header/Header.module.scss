@@ -2,6 +2,7 @@
 @import "../../styles/mixin.scss";
 
 .header {
+  grid-area: header;
   width: 100%;
   border-bottom: 1px solid $input-color-main;
   box-shadow: 0 0 20px 2px rgba(0, 0, 0, 0.1);

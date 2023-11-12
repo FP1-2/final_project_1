@@ -16,9 +16,8 @@ import MessageInput from "./MessageInput";
 import ChatHeader from './ChatHeader';
 import ChatBody from './ChatBody';
 import Modal from '../Modal/Modal';
-import useDebounce from "../../utils/useDebounce";
 import {checkReadStatus, checkSentStatus, StatusType} from "../../utils/statusType";
-
+import {createPortal} from "react-dom";
 export default function Chat() {
   const {chatId} = useParams();
   const dispatch = useDispatch();
@@ -35,13 +34,11 @@ export default function Chat() {
 
   const [message, setMessage] = useState("");
   const [userSearch, setUserSearch] = useState("");
-  const debounedSearchText = useDebounce(userSearch, 500);
-  const [show, setShow] = useState(false);
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
   const [newChat, setNewChat] = useState(false);
   const PAGE_SIZE = 10;
+  
   /* Load Chat*/
   useEffect(() => {
     dispatch(resetChat());
@@ -149,7 +146,6 @@ export default function Chat() {
   /* Creating new Chat*/
   const handleCreateChat = (username) => {
     dispatch(createChat({username}));
-    setShow(false);
     setUserSearch('');
     setHasMore(false);
     setPageNumber(0);
@@ -163,31 +159,13 @@ export default function Chat() {
       setCreateNewChat(false);
     }
   }, [chat]);
-  /* Search user for creating new Chat*/
-  useEffect(() => {
-    if (debounedSearchText.trim() === '') {
-      dispatch(resetSearchUsers());
-    }
-    if (debounedSearchText) {
-      handleUserChange(debounedSearchText);
-    }
-  }, [debounedSearchText]);
-
-  const handleUserChange = (input) => {
-
-    if (userSearch.trim() === '') {
-      dispatch(resetSearchUsers());
-      return;
-    }
-    dispatch(searchUser({input: input, page: 0, size: PAGE_SIZE}));
+  const handleGetSearchResult = (searchValue) => {
+    dispatch(searchUser({input: searchValue, page: 0, size: PAGE_SIZE}));
   };
-  const handleInputClick = () => {
-    if (userSearch.trim() === '') {
-      dispatch(resetSearchUsers());
-    }
-    setShow(true);
+  const handleResetSearchResult = () => {
+    dispatch(resetSearchUsers());
   };
-
+ 
   const handleOpenImg = (img) => {
     setIsModalOpen(true);
     setImgSrc(img);
@@ -210,10 +188,10 @@ export default function Chat() {
           <ChatHeader
             id={chatId}
             chat={chat}
-            handleInputClick={handleInputClick}
-            handleInputChange={(e) => setUserSearch(e.target.value)}
             userSearch={userSearch}
-            show={show}
+            setUserSearch={setUserSearch}
+            handleGetSearchResult={handleGetSearchResult}
+            handleResetSearchResult={handleResetSearchResult}
             searchUsers={searchUsers}
             handleCreateChat={handleCreateChat}
             pageSize={PAGE_SIZE}
@@ -238,10 +216,10 @@ export default function Chat() {
             message={message}
             emojiHandler={emojiHandler}/>}
         </div>
-        {isModalOpen && <Modal hideModal={() => setIsModalOpen(false)}>
+        {isModalOpen && createPortal(<Modal hideModal={() => setIsModalOpen(false)}>
           <img src={imgSrc} alt={imgSrc} onClick={e => e.stopPropagation()}
             className={styles.modalImg}
-          /></Modal>}
+          /></Modal>, document.body)}
       </>)
   );
 }

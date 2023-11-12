@@ -79,13 +79,16 @@ class PostTest {
      * </ol>
      */
     @Test
-    void dateModification() {
+    void dateModification() throws InterruptedException {
         // 1. Створення і збереження поста
         Post post = createPost(createAndSaveTestUser(), PostStatus.DRAFT);
         Post savedPost = tem.persistAndFlush(post);
 
         // 2. Отримання дати модифікації
         LocalDateTime initialLastModifiedDate = savedPost.getLastModifiedDate();
+
+        // Додаємо затримку
+        Thread.sleep(50);
 
         // 3. Зміна даних і повторне збереження
         savedPost.setTitle("Updated Title");

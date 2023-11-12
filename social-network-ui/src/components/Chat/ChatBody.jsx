@@ -2,7 +2,7 @@ import React from 'react';
 import Message from '../Message/Message';
 import Avatar from '../Avatar/Avatar';
 import Loader from '../Loader/Loader';
-import {formatDate, getTimeAgo} from '../../utils/formatData';
+import {formatDate} from '../../utils/formatData';
 import styles from './Chat.module.scss';
 import PropTypes from 'prop-types';
 
@@ -48,7 +48,7 @@ export default function ChatBody({
 
                 return (
                   <li key={id} className={styles.chat__body__messList__item}>
-                    {showDate && <div className={styles.messageDate}>{getTimeAgo(createdAt)}</div>}
+                    {showDate && <div className={styles.messageDate}>{formatDate(createdAt)}</div>}
                     <Message
                       contentType={contentType}
                       content={content}
