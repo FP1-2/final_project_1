@@ -40,11 +40,13 @@ export default function NotificationsPage() {
 
   return (
     <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
-      <div >
+      <ul>
         {content.map((notification) => (
-          <Notification key={notification.id} notification={notification} />
+          <li key={notification.id}>
+            <Notification  notification={notification} />
+          </li>
         ))}
-      </div>
+      </ul>
       {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
     </div>
   );

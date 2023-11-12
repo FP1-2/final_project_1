@@ -1,4 +1,4 @@
-const initialValue = {
+const defaultInitialState = {
     notifications: {
         obj:  {
             content: [],
@@ -32,4 +32,4 @@ const initialValue = {
     },
 };
 
-export default initialValue;
+export default defaultInitialState;
