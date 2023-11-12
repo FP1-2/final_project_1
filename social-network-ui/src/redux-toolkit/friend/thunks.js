@@ -72,3 +72,15 @@ export const requestsToMe = createAsyncThunk(
         }
     }
 );
+
+export const cancelRequest = createAsyncThunk(
+    'friends/cancelRequest',
+    async (obj,{ rejectWithValue }) => {
+        try {
+            const response = await workAx("put",`api/friends/cancel-request`, obj);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
