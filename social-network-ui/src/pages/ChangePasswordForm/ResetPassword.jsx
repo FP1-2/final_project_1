@@ -1,15 +1,14 @@
-import  React, { useState } from 'react';
-import {useDispatch} from "react-redux";
-import {resetThunkRequest} from "../../redux-toolkit/ResetPassword/thunks.js";
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { resetThunkRequest } from "../../redux-toolkit/ResetPassword/thunks.js";
 import { object, string } from "yup";
 import { Formik, Form } from "formik";
 import { NavLink } from "react-router-dom";
-import Input from '../../components/Input/Input.jsx';
+import Input from "../../components/Input/Input.jsx";
 import style from "./ResetPassword.module.scss";
 
-
 const validationSchema = object({
-  email: string().email().required('Please enter your Email'),
+  email: string().email().required("Please enter your Email"),
 });
 
 const ResetPassword = () => {
@@ -26,20 +25,15 @@ const ResetPassword = () => {
       const email = values.email;
       const response = await dispatch(resetThunkRequest({ email }));
 
-      console.log('Response:', response);
-
-      if (response.type === 'resetPassword/data/fulfilled') {
-        console.log('Password reset successful.');
+      if (response.type === "resetPassword/data/fulfilled") {
         setSuccess(true);
-        setError(null); // Очищаем ошибку
+        setError(null);
         resetForm();
       } else {
-        console.log('Password reset failed.');
-        setError('User not found. Please check your email and try again.');
+        setError("User not found. Please check your email and try again.");
       }
     } catch (error) {
-      console.error('Error in handleSubmit:', error);
-      setError('User not found. Please check your email and try again.');
+      setError("User not found. Please check your email and try again.");
     } finally {
       setIsSubmitting(false);
     }
@@ -53,7 +47,7 @@ const ResetPassword = () => {
     <div className={style.reset}>
       {!formSubmitted ? (
         <Formik
-          initialValues={{ email: '' }}
+          initialValues={{ email: "" }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
         >
@@ -62,15 +56,24 @@ const ResetPassword = () => {
               <div className={style.resetFormTitleWrapper}>
                 <h2 className={style.resetFormTitle}>Forgot Password</h2>
                 <p className={style.resetFormSubtitle}>
-                  Enter your email address below to receive a link to reset your password.
+                  Enter your email address below to receive a link to reset your
+                  password.
                 </p>
               </div>
-              <Input name="email" placeholder="Enter your e-mail" type="email" />
+              <Input
+                name="email"
+                placeholder="Enter your e-mail"
+                type="email"
+              />
               <NavLink to="/login" className={style.resetWrapperLink}>
                 Back to login?
               </NavLink>
-              <button className={style.resetBtnSubmit} type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Submitting...' : 'Reset now'}
+              <button
+                className={style.resetBtnSubmit}
+                type="submit"
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? "Submitting..." : "Reset now"}
               </button>
             </Form>
           </div>
