@@ -2,6 +2,7 @@
 @import "../../styles/mixin.scss";
 
 .header {
+  max-height: 4rem;
   grid-area: header;
   width: 100%;
   border-bottom: 1px solid $input-color-main;
@@ -105,10 +106,6 @@
 }
 
 @media (min-width: 1020px) {
-  .header {
-    max-height: 66px;
-  }
-
   .smallLogo {
     display: block;
     padding-right: 16px;
@@ -116,6 +113,5 @@
 
   .largeLogo {
     display: none;
-
   }
 }
