@@ -13,6 +13,9 @@ import webSocketMiddleware from "./ws/webSocketMiddleware"
 import notificationReducer from "./notification/slice"
 import popupReducer from "./popup/slice"
 import PostsInMainReducer from "./main/slice"
+import resetPasswordSlice from "./ResetPassword/slice"
+import passwordUpdateReducer from "./UpdatePassword/slice"
+
 const RESET_STATE = 'RESET_STATE';
 
 const rootReducer = (state, action) => {
@@ -32,6 +35,9 @@ const rootReducer = (state, action) => {
     }
     return combineReducers({
         registration: registrationReducer,
+        login: loginReducer,
+        resetPassword: resetPasswordSlice,
+        passwordUpdate: passwordUpdateReducer,
         auth: loginReducer,
         profile:profileReducer,
         post:postReducer,

@@ -29,7 +29,7 @@ const LoginForm = ({ handleSubmit }) => {
             <Input type="password" name="password" placeholder="Password" />
           </div>
           <button type="submit" className={styles.submit}>Log In</button>
-          <NavLink to="/forgotten password" className={styles.link}>Forgotten password?</NavLink>
+          <NavLink to="/reset-password" className={styles.link}>Forgotten password?</NavLink>
           <NavLink to="/registration" className={styles.create}>Create new account</NavLink>
         </Form>
       </Formik>
