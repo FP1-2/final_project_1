@@ -209,6 +209,29 @@ public class PostController {
         return ResponseEntity.ok(postResponse);
     }
 
+    /**
+     * Отримує всі пости з бази даних з можливістю пагінації та сортування.
+     *
+     * @param page Номер сторінки.
+     * @param size Розмір сторінки.
+     * @param sort Параметри сортування.
+     * @return Сторінка з усіма постами.
+     *
+     * <p>
+     * <strong>Приклад:</strong>
+     *   /api/posts/all_posts?page=0&size=10&sort=id,desc
+     * </p>
+     */
+    @GetMapping
+    public ResponseEntity<Page<PostResponse>> getAllPosts(
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,desc") String sort) {
+
+        Page<PostResponse> postResponses = postService.findAllPosts(page, size, sort);
+        return ResponseEntity.ok(postResponses);
+    }
+
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId) {
         Long userId = currentUserService.getCurrentUserId();

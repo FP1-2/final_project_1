@@ -178,6 +178,27 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             """, nativeQuery = true)
     Optional<Post> findPostWithMoreThanFourComments();
 
+    /**
+     * Виконує запит до бази даних для отримання деталей усіх постів з пагінацією.
+     *
+     * @param pageable Параметри пагінації та сортування.
+     * @return Список постів з деталями.
+     */
+    @Query(value = POST_DETAILS_SELECT + """
+         GROUP BY p.id, u.id, op.id, ou.id
+        """,
+            countQuery = "SELECT count(*) FROM posts",
+            nativeQuery = true)
+    List<Map<String, Object>> findAllPostDetails(Pageable pageable);
+
+    /**
+     * Підраховує загальну кількість постів у базі даних.
+     *
+     * @return Загальна кількість постів.
+     */
+    @Query(value = "SELECT count(*) FROM posts", nativeQuery = true)
+    Long countAllPosts();
+
     List<Post> findByOriginalPostId(Long originalPostId);
 
 }
