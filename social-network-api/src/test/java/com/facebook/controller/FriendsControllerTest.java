@@ -94,4 +94,18 @@ class FriendsControllerTest {
         verify(friendsService).getFriendsByUserId(USER_ID_2);
     }
 
+    @Test
+    void cancelFriendRequestTest() {
+        FriendsRequest request = new FriendsRequest();
+        request.setFriendId(USER_ID_1);
+
+        when(currentUserService.getCurrentUserId()).thenReturn(USER_ID_2);
+        doNothing().when(friendsService).cancelFriendRequest(USER_ID_2, USER_ID_1);
+
+        ResponseEntity<FriendsResponse> response = friendsController.cancelFriendRequest(request);
+
+        verify(currentUserService).getCurrentUserId();
+        verify(friendsService).cancelFriendRequest(USER_ID_2, USER_ID_1);
+    }
+
 }

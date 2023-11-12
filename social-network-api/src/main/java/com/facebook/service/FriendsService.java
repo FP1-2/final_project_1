@@ -4,7 +4,6 @@ import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
-import com.facebook.exception.UserNotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
@@ -61,6 +60,15 @@ public class FriendsService {
         return facade.toFriendsResponse(friendRequest);
     }
 
+    public void cancelFriendRequest(Long userId, Long friendId) {
+        Optional<Friends> existingRequest = friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(userId, friendId);
+        if(existingRequest.isPresent()) {
+            friendsRepository.delete(existingRequest.get());
+        } else {
+            throw new NotFoundException("Friend request not found!");
+        }
+    }
+
     @Transactional
     public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {
         friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
@@ -112,10 +120,6 @@ public class FriendsService {
                 .stream()
                 .map(userFacade::convertToAppUserResponse)
                 .toList();
-    }
-
-    public List<Friends> getFriendsListByUserIdAndStatus(Long userId) {
-        return friendsRepository.findByUserId(userId);
     }
 
 }

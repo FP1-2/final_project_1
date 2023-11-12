@@ -112,4 +112,22 @@ class FriendsServiceTest {
                 () -> friendsService.deleteFriend(USER_ID_2, USER_ID_1));
     }
 
+    @Test
+    void testCancelFriendRequest() {
+        Friends friends = new Friends();
+        when(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(USER_ID_1, USER_ID_2)).thenReturn(Optional.of(friends));
+
+        friendsService.cancelFriendRequest(USER_ID_1, USER_ID_2);
+
+        verify(friendsRepository).delete(friends);
+    }
+
+    @Test
+    void testCancelFriendRequestNotFound() {
+        when(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(USER_ID_1, USER_ID_2)).thenReturn(Optional.empty());
+
+        assertThrows(NotFoundException.class,
+                () -> friendsService.cancelFriendRequest(USER_ID_1, USER_ID_2));
+    }
+
 }
