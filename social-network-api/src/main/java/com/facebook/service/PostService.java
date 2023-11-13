@@ -121,6 +121,29 @@ public class PostService {
     }
 
     /**
+     * Отримує коментар за ідентифікатором.
+     *
+     * @param commentId Ідентифікатор коментаря, який потрібно отримати.
+     * @return CommentDTO, якщо коментар знайдено.
+     * @throws NotFoundException якщо коментар не знайдено.
+     */
+    public CommentDTO getCommentById(Long commentId) {
+        return commentRepository.findCommentDtoById(commentId)
+                .orElseThrow(() -> new NotFoundException("Comment not found!"));
+    }
+
+    /**
+     * Перевіряє, чи лайкнув користувач пост.
+     *
+     * @param postId Ідентифікатор поста.
+     * @param userId Ідентифікатор користувача.
+     * @return true, якщо користувач лайкнув пост.
+     */
+    public boolean isPostLikedByUser(Long postId, Long userId) {
+        return likeRepository.existsByPostIdAndUserId(postId, userId);
+    }
+
+    /**
      * Знаходить деталі публікацій користувача за його ID
      * із заданою сортуванням та пагінацією.
      *
@@ -385,6 +408,7 @@ public class PostService {
 
         return new PageImpl<>(postResponses, pageable, totalElements);
     }
+
 
     public void performRepostCascadeDeletion(Long postId) {
         List<Post> repostRepo = postRepository.findByOriginalPostId(postId);

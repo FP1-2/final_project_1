@@ -291,7 +291,7 @@ public class Gen {
     private List<Like> genLikes() {
         posts.forEach(post -> {
             appUsers1.forEach(user -> {
-                if (MathUtils.random(0, 20) == 20) {
+                if (MathUtils.random(0, 20) > 10) {
                     postService.likePost(user.getId(), post.getPostId());
                 }
             });
@@ -303,7 +303,7 @@ public class Gen {
     private List<Comment> genComments() {
         Faker faker = new Faker();
         posts.forEach(post -> {
-            IntStream.range(1, MathUtils.random(1, 5) + 1)
+            IntStream.range(1, MathUtils.random(4, 10) + 1)
                     .forEach(ignored -> {
                         Long randomUserId = appUsers1
                                 .get(MathUtils.random(0, appUsers1.size() - 1)).getId();
