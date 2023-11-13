@@ -1,4 +1,9 @@
 const initialValue = {
+    getPost:{
+        obj: {},
+        status: '',
+        error: '',
+    },
     editPost:{
         obj: {},
         status: '',

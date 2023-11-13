@@ -8,7 +8,9 @@ import {
     addLike,
     editPost,
     deletePost,
-    postsUser} from "./thunks";
+    postsUser,
+    getPost,
+} from "./thunks";
 import builders, {buildersPagination} from '../builders';
 import {appendPaginationUtil} from "../../utils/utils";
 
@@ -60,6 +62,7 @@ const postReducer = createSlice({
         builders(builder, addComment,'addComment');
         builders(builder, addLike,'addLike');
         builders(builder, deletePost,'deletePost');
+        builders(builder, getPost,'getPost');
     }
 });
 

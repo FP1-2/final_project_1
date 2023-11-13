@@ -5,7 +5,7 @@ import {appendComments} from "./slice";
 
 export const getPost = createAsyncThunk(
     'post/getPost',
-    async (id, { rejectWithValue }) => {
+    async ({ id }, { rejectWithValue }) => {
         try {
             const response = await workAx("get", `api/posts/${id}`);
             return response.data;
