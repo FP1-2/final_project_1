@@ -3,8 +3,8 @@ import ChatNavigation from "../../components/ChatNavigation/ChatNavigation";
 import {useDispatch, useSelector} from "react-redux";
 import {loadChats} from "../../redux-toolkit/messenger/asyncThunk";
 import {useEffect, useMemo, useState} from "react";
-import {updateChats, updateChatsLastMessage, resetChat, resetMessages} from '../../redux-toolkit/messenger/slice';
-import {Outlet, useNavigate, useParams} from 'react-router-dom';
+import {updateChats, updateChatsLastMessage} from '../../redux-toolkit/messenger/slice';
+import {Outlet, useNavigate} from 'react-router-dom';
 import {getDate} from "../../utils/formatData";
 import {setNewMessage} from '../../redux-toolkit/ws/slice';
 import {useLocation} from "react-router-dom";
@@ -14,7 +14,6 @@ export default function MessagesPage() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const location = useLocation();
-  const {chatId} = useParams();
 
   const authUser = useSelector(state => state.auth.user.obj);
   const {chats, unreadMessagesQt} = useSelector(state => state.messenger);
@@ -81,12 +80,6 @@ export default function MessagesPage() {
     }
   }, [unreadMessagesQt.obj]);
 
-  useEffect(() => {
-    if (showChat || chatId ==='new') {
-      dispatch(resetChat);
-      dispatch(resetMessages);
-    }
-  }, [location.pathname]);
   
   return (
     <div className={styles.messengerPage}>

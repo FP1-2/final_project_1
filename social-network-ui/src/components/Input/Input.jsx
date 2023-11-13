@@ -39,12 +39,12 @@ const Input = (props) => {
         </div>
         : props.type === "text" && props.modal === "" ?
           <div className={style.textlInputWrapper}>
-            <input className={style.textInput} {...field} {...props} />
+            <input className={style.textInput} {...field} {...props} onClick={(e) => e.preventDefault()}/>
             <p className={error && touched ? style.errorNames : style.errorDisplayNone} >{error}</p>
           </div>
           : props.type === "password" ?
             <div className={style.passworslInputWrapper}>
-              <input className={style.input} {...field} {...props} type={inputType} />
+              <input className={style.input} {...field} {...props} type={inputType} onClick={(e) => e.preventDefault()}/>
               <button onClick={handleClickOpenEyeBtn} type="button" className={style.btnEye}>
                 <OpenEye className={openEyeState ? style.btnCloseEye : style.btnOpenEye} />
               </button>

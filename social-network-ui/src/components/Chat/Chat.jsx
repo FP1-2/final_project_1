@@ -6,8 +6,8 @@ import {
   updateChats,
   updateChatsLastMessage,
   resetSearchUsers,
-  resetMessages,
-  resetChat
+  resetChatAndMessages,
+  resetNewChat
 } from '../../redux-toolkit/messenger/slice';
 import {setMessageWithNewStatus} from '../../redux-toolkit/ws/slice';
 import {useDispatch, useSelector} from "react-redux";
@@ -23,7 +23,7 @@ export default function Chat() {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const {chat, messages, searchUsers} = useSelector(state => state.messenger);
+  const {chat, messages, searchUsers, newChat} = useSelector(state => state.messenger);
   const user = useSelector(state => state.auth.user.obj);
   const {newMessage, messageWithNewStatus} = useSelector(state => state.webSocket);
 
@@ -36,43 +36,39 @@ export default function Chat() {
   const [userSearch, setUserSearch] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
-  const [newChat, setNewChat] = useState(false);
+  const [isNewChat, setIsNewChat] = useState(false);
   const PAGE_SIZE = 10;
   
   /* Load Chat*/
-  useEffect(() => {
-    dispatch(resetChat());
-    
+  useEffect(() => {    
     if (chatId !== 'new' && chatId) {
       dispatch(loadChat({id: chatId}));
-      dispatch(resetMessages());
       dispatch(loadMessages({id: chatId, page: 0, size: PAGE_SIZE}));
-      setNewChat(true);
+      setIsNewChat(true);
       setPageNumber(0);
     }
-  }, [chatId,]);
-  
+  }, [chatId]);
   useEffect(() => {
-    if (!newChat) {
+    if (!isNewChat) {
       const uniqueNewMessages = messages.obj.filter(message => {
         return !messagesList.some(existingMessage => existingMessage.id === message.id);
       });
       setMessagesList(prev => [...prev, ...uniqueNewMessages]);
+      
     } else {
       setMessagesList(messages.obj);
-      setNewChat(false);
+      setIsNewChat(false);
     }
     const more = messages.obj.length >= PAGE_SIZE;
     setHasMore(more);
   }, [messages.obj]);
 
   /* Load More messages*/
-
   const handleLoadMoreMessages = () => {
     dispatch(loadMessages({id: chatId, page: pageNumber + 1, size: PAGE_SIZE}));
     setPageNumber(prev => prev + 1);
   };
-
+  
   /*Sending new message*/
   function handleMessageChange(e) {
     setMessage(e.target.value);
@@ -142,7 +138,6 @@ export default function Chat() {
   const handleMouseEnter = () => {
     changeMessageStatus();
   };
-  const [createNewChat, setCreateNewChat] = useState(false);
   /* Creating new Chat*/
   const handleCreateChat = (username) => {
     dispatch(createChat({username}));
@@ -150,15 +145,13 @@ export default function Chat() {
     setHasMore(false);
     setPageNumber(0);
     dispatch(resetSearchUsers());
-    dispatch(resetMessages());
-    setCreateNewChat(true);
   };
   useEffect(() => {
-    if (createNewChat && chat.status === 'fulfilled') {
-      navigate(`/messages/${chat.obj.id}`);
-      setCreateNewChat(false);
+    if (newChat.status === 'fulfilled') {
+      navigate(`/messages/${newChat.obj.id}`);
+      dispatch(resetNewChat());
     }
-  }, [chat]);
+  }, [newChat]);
   const handleGetSearchResult = (searchValue) => {
     dispatch(searchUser({input: searchValue, page: 0, size: PAGE_SIZE}));
   };
@@ -174,8 +167,7 @@ export default function Chat() {
     if (chat.status ==='rejected' && messages.status === 'rejected' &&
         chat.error.status === 404 || messages.error.status === 404 ||
         chat.error.status === 400 || messages.error.status === 400) {
-      dispatch(resetChat());
-      dispatch(resetMessages());
+      dispatch(resetChatAndMessages());
       navigate('/not-found');
       return;
     }
