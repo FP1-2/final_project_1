@@ -1,14 +1,25 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import {addPost,addRepost,getCommentsPost,addComment,addLike, editPost, deletePost, postsUser} from "./thunks";
+import {
+    addPost,
+    addRepost,
+    getCommentsPost,
+    addComment,
+    addLike,
+    editPost,
+    deletePost,
+    postsUser} from "./thunks";
 import builders, {buildersPagination} from '../builders';
+import {appendPaginationUtil} from "../../utils/utils";
 
 const postReducer = createSlice({
     name: "post",
     initialState: initialValue,
     reducers: {
         clearComments: (state) => {
-            state.getCommentsPost.obj = {};
+            state.getCommentsPost = {
+                ...initialValue.getCommentsPost,
+            };
         },
         modalEditPostState: (state, action) => {
             state.modalEditPost = action.payload;
@@ -31,18 +42,12 @@ const postReducer = createSlice({
             state.postsUser.obj.totalPages = action.payload.totalPages;
             state.postsUser.obj.totalElements = action.payload.totalElements;
         },
+        appendComments: (state, action)=> {
+            appendPaginationUtil(state, action)
+        },
         resetPostsState: (state) => {
             state.postsUser = {
-                obj: {
-                    content: [],
-                    pageable: {
-                        pageNumber: 0
-                    },
-                    totalPages: 0,
-                    totalElements: 0,
-                },
-                status: '',
-                error: '',
+                ...initialValue.postsUser,
             };
         },
     },
@@ -51,13 +56,22 @@ const postReducer = createSlice({
         builders(builder, addPost,'addPost');
         builders(builder, addRepost,'addRepost');
         builders(builder, editPost,'editPost');
-        builders(builder, getCommentsPost,'getCommentsPost');
+        buildersPagination(builder, getCommentsPost,'getCommentsPost');
         builders(builder, addComment,'addComment');
         builders(builder, addLike,'addLike');
         builders(builder, deletePost,'deletePost');
     }
 });
 
-export const {clearComments, modalEditPostState, setPost, modalAddPostState, modalAddRepostState, appendPosts, resetPostsState} = postReducer.actions;
+export const {
+    clearComments,
+    modalEditPostState,
+    setPost,
+    modalAddPostState,
+    modalAddRepostState,
+    appendPosts,
+    resetPostsState,
+    appendComments
+} = postReducer.actions;
 
 export default postReducer.reducer;

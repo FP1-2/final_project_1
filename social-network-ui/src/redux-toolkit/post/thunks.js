@@ -1,6 +1,7 @@
 import { workAx } from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { appendPosts } from "./slice";
+import {appendComments} from "./slice";
 
 export const getPost = createAsyncThunk(
     'post/getPost',
@@ -52,15 +53,24 @@ export const editPost = createAsyncThunk(
 
 export const getCommentsPost = createAsyncThunk(
     'post/getCommentsPost',
-    async (id, { rejectWithValue }) => {
+    async ({ page = 0, size = 10, id }, { dispatch,rejectWithValue }) => {
+        const params = new URLSearchParams({ page, size });
         try {
-            const response = await workAx("get", `api/posts/${id}/comments`);
-            return response.data;
+            const response = await workAx("get", `api/posts/${id}/comments?${params}`);
+            if (page > 0) {
+                dispatch(appendComments({
+                    key: "getCommentsPost",
+                    data: response.data
+                }));
+            } else {
+                return response.data;
+            }
         } catch (err) {
             return rejectWithValue(err.response.data);
         }
     }
 );
+
 export const addComment = createAsyncThunk(
     'post/addComment',
     async (obj, { rejectWithValue }) => {
