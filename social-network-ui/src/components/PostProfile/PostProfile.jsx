@@ -27,12 +27,13 @@ const PostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
-  const [isFavouritePost, setIsFavouritePost] = useState(null);
+  const [isFavouritePost, setIsFavouritePost] = useState();
   const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
   const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
+  console.log(isFavouritePost);
 
 
   const {
@@ -48,7 +49,7 @@ const PostProfile = ({ el }) => {
   useEffect(() => {
     dispatch(isFavourite(el.postId));
     setIsFavouritePost(postIsFavourite);
-  }, []);
+  },[]);
 
 
   const changeClickLike = () => {

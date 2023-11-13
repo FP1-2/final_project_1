@@ -47,8 +47,8 @@ function FavoritesPage() {
         <ul className={style.favorits} >
           {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
             {el.type === "POST" ?
-              <PostProfile el={el} type="favourites" />
-              : <RepostProfile el={el} type="favourites" />}</li>) : null}
+              <PostProfile el={el}/>
+              : <RepostProfile el={el} />}</li>) : null}
           {pageNumber === totalPages && <li className={style.container_allCard}>That`s all for now!</li>}
         </ul>
       </div>

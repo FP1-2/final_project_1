@@ -10,6 +10,9 @@ const friendsReducer = createSlice({
         modalDeleteFriendState: (state, action) => {
             state.modalDeleteFriend = action.payload;
         },
+        // clearRequestToFriend: (state, action) => {
+        //     state.requestToFriend.status = action.payload;
+        // },
     },
     extraReducers:(builder)=>{
         builders(builder, getFriends,'getFriends');
@@ -21,6 +24,6 @@ const friendsReducer = createSlice({
     }
 });
 
-export const {modalDeleteFriendState} = friendsReducer.actions;
+export const {modalDeleteFriendState, clearRequestToFriend} = friendsReducer.actions;
 
 export default friendsReducer.reducer;
