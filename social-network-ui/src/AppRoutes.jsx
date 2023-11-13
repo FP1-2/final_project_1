@@ -17,6 +17,10 @@ import PageNotFound from './pages/PageNotFound/PageNotFound';
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import PopupMessage from "./components/PopupMessage/PopupMessage";
 import MainPage from "./pages/MainPage/MainPage";
+import PostPage from "./pages/PostPage/PostPage";
+import HeaderLayout from "./pages/Layout/HeaderLayout";
+import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
+import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
 
 function AppRoutes({ isAuth }) {
   return (
@@ -36,10 +40,15 @@ function AppRoutes({ isAuth }) {
           <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
           <Route path={'*'} element={<PageNotFound />} />
         </Route>
+        <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<HeaderLayout />} />}>
+          <Route path="/post" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
+        </Route>
         <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
         <Route path="/friends" element={<FriendsPage/>}/>
         <Route path='/registration' element={<RegistrationForm />} />
         <Route path='/registration/confirm' element={<ConfirmRegistration />} />
+        <Route path='/reset-password' element={<ResetPassword/>}/>
+        <Route path='/change_password/:token' element={<UpdatePass/>}/>
       </Routes>
     </React.Fragment>
   );
