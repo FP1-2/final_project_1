@@ -117,11 +117,11 @@ public class PostFacade {
         PostSqlResult result = modelMapper.map(resultMap, PostSqlResult.class);
 
         result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
-        result.setLikeIds((String) resultMap.get("LIKE_IDS"));
+        result.setLikeIds((String) resultMap.get("LIKE_USER_IDS"));
         result.setRepostIds((String) resultMap.get("REPOST_IDS"));
 
         result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
-        result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_IDS"));
+        result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_USER_IDS"));
         result.setOriginalRepostIds((String) resultMap.get("ORIGINAL_REPOST_IDS"));
 
         return result;

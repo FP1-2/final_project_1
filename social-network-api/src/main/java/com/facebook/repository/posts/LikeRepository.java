@@ -18,4 +18,13 @@ public interface LikeRepository extends JpaRepository<Like, Long> {
     void deleteByPostId(Long postId);
 
     List<Like> findAllByPostIdIn(List<Long> postIds);
+
+    /**
+     * Перевіряє, чи існує лайк від конкретного користувача на конкретний пост.
+     *
+     * @param postId Ідентифікатор поста.
+     * @param userId Ідентифікатор користувача.
+     * @return true, якщо лайк від користувача на пост існує.
+     */
+    boolean existsByPostIdAndUserId(Long postId, Long userId);
 }

@@ -60,6 +60,18 @@ public class PostController {
     }
 
     /**
+     * Обробляє запит на отримання коментаря.
+     *
+     * @param commentId Ідентифікатор коментаря, який потрібно отримати.
+     * @return ResponseEntity з CommentDTO.
+     */
+    @GetMapping("/comments/{commentId}")
+    public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long commentId) {
+        CommentDTO commentDTO = postService.getCommentById(commentId);
+        return ResponseEntity.ok(commentDTO);
+    }
+
+    /**
      * Додає "лайк" до поста з заданим ID від поточного користувача.
      *
      * @param postId Ідентифікатор поста, який потрібно "лайкнути".
@@ -76,6 +88,19 @@ public class PostController {
         return postService.likePost(userId, postId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    /**
+     * Обробляє запит на перевірку, чи лайкнув поточний користувач пост.
+     *
+     * @param postId Ідентифікатор поста.
+     * @return ResponseEntity зі значенням true або false.
+     */
+    @GetMapping("/{postId}/liked")
+    public ResponseEntity<Boolean> isPostLikedByCurrentUser(@PathVariable Long postId) {
+        Long userId = currentUserService.getCurrentUserId();
+        boolean isLiked = postService.isPostLikedByUser(postId, userId);
+        return ResponseEntity.ok(isLiked);
     }
 
     /**
