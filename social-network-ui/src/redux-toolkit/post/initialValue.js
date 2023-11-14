@@ -1,6 +1,25 @@
 const initialValue = {
     getPost:{
-        obj: {},
+        obj:{
+            imageUrl: '',
+            author: {
+                avatar: '',
+                name: '',
+                surname: ''
+            },
+            body: '',
+            type: '',
+            originalPost: {
+                author: {
+                    avatar: '',
+                    name: '',
+                    surname: ''
+                },
+                body: ''
+            },
+            likes: [],
+            comments: []
+        },
         status: '',
         error: '',
     },

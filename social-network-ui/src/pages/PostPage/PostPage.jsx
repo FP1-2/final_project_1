@@ -2,21 +2,33 @@ import React, {useEffect, useRef, useState} from 'react';
 import style from './PostPage.module.scss';
 import Comment from "../../components/Comment/Comment";
 import {useDispatch, useSelector} from "react-redux";
-import {clearComments} from "../../redux-toolkit/post/slice";
-import {getCommentsPost, getPost} from "../../redux-toolkit/post/thunks";
+import {appendComment, clearComments} from "../../redux-toolkit/post/slice";
+import {getCommentsPost, getPost, addComment} from "../../redux-toolkit/post/thunks";
 import {useParams} from "react-router-dom";
 import {createHandleScroll} from "../../utils/utils";
 import Likes from "../../components/Icons/Likes";
+import {Field, Form, Formik} from "formik";
+import * as Yup from 'yup';
+
+const CommentSchema = Yup.object().shape({
+  comment: Yup.string()
+    .min(2, 'Too Short!')
+    .max(500, 'Too Long!')
+    .required('Required'),
+});
 
 export default function PostPage(){
   const { id } = useParams();
   const scrollContainerRef = useRef(null);
   const dispatch = useDispatch();
+
   const {
+    userId,
     avatar: userAvatar,
     username:  userName,
     surname:   surName,
   } = useSelector(state => state.auth.user.obj);
+
   const {
     status,
     obj: {
@@ -28,7 +40,37 @@ export default function PostPage(){
     }
   } = useSelector(state => state.post.getCommentsPost);
   const {obj: post} = useSelector(state => state.post.getPost);
-  
+
+  const {
+    obj: commentCreate,
+    status: statusCommentCreate
+  } = useSelector(state => state.post.addComment);
+
+  const handleCommit = (values, { resetForm }) => {
+    dispatch(addComment({
+      postId: id,
+      content:  values.comment,
+    }));
+    resetForm();
+  };
+
+  useEffect(() => {
+    if (statusCommentCreate === "fulfilled") {
+      const newComment = {
+        ...commentCreate,
+        appUser: {
+          userId: userId,
+          name: name,
+          surname: surName,
+          username: userName,
+          avatar: userAvatar,
+        }
+      };
+
+      dispatch(appendComment(newComment));
+    }
+  }, [statusCommentCreate]);
+
   useEffect(() => {
     dispatch(clearComments());
     dispatch(getPost({ id }));
@@ -47,10 +89,10 @@ export default function PostPage(){
     fetchMore:  getMoreComments,
   });
 
-  const commentInputRef = useRef(null);
   const [zoomLevel, setZoomLevel] = useState(1);
 
   const handleZoomIn =()=> zoomLevel <= 2 && setZoomLevel(zoomLevel + 0.5);
+
   const handleZoomOut =()=> zoomLevel > 1 && setZoomLevel(zoomLevel - 0.5);
 
   return (
@@ -69,7 +111,7 @@ export default function PostPage(){
           style={{ transform: `scale(${zoomLevel})` }}
         />
       </div>
-      <div onScroll={handleScroll} 
+      <div onScroll={handleScroll}
         ref={scrollContainerRef} 
         className={style.postContainer}>
         <div className={style.post}>
@@ -110,7 +152,7 @@ export default function PostPage(){
             </div>
             <span className={style.commentsCount}>
               <span className={style.sprite}></span>
-              {post?.comments ? post.comments.length : 0}
+              {postComments ? postComments.length : 0}
             </span>
           </div>
           <div className={style.postActions}>
@@ -135,16 +177,30 @@ export default function PostPage(){
             </ul>
           </div>
           <div className={style.createCommentSection}>
-            <div className={style.addComment}>
-              <img src={userAvatar} 
-                alt={`${userName} ${surName}`} 
-                className={style.commentAvatar} />
-              <textarea
-                ref={commentInputRef}
-                placeholder="Write a comment..."
-              />
-              <button className={style.sendIcon}></button>
-            </div>
+            <Formik
+              initialValues={{ comment: '' }}
+              validationSchema={CommentSchema}
+              onSubmit={handleCommit}
+            >
+              {({ errors, touched }) => (
+                <Form>
+                  <div className={style.addComment}>
+                    <img src={userAvatar} alt={`${userName} ${surName}`} 
+                      className={style.commentAvatar} />
+                    <Field
+                      name="comment"
+                      as="textarea"
+                      placeholder="Write a comment..."
+                      className={style.commentInput}
+                    />
+                    {errors.comment && touched.comment ? (
+                      <div className={style.error}>{errors.comment}</div>
+                    ) : null}
+                    <button type="submit" className={style.sendIcon}></button>
+                  </div>
+                </Form>
+              )}
+            </Formik>
           </div>
         </div>
       </div>

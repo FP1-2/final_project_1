@@ -1,6 +1,6 @@
 import { workAx } from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
-import { appendPosts } from "./slice";
+import {appendPosts} from "./slice";
 import {appendComments} from "./slice";
 
 export const getPost = createAsyncThunk(

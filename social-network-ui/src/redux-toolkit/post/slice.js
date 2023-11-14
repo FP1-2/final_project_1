@@ -52,6 +52,12 @@ const postReducer = createSlice({
                 ...initialValue.postsUser,
             };
         },
+        appendComment: (state, action) => {
+            state.getCommentsPost.obj.content = [
+                ...state.getCommentsPost.obj.content,
+                action.payload
+            ];
+        },
     },
     extraReducers:(builder)=>{
         buildersPagination(builder, postsUser, 'postsUser');
@@ -74,7 +80,8 @@ export const {
     modalAddRepostState,
     appendPosts,
     resetPostsState,
-    appendComments
+    appendComments,
+    appendComment,
 } = postReducer.actions;
 
 export default postReducer.reducer;
