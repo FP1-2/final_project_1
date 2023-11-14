@@ -9,7 +9,7 @@ import ChatLoader from "./ChatLoader";
 import {checkSentStatus, checkReadStatus} from "../../utils/statusType";
 import {useState} from "react";
 import {searchChat} from "../../redux-toolkit/messenger/asyncThunk";
-import {resetSearchChats} from "../../redux-toolkit/messenger/slice";
+import {resetSearchChats, resetChatAndMessages} from "../../redux-toolkit/messenger/slice";
 import {useDispatch, useSelector} from "react-redux";
 import {checkContentType} from "../../utils/contentType";
 import InputSearch from "../SearchUser/InputSearch";
@@ -52,7 +52,7 @@ export default function ChatNavigation({
             <div className={styles.chatNavSection__header__text}>
               <h1>Чати</h1>
             </div>
-            <NavLink to='/messages/new'>
+            <NavLink to='/messages/new' onClick={()=> dispatch(resetChatAndMessages())}>
               <div className={styles.chatNavSection__header__buttonWrapper}>
                 <img src='/img/chat.png' alt='chat'/>
               </div>
