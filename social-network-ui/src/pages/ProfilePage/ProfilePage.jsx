@@ -22,6 +22,7 @@ import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFri
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
 import { loadAuthUser } from "../../redux-toolkit/login/thunks";
+// import { setIsFavourite } from "../../redux-toolkit/favourite/slice";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -81,12 +82,12 @@ const ProfilePage = () => {
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
     getUser(myId);
     dispatch(postsUser({ id: id, page: 0 }));
+    // dispatch(setIsFavourite({}));
   }, [id, deleteStatus, editUserStatus]);
 
   useEffect(() => {

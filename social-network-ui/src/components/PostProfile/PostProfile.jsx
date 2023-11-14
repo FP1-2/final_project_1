@@ -18,7 +18,7 @@ import Comment from "../Comment/Comment";
 import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
-import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
+import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
 
@@ -27,13 +27,13 @@ const PostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
-  const [isFavouritePost, setIsFavouritePost] = useState();
+  const [isFavouritePost, setIsFavouritePost] = useState(null);
   const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
   const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
-  console.log(isFavouritePost);
+
 
 
   const {
@@ -47,9 +47,16 @@ const PostProfile = ({ el }) => {
 
 
   useEffect(() => {
-    dispatch(isFavourite(el.postId));
-    setIsFavouritePost(postIsFavourite);
-  },[]);
+    if (postIsFavourite.postId === el.postId && postIsFavourite.exists) {
+      console.log("є збіг");
+      setIsFavouritePost(true);
+    } else if (postIsFavourite.postId === el.postId && !postIsFavourite.exists) {
+      console.log("немає збіг");
+    } else {
+      dispatch(isFavourite(el.postId));
+      console.log("нічого");
+    }
+  }, []);
 
 
   const changeClickLike = () => {
@@ -88,11 +95,9 @@ const PostProfile = ({ el }) => {
     if (isFavouritePost) {
       await dispatch(deleteFavourite(el.postId));
       dispatch(deleteLocalFavourite(el.postId));
-      await dispatch(setIsFavourite(false));
       setIsFavouritePost(false);
     } else {
       dispatch(addToFavourites(el.postId));
-      await dispatch(setIsFavourite(true));
       setIsFavouritePost(true);
     }
   };
