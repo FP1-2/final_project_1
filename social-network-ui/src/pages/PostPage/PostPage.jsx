@@ -2,13 +2,23 @@ import React, {useEffect, useRef, useState} from 'react';
 import style from './PostPage.module.scss';
 import Comment from "../../components/Comment/Comment";
 import {useDispatch, useSelector} from "react-redux";
-import {appendComment, clearComments} from "../../redux-toolkit/post/slice";
-import {getCommentsPost, getPost, addComment} from "../../redux-toolkit/post/thunks";
+import {
+  appendComment,
+  clearStatePost,
+  toggleLikePost
+} from "../../redux-toolkit/post/slice";
+import {
+  getCommentsPost,
+  getPost,
+  addComment,
+  addLike, addRepost
+} from "../../redux-toolkit/post/thunks";
 import {useParams} from "react-router-dom";
 import {createHandleScroll} from "../../utils/utils";
 import Likes from "../../components/Icons/Likes";
 import {Field, Form, Formik} from "formik";
 import * as Yup from 'yup';
+import {showMessage} from "../../redux-toolkit/popup/slice";
 
 const CommentSchema = Yup.object().shape({
   comment: Yup.string()
@@ -23,7 +33,7 @@ export default function PostPage(){
   const dispatch = useDispatch();
 
   const {
-    userId,
+    id: userId,
     avatar: userAvatar,
     username:  userName,
     surname:   surName,
@@ -39,8 +49,19 @@ export default function PostPage(){
       }
     }
   } = useSelector(state => state.post.getCommentsPost);
+
   const {obj: post} = useSelector(state => state.post.getPost);
 
+  /**
+   * Додаємо коментарі:
+   * По завершенню успіхом роботи асинхронної функції відправки
+   * коментаря на сервер "addComment" починає працювати логіка
+   * оновлення локального стану. Збирається об'єкт едентичний тому,
+   * що повертається з сервера, з'єднується поточний аунтефікований
+   * користувач з об'єктом відповіді з сервера, і передається
+   * редьюсеру "appendComment". Ред'юсер додає об'єкт у масив стану,
+   * що тримає всі коментарі.
+   * */
   const {
     obj: commentCreate,
     status: statusCommentCreate
@@ -66,17 +87,75 @@ export default function PostPage(){
           avatar: userAvatar,
         }
       };
-
       dispatch(appendComment(newComment));
     }
   }, [statusCommentCreate]);
 
+  /**
+   * Логіка перемикача лайків: 
+   * "addLike" відправляє асинхронний запит а результат
+   * відповіді керує ред'юсером "toggleLikePost" - додає або видаляє
+   * ід користувача. Якщо у посту не було
+   * лайків( поле "likes" було відсутнім ), ред'юсер створює
+   * його в об'єкті state.post.getPost ініціалізуючи порожнім масивом.
+   */
+  const handleToggleLike = () => {
+    dispatch(addLike(id));
+  };
+
+  const {
+    status: isLikeStatus,
+    obj: isLiked
+  } = useSelector(state => state.post.addLike);
+
+  const isLikedByUser  = Array.isArray(post.likes)
+      && post.likes.includes(userId);
+
   useEffect(() => {
-    dispatch(clearComments());
+    if (isLikeStatus === "fulfilled"
+        && !(isLikedByUser === isLiked.added)) {
+      dispatch(toggleLikePost(userId));
+    }
+  }, [isLikeStatus]);
+
+  /******************************** Repost logic is not implemented **************************************/
+  const handleShare = () => {
+    dispatch(addRepost(id));
+  };
+
+  const {
+    status: repostedStatus,
+    //obj: reposted
+  } = useSelector(state => state.post.addRepost);
+
+  useEffect(() => {
+    if (repostedStatus === 'fulfilled') dispatch(showMessage('Reposted fulfilled'));
+    if(repostedStatus === 'rejected') dispatch(showMessage('Repost logic is not implemented'));
+  }, [repostedStatus]);
+
+  useEffect(() => {
+    if (repostedStatus === "fulfilled") {
+      dispatch(toggleLikePost(userId));
+    }
+  }, [isLikeStatus]);
+  /******************************** Repost logic is not implemented **************************************/
+
+  /**
+   * При першому рендерингу робимо повністю очищення стейту state.post,
+   * ініціалізуємо дефолтним об'єктом стану, завантажуємо пост
+   * із сервера та перші 10 об'єктів коментарів
+   */
+  useEffect(() => {
+    dispatch(clearStatePost());
     dispatch(getPost({ id }));
     dispatch(getCommentsPost({ page: 0, id }));
   }, []);
 
+  /**
+   * Логіка обробки додавання коментарів порціями по 10 об'єктів.
+   * Коментарі додаються до існуючих збільшуючи масив при кожному
+   * досягненні низу прокручування.
+   */
   const getMoreComments = () => {
     if (status !== 'pending' && pageNumber < totalPages) {
       dispatch(getCommentsPost({ page: pageNumber + 1, id }));
@@ -89,11 +168,23 @@ export default function PostPage(){
     fetchMore:  getMoreComments,
   });
 
+  /**
+   * Логіка перемикання видимості секції коментарів.
+   */
+  const [showComments, setShowComments] = useState(true);
+
+  const toggleComments = () => setShowComments(!showComments);
+
+  /**
+   * Логіка зуму фотографії.
+   */
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const handleZoomIn =()=> zoomLevel <= 2 && setZoomLevel(zoomLevel + 0.5);
+  const handleZoomIn =()=> zoomLevel <= 2
+      && setZoomLevel(zoomLevel + 0.5);
 
-  const handleZoomOut =()=> zoomLevel > 1 && setZoomLevel(zoomLevel - 0.5);
+  const handleZoomOut =()=> zoomLevel > 1
+      && setZoomLevel(zoomLevel - 0.5);
 
   return (
     <div className={style.postWrapper}>
@@ -137,7 +228,8 @@ export default function PostPage(){
                   className={style.originalAvatar}
                 />
                 <span className={style.originalUserName}>
-                  {`${post.originalPost.author.name} ${post.originalPost.author.surname}`}
+                  {`${post.originalPost.author.name} 
+                  ${post.originalPost.author.surname}`}
                 </span>
               </div>
               <div className={style.originalPostBody}>
@@ -148,7 +240,9 @@ export default function PostPage(){
           <div className={style.stats}>
             <div className={style.likesContainer}>
               <Likes/>
-              <span>{post?.likes ? post.likes.length : 0}</span>
+              <span>
+                {post?.likes ? post.likes.length : 0}
+              </span>
             </div>
             <span className={style.commentsCount}>
               <span className={style.sprite}></span>
@@ -157,24 +251,33 @@ export default function PostPage(){
           </div>
           <div className={style.postActions}>
             <button>
-              <span className={`${style.icon} ${style.likeIcon}`}></span>
+              <span onClick={handleToggleLike} 
+                className={
+                  `${style.icon} ${isLikedByUser ? 
+                    style.likeIconActive : style.likeIcon}`
+                }></span>
               <span className="text">Like</span>
             </button>
             <button>
-              <span className={`${style.icon} ${style.commentIcon}`}></span>
+              <span onClick={toggleComments} 
+                className={`${style.icon} ${style.commentIcon}`}>
+              </span>
               <span className="text">Comment</span>
             </button>
             <button>
-              <span className={`${style.icon} ${style.shareIcon}`}></span>
+              <span onClick={handleShare} className={`${style.icon} ${style.shareIcon}`}>
+              </span>
               <span className="text">Share</span>
             </button>
           </div>
-          <div >
-            <ul className={style.CommentsSection}>
-              {postComments.map((comment) =>(
-                <li key={comment.id}><Comment el={comment}/></li>
-              ))}
-            </ul>
+          <div>
+            {showComments && (
+              <ul className={style.CommentsSection}>
+                {postComments.map((comment, index) =>(
+                  <li key={`${comment.id}-${index}`}><Comment el={comment}/></li>
+                ))}
+              </ul>
+            )};
           </div>
           <div className={style.createCommentSection}>
             <Formik
