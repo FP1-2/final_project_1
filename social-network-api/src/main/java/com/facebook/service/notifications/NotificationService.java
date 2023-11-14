@@ -12,6 +12,7 @@ import com.facebook.model.notifications.NotificationType;
 import com.facebook.model.posts.Post;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.repository.notifications.NotificationRepository;
+
 import java.util.List;
 import java.util.Objects;
 
@@ -78,8 +79,8 @@ public class NotificationService {
      * Отримує список повідомлень для конкретного користувача.
      *
      * @param userId ID користувача.
-     * @param page Номер сторінки.
-     * @param size Кількість записів на сторінці.
+     * @param page   Номер сторінки.
+     * @param size   Кількість записів на сторінці.
      * @return Сторінка з повідомленнями.
      */
     public Page<NotificationResponse> getNotificationsByUserId(Long userId,
@@ -100,10 +101,10 @@ public class NotificationService {
      * Якщо повідомлення не знайдено або користувач не має до нього доступу, кидається відповідний виняток.
      *
      * @param notificationId ідентифікатор повідомлення, яке потрібно отримати
-     * @param userId ідентифікатор користувача, який робить запит
+     * @param userId         ідентифікатор користувача, який робить запит
      * @return NotificationResponse об'єкт, що містить дані повідомлення
      * @throws UnauthorizedException якщо користувач не має доступу до повідомлення
-     * @throws NotFoundException якщо повідомлення не знайдено
+     * @throws NotFoundException     якщо повідомлення не знайдено
      */
     public NotificationResponse getNotificationById(Long notificationId,
                                                     Long userId) {
@@ -187,23 +188,22 @@ public class NotificationService {
      */
     public void createRepostNotification(AppUser initiator, Post post, AppUser postOwner) {
 
-        createRepostNotification(initiator,
-                post,
-                postOwner,
-                NotificationType.POST_REPOSTED,
-                (n, i, p) -> {
-                });
-
-        List<AppUser> friends = getApprovedFriendsOfUser(initiator.getId())
-                                .stream()
-                                .filter(f-> Objects.equals(f.getId(), postOwner.getId())).toList();
-        for (AppUser friend : friends) {
-            createFriendNotification(initiator,
-                    friend,
+        if (!Objects.equals(initiator.getId(), postOwner.getId())) {
+            createRepostNotification(initiator,
                     post,
-                    NotificationType.FRIEND_POSTED,
-                    (n, i, r, p) -> n.setPost(p));
+                    postOwner,
+                    NotificationType.POST_REPOSTED,
+                    (n, i, p) -> {
+                    });
         }
+        getApprovedFriendsOfUser(initiator.getId())
+                .stream()
+                .filter(f -> !Objects.equals(f.getId(), postOwner.getId()))
+                .forEach(friend -> createFriendNotification(initiator,
+                        friend,
+                        post,
+                        NotificationType.FRIEND_POSTED,
+                        (n, i, r, p) -> n.setPost(p)));
     }
 
     /**
@@ -249,7 +249,7 @@ public class NotificationService {
                 receiver,
                 null,
                 NotificationType.FRIEND_REQUEST, (n, i, r, p) -> {
-        });
+                });
     }
 
     /**
@@ -271,13 +271,14 @@ public class NotificationService {
         notification.setType(type);
         notification.setMessage(initiator.getName() + " " + type.getDescription());
         strategy.apply(notification, initiator, post);
-        notificationRepository.save(notification);
+        saveAndSendNotification(notification);
     }
+
     private void createRepostNotification(AppUser initiator,
-                                        Post post,
-                                        AppUser postOwner,
-                                        NotificationType type,
-                                        PostNotificationStrategy strategy) {
+                                          Post post,
+                                          AppUser postOwner,
+                                          NotificationType type,
+                                          PostNotificationStrategy strategy) {
         Notification notification = new Notification();
         notification.setUser(postOwner);
         notification.setInitiator(initiator);
@@ -285,8 +286,9 @@ public class NotificationService {
         notification.setType(type);
         notification.setMessage(initiator.getName() + " " + type.getDescription());
         strategy.apply(notification, initiator, post);
-        notificationRepository.save(notification);
+        saveAndSendNotification(notification);
     }
+
     /**
      * Допоміжний метод для створення повідомлення про дії, пов'язані з друзями.
      *
@@ -310,7 +312,8 @@ public class NotificationService {
         strategy.apply(notification, initiator, receiver, post);
         saveAndSendNotification(notification);
     }
-    private void saveAndSendNotification(Notification notification){
+
+    private void saveAndSendNotification(Notification notification) {
         notificationRepository.save(notification);
         webSocketService.sendNotification(notification.getUser());
     }
