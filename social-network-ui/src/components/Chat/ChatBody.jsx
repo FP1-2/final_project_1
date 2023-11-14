@@ -23,9 +23,7 @@ export default function ChatBody({
   const containerRef = useRef(null);
   const handleScroll = () => {
     const container = containerRef.current;
-    console.log(container.scrollHeight-container.clientHeight+container.scrollTop)
     if (hasMore && (container.scrollHeight-container.clientHeight+container.scrollTop)<2 && messages.status !== 'pending') {
-      
       handleLoadMoreMessages();
     }
   };
@@ -35,7 +33,7 @@ export default function ChatBody({
       onMouseEnter={handleMouseEnter}
       ref={containerRef}
       onScroll={handleScroll}
-      >
+    >
       {messagesList.length === 0 && messages.status === 'fulfilled' ? (
         chat.status === 'fulfilled' && (
           <>

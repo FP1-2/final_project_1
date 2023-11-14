@@ -52,8 +52,8 @@ export default function Chat() {
   useEffect(()=>{
     return () =>{
       dispatch(resetChatAndMessages());
-    }
-  }, [])
+    };
+  }, []);
   useEffect(() => {
     if (!isNewChat) {
       const uniqueNewMessages = messages.obj.filter(message => {
