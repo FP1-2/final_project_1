@@ -1,5 +1,5 @@
 import styles from './Chat.module.scss';
-import {useState, useRef} from "react";
+import {useState, useRef, useEffect} from "react";
 import AddFile from "../Icons/AddFile";
 import Send from "../Icons/Send";
 import Like from "../Icons/Like";
@@ -8,7 +8,7 @@ import PropTypes from 'prop-types';
 import {ContentType} from "../../utils/contentType";
 import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
-import { getPhotoURL } from '../../utils/thunks';
+import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
 
 export default function MessageInput({sendMessage, handleMessageChange, message, emojiHandler}) {
   const [isOpen, setIsOpen] = useState(false);
@@ -36,11 +36,12 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
   async function sendImage(file){
     try {
       const photoURL = await getPhotoURL(file);
-      sendMessage(ContentType.IMAGE, photoURL);
+      sendMessage(ContentType.IMAGE, photoURL.data.url);
       handleDeleteFile();
     } catch (error) {
       alert('Сталася помилка під час завантаження, спробуйте ще раз.');
     }
+    
   }
 
   function sendLike() {
@@ -53,7 +54,20 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
       handleSend();
     }
   };
-
+  const handleClickOutside = (e) => {
+    const searchUserElement = document.getElementById("emoji-picker");
+    const btn = document.getElementById("emoji-btn");
+    if (searchUserElement && !searchUserElement.contains(e.target) && !btn.contains(e.target)) {
+      setIsOpen(false);
+    }
+  };
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
+  
   return (
     <div className={styles.chat__input}>
       <FileInput handleFileUpload={handleFileUpload}/>
@@ -69,7 +83,7 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
           />
         </div>
 
-        <Emoji emojiClickHandler={() => setIsOpen(true)}/>
+        <Emoji emojiClickHandler={() => setIsOpen(!isOpen)}/>
       </div>
 
       <Like size={"20"} onClick={sendLike} styleClass={styles.likeBtn}></Like>
@@ -148,9 +162,10 @@ TextInput.propTypes = {
 };
 
 function EmojiPicker({isOpen, setIsOpen, emojiHandler}) {
+  
   return (
     isOpen &&
-    <div className={styles.pickerWrapper}>
+    <div className={styles.pickerWrapper} id="emoji-picker" onClick={(e)=> e.preventDefault()}>
       <Picker
         data={data}
         theme="light"

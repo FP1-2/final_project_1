@@ -40,7 +40,7 @@ export default function Message({
           </div>
         </div>
       </div>
-      <div className={(index !== 0) && !authUser ? `${styles.messageStatus} ${styles.none}` : styles.messageStatus}>
+      <div className={(index !== 0) || !authUser ? `${styles.messageStatus} ${styles.none}` : styles.messageStatus}>
         {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Надіслано</div>
           : (checkFailedStatus(status) ? <div className={styles.messageStatus__error}>Error</div>
             : <div className={styles.messageStatus__read}>

@@ -74,7 +74,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             u.avatar,
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                            GROUP_CONCAT(DISTINCT l.id) AS like_ids,
+                            (SELECT GROUP_CONCAT(l.user_id) FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
                             GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
@@ -89,7 +89,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
-                            GROUP_CONCAT(DISTINCT ol.id) AS original_like_ids,
+                            (SELECT GROUP_CONCAT(ol.user_id) FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
                             GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids
                         FROM
                             posts p
@@ -177,6 +177,27 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             WHERE c.post_id = p.id) > 4 LIMIT 1
             """, nativeQuery = true)
     Optional<Post> findPostWithMoreThanFourComments();
+
+    /**
+     * Виконує запит до бази даних для отримання деталей усіх постів з пагінацією.
+     *
+     * @param pageable Параметри пагінації та сортування.
+     * @return Список постів з деталями.
+     */
+    @Query(value = POST_DETAILS_SELECT + """
+         GROUP BY p.id, u.id, op.id, ou.id
+        """,
+            countQuery = "SELECT count(*) FROM posts",
+            nativeQuery = true)
+    List<Map<String, Object>> findAllPostDetails(Pageable pageable);
+
+    /**
+     * Підраховує загальну кількість постів у базі даних.
+     *
+     * @return Загальна кількість постів.
+     */
+    @Query(value = "SELECT count(*) FROM posts", nativeQuery = true)
+    Long countAllPosts();
 
     List<Post> findByOriginalPostId(Long originalPostId);
 

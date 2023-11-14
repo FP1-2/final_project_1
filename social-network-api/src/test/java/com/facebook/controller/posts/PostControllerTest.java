@@ -74,6 +74,9 @@ import static org.junit.jupiter.api.Assertions.fail;
  *     <li>{@link PostControllerTest#testGetPostById() Тест для перевірки отримання поста за ID}</li>
  *     <li>{@link PostControllerTest#testCreatePost() Тестує створення нового поста}</li>
  *     <li>{@link PostControllerTest#assertBadRequestWithMessage(PostRequest request, String expectedMessage) Тестує відповідь сервера на некоректний запит}</li>
+ *     <li>{@link PostControllerTest#testGetAllPosts() Тест для перевірки отримання усіх постів з використанням пагінації}</li>
+ *     <li>{@link PostControllerTest#testGetCommentById() Тестує отримання коментаря за його ідентифікатором}</li>
+ *     <li>{@link PostControllerTest#testIsPostLikedByCurrentUser() Тестує перевірку статусу "лайка" поста користувачем}</li>
  * </ul>
  * </p>
  * <p>
@@ -704,6 +707,129 @@ class PostControllerTest {
         }
         fail("Expected HttpClientErrorException.BadRequest");
 
+    }
+
+    /**
+     * Тест для перевірки отримання усіх постів
+     * з використанням пагінації та сортування.
+     * <p>
+     * Сценарії тестування:
+     * <ol>
+     * <li> Метод відправляє запит до API для отримання усіх постів.</li>
+     * <li> За допомогою пагінації тест перевіряє, що API повертає
+     *      задану кількість постів.</li>
+     * <li> Перевіряється відповідність відсортованих даних.</li>
+     * </ol>
+     * </p>
+     */
+    @Test
+    void testGetAllPosts() {
+        // Відправляємо запит до API для отримання усіх постів
+        ResponseEntity<PageDto<PostResponse>> response = restTemplate.exchange(
+                baseUrl + "api/posts?page=0&size=4&sort=id,asc",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                new ParameterizedTypeReference<PageDto<PostResponse>>() {
+                });
+
+        // Перевіряємо, що відповідь успішна і містить дані
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+
+        PageDto<PostResponse> pageData = response.getBody();
+        assertNotNull(pageData.getContent());
+        // Перевіряємо, що повернуто вказану кількість постів
+        assertEquals(4, pageData.getContent().size());
+
+        // Перевіряємо, що пости відсортовані за id у порядку зростання
+        Long previousId = Long.MIN_VALUE;
+        for (PostResponse postResponse : pageData.getContent()) {
+            assertTrue(postResponse.getPostId() > previousId);
+            previousId = postResponse.getPostId();
+        }
+    }
+
+    /**
+     * Тестує отримання коментаря за його ідентифікатором.
+     * Спочатку знаходить пост із достатньою кількістю коментарів,
+     * потім отримує список коментарів для цього поста,
+     * і нарешті отримує один конкретний коментар за його ID.
+     */
+    @Test
+    void testGetCommentById() {
+        Post targetPost = postRepository
+                .findPostWithMoreThanFourComments()
+                .orElse(null);
+
+        assertNotNull(targetPost, "Не знайдено жодного посту з коментарями.");
+
+        ResponseEntity<PageDto<CommentDTO>> commentsResponse = restTemplate.exchange(
+                baseUrl + "api/posts/" + targetPost.getId() + "/comments",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                new ParameterizedTypeReference<PageDto<CommentDTO>>() {}
+        );
+
+        assertNotNull(commentsResponse.getBody());
+        assertFalse(commentsResponse.getBody().getContent().isEmpty());
+
+        Long commentId = commentsResponse.getBody().getContent().get(0).getId();
+
+        ResponseEntity<CommentDTO> response = restTemplate.exchange(
+                baseUrl + "api/posts/comments/" + commentId,
+                HttpMethod.GET,
+                new HttpEntity<>(null, authHeaders),
+                CommentDTO.class
+        );
+
+        assertEquals(HttpStatus.OK, response.getStatusCode());
+        assertNotNull(response.getBody());
+        assertEquals(commentId, response.getBody().getId());
+        assertNotNull(response.getBody().getContent());
+        assertNotNull(response.getBody().getCreatedDate());
+        assertNotNull(response.getBody().getAppUser());
+    }
+
+    /**
+     * Тестує перевірку статусу "лайка" поста користувачем.
+     * Спочатку перевіряє поточний статус, потім "лайкає" або "дизлайкає" пост і знову перевіряє статус.
+     */
+    @Test
+    void testIsPostLikedByCurrentUser() {
+        // 1. Перевірка початкового статусу лайка
+        ResponseEntity<Boolean> initialLikeCheck = restTemplate.exchange(
+                baseUrl + "api/posts/1/liked",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                Boolean.class
+        );
+        assertEquals(HttpStatus.OK, initialLikeCheck.getStatusCode());
+        assertNotNull(initialLikeCheck.getBody());
+        boolean initialLikeStatus = initialLikeCheck.getBody();
+
+        // 2. Зміна статусу лайка
+        restTemplate.exchange(
+                baseUrl + "api/posts/like/1",
+                HttpMethod.POST,
+                new HttpEntity<>(authHeaders),
+                ActionResponse.class
+        );
+
+        // 3. Перевірка зміненого статусу лайка
+        ResponseEntity<Boolean> changedLikeCheck = restTemplate.exchange(
+                baseUrl + "api/posts/1/liked",
+                HttpMethod.GET,
+                new HttpEntity<>(authHeaders),
+                Boolean.class
+        );
+        assertEquals(HttpStatus.OK, changedLikeCheck.getStatusCode());
+        assertNotNull(changedLikeCheck.getBody());
+        boolean changedLikeStatus = changedLikeCheck.getBody();
+
+        // Переконуємося, що статус змінився
+        assertNotEquals(initialLikeStatus,
+                changedLikeStatus,
+                "Статус лайка повинен змінитися після взаємодії з ним.");
     }
 
 }

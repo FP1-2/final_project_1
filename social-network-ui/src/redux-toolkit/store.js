@@ -12,6 +12,10 @@ import webSocketReducer from "./ws/slice"
 import webSocketMiddleware from "./ws/webSocketMiddleware"
 import notificationReducer from "./notification/slice"
 import popupReducer from "./popup/slice"
+import PostsInMainReducer from "./main/slice"
+import resetPasswordSlice from "./ResetPassword/slice"
+import passwordUpdateReducer from "./UpdatePassword/slice"
+
 const RESET_STATE = 'RESET_STATE';
 
 const rootReducer = (state, action) => {
@@ -26,10 +30,14 @@ const rootReducer = (state, action) => {
             messenger: undefined,
             notifications: undefined,
             popup: undefined,
+            postsInMain: undefined,
         };
     }
     return combineReducers({
         registration: registrationReducer,
+        login: loginReducer,
+        resetPassword: resetPasswordSlice,
+        passwordUpdate: passwordUpdateReducer,
         auth: loginReducer,
         profile:profileReducer,
         post:postReducer,
@@ -39,6 +47,7 @@ const rootReducer = (state, action) => {
         webSocket: webSocketReducer,
         notifications: notificationReducer,
         popup: popupReducer,
+        postsInMain: PostsInMainReducer,
     })(state, action);
 }
 

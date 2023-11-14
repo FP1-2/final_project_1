@@ -1,5 +1,6 @@
 package com.facebook.utils;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.PostRequest;
@@ -9,8 +10,6 @@ import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.model.AppUser;
-import com.facebook.model.friends.Friends;
-import com.facebook.model.friends.FriendsStatus;
 import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
@@ -99,6 +98,7 @@ public class Gen {
     private final MessageRepository messageRepository;
     private List<Chat> chats;
     private List<Message> messages;
+
     private Gen(ApplicationContext context) {
         this.context = context;
 
@@ -291,7 +291,7 @@ public class Gen {
     private List<Like> genLikes() {
         posts.forEach(post -> {
             appUsers1.forEach(user -> {
-                if (MathUtils.random(0, 20) == 20) {
+                if (MathUtils.random(0, 20) > 10) {
                     postService.likePost(user.getId(), post.getPostId());
                 }
             });
@@ -303,7 +303,7 @@ public class Gen {
     private List<Comment> genComments() {
         Faker faker = new Faker();
         posts.forEach(post -> {
-            IntStream.range(1, MathUtils.random(1, 5) + 1)
+            IntStream.range(1, MathUtils.random(4, 10) + 1)
                     .forEach(ignored -> {
                         Long randomUserId = appUsers1
                                 .get(MathUtils.random(0, appUsers1.size() - 1)).getId();
@@ -361,42 +361,11 @@ public class Gen {
         return repostRequest;
     }
 
-
+    /**
+     * Генерація запитів на додавання та підтвердження дружби між користувачами.
+     */
     private void genFriends() {
-        appUsers1.stream()
-                .forEach(user -> {
-                    appUsers1
-                            .stream()
-                            .filter(potentialFriend -> {
-                                return !user.equals(potentialFriend) && MathUtils.random(0, 10) == 10;
-                            })
-                            .forEach(potentialFriend -> {
-                                try {
-                                    friendsService
-                                            .sendFriendRequest(user.getId(),
-                                                    potentialFriend.getId());
-                                } catch (AlreadyExistsException e) {
-                                }
-                            });
-                });
-
-        appUsers1.forEach(user -> {
-            if (MathUtils.random(0, 10) < 3) {
-                List<Friends> friendsList = friendsService.getFriendsListByUserIdAndStatus(user.getId());
-
-                friendsList.forEach(friendship -> {
-                    if (friendship.getStatus() == FriendsStatus.PENDING) {
-                        boolean acceptFriendship = MathUtils.random(0, 10) < 5;
-                        friendsService.changeFriendsStatus(
-                                friendship.getUser().getId(),
-                                friendship.getFriend().getId(),
-                                acceptFriendship
-                        );
-                    }
-                });
-            }
-        });
-
+        // Знаходимо користувачів за дефолтом
         AppUser defaultUser1 = appUserService.findByUsername(DEFAULT_USERNAME)
                 .orElseThrow(() -> new NotFoundException("Default user not found!"));
 
@@ -404,12 +373,46 @@ public class Gen {
                 .orElseThrow(() -> new NotFoundException("Default user 2 not found!"));
 
         try {
+            // Надсилаємо запит на дружбу між користувачами та підтверджуємо його
             friendsService.sendFriendRequest(defaultUser1.getId(), defaultUser2.getId());
             friendsService.changeFriendsStatus(defaultUser1.getId(), defaultUser2.getId(), true);
         } catch (AlreadyExistsException e) {
-            log.info("Friend request already exists between default users.");
+            //log.info("Friend request already exists between default users.");
         }
+
+        // Генерація запитів на додавання друзів для інших користувачів
+        appUsers1.forEach(user -> appUsers1.stream()
+                .filter(potentialFriend -> !user.equals(potentialFriend) && MathUtils.random(0, 20) > 17)
+                .forEach(potentialFriend -> {
+                    try {
+                        friendsService.sendFriendRequest(user.getId(), potentialFriend.getId());
+                    } catch (AlreadyExistsException e) {
+                        //log.info("Запит у друзі вже надіслано: {}", e.getMessage());
+                    }
+                })
+        );
+
+        // Генерація відповідей на запити на додавання до друзів
+        appUsers1.forEach(user -> {
+            if (MathUtils.random(0, 10) < 4) {
+                List<AppUserResponse> friendsRequestList = friendsService.getFriendsRequest(user.getId());
+                //log.info("user: {} {}", user.getId(), friendsRequestList);
+                try {
+                    friendsRequestList.forEach(friendship -> {
+                        boolean acceptFriendship = MathUtils.random(0, 10) < 5;
+                        friendsService.changeFriendsStatus(
+                                friendship.getId(),
+                                user.getId(),
+                                acceptFriendship
+                        );
+                    });
+                } catch (NotFoundException | AlreadyExistsException e) {
+                    //log.info("Запит на додавання до друзів не прийнято не знайдено id: {}", e.getMessage());
+                }
+            }
+        });
     }
+
     private List<Chat> genChats() {
         Optional<AppUser> test = appUserService.findByUsername("test");
         Optional<AppUser> greak = appUserService.findByUsername("Greak");
@@ -436,15 +439,16 @@ public class Gen {
     }
 
     private void genFavorites() {
-            appUsers1.forEach(user -> {
-                int randomFavoritesCount = MathUtils.random(0, 10);
-                for (int i = 0; i < randomFavoritesCount; i++) {
-                    PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
+        appUsers1.forEach(user -> {
+            int randomFavoritesCount = MathUtils.random(0, 10);
+            for (int i = 0; i < randomFavoritesCount; i++) {
+                PostResponse randomPost = posts.get(MathUtils.random(0, posts.size() - 1));
 
-                    try {
-                        favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
-                    } catch (AlreadyExistsException e) {}
+                try {
+                    favoritesService.addToFavorites(randomPost.getPostId(), user.getId());
+                } catch (AlreadyExistsException e) {
                 }
-            });
-        }
+            }
+        });
+    }
 }

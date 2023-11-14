@@ -1,4 +1,4 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
@@ -17,7 +17,8 @@ import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
 import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
-import { addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
 
@@ -27,9 +28,11 @@ const PostProfile = ({ el }) => {
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
   const commenttext = useRef();
-  
+
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
+  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
+
 
   const {
     getCommentsPost: {
@@ -38,6 +41,7 @@ const PostProfile = ({ el }) => {
       error
     }
   } = useSelector(state => state.post);
+
 
   const changeClickLike = () => {
     dispatch(addLike(el.postId));
@@ -67,12 +71,20 @@ const PostProfile = ({ el }) => {
     dispatch(modalEditPostState(true));
   };
 
-  const deletePostThunk=()=>{
+  const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
   };
 
-  const savePostThunk=()=>{
-    dispatch(addToFavourites(el.postId));
+  const savePostThunk = async () => {
+    await dispatch(isFavourite(el.postId));
+    if (postIsFavourite) {
+      await dispatch(deleteFavourite(el.postId));
+      await dispatch(setIsFavourite(false));
+      dispatch(deleteLocalFavourite(el.postId));
+    } else {
+      dispatch(addToFavourites(el.postId));
+      await dispatch(setIsFavourite(true));
+    }
   };
 
   return (
@@ -159,6 +171,7 @@ const PostProfile = ({ el }) => {
 
 PostProfile.propTypes = {
   el: PropTypes.object.isRequired,
+  type: PropTypes.string
 };
 
 
