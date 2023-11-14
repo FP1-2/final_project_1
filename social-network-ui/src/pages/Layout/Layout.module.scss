@@ -1,8 +1,6 @@
 @import "../../styles/variables.scss";
 @import "../../styles/mixin.scss";
 
-
-
 .container{
   width:100dvw;
   height: 100dvh;
@@ -15,6 +13,7 @@
   grid-template-rows: auto 1fr auto;
   grid-template-columns: 1fr;
 }
+
 .containerFullWidth{
   display:grid;
   width:100dvw;
@@ -25,11 +24,17 @@
   grid-template-rows: auto 1fr;
   grid-template-columns: 1fr;
 }
+
 .main{
   grid-area: main;
   background-color: $input-color-main;
   flex:1;
   overflow: auto;
+}
+
+.headerMain{
+  background-color: $input-color-main;
+  overflow: hidden;
 }
 
 @media (min-width: 1025px) {

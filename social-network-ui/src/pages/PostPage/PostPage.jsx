@@ -1,64 +1,86 @@
-import React, { useState,useRef } from "react";
-import style from "./PostPage.module.scss";
-import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
-import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
-import { ReactComponent as CommentPostBtn} from "../../img/commentPostBtn.svg";
-import { ReactComponent as SharePostBtn} from "../../img/sharePostBtn.svg";
-import { ReactComponent as SendCommentPost} from "../../img/sendCommentPost.svg";
+import React, {useRef, useState} from 'react';
+import style from './PostPage.module.scss';
 import Comment from "../../components/Comment/Comment";
 
+const PostPage = () => {
+  const commentInputRef = useRef(null);
+  const [zoomLevel, setZoomLevel] = useState(1);
 
-const PostsPage = () => {
+  const handleZoomIn =()=> zoomLevel <= 2 && setZoomLevel(zoomLevel + 0.5);
+  const handleZoomOut =()=> zoomLevel > 1 && setZoomLevel(zoomLevel - 0.5);
 
-  const [clickLike, setClickLike] = useState(false);
-  const commentInputFocus=useRef();
-
-
-  const changeClickLike = () => {
-    setClickLike(state => !state);
-  };
-
-  const commentInputFocusClick = () => {
-    commentInputFocus.current.focus();
+  const comment = {
+    id: 1,
+    content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.',
+    createdDate: '2023-11-12T12:00:00Z',
+    appUser: {
+      userId: 'user123',
+      name: 'Jane Doe',
+      avatar: 'https://via.placeholder.com/150/66b7d2'
+    }
   };
 
   return (
     <div className={style.postWrapper}>
-      <div className={style.post}>
-        <div className={style.postHeaderWrapper}>
-          <a href="" className={style.postAvatarLink}>
-            <img src="https://risovach.ru/upload/2013/01/mem/kakoy-pacan_9771748_orig_.jpeg" alt="" className={style.postAvatar} />
-          </a>
-          <a className={style.postNameLink} href="">Ірина Сергіївна Надточий</a>
+      <div className={style.postImageContainer}>
+        <div className={style.zoomControls}>
+          <button onClick={handleZoomOut} className={style.zoomIn}></button>
+          <button onClick={handleZoomIn} className={style.zoomOut}></button>
         </div>
-        <img src="https://imgv3.fotor.com/images/slider-image/Female-portrait-photo-enhanced-with-clarity-and-higher-quality-using-Fotors-free-online-AI-photo-enhancer.jpg" alt="" className={style.postImg} />
-        <div className={style.postFooterWrapper}>
-          <div className={style.postFooterLikes}>
-            <BlueLike className={style.postFooterLikesImg}/>
-            <p className={style.postFooterLikesText}>Liked ..</p>
+        <img
+          src="https://source.unsplash.com/random?wallpapers"
+          alt="Post content"
+          className={style.postImage}
+          style={{ transform: `scale(${zoomLevel})` }}
+        />
+      </div>
+      <div className={style.postContainer}>
+        <div className={style.post}>
+          <div className={style.postHeader}>
+            <img
+              src="https://via.placeholder.com/150/66b7d2"
+              alt="User avatar"
+              className={style.avatar}
+            />
+            <span className={style.userName}>User Name</span>
           </div>
-          <div className={style.postFooterBtns}>         
-            <button className={clickLike ? style.active : style.postBtn} onClick={changeClickLike}>
-              <LikePostBtn className={style.postLikeBtnImg} />
-              Like
+          <div className={style.postBody}>
+          Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+          </div>
+          <div className={style.postActions}>
+            <button>
+              <span className={`${style.icon} ${style.likeIcon}`}></span>
+              <span className="text">Like</span>
             </button>
-            <button className={style.postBtn} onClick={commentInputFocusClick}>
-              <CommentPostBtn className={style.postCommentBtnImg} />
-              Comment
+            <button>
+              <span className={`${style.icon} ${style.commentIcon}`}></span>
+              <span className="text">Comment</span>
             </button>
-            <button className={style.postBtn}>
-              <SharePostBtn className={style.postLikeBtnImg}/>
-            Share
+            <button>
+              <span className={`${style.icon} ${style.shareIcon}`}></span>
+              <span className="text">Share</span>
             </button>
           </div>
-          <div className={style.postFooterComents}>
-            <Comment/>
-            <div className={style.postFooterAddComents}>
-              <img src="https://imgv3.fotor.com/images/slider-image/Female-portrait-photo-enhanced-with-clarity-and-higher-quality-using-Fotors-free-online-AI-photo-enhancer.jpg" alt="" className={style.postFooterAddComentsImg}/>
-              <input type="text" placeholder="Write a comment..." className={style.postFooterAddComentsText} ref={commentInputFocus}/>
-              <button className={style.postFooterAddComentBtn}>
-                <SendCommentPost className={style.postFooterAddComentBtnImg}/>
-              </button>
+          <ul className={style.CommentsSection}>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+            <li><Comment el={comment}/></li>
+          </ul>
+          <div className={style.createCommentSection}>
+            <div className={style.addComment}>
+              <img src="https://via.placeholder.com/150/66b7d2" alt="User avatar" className={style.commentAvatar} />
+              <textarea
+                ref={commentInputRef}
+                placeholder="Write a comment..."
+              />
+              <button className={style.sendIcon}></button>
             </div>
           </div>
         </div>
@@ -66,4 +88,5 @@ const PostsPage = () => {
     </div>
   );
 };
-export default PostsPage;
+
+export default PostPage;
