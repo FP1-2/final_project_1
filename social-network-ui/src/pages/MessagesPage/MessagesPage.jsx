@@ -22,15 +22,15 @@ export default function MessagesPage() {
   const showChat = location.pathname.startsWith('/messages/') && location.pathname.includes('/messages');
   const [hasMore, setHasMore] = useState(true);
   const [pageNumber, setPageNumber] = useState(0);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 20;
 
   useEffect(() => {
     dispatch(loadChats({page: 0, size: PAGE_SIZE}));
     setHasMore(true);
   }, []);
-
+  
   const sortedChats = useMemo(() => {
-    chats.obj.length < PAGE_SIZE && setHasMore(false);
+    chats.obj.length < PAGE_SIZE ? setHasMore(false) : setHasMore(true);
     if (chats.status === 'fulfilled') {
       const filteredChats = chats.obj.filter(chat => chat.lastMessage);
       return [...filteredChats].sort((a, b) => getDate(b.lastMessage.createdAt) - getDate(a.lastMessage.createdAt));

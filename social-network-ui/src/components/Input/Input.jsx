@@ -55,7 +55,7 @@ const Input = (props) => {
               <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
             </div>
             : <>
-              <input className={style.input} {...field} {...props} />
+              <input className={style.input} {...field} {...props}  onClick={(e) => e.preventDefault()}/>
               <p className={error && touched ? style.error : style.errorDisplayNone} >{error}</p>
             </>}
     </div>
