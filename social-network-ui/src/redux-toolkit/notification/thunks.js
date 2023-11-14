@@ -9,7 +9,10 @@ export const loadNotifications = createAsyncThunk(
         try {
             const response = await workAx('get', `api/notifications?${params}`);
             if (page > 0) {
-                dispatch(appendNotifications(response.data));
+                dispatch(appendNotifications({
+                    key: "notifications",
+                    data: response.data
+                }));
             } else {
                 return response.data;
             }

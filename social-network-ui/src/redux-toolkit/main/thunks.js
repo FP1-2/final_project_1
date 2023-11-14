@@ -9,7 +9,10 @@ export const loadPostsInMain = createAsyncThunk(
         try {
             const response = await workAx('get', `/api/posts?${params}`);
             if (page > 0) {
-                dispatch(appendPostsInMain(response.data));
+                dispatch(appendPostsInMain({
+                    key: "posts",
+                    data: response.data
+                }));
             } else {
                 return response.data;
             }
