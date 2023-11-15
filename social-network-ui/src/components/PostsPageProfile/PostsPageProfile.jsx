@@ -24,7 +24,7 @@ const PostPageProfile = () => {
   } = useSelector(state => state.post.postsUser);
 
   useEffect(() => {
-    return ()=>{dispatch(resetPostsState())};
+    return(()=>{dispatch(resetPostsState());});
   }, []);
 
   const modalAddPostOpen = () => {
