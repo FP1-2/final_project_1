@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect} from "react";
 import style from "./RepostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
@@ -15,8 +15,8 @@ import { NavLink } from "react-router-dom";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
 import { clearComments, setPost, modalAddRepostState, modalEditPostState } from "../../redux-toolkit/post/slice";
-import { addToFavourites,isFavourite, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
-import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
+import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
+import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
@@ -26,11 +26,11 @@ const RepostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
+  const [isFavouritePost, setIsFavouritePost] = useState(false);
   const commenttext = useRef();
 
   const userAvatar = useSelector(state => state.auth.user.obj.avatar);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
 
   const {
     getCommentsPost: {
@@ -39,6 +39,12 @@ const RepostProfile = ({ el }) => {
       error
     }
   } = useSelector(state => state.post);
+
+  useEffect(() => {
+    if (el.isFavorite) {
+      setIsFavouritePost(true);
+    }
+  }, []);
 
 
   const changeClickLike = () => {
@@ -75,14 +81,13 @@ const RepostProfile = ({ el }) => {
   };
 
   const savePostThunk = async () => {
-    await dispatch(isFavourite(el.postId));
-    if (postIsFavourite) {
+    if (isFavouritePost) {
       await dispatch(deleteFavourite(el.postId));
-      await dispatch(setIsFavourite(false));
       dispatch(deleteLocalFavourite(el.postId));
+      setIsFavouritePost(false);
     } else {
       dispatch(addToFavourites(el.postId));
-      await dispatch(setIsFavourite(true));
+      setIsFavouritePost(true);
     }
   };
 
@@ -154,7 +159,7 @@ const RepostProfile = ({ el }) => {
             Share
           </button>
           <button className={style.postBtn} onClick={savePostThunk}>
-            <SavePost className={style.postBtnImg} />
+            <SavePost className={isFavouritePost ? style.postBtnImgSaved : style.postBtnImg} />
             Save
           </button>
         </div>
