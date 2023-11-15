@@ -29,6 +29,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    cancelRequest:{
+        obj: [],
+        status: '',
+        error: '',
+    },
     modalDeleteFriend:false,
 }
 export default initialValue;
