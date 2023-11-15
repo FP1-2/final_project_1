@@ -27,8 +27,8 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
     List<AppUser> findUserFriendsByUserId(@Param("userId") Long userId);
 
     @Query(value = "SELECT u.* FROM users u INNER JOIN friends f ON u.ID = f.USER_ID AND f.STATUS ='PENDING'  WHERE f.FRIEND_ID = :userId", nativeQuery = true)
-    List<AppUser> findUserFriendsRequestsByUserId(@Param("userId") Long userId);
+    List<AppUser> findUserReceivedFriendsRequestsByUserId(@Param("userId") Long userId);
 
-    @Query(value = "SELECT u.* FROM users u INNER JOIN friends f ON u.ID = f.FRIEND_ID AND f.STATUS ='PENDING'  WHERE f.FRIEND_ID = :friendId", nativeQuery = true)
-    List<AppUser> findUserFriendsRequestsByFriendId(@Param("friendId") Long friendId);
+    @Query(value = "SELECT u.* FROM users u INNER JOIN friends f ON u.ID = f.FRIEND_ID AND f.STATUS ='PENDING'  WHERE f.USER_ID = :userId", nativeQuery = true)
+    List<AppUser> findUserSendFriendsRequestsByUserId(@Param("userId") Long userId);
 }

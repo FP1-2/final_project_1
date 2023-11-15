@@ -1,6 +1,7 @@
 package com.facebook.service;
 
 import com.facebook.dto.appuser.AppUserResponse;
+import com.facebook.dto.friends.FriendRequestListsResponse;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.exception.AlreadyExistsException;
 import com.facebook.exception.NotFoundException;
@@ -116,29 +117,28 @@ public class FriendsService {
     }
 
     public List<AppUserResponse> getFriendsRequest(Long userId) {
-        return appUserRepository.findUserFriendsRequestsByUserId(userId)
+        return appUserRepository.findUserReceivedFriendsRequestsByUserId(userId)
                 .stream()
                 .map(userFacade::convertToAppUserResponse)
                 .toList();
     }
 
-//    public ExistRequestResponse existRequest(Long userId, Long friendId) {
-//        ExistRequestResponse existRequestResponse = new ExistRequestResponse();
-////        Optional<Friends> fromUser = friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(userId, friendId);
-//        if(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(userId, friendId).isPresent()) {
-//            existRequestResponse.setFromUserToFriend(true);
-//            existRequestResponse.setFromFriendToUser(false);
-//            return existRequestResponse;
-//        } else if(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(friendId, userId).isPresent()) {
-//            existRequestResponse.setFromFriendToUser(true);
-//            existRequestResponse.setFromUserToFriend(false);
-//            return existRequestResponse;
-//        } else {
-//            existRequestResponse.setFromFriendToUser(false);
-//            existRequestResponse.setFromUserToFriend(false);
-//            return existRequestResponse;
-//        }
-////        Optional<Friends> fromFriend = friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(friendId, userId);
-//    }
+    public FriendRequestListsResponse allFriendsRequests(Long userId) {
+        List<AppUserResponse> received = appUserRepository.findUserReceivedFriendsRequestsByUserId(userId)
+                .stream()
+                .map(userFacade::convertToAppUserResponse)
+                .toList();
+
+        List<AppUserResponse> send = appUserRepository.findUserSendFriendsRequestsByUserId(userId)
+                .stream()
+                .map(userFacade::convertToAppUserResponse)
+                .toList();
+
+        FriendRequestListsResponse friendRequests = new FriendRequestListsResponse();
+        friendRequests.setReceived(received);
+        friendRequests.setSend(send);
+
+        return friendRequests;
+    }
 
 }
