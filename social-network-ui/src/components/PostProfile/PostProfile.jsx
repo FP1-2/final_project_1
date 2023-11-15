@@ -15,9 +15,9 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState} from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
-import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import {isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
@@ -27,14 +27,14 @@ const PostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
-  const [isFavouritePost, setIsFavouritePost] = useState(null);
+  const [isFavouritePost, setIsFavouritePost] = useState(false);
   const commenttext = useRef();
 
-  const userAvatar = useSelector(state => state.auth.user.obj.avatar);
+  const {
+    avatar: userAvatar,
+  } = useSelector(state => state.auth.user.obj);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
-
-
+  const postIsFavourite = useSelector(state => state.favourites.isFavourite);
 
   const {
     getCommentsPost: {
@@ -45,16 +45,14 @@ const PostProfile = ({ el }) => {
   } = useSelector(state => state.post);
 
 
-
   useEffect(() => {
-    if (postIsFavourite.postId === el.postId && postIsFavourite.exists) {
+    console.log(postIsFavourite.obj);
+    console.log( el.postId);
+    if (postIsFavourite.obj.postId === el.postId && postIsFavourite.obj.exists && postIsFavourite.status==="fulfilled") {
       console.log("є збіг");
       setIsFavouritePost(true);
-    } else if (postIsFavourite.postId === el.postId && !postIsFavourite.exists) {
-      console.log("немає збіг");
-    } else {
+    }else if(postIsFavourite.obj.postId !== el.postId){
       dispatch(isFavourite(el.postId));
-      console.log("нічого");
     }
   }, []);
 
