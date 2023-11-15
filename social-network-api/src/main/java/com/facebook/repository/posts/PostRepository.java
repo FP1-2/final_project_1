@@ -46,7 +46,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * Цей запит використовується в двох основних методах:
      * - {@link #findPostDetailsByUserId(Long, Pageable)}:
      *   для отримання деталей усіх постів певного користувача;
-     * - {@link #findPostDetailsById(Long)}:
+     * - {@link #findPostDetailsById(Long, Long)}:
      *   для отримання деталей конкретного посту за його ID.
      * </p>
      * <p>
@@ -74,7 +74,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             u.avatar,
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                            (SELECT GROUP_CONCAT(l.user_id) FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
+                            GROUP_CONCAT(DISTINCT l.id) AS like_ids,
                             GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
@@ -89,8 +89,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
-                            (SELECT GROUP_CONCAT(ol.user_id) FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
-                            GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids
+                            GROUP_CONCAT(DISTINCT ol.id) AS original_like_ids,
+                            GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids,
+                            (SELECT COUNT(*) FROM favorites f WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
                         FROM
                             posts p
                         LEFT JOIN posts op ON p.original_post_id = op.id
@@ -148,7 +149,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                 p.id = :postId
             GROUP BY p.id, u.id, op.id, ou.id
             """, nativeQuery = true)
-    Optional<Map<String, Object>> findPostDetailsById(@Param("postId") Long postId);
+    Optional<Map<String, Object>> findPostDetailsById(@Param("userId") Long userId,
+                                                      @Param("postId") Long postId);
 
 
     /**
@@ -189,7 +191,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
         """,
             countQuery = "SELECT count(*) FROM posts",
             nativeQuery = true)
-    List<Map<String, Object>> findAllPostDetails(Pageable pageable);
+    List<Map<String, Object>> findAllPostDetails(@Param("userId") Long userId,
+                                                 Pageable pageable);
 
     /**
      * Підраховує загальну кількість постів у базі даних.
