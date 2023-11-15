@@ -15,9 +15,9 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { clearComments, modalEditPostState, setPost, modalAddRepostState} from "../../redux-toolkit/post/slice";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
-import {isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import { deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
@@ -34,7 +34,6 @@ const PostProfile = ({ el }) => {
     avatar: userAvatar,
   } = useSelector(state => state.auth.user.obj);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  const postIsFavourite = useSelector(state => state.favourites.isFavourite);
 
   const {
     getCommentsPost: {
@@ -46,13 +45,8 @@ const PostProfile = ({ el }) => {
 
 
   useEffect(() => {
-    console.log(postIsFavourite.obj);
-    console.log( el.postId);
-    if (postIsFavourite.obj.postId === el.postId && postIsFavourite.obj.exists && postIsFavourite.status==="fulfilled") {
-      console.log("є збіг");
+    if (el.isFavorite) {
       setIsFavouritePost(true);
-    }else if(postIsFavourite.obj.postId !== el.postId){
-      dispatch(isFavourite(el.postId));
     }
   }, []);
 
