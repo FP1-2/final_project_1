@@ -60,19 +60,20 @@ const chatsReducer = createSlice({
     resetSearchChats: (state, action) => {
       state.searchChats = defaultInitialState.searchChats;
     },
-    resetChat: (state) => {
+    resetChatAndMessages: (state) => {
+      state.messages = defaultInitialState.messages;
       state.chat = defaultInitialState.chat;
     },
-    resetMessages: (state) => {
-      state.messages = defaultInitialState.messages;
-    },
+    resetNewChat: (state) => {
+      state.newChat = defaultInitialState.newChat;
+    }
   },
   extraReducers: (builder) => {
     builders(builder, loadChats, 'chats');
     builders(builder, loadChat, 'chat');
     builders(builder, loadMessages, 'messages');
     builders(builder, loadUnreadMessagesQt, 'unreadMessagesQt');
-    builders(builder, createChat, 'chat');
+    builders(builder, createChat, 'newChat');
     builders(builder, searchChat, 'searchChats');
     builders(builder, searchUser, 'searchUsers');
   }
@@ -85,8 +86,8 @@ export const {
   addChat,
   resetSearchUsers,
   resetSearchChats,
-  resetChat,
-  resetMessages
+  resetChatAndMessages,
+  resetNewChat
 } = chatsReducer.actions;
 
 export default chatsReducer.reducer;

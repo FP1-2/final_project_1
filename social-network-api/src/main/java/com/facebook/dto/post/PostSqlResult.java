@@ -35,6 +35,7 @@ public class PostSqlResult {
     private String likeIds;
     private String repostIds;
     private PostType type;
+    private Boolean isFavorite;
 
     private Long originalUserId;
     private String originalName;

@@ -9,6 +9,11 @@ const defaultInitialState = {
     status: '',
     error: '',
   },
+  newChat: {
+    obj: {},
+    status: '',
+    error: '',
+  },
   messages: {
     obj: [],
     status: '',

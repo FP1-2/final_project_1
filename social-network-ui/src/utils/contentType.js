@@ -19,9 +19,9 @@ export function fromString(typeString) {
 
 export function checkContentType(type, text) {
   if (fromString(type) === ContentType.IMAGE) {
-    return "Надіслано світлину"
+    return "Sent image"
   } else if (fromString(type) === ContentType.LIKE) {
-    return "Нравится!";
+    return "LIKE!";
   } else {
     return text;
   }
