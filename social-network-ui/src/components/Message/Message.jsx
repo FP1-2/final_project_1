@@ -41,7 +41,7 @@ export default function Message({
         </div>
       </div>
       <div className={(index !== 0) || !authUser ? `${styles.messageStatus} ${styles.none}` : styles.messageStatus}>
-        {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Надіслано</div>
+        {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Sent</div>
           : (checkFailedStatus(status) ? <div className={styles.messageStatus__error}>Error</div>
             : <div className={styles.messageStatus__read}>
               <Avatar photo={photo} name={name}/>

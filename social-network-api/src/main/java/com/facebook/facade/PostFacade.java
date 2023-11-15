@@ -119,6 +119,7 @@ public class PostFacade {
         result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
         result.setLikeIds((String) resultMap.get("LIKE_USER_IDS"));
         result.setRepostIds((String) resultMap.get("REPOST_IDS"));
+        result.setIsFavorite((Boolean) resultMap.get("IS_FAVORITE"));
 
         result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
         result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_USER_IDS"));
@@ -196,6 +197,7 @@ public class PostFacade {
         originalPost.setBody(sqlResult.getOriginalBody());
         originalPost.setStatus(sqlResult.getOriginalStatus());
         originalPost.setType(sqlResult.getOriginalType());
+        originalPost.setIsFavorite(null);
 
         Optional.ofNullable(sqlResult.getOriginalCommentIds())
                 .map(this::stringToList)

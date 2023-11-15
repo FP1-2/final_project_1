@@ -35,6 +35,7 @@
         border-radius: $main-border-radius;
         width: fit-content;
         opacity: 0.8;
+        z-index: 2;
         & p{
           padding:6px;
           color:$main-text-color;
@@ -58,17 +59,17 @@
           color: $text-color-on-dark-background;
           &__date{
             right: 0;
-            bottom: -100%;
+            bottom: -20px;
           }
         }
         &__chatUser {
           background-color: $background-color-receiver-message;
           color: $main-text-color;
           &__date{
-            left: 0;
-            bottom: -100%;
+            right: 0;
+            bottom: -20px;
         }
-        }
+      }
     }
 
 .image{

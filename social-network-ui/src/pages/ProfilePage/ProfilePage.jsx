@@ -22,7 +22,7 @@ import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFri
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
 import { loadAuthUser } from "../../redux-toolkit/login/thunks";
-// import { setIsFavourite } from "../../redux-toolkit/favourite/slice";
+import {resetNewChat} from "../../redux-toolkit/messenger/slice";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
@@ -51,14 +51,15 @@ const ProfilePage = () => {
   const editUserStatus = useSelector(state => state.profile.editUser);
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
-  const chat = useSelector(state => state.messenger.chat.obj.id);
+  const newChat = useSelector(state => state.messenger.newChat);
 
 
   useEffect(() => {
-    if (chat) {
-      navigate(`/messages/${chat}`);
+    if (newChat.status === 'fulfilled') {
+      navigate(`/messages/${newChat.obj.id}`);
+      dispatch(resetNewChat());
     }
-  }, [chat]);
+  }, [newChat]);
 
 
   const [linkPosts, setLinkPosts] = useState("focus");
@@ -160,7 +161,7 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
-  const newChat = () => {
+  const createNewChat = () => {
     dispatch(createChat({ username: profileName.username }));
   };
 
@@ -246,7 +247,7 @@ const ProfilePage = () => {
                           Send request
                         </button>)
                     }
-                    <button className={style.infoBtnMessage} onClick={newChat}>
+                    <button className={style.infoBtnMessage} onClick={createNewChat}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />
                       Message
                     </button>

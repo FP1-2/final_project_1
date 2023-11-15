@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useRef} from 'react';
 import Message from '../Message/Message';
 import Avatar from '../Avatar/Avatar';
 import Loader from '../Loader/Loader';
@@ -20,11 +20,21 @@ export default function ChatBody({
   pageNumber
 }) {
   const isCreatingNewChat = id !== "new";
+  const containerRef = useRef(null);
+  const handleScroll = () => {
+    const container = containerRef.current;
+    if (hasMore && (container.scrollHeight-container.clientHeight+container.scrollTop)<2 && messages.status !== 'pending') {
+      handleLoadMoreMessages();
+    }
+  };
   return (
     isCreatingNewChat &&
     <div className={`${messagesList.length === 0 ? styles.chat__emptyList : styles.chat__body}`}
-      onMouseEnter={handleMouseEnter}>
-      {messagesList.length === 0 ? (
+      onMouseEnter={handleMouseEnter}
+      ref={containerRef}
+      onScroll={handleScroll}
+    >
+      {messagesList.length === 0 && messages.status === 'fulfilled' ? (
         chat.status === 'fulfilled' && (
           <>
             <Avatar
@@ -34,14 +44,14 @@ export default function ChatBody({
             />
             <p
               className={styles.chat__emptyList__name}>{chat.obj.chatParticipant.name} {chat.obj.chatParticipant.surname}</p>
-            <p className={styles.chat__emptyList__text}>Відправте перше повідомлення</p>
+            <p className={styles.chat__emptyList__text}>Send your first message</p>
           </>
         )
       ) 
         :
         (
           <ul className={styles.chat__body__messList}>
-            {messages.status === 'pending' && pageNumber === 0 ? <Loader/> :
+            {messages.status === 'pending' && pageNumber === 0 && messagesList.length=== 0 ? <Loader/> :
               messagesList.map(({id, contentType, content, createdAt, sender, status}, index) => {
                 const prevMessage = messagesList[index + 1];
                 const showDate = !prevMessage || new Date(createdAt) - new Date(prevMessage.createdAt) > 15 * 60 * 1000;
@@ -65,14 +75,8 @@ export default function ChatBody({
                 );
               })}
             {messages.status === 'pending' && pageNumber !== 0 && <Loader/>}
-            {hasMore && messagesList.length > 0 && (
-              <li className={styles.chat__body__messList__item}>
-                <button className={styles.chat__body__messList__item__btn} onClick={handleLoadMoreMessages}>
-                  More
-                </button>
-              </li>
-            )}
           </ul>
+         
         )
       }
     </div>
