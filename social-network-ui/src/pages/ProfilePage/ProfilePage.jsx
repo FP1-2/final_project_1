@@ -82,12 +82,12 @@ const ProfilePage = () => {
   const scrollContainerRef = useRef(null);
 
   useEffect(() => {
-
     if (Object.keys(obj)) {
       dispatch(removeUser());
     }
     getUser(myId);
     dispatch(postsUser({ id: id, page: 0 }));
+    // dispatch(setIsFavourite({}));
   }, [id, deleteStatus, editUserStatus]);
 
   useEffect(() => {

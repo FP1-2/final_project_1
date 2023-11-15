@@ -1,6 +1,7 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import style from "./RepostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
+import { ReactComponent as LikedPostBtn } from "../../img/likedPostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
 import { ReactComponent as CommentPostBtn } from "../../img/commentPostBtn.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -14,9 +15,9 @@ import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost, modalAddRepostState, modalEditPostState } from "../../redux-toolkit/post/slice";
-import { addToFavourites,isFavourite, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
-import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
+import { clearComments, setPost, modalAddRepostState, modalEditPostState, toggleLikePost} from "../../redux-toolkit/post/slice";
+import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
+import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
 
@@ -26,19 +27,49 @@ const RepostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
+  const [isFavouritePost, setIsFavouritePost] = useState(false);
   const commenttext = useRef();
 
-  const userAvatar = useSelector(state => state.auth.user.obj.avatar);
+  const {
+    id: userId,
+    avatar: userAvatar,
+  } = useSelector(state => state.auth.user.obj);
+  const {
+    status: isLikeStatus,
+    obj: isLiked
+  } = useSelector(state => state.post.addLike);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
 
   const {
     getCommentsPost: {
-      obj,
+      obj: {
+        content,
+        size,
+        totalElements,
+      },
       status,
       error
     }
   } = useSelector(state => state.post);
+
+
+
+  const isLikedByUser = Array.isArray(el.likes)
+    && el.likes.includes(userId);
+
+  useEffect(() => {
+    if (isLikeStatus === "fulfilled"
+      && !(isLikedByUser === isLiked.added)) {
+      dispatch(toggleLikePost(userId));
+    }
+  }, [isLikeStatus]);
+
+
+  useEffect(() => {
+    if (el.isFavorite) {
+      setIsFavouritePost(true);
+    }
+  }, []);
 
 
   const changeClickLike = () => {
@@ -48,7 +79,9 @@ const RepostProfile = ({ el }) => {
   const commentClick = () => {
     setClickComment((val => !val));
     dispatch(clearComments());
-    dispatch(getCommentsPost(el.postId));
+    if (el.comments) {
+      dispatch(getCommentsPost({ page: 0, size: 3, id: el.postId }));
+    }
   };
 
   const sendComment = () => {
@@ -58,7 +91,6 @@ const RepostProfile = ({ el }) => {
     };
     dispatch(addComment(obj));
     setClickComment(false);
-    commenttext.current.value = "";
   };
   const sharePost = () => {
     dispatch(setPost(el));
@@ -75,14 +107,13 @@ const RepostProfile = ({ el }) => {
   };
 
   const savePostThunk = async () => {
-    await dispatch(isFavourite(el.postId));
-    if (postIsFavourite) {
+    if (isFavouritePost) {
       await dispatch(deleteFavourite(el.postId));
-      await dispatch(setIsFavourite(false));
       dispatch(deleteLocalFavourite(el.postId));
+      setIsFavouritePost(false);
     } else {
       dispatch(addToFavourites(el.postId));
-      await dispatch(setIsFavourite(true));
+      setIsFavouritePost(true);
     }
   };
 
@@ -142,7 +173,9 @@ const RepostProfile = ({ el }) => {
         </div>
         <div className={style.postFooterBtns}>
           <button className={style.postBtn} onClick={changeClickLike}>
-            <LikePostBtn className={style.postBtnImg} />
+            {isLikedByUser ?
+              <LikedPostBtn className={style.postBtnImg} />
+              : <LikePostBtn className={style.postBtnImg} />}
             Like
           </button>
           <button className={style.postBtn} onClick={commentClick}>
@@ -154,7 +187,7 @@ const RepostProfile = ({ el }) => {
             Share
           </button>
           <button className={style.postBtn} onClick={savePostThunk}>
-            <SavePost className={style.postBtnImg} />
+            <SavePost className={isFavouritePost ? style.postBtnImgSaved : style.postBtnImg} />
             Save
           </button>
         </div>
@@ -166,7 +199,13 @@ const RepostProfile = ({ el }) => {
             : status === "rejected" ?
               <ErrorPage message={error ? error : "Oops something went wrong!"} />
               :
-              (obj.content.length ? obj.content.map((el) => <Comment el={el} key={el.id} />) : null)
+              (content.length ?
+                <>{content.map((elem) =>
+                  <Comment el={elem} key={elem.id} />)}
+                {totalElements > size ?
+                  <NavLink to={`/post/${el.postId}`} className={style.postOtherComents} >...comments</NavLink>
+                  : null}</>
+                : null)
           }
           <div className={style.postFooterAddComents}>
             <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />
