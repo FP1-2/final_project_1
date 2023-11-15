@@ -74,7 +74,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             u.avatar,
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                            GROUP_CONCAT(DISTINCT l.id) AS like_ids,
+                            (SELECT GROUP_CONCAT(l.user_id) FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
                             GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
@@ -89,7 +89,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
-                            GROUP_CONCAT(DISTINCT ol.id) AS original_like_ids,
+                            (SELECT GROUP_CONCAT(ol.user_id) FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
                             GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids,
                             (SELECT COUNT(*) FROM favorites f WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
                         FROM
