@@ -73,4 +73,11 @@ public class FriendsController {
         return ResponseEntity.ok(friendsService.getFriendsRequest(userId));
     }
 
+//    @GetMapping("/exist-request")
+//    public ResponseEntity<ExistRequestResponse> existRequest(@Valid @RequestBody FriendsRequest request) {
+//        Long userId = currentUserService.getCurrentUserId();
+//        Long friendId = request.getFriendId();
+//        return ResponseEntity.ok(friendsService.existRequest(userId, friendId));
+//    }
+
 }

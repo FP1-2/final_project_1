@@ -122,4 +122,23 @@ public class FriendsService {
                 .toList();
     }
 
+//    public ExistRequestResponse existRequest(Long userId, Long friendId) {
+//        ExistRequestResponse existRequestResponse = new ExistRequestResponse();
+////        Optional<Friends> fromUser = friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(userId, friendId);
+//        if(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(userId, friendId).isPresent()) {
+//            existRequestResponse.setFromUserToFriend(true);
+//            existRequestResponse.setFromFriendToUser(false);
+//            return existRequestResponse;
+//        } else if(friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(friendId, userId).isPresent()) {
+//            existRequestResponse.setFromFriendToUser(true);
+//            existRequestResponse.setFromUserToFriend(false);
+//            return existRequestResponse;
+//        } else {
+//            existRequestResponse.setFromFriendToUser(false);
+//            existRequestResponse.setFromUserToFriend(false);
+//            return existRequestResponse;
+//        }
+////        Optional<Friends> fromFriend = friendsRepository.findFriendsByUserIdAndFriendIdAndStatus(friendId, userId);
+//    }
+
 }
