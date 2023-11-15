@@ -72,6 +72,16 @@ const postReducer = createSlice({
         clearStatePost: (state) => {
             state.initialState = {...initialValue}
         },
+        deleteLocalPost: (state, action) => {
+            state.postsUser.obj.content = state.postsUser.obj.content.filter(
+              post => post.postId!== action.payload);
+        },
+        appendPost: (state, action) => {
+            state.postsUser.obj.content = [
+                ...state.postsUser.obj.content,
+                action.payload
+            ];
+        },
     },
     extraReducers: (builder) => {
         buildersPagination(builder, postsUser, 'postsUser');
@@ -98,6 +108,8 @@ export const {
     appendComment,
     toggleLikePost,
     clearStatePost,
+    deleteLocalPost,
+    appendPost,
 } = postReducer.actions;
 
 export default postReducer.reducer;

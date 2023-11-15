@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
+import { ReactComponent as LikedPostBtn } from "../../img/likedPostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
 import { ReactComponent as CommentPostBtn } from "../../img/commentPostBtn.svg";
 import { ReactComponent as BlueComment } from "../../img/blueComment.svg";
@@ -15,8 +16,8 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
-import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState, deleteLocalPost, toggleLikePost } from "../../redux-toolkit/post/slice";
+import { getCommentsPost, addLike, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import { deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
@@ -31,17 +32,40 @@ const PostProfile = ({ el }) => {
   const commenttext = useRef();
 
   const {
+    id: userId,
     avatar: userAvatar,
   } = useSelector(state => state.auth.user.obj);
+  const {
+    status: isLikeStatus,
+    obj: isLiked
+  } = useSelector(state => state.post.addLike);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
     getCommentsPost: {
-      obj,
+      obj: {
+        content,
+        size,
+        totalElements,
+      },
       status,
       error
     }
   } = useSelector(state => state.post);
+
+
+
+  const isLikedByUser = Array.isArray(el.likes)
+    && el.likes.includes(userId);
+  
+  
+
+  useEffect(() => {
+    if (isLikeStatus === "fulfilled"
+      && !(isLikedByUser === isLiked.added)) {
+      dispatch(toggleLikePost(userId));
+    }
+  }, [isLikeStatus]);
 
 
   useEffect(() => {
@@ -71,7 +95,9 @@ const PostProfile = ({ el }) => {
   const commentClick = () => {
     setClickComment((val => !val));
     dispatch(clearComments());
-    dispatch(getCommentsPost(el.postId));
+    if (el.comments) {
+      dispatch(getCommentsPost({ page: 0, size: 3, id: el.postId }));
+    }
   };
 
   const modalEditPostOpen = () => {
@@ -81,6 +107,7 @@ const PostProfile = ({ el }) => {
 
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
+    dispatch(deleteLocalPost(el.postId));
   };
 
   const savePostThunk = async () => {
@@ -136,7 +163,9 @@ const PostProfile = ({ el }) => {
         </div>
         <div className={style.postFooterBtns}>
           <button className={style.postBtn} onClick={changeClickLike}>
-            <LikePostBtn className={style.postBtnImg} />
+            {isLikedByUser ?
+              <LikedPostBtn className={style.postBtnImg} />
+              : <LikePostBtn className={style.postBtnImg} />}
             Like
           </button>
           <button className={style.postBtn} onClick={commentClick}>
@@ -160,7 +189,13 @@ const PostProfile = ({ el }) => {
             : status === "rejected" ?
               <ErrorPage message={error ? error : "Oops something went wrong!"} />
               :
-              (obj.content.length ? obj.content.map((el) => <Comment el={el} key={el.id} />) : null)
+              (content.length ?
+                <>{content.map((elem) =>
+                  <Comment el={elem} key={elem.id} />)}
+                {totalElements > size ?
+                  <NavLink to={`/post/${el.postId}`} className={style.postOtherComents}>...comments</NavLink>
+                  : null}</>
+                : null)
           }
           <div className={style.postFooterAddComents}>
             <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />

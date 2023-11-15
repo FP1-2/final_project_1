@@ -17,7 +17,7 @@ import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
 import { getFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
-import { friend, requestToFriend } from "../../redux-toolkit/friend/thunks";
+import { friend, requestToFriend, cancelRequest} from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
@@ -44,7 +44,7 @@ const ProfilePage = () => {
       }
     }
   } = useSelector(state => state.post.postsUser);
-  const postsStatus=useSelector(state => state.post.postsUser.status);
+  const postsStatus = useSelector(state => state.post.postsUser.status);
 
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
   const profileName = useSelector(state => state.profile.profileUser.obj);
@@ -52,7 +52,6 @@ const ProfilePage = () => {
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
   const newChat = useSelector(state => state.messenger.newChat);
-
 
   useEffect(() => {
     if (newChat.status === 'fulfilled') {
@@ -92,7 +91,7 @@ const ProfilePage = () => {
   }, [id, deleteStatus, editUserStatus]);
 
   useEffect(() => {
-    if(editUserStatus.status==="fulfilled"){
+    if (editUserStatus.status === "fulfilled") {
       dispatch(loadAuthUser(id));
     }
   }, [editUserStatus]);
@@ -161,6 +160,11 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
+  const clickCancelRequest=()=>{
+    dispatch(cancelRequest({ friendId: id }));
+    setSendRequest(false);
+  };
+
   const createNewChat = () => {
     dispatch(createChat({ username: profileName.username }));
   };
@@ -176,7 +180,7 @@ const ProfilePage = () => {
   }
 
   const getMorePosts = () => {
-    if (postsStatus !== 'pending' &&  pageNumber < totalPages) {
+    if (postsStatus !== 'pending' && pageNumber < totalPages) {
       dispatch(postsUser({ page: pageNumber + 1, id: id }));
     }
   };
@@ -199,7 +203,7 @@ const ProfilePage = () => {
         <>
           <ModalDeleteFriend />
           <ModalEditProfile />
-          <div className={style.profilePage} onScroll={()=>handleScroll()} ref={scrollContainerRef}>
+          <div className={style.profilePage} onScroll={() => handleScroll()} ref={scrollContainerRef}>
             <div className={style.headerWrapper}>
               <header className={style.header}>
                 <img className={style.headerImg} src={obj.headerPhoto ? obj.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" />
@@ -238,9 +242,9 @@ const ProfilePage = () => {
                       </button>
                       :
                       (sendRequest ?
-                        <button className={style.infoBtnAddFriend} >
+                        <button className={style.infoBtnAddFriend} onClick={clickCancelRequest}>
                           <AddFriend className={style.infoBtnAddFriendImg} />
-                          Request is send
+                          Cancel request
                         </button>
                         : <button className={style.infoBtnAddFriend} onClick={addFriend}>
                           <AddFriend className={style.infoBtnAddFriendImg} />

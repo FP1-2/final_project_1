@@ -373,9 +373,18 @@
                 
                 }
             }
+            .postOtherComents{
+                color:#65676B;
+                font-size: 15px;
+                font-weight: 400;
+
+                &:hover{
+                    text-decoration: underline;
+                }
+            }
 
             .postFooterAddComents {
-                margin-top: 8px;
+                margin-top:10px;
                 display: flex;
                 align-items: flex-start;
                 justify-content: flex-start;

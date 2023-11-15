@@ -411,6 +411,16 @@
                 
                 }
             }
+            
+            .postOtherComents{
+                color:#65676B;
+                font-size: 15px;
+                font-weight: 400;
+
+                &:hover{
+                    text-decoration: underline;
+                }
+            }
 
 
             .postFooterAddComents {
