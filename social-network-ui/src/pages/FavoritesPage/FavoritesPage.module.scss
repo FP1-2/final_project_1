@@ -1,11 +1,48 @@
 @import "../../styles/mixin.scss";
+@keyframes rotating {
+    from {
+        transform: rotate(360deg)
+    }
 
+    to {
+        transform: rotate(0deg)
+    }
+}
+.loderWrapper{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    .loder {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        background: conic-gradient(#0866FF, transparent);
+        position: relative;
+        animation: rotating 1s linear infinite;
+    
+        &::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background-color: white;
+            left: 15px;
+            top: 15px;
+        }
+    
+    
+    }
+}
 .favoritsWrapper {
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding: 20px;
+    padding: 15px;
     overflow:auto;
     height: 100%;
     
@@ -19,14 +56,11 @@
         overflow: auto;
 
         .favoritsElem {
-            width: 65%;
+            width: 100%;
+            max-width: 500px;
 
-            @include width_992 {
-                width: 70%;
-            }
-
-            @include width_768 {
-                width: 90%;
+            @include width_880 {
+                max-width: none;
             }
         }
 
