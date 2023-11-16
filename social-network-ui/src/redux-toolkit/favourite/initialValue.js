@@ -1,20 +1,26 @@
 const initialValue = {
-    addToFavourites:{
+    addToFavourites: {
         obj: {},
         status: '',
         error: '',
     },
-    favouritesList:{
-        obj: [],
-        status: '',
+    favouritesList: {
+        status:"",
+        obj: {
+            content:[],
+            totalPages:0,
+            pageable: {
+                pageNumber:0
+            }
+        },
         error: '',
     },
-    isFavourite:{
+    isFavourite: {
         obj: {},
         status: '',
         error: '',
     },
-    deleteFavourite:{
+    deleteFavourite: {
         obj: {},
         status: '',
         error: '',
