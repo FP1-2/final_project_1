@@ -10,8 +10,10 @@ import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.friends.Friends;
 import com.facebook.model.friends.FriendsStatus;
+import com.facebook.model.notifications.NotificationType;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
+import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.service.notifications.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -35,6 +37,8 @@ public class FriendsService {
     private final NotificationService notificationService;
 
     private final AppUserFacade userFacade;
+
+    private final NotificationRepository notificationRepository;
 
     private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
 
@@ -72,8 +76,11 @@ public class FriendsService {
 
     @Transactional
     public void changeFriendsStatus(Long userId, Long friendId, Boolean status) {
-        friendsRepository.findFriendsByUserIdAndFriendId(userId, friendId).ifPresentOrElse(
-                f -> {
+        notificationRepository
+                .deleteByInitiatorAndUserAndType(friendId, userId, NotificationType.FRIEND_REQUEST);
+        friendsRepository
+                .findFriendsByUserIdAndFriendId(userId, friendId)
+                .ifPresentOrElse(f -> {
                     if (Boolean.TRUE.equals(status)) {
                         f.setStatus(FriendsStatus.APPROVED);
                         friendsRepository.save(f);
@@ -86,8 +93,7 @@ public class FriendsService {
                         f.setStatus(FriendsStatus.REJECTED);
                         friendsRepository.delete(f);
                     }
-                },
-                () -> {
+                }, () -> {
                     log.warn("Friends pair not found for userId: {} and friendId: {}", userId, friendId);
                     throw new NotFoundException(FRIENDS_NOT_FOUND_ERROR_MSG);
                 }

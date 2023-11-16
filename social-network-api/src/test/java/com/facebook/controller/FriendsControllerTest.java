@@ -4,6 +4,7 @@ import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
+import com.facebook.dto.friends.FriendsStatusResponse;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.FriendsService;
 import org.junit.jupiter.api.BeforeEach;
@@ -61,7 +62,7 @@ class FriendsControllerTest {
         when(currentUserService.getCurrentUserId()).thenReturn(USER_ID_2);
         doNothing().when(friendsService).changeFriendsStatus(USER_ID_1, USER_ID_2, true);
 
-        ResponseEntity<FriendsResponse> response = friendsController.friendsStatus(request);
+        ResponseEntity<FriendsStatusResponse> response = friendsController.friendsStatus(request);
 
         verify(currentUserService).getCurrentUserId();
         verify(friendsService).changeFriendsStatus(USER_ID_1, USER_ID_2, true);
