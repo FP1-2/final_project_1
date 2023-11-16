@@ -11,23 +11,23 @@ import { ReactComponent as AddFriend } from "../../img/addFriend.svg";
 import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger.svg";
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
-import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
+import { getPhotoURL } from "../../utils/thunks";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
-import { getFriends } from "../../redux-toolkit/friend/thunks";
+import { getFriends,cancelRequest, requestToFriend} from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
-import { friend, requestToFriend, cancelRequest} from "../../redux-toolkit/friend/thunks";
+import { friend,allRequests, confirmFriendRequest } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
 import { loadAuthUser } from "../../redux-toolkit/login/thunks";
-import {resetNewChat} from "../../redux-toolkit/messenger/slice";
+import { resetNewChat } from "../../redux-toolkit/messenger/slice";
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  let { id } = useParams();
+  let idNavigate = useParams().id;
   const {
     profileUser: {
       obj,
@@ -52,6 +52,14 @@ const ProfilePage = () => {
   const friends = useSelector(state => state.friends.getFriends.obj);
   const myId = useSelector(state => state.auth.user.obj.id);
   const newChat = useSelector(state => state.messenger.newChat);
+  const requests = useSelector(state => state.friends.allRequests.obj);
+
+  const [linkPosts, setLinkPosts] = useState("focus");
+  const [linkFriends, setLinkFriends] = useState("unfocus");
+  const [sendRequest, setSendRequest] = useState("no request");
+  const [isMyFriend, setIsMyFriend] = useState(false);
+
+
 
   useEffect(() => {
     if (newChat.status === 'fulfilled') {
@@ -61,21 +69,32 @@ const ProfilePage = () => {
   }, [newChat]);
 
 
-  const [linkPosts, setLinkPosts] = useState("focus");
-  const [linkFriends, setLinkFriends] = useState("unfocus");
-  const [sendRequest, setSendRequest] = useState();
+  useEffect(() => {
+    idNavigate = parseInt(idNavigate);
+    for (const el of requests.send) {
+      if (el.id === idNavigate) {
+        setSendRequest("my request");
+      }
+    }
+    for (const el of requests.received) {
+      if (el.id === idNavigate) {
+        setSendRequest("request to me");
+      }
+    }
+    for (const el of friends) {
+      if (el.id === myId) {
+        setIsMyFriend(true);
+      }
+    }
+  }, [requests,sendRequest]);
+
 
 
   const location = useLocation();
   const indexSlash = location.pathname.lastIndexOf('/');
   const word = location.pathname.slice(indexSlash + 1);
 
-  let isMyFriend;
-  for (const el of friends) {
-    if (el.id === myId) {
-      isMyFriend = true;
-    }
-  }
+
 
   const inputHeaderPicture = useRef();
   const inputAvatarPicture = useRef();
@@ -86,34 +105,32 @@ const ProfilePage = () => {
       dispatch(removeUser());
     }
     getUser(myId);
-    dispatch(postsUser({ id: id, page: 0 }));
-    // dispatch(setIsFavourite({}));
-  }, [id, deleteStatus, editUserStatus]);
+    dispatch(postsUser({ id: idNavigate, page: 0 }));
+  }, [idNavigate, deleteStatus, editUserStatus]);
 
   useEffect(() => {
     if (editUserStatus.status === "fulfilled") {
-      dispatch(loadAuthUser(id));
+      dispatch(loadAuthUser(idNavigate));
     }
   }, [editUserStatus]);
 
   const getUser = (userId) => {
     let newObj = {};
-    id = parseInt(id);
-    if (userId === id) {
+    idNavigate = parseInt(idNavigate);
+    if (userId === idNavigate) {
       newObj = {
         user: "myUser",
-        id: id
+        id: idNavigate
       };
-
+      dispatch(allRequests());
     } else {
       newObj = {
         user: "anotherUser",
-        id: id
+        id: idNavigate
       };
-      dispatch(getFriends(id));
     }
+    dispatch(getFriends(idNavigate));
     dispatch(loadUserProfile(newObj));
-
   };
 
   const downloadInputHeaderPicture = async (e) => {
@@ -140,15 +157,23 @@ const ProfilePage = () => {
     dispatch(modalEditProfileState(true));
   };
   const modalDeleteFriendOpen = () => {
-    dispatch(friend(id));
+    dispatch(friend(idNavigate));
     dispatch(modalDeleteFriendState(true));
   };
 
-  const addFriend = () => {
-    dispatch(requestToFriend({ friendId: id }));
+  const clickSendRequest = () => {
+    dispatch(requestToFriend({ friendId: idNavigate }));
     setSendRequest(true);
   };
 
+  const addFriend = () => {
+    dispatch(confirmFriendRequest({ userId: idNavigate, status: true }));
+    setIsMyFriend(true);
+  };
+  // const ignor = () => {
+  //   dispatch(confirmFriendRequest({ userId: idNavigate, status: false }));
+  //   setSendRequest("no request" );
+  // };
 
   const clickLinkPosts = () => {
     setLinkPosts("focus");
@@ -160,9 +185,9 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
-  const clickCancelRequest=()=>{
-    dispatch(cancelRequest({ friendId: id }));
-    setSendRequest(false);
+  const clickCancelRequest = () => {
+    dispatch(cancelRequest({ friendId: idNavigate }));
+    setSendRequest("no request");
   };
 
   const createNewChat = () => {
@@ -181,7 +206,7 @@ const ProfilePage = () => {
 
   const getMorePosts = () => {
     if (postsStatus !== 'pending' && pageNumber < totalPages) {
-      dispatch(postsUser({ page: pageNumber + 1, id: id }));
+      dispatch(postsUser({ page: pageNumber + 1, id: idNavigate }));
     }
   };
 
@@ -241,15 +266,27 @@ const ProfilePage = () => {
                         Delete
                       </button>
                       :
-                      (sendRequest ?
-                        <button className={style.infoBtnAddFriend} onClick={clickCancelRequest}>
-                          <AddFriend className={style.infoBtnAddFriendImg} />
-                          Cancel request
-                        </button>
-                        : <button className={style.infoBtnAddFriend} onClick={addFriend}>
-                          <AddFriend className={style.infoBtnAddFriendImg} />
+                      (sendRequest === "no request" ?
+                        <button className={style.infoBtnFriend} onClick={()=>clickSendRequest()}>
+                          <AddFriend className={style.infoBtnFriendImg} />
                           Send request
-                        </button>)
+                        </button>
+                        : sendRequest === "request to me" ?
+                          // <div className={style.infoBtnsFriendWrapper}>
+                          // <button className={style.infoBtnFriend} onClick={ignor}>
+                          //   <AddFriend className={style.infoBtnFriendImg} />
+                          //   Ignore
+                          // </button>
+                          <button className={style.infoBtnFriend} onClick={()=>addFriend()}>
+                            <AddFriend className={style.infoBtnFriendImg} />
+                            Add to friends
+                          </button>
+                          // </div>
+                          :
+                          <button className={style.infoBtnAddFriend} onClick={()=>clickCancelRequest()}>
+                            <AddFriend className={style.infoBtnAddFriendImg} />
+                            Cancel request
+                          </button>)
                     }
                     <button className={style.infoBtnMessage} onClick={createNewChat}>
                       <FacebookMessenger className={style.infoBtnMessageImg} />

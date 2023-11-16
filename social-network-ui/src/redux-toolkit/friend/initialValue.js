@@ -34,6 +34,14 @@ const initialValue = {
         status: '',
         error: '',
     },
+    allRequests:{
+        obj: {
+            send:[],
+            received:[]
+        },
+        status: '',
+        error: '',
+    },
     modalDeleteFriend:false,
 }
 export default initialValue;
