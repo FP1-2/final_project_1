@@ -58,6 +58,12 @@ const postReducer = createSlice({
                 action.payload
             ];
         },
+        appendCommentStart: (state, action) => {
+            state.getCommentsPost.obj.content = [
+                action.payload,
+                ...state.getCommentsPost.obj.content,
+            ];
+        },
         toggleLikePost: (state, action) => {
             const userId = action.payload;
             const post = state.getPost.obj;
@@ -110,6 +116,7 @@ export const {
     clearStatePost,
     deleteLocalPost,
     appendPost,
+    appendCommentStart
 } = postReducer.actions;
 
 export default postReducer.reducer;

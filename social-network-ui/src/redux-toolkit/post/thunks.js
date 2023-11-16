@@ -53,7 +53,7 @@ export const editPost = createAsyncThunk(
 
 export const getCommentsPost = createAsyncThunk(
     'post/getCommentsPost',
-    async ({ page = 0, size = 10, id }, { dispatch,rejectWithValue }) => {
+    async ({ page = 0, size = 10, id}, { dispatch,rejectWithValue }) => {
         const params = new URLSearchParams({ page, size });
         try {
             const response = await workAx("get", `api/posts/${id}/comments?${params}`);

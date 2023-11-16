@@ -4,6 +4,7 @@ import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
 import { modalDeleteFriendState} from "../../redux-toolkit/friend/slice";
 import { deleteMyFriend } from "../../redux-toolkit/friend/thunks";
+import { deleteLocalFriend } from "../../redux-toolkit/friend/slice";
 
 const ModalDeleteFriend = () => {
 
@@ -18,6 +19,7 @@ const ModalDeleteFriend = () => {
 
   const deleteFriend=()=>{
     dispatch(deleteMyFriend({friendId:el.id}));
+    dispatch(deleteLocalFriend(el.id));
     dispatch(modalDeleteFriendState(false));
   };
 
