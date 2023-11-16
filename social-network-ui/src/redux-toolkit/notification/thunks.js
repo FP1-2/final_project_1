@@ -66,13 +66,7 @@ export const updateFriendRequest = createAsyncThunk(
                 userId,
                 status,
             });
-            if (response.status === 200) {
-                if (status) {
-                    return 'You have successfully accepted the request.';
-                } else {
-                    return 'You have deleted the friend request.';
-                }
-            }
+            return response.data;
         } catch (err) {
             return rejectWithValue(err.response.data);
         }
