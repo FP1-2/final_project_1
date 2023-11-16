@@ -157,7 +157,7 @@ const PostProfile = ({ el }) => {
     <div className={style.post}>
       <header className={style.postHeader}>
         <div className={style.postHeaderLinksWrapper}>
-          <NavLink to={`/profile/${el.author.userId}`} className={style.postAvatarLink}>
+          <NavLink to={`/post/${el.postId}`} className={style.postAvatarLink}>
             <img src={el.author.avatar
               ? el.author.avatar
               : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.postAvatar} />

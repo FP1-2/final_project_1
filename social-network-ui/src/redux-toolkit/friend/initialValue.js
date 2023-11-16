@@ -4,6 +4,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    getMyFriends:{
+        obj: [],
+        status: '',
+        error: '',
+    },
     deleteMyFriend:{
         obj: {},
         status: '',

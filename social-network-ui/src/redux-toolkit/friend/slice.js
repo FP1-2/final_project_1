@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import {getFriends,deleteMyFriend,requestToFriend,confirmFriendRequest,friend, requestsToMe, cancelRequest,allRequests} from "./thunks";
+import {getFriends,deleteMyFriend,requestToFriend,confirmFriendRequest,friend, requestsToMe, cancelRequest,allRequests,getMyFriends} from "./thunks";
 import builders from "../builders";
 
 const friendsReducer = createSlice({
@@ -10,9 +10,38 @@ const friendsReducer = createSlice({
         modalDeleteFriendState: (state, action) => {
             state.modalDeleteFriend = action.payload;
         },
+        clearFriends:(state) => {
+            state.getFriends = {
+                ...initialValue.getFriends,
+            };
+        },
+        cancelLocalRequest:(state, action) => {
+            state.allRequests.obj.send = state.allRequests.obj.send.filter(
+              user => user.id!== action.payload);
+        },
+        addLocalFriend:(state, action) => {
+            state.getFriends.obj = [
+                ...state.getFriends.obj,
+                action.payload
+            ];
+        },
+        deleteLocalReceived:(state, action) => {
+            state.allRequests.obj.received = state.allRequests.obj.received.filter(user => user.id!== action.payload);
+        },
+        deleteLocalFriend:(state, action) => {
+            state.getMyFriends.obj = state.getMyFriends.obj.filter(
+              user => user.id!== action.payload);
+        },
+        addLocalSendRequest:(state, action) => {
+            state.allRequests.obj.send = [
+                ...state.allRequests.obj.send,
+                action.payload
+            ];
+        },
     },
     extraReducers:(builder)=>{
         builders(builder, getFriends,'getFriends');
+        builders(builder, getMyFriends,'getMyFriends');
         builders(builder, deleteMyFriend,'deleteMyFriend');
         builders(builder, requestToFriend,'requestToFriend');
         builders(builder, confirmFriendRequest,'confirmFriendRequest');
@@ -23,6 +52,6 @@ const friendsReducer = createSlice({
     }
 });
 
-export const {modalDeleteFriendState, clearRequestToFriend} = friendsReducer.actions;
+export const {modalDeleteFriendState, clearRequestToFriend, clearFriends,cancelLocalRequest,addLocalFriend, deleteLocalFriend, addLocalSendRequest, deleteLocalReceived} = friendsReducer.actions;
 
 export default friendsReducer.reducer;

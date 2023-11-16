@@ -145,9 +145,9 @@
                 position: absolute;
             }
 
-            @include width_992 {
-                gap: 15px;
-            }
+            // @include width_992 {
+            //     gap: 15px;
+            // }
 
             @include width_880 {
                 flex-direction: column;

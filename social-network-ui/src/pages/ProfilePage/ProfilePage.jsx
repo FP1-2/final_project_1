@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
-import { modalDeleteFriendState } from "../../redux-toolkit/friend/slice";
+import { modalDeleteFriendState, clearFriends, cancelLocalRequest, addLocalFriend, addLocalSendRequest,deleteLocalReceived} from "../../redux-toolkit/friend/slice";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
@@ -15,9 +15,9 @@ import { getPhotoURL } from "../../utils/thunks";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
 import { useParams } from "react-router-dom";
-import { getFriends,cancelRequest, requestToFriend} from "../../redux-toolkit/friend/thunks";
+import { getFriends, cancelRequest, requestToFriend, getMyFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
-import { friend,allRequests, confirmFriendRequest } from "../../redux-toolkit/friend/thunks";
+import { friend, allRequests, confirmFriendRequest } from "../../redux-toolkit/friend/thunks";
 import ModalDeleteFriend from "../../components/ModalDeleteFriend/ModalDeleteFriend";
 import { createChat } from "../../redux-toolkit/messenger/asyncThunk";
 import { createHandleScroll } from "../../utils/utils";
@@ -28,6 +28,7 @@ const ProfilePage = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   let idNavigate = useParams().id;
+  idNavigate = parseInt(idNavigate);
   const {
     profileUser: {
       obj,
@@ -49,7 +50,8 @@ const ProfilePage = () => {
   const deleteStatus = useSelector(state => state.friends.deleteMyFriend);
   const profileName = useSelector(state => state.profile.profileUser.obj);
   const editUserStatus = useSelector(state => state.profile.editUser);
-  const friends = useSelector(state => state.friends.getFriends.obj);
+  const friends = useSelector(state => state.friends.getFriends);
+  const myFriends = useSelector(state => state.friends.getMyFriends);
   const myId = useSelector(state => state.auth.user.obj.id);
   const newChat = useSelector(state => state.messenger.newChat);
   const requests = useSelector(state => state.friends.allRequests.obj);
@@ -57,7 +59,7 @@ const ProfilePage = () => {
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
   const [sendRequest, setSendRequest] = useState("no request");
-  const [isMyFriend, setIsMyFriend] = useState(false);
+  const [isMyFriend, setIsMyFriend] = useState();
 
 
 
@@ -68,9 +70,12 @@ const ProfilePage = () => {
     }
   }, [newChat]);
 
+  useEffect(() => {
+    return (() => dispatch(clearFriends()));
+  }, []);
+
 
   useEffect(() => {
-    idNavigate = parseInt(idNavigate);
     for (const el of requests.send) {
       if (el.id === idNavigate) {
         setSendRequest("my request");
@@ -81,12 +86,7 @@ const ProfilePage = () => {
         setSendRequest("request to me");
       }
     }
-    for (const el of friends) {
-      if (el.id === myId) {
-        setIsMyFriend(true);
-      }
-    }
-  }, [requests,sendRequest]);
+  }, [requests, sendRequest, myFriends]);
 
 
 
@@ -105,8 +105,19 @@ const ProfilePage = () => {
       dispatch(removeUser());
     }
     getUser(myId);
+    dispatch(getMyFriends(myId));
     dispatch(postsUser({ id: idNavigate, page: 0 }));
   }, [idNavigate, deleteStatus, editUserStatus]);
+
+  useEffect(() => {
+    if (myFriends.status === "fulfilled" && myFriends.obj.length !== 0)
+      for (const el of myFriends.obj) {
+        if (el.id === idNavigate)
+          setIsMyFriend(true);
+      }
+    else if (myFriends.obj.length === 0)
+      setIsMyFriend(false);
+  }, [myFriends.status, myFriends.obj, idNavigate]);
 
   useEffect(() => {
     if (editUserStatus.status === "fulfilled") {
@@ -128,9 +139,10 @@ const ProfilePage = () => {
         user: "anotherUser",
         id: idNavigate
       };
+      dispatch(getFriends(idNavigate));
     }
-    dispatch(getFriends(idNavigate));
     dispatch(loadUserProfile(newObj));
+
   };
 
   const downloadInputHeaderPicture = async (e) => {
@@ -163,17 +175,26 @@ const ProfilePage = () => {
 
   const clickSendRequest = () => {
     dispatch(requestToFriend({ friendId: idNavigate }));
-    setSendRequest(true);
+    dispatch(addLocalSendRequest(obj));
+    setSendRequest("myRequest");
   };
 
   const addFriend = () => {
     dispatch(confirmFriendRequest({ userId: idNavigate, status: true }));
+    dispatch(addLocalFriend(obj));
+    dispatch(deleteLocalReceived(idNavigate));
     setIsMyFriend(true);
   };
   // const ignor = () => {
   //   dispatch(confirmFriendRequest({ userId: idNavigate, status: false }));
   //   setSendRequest("no request" );
   // };
+
+  const clickCancelRequest = () => {
+    dispatch(cancelRequest({ friendId: myId }));
+    dispatch(cancelLocalRequest(idNavigate));
+    setSendRequest("no request");
+  };
 
   const clickLinkPosts = () => {
     setLinkPosts("focus");
@@ -185,10 +206,6 @@ const ProfilePage = () => {
     setLinkFriends("focus");
   };
 
-  const clickCancelRequest = () => {
-    dispatch(cancelRequest({ friendId: idNavigate }));
-    setSendRequest("no request");
-  };
 
   const createNewChat = () => {
     dispatch(createChat({ username: profileName.username }));
@@ -252,7 +269,7 @@ const ProfilePage = () => {
                 </div>
                 <div className={style.infoNameWrapper}>
                   <h2 className={style.infoName}>{`${obj.name} ${obj.surname}`}</h2>
-                  <p className={style.infoFriends} href="">Friends: {friends.length}</p>
+                  <p className={style.infoFriends} href="">Friends: {myId === idNavigate ? myFriends.obj.length : friends.obj.length}</p>
                 </div>
                 {obj.user === "myUser" ? <button className={style.infoBtnEdit} onClick={modalEditProfileOpen}>
                   <Pencil className={style.infoBtnPencil} />
@@ -260,14 +277,14 @@ const ProfilePage = () => {
                 </button>
                   :
                   <div className={style.infoBtnsWrapper}>
-                    {isMyFriend && deleteStatus !== "fulfilled" ?
+                    {isMyFriend ?
                       <button className={style.infoBtnDeleteFriend} onClick={modalDeleteFriendOpen}>
                         <DeleteFriend className={style.infoBtnDeleteFriendImg} />
                         Delete
                       </button>
                       :
                       (sendRequest === "no request" ?
-                        <button className={style.infoBtnFriend} onClick={()=>clickSendRequest()}>
+                        <button className={style.infoBtnFriend} onClick={clickSendRequest}>
                           <AddFriend className={style.infoBtnFriendImg} />
                           Send request
                         </button>
@@ -277,14 +294,14 @@ const ProfilePage = () => {
                           //   <AddFriend className={style.infoBtnFriendImg} />
                           //   Ignore
                           // </button>
-                          <button className={style.infoBtnFriend} onClick={()=>addFriend()}>
+                          <button className={style.infoBtnFriend} onClick={addFriend}>
                             <AddFriend className={style.infoBtnFriendImg} />
                             Add to friends
                           </button>
                           // </div>
                           :
-                          <button className={style.infoBtnAddFriend} onClick={()=>clickCancelRequest()}>
-                            <AddFriend className={style.infoBtnAddFriendImg} />
+                          <button className={style.infoBtnFriend} onClick={clickCancelRequest}>
+                            <AddFriend className={style.infoBtnFriendImg} />
                             Cancel request
                           </button>)
                     }
