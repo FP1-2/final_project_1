@@ -16,7 +16,7 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { clearComments, modalEditPostState, setPost, modalAddRepostState, deleteLocalPost, toggleLikePost, appendCommentStart } from "../../redux-toolkit/post/slice";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState, deleteLocalPost, appendCommentStart } from "../../redux-toolkit/post/slice";
 import { getCommentsPost, addLike, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import { deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
@@ -41,10 +41,10 @@ const PostProfile = ({ el }) => {
     surname,
     username,
   } = useSelector(state => state.auth.user.obj);
-  const {
-    status: isLikeStatus,
-    obj: isLiked
-  } = useSelector(state => state.post.addLike);
+  // const {
+  //   status: isLikeStatus,
+  //   obj: isLiked
+  // } = useSelector(state => state.post.addLike);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
@@ -59,18 +59,9 @@ const PostProfile = ({ el }) => {
     }
   } = useSelector(state => state.post);
 
-
-
-  const isLikedByUser = Array.isArray(el.likes)
-    && el.likes.includes(userId);
-
-
-
   useEffect(() => {
-    if (isLikeStatus === "fulfilled"
-      && !(isLikedByUser === isLiked.added)) {
-      dispatch(toggleLikePost(userId));
-    }
+    const isLikedByUser = Array.isArray(el.likes)
+    && el.likes.includes(userId);
     setStateLikePost(isLikedByUser);
     if(el.likes){
       setCountLikePost(el.likes.length);
