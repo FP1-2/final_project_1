@@ -7,6 +7,7 @@ import com.facebook.model.friends.Friends;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.FriendsRepository;
 import com.facebook.exception.NotFoundException;
+import com.facebook.repository.notifications.NotificationRepository;
 import com.facebook.service.notifications.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,6 +31,9 @@ class FriendsServiceTest {
     @Mock
     private NotificationService notificationService;
 
+    @Mock
+    private NotificationRepository notificationRepository;
+
     private FriendsService friendsService;
 
     private static final Long USER_ID_1 = 123L;
@@ -46,7 +50,12 @@ class FriendsServiceTest {
 
         AppUserFacade userFacade = new AppUserFacade(modelMapper);
 
-        friendsService = new FriendsService(friendsRepository, appUserRepository, friendsFacade, notificationService, userFacade);
+        friendsService = new FriendsService(friendsRepository,
+                appUserRepository,
+                friendsFacade,
+                notificationService,
+                userFacade,
+                notificationRepository);
     }
 
     @Test
