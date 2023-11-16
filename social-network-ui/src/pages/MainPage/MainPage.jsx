@@ -1,11 +1,12 @@
 import styles from './MainPage.module.scss';
-import React, {useEffect, useRef} from 'react';
-import {useDispatch, useSelector} from "react-redux";
-import {createHandleScroll} from "../../utils/utils";
-import {loadPostsInMain} from "../../redux-toolkit/main/thunks";
-import {resetPostsInMainState} from "../../redux-toolkit/main/slice";
+import React, { useEffect, useRef } from 'react';
+import { useDispatch, useSelector } from "react-redux";
+import { createHandleScroll } from "../../utils/utils";
+import { loadPostsInMain } from "../../redux-toolkit/main/thunks";
+import { resetPostsInMainState } from "../../redux-toolkit/main/slice";
 import PostProfile from "../../components/PostProfile/PostProfile";
 import RepostProfile from "../../components/RepostProfile/RepostProfile";
+import ModalAddRepost from "../../components/ModalAddRepost/ModalAddRepost";
 
 export default function MainPage() {
   const scrollContainerRef = useRef(null);
@@ -35,21 +36,25 @@ export default function MainPage() {
   const handleScroll = createHandleScroll({
     scrollRef: scrollContainerRef,
     status: status,
-    fetchMore:  getMorePosts,
+    fetchMore: getMorePosts,
   });
-  
+
   return (
-    <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
-      <ul className={styles.container_cards_bloc}>
-        {content.map((post) => (
-          <li key={post.postId}>
-            {post.type === "REPOST" ?
-              <RepostProfile  el={post} /> : 
-              <PostProfile el={post} />}
-          </li>
-        ))}
-      </ul>
-      {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
-    </div>
+    <>
+      <ModalAddRepost />
+      <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
+        <ul className={styles.container_cards_bloc}>
+          {content.map((post) => (
+            <li key={post.postId}>
+              {post.type === "REPOST" ?
+                <RepostProfile el={post} /> :
+                <PostProfile el={post} />}
+            </li>
+          ))}
+        </ul>
+        {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
+      </div>
+    </>
+
   );
 }

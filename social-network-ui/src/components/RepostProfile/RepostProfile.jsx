@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost, modalAddRepostState, modalEditPostState, toggleLikePost, appendCommentStart,deleteLocalPost} from "../../redux-toolkit/post/slice";
+import { clearComments, setPost, modalAddRepostState, modalEditPostState, appendCommentStart,deleteLocalPost} from "../../redux-toolkit/post/slice";
 import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
@@ -40,10 +40,6 @@ const RepostProfile = ({ el }) => {
     surname,
     username
   } = useSelector(state => state.auth.user.obj);
-  const {
-    status: isLikeStatus,
-    obj: isLiked
-  } = useSelector(state => state.post.addLike);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
@@ -59,15 +55,9 @@ const RepostProfile = ({ el }) => {
   } = useSelector(state => state.post);
 
 
-
-  const isLikedByUser = Array.isArray(el.likes)
-    && el.likes.includes(userId);
-
   useEffect(() => {
-    if (isLikeStatus === "fulfilled"
-      && !(isLikedByUser === isLiked.added)) {
-      dispatch(toggleLikePost(userId));
-    }
+    const isLikedByUser = Array.isArray(el.likes)
+    && el.likes.includes(userId);
     setStateLikePost(isLikedByUser);
     if (el.likes) {
       setCountLikePost(el.likes.length);
@@ -153,7 +143,7 @@ const RepostProfile = ({ el }) => {
     <div className={style.post}>
       <header className={style.postHeader}>
         <div className={style.postHeaderLinksWrapper}>
-          <NavLink to={`/profile/${el.author.userId}`} className={style.postAvatarLink}>
+          <NavLink to={`/post/${el.postId}`} className={style.postAvatarLink}>
             <img src={el.author.avatar
               ? el.author.avatar
               : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.postAvatar} />
