@@ -83,7 +83,7 @@ export default function Notification({ notification }) {
       }
       friendStatusRef.current = friendStatus;
     }
-  }, [handleAcceptRequest, handleRejectRequest]);
+  }, [potentialFriendId]);
   
   return (
     <div className={`${styles.card} 
