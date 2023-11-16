@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost, modalAddRepostState, modalEditPostState, toggleLikePost, appendCommentStart } from "../../redux-toolkit/post/slice";
+import { clearComments, setPost, modalAddRepostState, modalEditPostState, toggleLikePost, appendCommentStart,deleteLocalPost} from "../../redux-toolkit/post/slice";
 import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
@@ -135,6 +135,7 @@ const RepostProfile = ({ el }) => {
 
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
+    dispatch(deleteLocalPost(el.postId));
   };
 
   const savePostThunk = async () => {

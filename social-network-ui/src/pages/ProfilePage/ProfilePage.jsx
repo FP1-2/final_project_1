@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
-import { modalDeleteFriendState, clearFriends, cancelLocalRequest, addLocalFriend, addLocalSendRequest,deleteLocalReceived} from "../../redux-toolkit/friend/slice";
+import { modalDeleteFriendState, clearFriends, clearMyFriends, cancelLocalRequest, addLocalFriend, addLocalSendRequest, deleteLocalReceived } from "../../redux-toolkit/friend/slice";
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
@@ -29,6 +29,14 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   let idNavigate = useParams().id;
   idNavigate = parseInt(idNavigate);
+  const location = useLocation();
+  const indexSlash = location.pathname.lastIndexOf('/');
+  const word = location.pathname.slice(indexSlash + 1);
+
+  const inputHeaderPicture = useRef();
+  const inputAvatarPicture = useRef();
+  const scrollContainerRef = useRef(null);
+
   const {
     profileUser: {
       obj,
@@ -71,7 +79,10 @@ const ProfilePage = () => {
   }, [newChat]);
 
   useEffect(() => {
-    return (() => dispatch(clearFriends()));
+    return (() => {
+      dispatch(clearFriends());
+      dispatch(clearMyFriends());
+    });
   }, []);
 
 
@@ -89,17 +100,6 @@ const ProfilePage = () => {
   }, [requests, sendRequest, myFriends]);
 
 
-
-  const location = useLocation();
-  const indexSlash = location.pathname.lastIndexOf('/');
-  const word = location.pathname.slice(indexSlash + 1);
-
-
-
-  const inputHeaderPicture = useRef();
-  const inputAvatarPicture = useRef();
-  const scrollContainerRef = useRef(null);
-
   useEffect(() => {
     if (Object.keys(obj)) {
       dispatch(removeUser());
@@ -114,6 +114,8 @@ const ProfilePage = () => {
       for (const el of myFriends.obj) {
         if (el.id === idNavigate)
           setIsMyFriend(true);
+        else
+          setIsMyFriend(false);
       }
     else if (myFriends.obj.length === 0)
       setIsMyFriend(false);
@@ -185,13 +187,14 @@ const ProfilePage = () => {
     dispatch(deleteLocalReceived(idNavigate));
     setIsMyFriend(true);
   };
-  // const ignor = () => {
-  //   dispatch(confirmFriendRequest({ userId: idNavigate, status: false }));
-  //   setSendRequest("no request" );
-  // };
+  const ignor = () => {
+    dispatch(confirmFriendRequest({ userId: idNavigate, status: false }));
+    dispatch(deleteLocalReceived(idNavigate));
+    setSendRequest("no request");
+  };
 
   const clickCancelRequest = () => {
-    dispatch(cancelRequest({ friendId: myId }));
+    dispatch(cancelRequest({ friendId: idNavigate }));
     dispatch(cancelLocalRequest(idNavigate));
     setSendRequest("no request");
   };
@@ -289,16 +292,16 @@ const ProfilePage = () => {
                           Send request
                         </button>
                         : sendRequest === "request to me" ?
-                          // <div className={style.infoBtnsFriendWrapper}>
-                          // <button className={style.infoBtnFriend} onClick={ignor}>
-                          //   <AddFriend className={style.infoBtnFriendImg} />
-                          //   Ignore
-                          // </button>
-                          <button className={style.infoBtnFriend} onClick={addFriend}>
-                            <AddFriend className={style.infoBtnFriendImg} />
-                            Add to friends
-                          </button>
-                          // </div>
+                          <div className={style.infoBtnsFriendWrapper}>
+                            <button className={style.infoBtnFriend} onClick={ignor}>
+                              <AddFriend className={style.infoBtnFriendImg} />
+                              Ignore
+                            </button>
+                            <button className={style.infoBtnFriend} onClick={addFriend}>
+                              <AddFriend className={style.infoBtnFriendImg} />
+                              Add to friends
+                            </button>
+                          </div>
                           :
                           <button className={style.infoBtnFriend} onClick={clickCancelRequest}>
                             <AddFriend className={style.infoBtnFriendImg} />

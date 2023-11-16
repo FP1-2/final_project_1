@@ -15,6 +15,11 @@ const friendsReducer = createSlice({
                 ...initialValue.getFriends,
             };
         },
+        clearMyFriends:(state) => {
+            state.getMyFriends = {
+                ...initialValue.getMyFriends,
+            };
+        },
         cancelLocalRequest:(state, action) => {
             state.allRequests.obj.send = state.allRequests.obj.send.filter(
               user => user.id!== action.payload);
@@ -52,6 +57,6 @@ const friendsReducer = createSlice({
     }
 });
 
-export const {modalDeleteFriendState, clearRequestToFriend, clearFriends,cancelLocalRequest,addLocalFriend, deleteLocalFriend, addLocalSendRequest, deleteLocalReceived} = friendsReducer.actions;
+export const {modalDeleteFriendState, clearRequestToFriend, clearMyFriends, clearFriends,cancelLocalRequest,addLocalFriend, deleteLocalFriend, addLocalSendRequest, deleteLocalReceived} = friendsReducer.actions;
 
 export default friendsReducer.reducer;
