@@ -35,7 +35,6 @@ const rootReducer = (state, action) => {
     }
     return combineReducers({
         registration: registrationReducer,
-        login: loginReducer,
         resetPassword: resetPasswordSlice,
         passwordUpdate: passwordUpdateReducer,
         auth: loginReducer,

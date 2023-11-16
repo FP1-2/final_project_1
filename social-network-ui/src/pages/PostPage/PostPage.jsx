@@ -128,16 +128,15 @@ export default function PostPage(){
     //obj: reposted
   } = useSelector(state => state.post.addRepost);
 
-  useEffect(() => {
-    if (repostedStatus === 'fulfilled') dispatch(showMessage('Reposted fulfilled'));
-    if(repostedStatus === 'rejected') dispatch(showMessage('Repost logic is not implemented'));
-  }, [repostedStatus]);
+  const prevStatusRef = useRef(repostedStatus);
 
   useEffect(() => {
-    if (repostedStatus === "fulfilled") {
-      dispatch(toggleLikePost(userId));
+    if (prevStatusRef.current !== status){
+      if (repostedStatus === 'fulfilled') dispatch(showMessage('Reposted fulfilled'));
+      if(repostedStatus === 'rejected') dispatch(showMessage('Repost logic is not implemented'));
+      prevStatusRef.current = status;
     }
-  }, [isLikeStatus]);
+  }, [repostedStatus]);
   /******************************** Repost logic is not implemented **************************************/
 
   /**
@@ -145,6 +144,12 @@ export default function PostPage(){
    * ініціалізуємо дефолтним об'єктом стану, завантажуємо пост
    * із сервера та перші 10 об'єктів коментарів
    */
+  useEffect(() => {
+    if (repostedStatus === "fulfilled") {
+      dispatch(toggleLikePost(userId));
+    }
+  }, [isLikeStatus]);
+
   useEffect(() => {
     dispatch(clearStatePost());
     dispatch(getPost({ id }));

@@ -37,6 +37,11 @@ const notificationReducer = createSlice({
                 ...defaultInitialState.update_status_friend
             }
         },
+        deleteFriendRequestNotification: (state, action) => {
+            state.notifications.obj.content = state.notifications.obj.content.filter(
+                notification => notification.id !== action.payload
+            );
+        }
     },
     extraReducers: (builder) => {
         buildersPagination(builder, loadNotifications, 'notifications');
@@ -53,6 +58,7 @@ export const {
     markNotificationAsRead,
     resetMarkAsRead,
     resetFriendRequest,
+    deleteFriendRequestNotification,
 } = notificationReducer.actions;
 
 export default notificationReducer.reducer;
