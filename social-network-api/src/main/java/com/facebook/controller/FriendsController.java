@@ -4,6 +4,7 @@ import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.friends.FriendsRequest;
 import com.facebook.dto.friends.FriendsResponse;
 import com.facebook.dto.friends.FriendsStatusRequest;
+import com.facebook.dto.friends.FriendsStatusResponse;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.FriendsService;
 import jakarta.validation.Valid;
@@ -36,14 +37,15 @@ public class FriendsController {
     }
 
     @PutMapping("/update-status")
-    public ResponseEntity<FriendsResponse> friendsStatus(@Valid @RequestBody FriendsStatusRequest request) {
+    public ResponseEntity<FriendsStatusResponse> friendsStatus(@Valid @RequestBody FriendsStatusRequest request) {
         Long friendId = currentUserService.getCurrentUserId();
         friendsService.changeFriendsStatus(
                 request.getUserId(),
                 friendId,
                 request.getStatus()
         );
-        return ResponseEntity.ok().build();
+
+        return ResponseEntity.ok(FriendsStatusResponse.of(request.getUserId(), request.getStatus()));
     }
 
     @DeleteMapping("/delete")
