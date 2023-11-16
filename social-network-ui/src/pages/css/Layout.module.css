@@ -1,0 +1,50 @@
+.container {
+  width: 100dvw;
+  height: 100dvh;
+  background-color: #FFFFFF;
+  display: grid;
+  grid-template-areas: "header" "main" "nav";
+  grid-template-rows: auto 1fr auto;
+  grid-template-columns: 1fr;
+}
+
+.containerFullWidth {
+  display: grid;
+  width: 100dvw;
+  height: 100dvh;
+  grid-template-areas: "header" "main";
+  grid-template-rows: auto 1fr;
+  grid-template-columns: 1fr;
+}
+
+.main {
+  grid-area: main;
+  background-color: #F0F2F5;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  overflow: auto;
+}
+
+.headerMain {
+  background-color: #F0F2F5;
+  overflow: hidden;
+}
+
+@media (min-width: 1025px) {
+  .container {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    height: 100vh;
+    grid-template-areas: "header header" "nav main";
+    grid-template-rows: auto 1fr;
+    grid-template-columns: 20% 80%;
+  }
+  .main {
+    height: 100%;
+  }
+}/*# sourceMappingURL=Layout.module.css.map */

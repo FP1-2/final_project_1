@@ -13,9 +13,9 @@ const FriendCardProfile = ({ el }) => {
   const dispatch = useDispatch();
   const userObject = useSelector(state => state.profile.profileUser.obj);
 
-  const modalDeleteFriendOpen = () => {
-    dispatch(friend(el.id));
-    dispatch(modalDeleteFriendState(true));
+  const modalDeleteFriendOpen = async () => {
+    await dispatch(friend(el.id));
+    await dispatch(modalDeleteFriendState(true));
   };
 
   return (

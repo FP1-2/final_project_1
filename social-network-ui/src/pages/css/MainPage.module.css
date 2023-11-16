@@ -1,0 +1,36 @@
+.container {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 1rem;
+  height: 100%;
+  overflow: auto;
+}
+.container_allCard {
+  padding: 2rem;
+}
+.container_cards_bloc {
+  width: 50%;
+}
+@media (max-width: 576px) {
+  .container_cards_bloc {
+    width: 100%;
+  }
+}
+@media (max-width: 768px) {
+  .container_cards_bloc {
+    width: 90%;
+  }
+}
+@media (max-width: 880px) {
+  .container_cards_bloc {
+    width: 80%;
+  }
+}/*# sourceMappingURL=MainPage.module.css.map */

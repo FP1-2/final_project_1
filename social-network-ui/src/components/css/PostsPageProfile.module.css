@@ -1,0 +1,195 @@
+.profileBodyWrapper {
+  background-color: #F0F2F5;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  width: 100%;
+}
+.profileBodyWrapper .profileBody {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 16px;
+  width: 100%;
+}
+@media (max-width: 880px) {
+  .profileBodyWrapper .profileBody {
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+  }
+}
+.profileBodyWrapper .profileBody .profileInformation {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding-left: 16px;
+  padding-right: 16px;
+  gap: 8px;
+  max-height: 160px;
+  min-height: 160px;
+  background-color: white;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  max-width: 360px;
+}
+@media (max-width: 880px) {
+  .profileBodyWrapper .profileBody .profileInformation {
+    max-width: none;
+  }
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationTitile {
+  font-weight: 700;
+  font-size: 20px;
+  color: #050505;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationList {
+  padding: 0;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationList .profileInformationElem {
+  list-style: none;
+  margin-bottom: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  gap: 5px;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationList .profileInformationElem:last-child {
+  margin-bottom: 0;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationList .profileInformationElem .profileInformationElemImg {
+  width: 20px;
+  height: 20px;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationBtn {
+  width: 100%;
+  text-align: center;
+  padding: 8px 0;
+  font-size: 15px;
+  line-height: 1.3333;
+  font-weight: 600;
+  color: #050505;
+  background-color: #E4E6EB;
+  border: none;
+  border-radius: 5px;
+}
+.profileBodyWrapper .profileBody .profileInformation .profileInformationBtn:hover {
+  cursor: pointer;
+  background-color: #d5d8de;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper {
+  width: 500px;
+  position: relative;
+  z-index: 0;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .container_allCard {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 2rem;
+  height: 100%;
+  overflow: auto;
+}
+@media (max-width: 992px) {
+  .profileBodyWrapper .profileBody .profileBodyPostsWrapper {
+    width: 450px;
+  }
+}
+@media (max-width: 880px) {
+  .profileBodyWrapper .profileBody .profileBodyPostsWrapper {
+    width: 100%;
+  }
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profileAddPost {
+  padding: 12px 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  background-color: white;
+  width: 100%;
+  height: 64px;
+  border-radius: 5px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  margin-bottom: 12px;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profileAddPost .profileAddPostImg {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profileAddPost .profileAddPostBtn {
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  border-radius: 20px;
+  font-size: 17px;
+  line-height: 1.3333;
+  color: #65676B;
+  background-color: #E4E6EB;
+  text-align: left;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profileAddPost .profileAddPostBtn:hover {
+  cursor: pointer;
+  background-color: #d5d8de;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profilePosts {
+  padding: 0;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  overflow: auto;
+  height: 100%;
+}
+.profileBodyWrapper .profileBody .profileBodyPostsWrapper .profilePosts .profilePost {
+  list-style: none;
+  margin-bottom: 16px;
+}/*# sourceMappingURL=PostsPageProfile.module.css.map */

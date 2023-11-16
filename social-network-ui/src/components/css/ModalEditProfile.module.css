@@ -1,0 +1,326 @@
+.modalWrapper {
+  z-index: 3;
+  position: fixed;
+  width: 100%;
+  min-height: 100vh;
+  background-color: rgba(255, 255, 255, 0.4);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 15px;
+  top: 0;
+}
+.modalWrapper .modal {
+  width: 730px;
+  overflow-y: scroll;
+  max-height: 595px;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+          box-shadow: 0 12px 28px 0 rgba(0, 0, 0, 0.2), 0 2px 4px 0 rgba(0, 0, 0, 0.1), inset 0 0 0 1px rgba(255, 255, 255, 0.5);
+  background-color: white;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.modalWrapper .modal .errorNames {
+  font-size: 10px;
+  color: red;
+  margin: 0;
+  bottom: -15px;
+  left: 0;
+  display: block;
+  position: absolute;
+}
+.modalWrapper .modal .errorDisplayNone {
+  display: none;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  position: relative;
+  height: 60px;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper .modalHeaderTitle {
+  color: #050505;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper .modalHeaderCloseBtn {
+  width: 36px;
+  height: 36px;
+  background-color: #E4E6EB;
+  border: none;
+  border-radius: 50%;
+  position: absolute;
+  right: 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper .modalHeaderCloseBtn .modalHeaderCloseBtnImg {
+  width: 20px;
+  height: 20px;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper .modalHeaderCloseBtn:hover {
+  cursor: pointer;
+  background-color: #d5d8de;
+}
+.modalWrapper .modal .modalHeader .modalHeaderTitleWrapper::after {
+  content: "";
+  width: 100%;
+  border-bottom: 1px solid #ced0d4;
+  position: absolute;
+  top: 60px;
+}
+.modalWrapper .modal .modalHeader .modalHeaderInfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 16px;
+  gap: 10px;
+}
+.modalWrapper .modal .modalHeader .modalHeaderInfo .modalHeaderInfoImg {
+  width: 40px;
+  height: 40px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+}
+.modalWrapper .modal .modalHeader .modalHeaderInfo .modalHeaderInfoLink {
+  text-decoration: none;
+  color: #050505;
+  line-height: 1.3333;
+  font-size: 15px;
+  font-weight: 600;
+}
+.modalWrapper .modal .modalHeader .modalHeaderInfo .modalHeaderInfoLink:hover {
+  text-decoration: underline;
+}
+.modalWrapper .modal .modalMain {
+  padding: 20px 16px;
+}
+.modalWrapper .modal .modalMain .modalMainAvatar {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.modalWrapper .modal .modalMain .modalMainAvatar .modalMainAvatarWrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+.modalWrapper .modal .modalMain .modalMainAvatar .modalMainAvatarWrapper .modalMainAvatarTitle {
+  color: #050505;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.modalWrapper .modal .modalMain .modalMainAvatar .modalMainAvatarWrapper .modalMainAvatarBtn {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  min-width: 115px;
+  color: #0064D1;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.1765;
+  background-color: transparent;
+}
+.modalWrapper .modal .modalMain .modalMainAvatar .modalMainAvatarWrapper .modalMainAvatarBtn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.modalWrapper .modal .modalMain .modalMainAvatar .modalMainAvatarImg {
+  width: 168px;
+  min-height: 168px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 50%;
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoWrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoWrapper .modalMainHeaderPhotoTitle {
+  color: #050505;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoWrapper .modalMainHeaderPhotoBtn {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  min-width: 115px;
+  color: #0064D1;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.1765;
+  background-color: transparent;
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoWrapper .modalMainHeaderPhotoBtn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoImg {
+  width: 500px;
+  max-height: 185px;
+  -o-object-fit: cover;
+     object-fit: cover;
+  border-radius: 8px;
+}
+@media (max-width: 576px) {
+  .modalWrapper .modal .modalMain .modalMainHeaderPhoto .modalMainHeaderPhotoImg {
+    width: 100%;
+  }
+}
+.modalWrapper .modal .modalMain .modalMainInfoList {
+  width: 674px;
+  padding: 16px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 12px;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  margin-top: 20px;
+}
+@media (max-width: 768px) {
+  .modalWrapper .modal .modalMain .modalMainInfoList {
+    width: 100%;
+  }
+}
+.modalWrapper .modal .modalMain .modalMainInfoList .modalMainInfoElem .modalMainInfoElemText {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+}
+.modalWrapper .modal .modalMain .modalMainInfoList .modalMainInfoElem .modalMainInfoElemText .modalMainInfoElemTitle {
+  color: #050505;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
+.modalWrapper .modal .modalMain .modalMainInfoList .modalMainInfoElem .modalMainInfoElemText .modalMainInfoElemBtn {
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  min-width: 115px;
+  color: #0064D1;
+  font-weight: 400;
+  font-size: 17px;
+  line-height: 1.1765;
+  background-color: transparent;
+}
+.modalWrapper .modal .modalMain .modalMainInfoList .modalMainInfoElem .modalMainInfoElemText .modalMainInfoElemBtn:hover {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+.modalWrapper .modal .modalMain .modalMainSaveProfileBtn {
+  margin-top: 20px;
+  border: none;
+  border-radius: 5px;
+  line-height: 1.3333;
+  color: white;
+  font-weight: 600;
+  font-size: 17px;
+  background-color: #0866FF;
+  min-height: 36px;
+  width: 100%;
+}
+.modalWrapper .modal .modalMain .modalMainSaveProfileBtn:hover {
+  cursor: pointer;
+}
+.modalWrapper .modal .modalMain .modalMainSaveProfileBtn:disabled {
+  background-color: #ccd0d5;
+}
+.modalWrapper .modal .modalMain .displayNone {
+  display: none;
+}
+
+.displayNone {
+  display: none;
+}/*# sourceMappingURL=ModalEditProfile.module.css.map */

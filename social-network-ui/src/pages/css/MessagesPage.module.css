@@ -1,0 +1,74 @@
+.messengerPage {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: horizontal;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: row;
+          flex-direction: row;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  color: #050505;
+  height: 100%;
+  background-color: #FFFFFF;
+}
+
+.chatFieldSection {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  width: 100%;
+  height: 100%;
+}
+.chatFieldSection__empty {
+  display: none;
+}
+
+@media (max-width: 767px) {
+  .hide {
+    display: none;
+  }
+}
+@media (min-width: 768px) {
+  .chatFieldSection {
+    width: 70%;
+  }
+  .chatFieldSection__empty {
+    width: 100%;
+    height: 100%;
+    display: -webkit-box;
+    display: -ms-flexbox;
+    display: flex;
+    -webkit-box-orient: vertical;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+            flex-direction: column;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: center;
+        -ms-flex-pack: center;
+            justify-content: center;
+    background: #F0F2F5;
+  }
+  .chatFieldSection__empty h1 {
+    color: #65676B;
+    font-weight: bold;
+    margin: 24px;
+    font-size: 24px;
+    text-align: center;
+  }
+}
+@media (min-width: 1025px) {
+  .chatFieldSection {
+    width: 74%;
+  }
+}/*# sourceMappingURL=MessagesPage.module.css.map */

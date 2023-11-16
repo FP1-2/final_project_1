@@ -1,0 +1,90 @@
+.profileBodyWrapper {
+  background-color: #F0F2F5;
+  height: auto;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+}
+@media (max-width: 992px) {
+  .profileBodyWrapper {
+    padding: 15px;
+  }
+}
+.profileBodyWrapper .profileBody {
+  width: 895px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+}
+@media (max-width: 992px) {
+  .profileBodyWrapper .profileBody {
+    width: 100%;
+  }
+}
+.profileBodyWrapper .profileBody .profileLikedWrapper {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  width: 865px;
+  background-color: white;
+  border-radius: 5px;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  padding: 20px 15px 15px;
+}
+@media (max-width: 992px) {
+  .profileBodyWrapper .profileBody .profileLikedWrapper {
+    width: 96%;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+@media (max-width: 576px) {
+  .profileBodyWrapper .profileBody .profileLikedWrapper {
+    padding-left: 15px;
+  }
+}
+.profileBodyWrapper .profileBody .profileLikedWrapper .profileLikedHeader {
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 1.2;
+  color: #050505;
+  text-decoration: none;
+  margin-top: 0;
+  margin-bottom: 12px;
+}
+.profileBodyWrapper .profileBody .profileLikedWrapper .profileLikes {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+@media (max-width: 992px) {
+  .profileBodyWrapper .profileBody .profileLikedWrapper .profileLikes {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+@media (max-width: 576px) {
+  .profileBodyWrapper .profileBody .profileLikedWrapper .profileLikes {
+    grid-template-columns: 1fr;
+  }
+}/*# sourceMappingURL=LikedPageProfile.module.css.map */
