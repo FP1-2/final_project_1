@@ -189,7 +189,9 @@ const RepostProfile = ({ el }) => {
       </div>
       <p className={style.repostText}>{el.originalPost.body}</p>
       {el.imageUrl ?
-        <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        <NavLink to={`/post/${el.postId}`}>
+          <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        </NavLink>
         : null}
       <div className={style.postFooterWrapper}>
         <div className={style.postFooterInfo}>

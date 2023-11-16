@@ -181,7 +181,11 @@ const PostProfile = ({ el }) => {
           : null}
       </header>
       <p className={style.postText}>{el.body}</p>
-      {el.imageUrl ? <img src={el.imageUrl} alt="Photo of post" className={style.postImg} /> : null}
+      {el.imageUrl ?
+        <NavLink to={`/post/${el.postId}`}>
+          <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        </NavLink>  
+        : null}
       <div className={style.postFooterWrapper}>
         <div className={style.postFooterInfo}>
           <div className={style.postFooterLikes}>
