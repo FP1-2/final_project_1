@@ -41,7 +41,7 @@ function AppRoutes({ isAuth }) {
           <Route path={'*'} element={<PageNotFound />} />
         </Route>
         <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<HeaderLayout />} />}>
-          <Route path="/post" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
+          <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
         </Route>
         <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
         <Route path="/friends" element={<FriendsPage/>}/>

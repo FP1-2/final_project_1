@@ -37,17 +37,23 @@ export default function Chat() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [imgSrc, setImgSrc] = useState(null);
   const [isNewChat, setIsNewChat] = useState(false);
-  const PAGE_SIZE = 10;
+  const PAGE_SIZE = 30;
   
   /* Load Chat*/
   useEffect(() => {    
     if (chatId !== 'new' && chatId) {
-      dispatch(loadChat({id: chatId}));
-      dispatch(loadMessages({id: chatId, page: 0, size: PAGE_SIZE}));
       setIsNewChat(true);
       setPageNumber(0);
+      setMessagesList([]);
+      dispatch(loadChat({id: chatId}));
+      dispatch(loadMessages({id: chatId, page: 0, size: PAGE_SIZE}));
     }
   }, [chatId]);
+  useEffect(()=>{
+    return () =>{
+      dispatch(resetChatAndMessages());
+    };
+  }, []);
   useEffect(() => {
     if (!isNewChat) {
       const uniqueNewMessages = messages.obj.filter(message => {
@@ -143,6 +149,7 @@ export default function Chat() {
     dispatch(createChat({username}));
     setUserSearch('');
     setHasMore(false);
+    setMessagesList([]);
     setPageNumber(0);
     dispatch(resetSearchUsers());
   };

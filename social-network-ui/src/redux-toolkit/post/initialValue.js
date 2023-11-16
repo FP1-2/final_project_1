@@ -1,4 +1,28 @@
 const initialValue = {
+    getPost:{
+        obj:{
+            imageUrl: '',
+            author: {
+                avatar: '',
+                name: '',
+                surname: ''
+            },
+            body: '',
+            type: '',
+            originalPost: {
+                author: {
+                    avatar: '',
+                    name: '',
+                    surname: ''
+                },
+                body: ''
+            },
+            likes: [],
+            comments: []
+        },
+        status: '',
+        error: '',
+    },
     editPost:{
         obj: {},
         status: '',
@@ -9,8 +33,14 @@ const initialValue = {
         status: '',
         error: '',
     },
-    getCommentsPost:{
-        obj: {},
+    getCommentsPost: {
+        obj: {
+            content: [],
+            totalPages: 0,
+            pageable: {
+                pageNumber: 0,
+            },
+        },
         status: '',
         error: '',
     },
@@ -42,7 +72,7 @@ const initialValue = {
     },
     postsUser:{
         obj: {
-            content:[],
+            content: [],
             totalPages:0,
             pageable: {
               pageNumber:0,

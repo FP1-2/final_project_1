@@ -192,8 +192,8 @@ public class PostService {
      * у формі {@link PostResponse}.
      * @throws NotFoundException якщо пост з вказаним ID не знайдено.
      */
-    public PostResponse findPostDetailsById(Long postId) {
-        return postRepository.findPostDetailsById(postId)
+    public PostResponse findPostDetailsById(Long userId, Long postId) {
+        return postRepository.findPostDetailsById(userId, postId)
                 .filter(map -> map.get("post_id") != null)
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException(POST_NOT_FOUND));
@@ -228,7 +228,9 @@ public class PostService {
                     like.setPost(post);
                     likeRepository.save(like);
 
-                    if(!Objects.equals(user.getId(), post.getUser().getId())) notificationService.createLikeNotification(user, post);
+                    if(!Objects.equals(user.getId(), post.getUser().getId())) {
+                        notificationService.createLikeNotification(user, post);
+                    }
 
                     return new ActionResponse(true, "Like added");
                 }));
@@ -255,7 +257,9 @@ public class PostService {
             comment.setContent(request.getContent());
             Comment savedComment = commentRepository.save(comment);
 
-            if(!Objects.equals(user.getId(), post.getUser().getId())) notificationService.createCommentNotification(user, post);
+            if(!Objects.equals(user.getId(), post.getUser().getId())) {
+                notificationService.createCommentNotification(user, post);
+            }
 
             return postFacade.convertToCommentResponse(savedComment);
         });
@@ -345,7 +349,7 @@ public class PostService {
 
         notificationService.createFriendPostNotification(user, savedPost);
 
-        return postRepository.findPostDetailsById(savedPost.getId())
+        return postRepository.findPostDetailsById(userId, savedPost.getId())
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException("Post details not found after creation!"));
     }
@@ -383,7 +387,7 @@ public class PostService {
 
         Post savedPost = postRepository.save(existingPost);
 
-        return postRepository.findPostDetailsById(savedPost.getId())
+        return postRepository.findPostDetailsById(userId, savedPost.getId())
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException("Post details not found after update!"));
     }
@@ -396,11 +400,11 @@ public class PostService {
      * @param sort Строка сортування.
      * @return Сторінка з постами.
      */
-    public Page<PostResponse> findAllPosts(int page, int size, String sort) {
+    public Page<PostResponse> findAllPosts(Long userId, int page, int size, String sort) {
         Sort sorting = getSorting(sort);
         Pageable pageable = PageRequest.of(page, size, sorting);
 
-        List<Map<String, Object>> results = postRepository.findAllPostDetails(pageable);
+        List<Map<String, Object>> results = postRepository.findAllPostDetails(userId, pageable);
 
         List<PostResponse> postResponses = results
                 .stream().map(postFacade::convertToPostResponse).toList();

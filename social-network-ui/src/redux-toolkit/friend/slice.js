@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
-import {getFriends,deleteMyFriend,requestToFriend,confirmFriendRequest,friend, requestsToMe} from "./thunks";
+import {getFriends,deleteMyFriend,requestToFriend,confirmFriendRequest,friend, requestsToMe, cancelRequest} from "./thunks";
 import builders from "../builders";
 
 const friendsReducer = createSlice({
@@ -21,6 +21,7 @@ const friendsReducer = createSlice({
         builders(builder, confirmFriendRequest,'confirmFriendRequest');
         builders(builder, friend, "friend");
         builders(builder, requestsToMe, "requestsToMe");
+        builders(builder, cancelRequest, "cancelRequest");
     }
 });
 

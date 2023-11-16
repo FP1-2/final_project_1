@@ -45,6 +45,8 @@ public class PostResponse {
 
     private PostType type;
 
+    private Boolean isFavorite;
+
     private PostResponse originalPost;
 
     private List<Long> comments;
