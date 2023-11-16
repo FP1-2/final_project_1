@@ -1,10 +1,16 @@
-import React from "react";
+import React, { useEffect, useDispatch } from "react";
 import style from "./FriendPageProfile.module.scss";
 import FriendCardProfile from "../FriendCardProfile/FriendCardProfile";
 import { useSelector} from "react-redux";
 import ErrorPage from "../ErrorPage/ErrorPage";
 
+
 const FriendProfile = () => {
+  const dispatch=useDispatch();
+  const myId = useSelector(state => state.auth.user.obj.id);
+  useEffect(
+    dispatch({myId})
+    ,[]);
   const {
     getFriends: {
       obj,
@@ -12,7 +18,6 @@ const FriendProfile = () => {
       error
     }
   } = useSelector(state => state.friends);
-
   return (<>
     {status === "rejected" ?
       <ErrorPage message={error.message ? error.message : "Oops something went wrong!"} />
@@ -25,7 +30,8 @@ const FriendProfile = () => {
             </div>
             {obj.length ?
               <ul className={style.profileFriends}>
-                {obj.map((el) => <li key={el.id}><FriendCardProfile el={el} /></li>)}
+                {obj.map((el) => 
+                  <li key={el.id}><FriendCardProfile el={el} /></li>)}
               </ul>
               : null}
           </div>
