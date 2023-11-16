@@ -5,7 +5,6 @@ import { useSelector} from "react-redux";
 import ErrorPage from "../ErrorPage/ErrorPage";
 
 const FriendProfile = () => {
-
   const {
     getFriends: {
       obj,
