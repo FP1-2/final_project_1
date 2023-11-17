@@ -77,7 +77,7 @@
   display: none;
 }
 
-@media (min-width: 1020px) {
+@media (min-width: 1025px) {
   .nav {
     @include flex-center;
     position: relative;
@@ -86,8 +86,7 @@
     font-weight: 400;
     padding: 30px 10px 30px 40px;
     line-height: 1.6;
-    height: calc(100% - 66px);
-  height: 100%;
+    height: 100%;
     &__list {
       flex-direction: column;
       justify-content: space-between;
