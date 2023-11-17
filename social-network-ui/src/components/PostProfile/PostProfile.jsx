@@ -41,11 +41,6 @@ const PostProfile = ({ el }) => {
     surname,
     username,
   } = useSelector(state => state.auth.user.obj);
-  // const {
-  //   status: isLikeStatus,
-  //   obj: isLiked
-  // } = useSelector(state => state.post.addLike);
-  const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
     getCommentsPost: {
@@ -155,7 +150,7 @@ const PostProfile = ({ el }) => {
           </NavLink>
           <NavLink to={`/profile/${el.author.userId}`} className={style.postNameLink} href="">{`${el.author.name} ${el.author.surname}`}</NavLink>
         </div>
-        {typeUser === "myUser" ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
+        {el.author.userId === userId ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
           <Dots className={style.postHeaderAlsoBtnImg} />
         </button>
           : null}
