@@ -42,10 +42,12 @@ const FriendsPage = () => {
                   ))}
                 </ul>
               ) : status ==="pending"?
-              (<p>Loading</p>):
-              (
-                <p>No friends available</p>
-              )}
+                (
+                  <p>Loading</p>
+                ):
+                (
+                  <p>No friends available</p>
+                )}
             </div>
           </div>
         </div>
