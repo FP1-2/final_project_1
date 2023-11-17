@@ -28,7 +28,7 @@ const FriendCardProfile = ({ el }) => {
           <p className={style.friendCardInformText}>{el.dateOfBirth ? `Age: ${el.dateOfBirth}` : el.address ? `Lives in: ${el.address}` : null}</p>
         </div>
       </NavLink>
-      {userObject.user === "myUser" ? <button className={style.friendCardBtn} onClick={modalDeleteFriendOpen}>
+      {userObject.user !== "anotherUser" ? <button className={style.friendCardBtn} onClick={modalDeleteFriendOpen}>
         <Delete className={style.friendCardBtnImg} />
       </button> : null}
     </div>
