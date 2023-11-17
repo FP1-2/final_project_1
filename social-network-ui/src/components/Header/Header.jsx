@@ -11,14 +11,10 @@ import {useDispatch, useSelector} from "react-redux";
 import {loadUnreadMessagesQt} from "../../redux-toolkit/messenger/asyncThunk";
 import SearchUser from "../SearchUser/SearchUser";
 import {createPortal} from "react-dom";
-import { loadUnreadCount } from "../../redux-toolkit/notification/thunks";
-import { editNotificationQt } from "../../redux-toolkit/notification/slice";
-import { resetNotificationQt } from "../../redux-toolkit/ws/slice";
 export default function Header({authUser, showMessageIcon}) {
   const dispatch = useDispatch();
   const unreadMessQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
-  const newNotificationsQt = useSelector(state => state.notifications.unread_count.obj);
-  const notificationQt = useSelector(state => state.webSocket.notificationQt)
+  const newNotificationsQt = 2;
   const [showSearchField, setShowSearchField] = useState(false);
   const [textSearch, setTextSearch] = useState("");
   function openSearchPortal (e){
@@ -27,16 +23,8 @@ export default function Header({authUser, showMessageIcon}) {
   }
   useEffect(() => {
     dispatch(loadUnreadMessagesQt());
-    dispatch(loadUnreadCount())
   }, []);
   
-  useEffect(()=>{
-    if(notificationQt === 1){
-      dispatch(editNotificationQt(1));
-      dispatch(resetNotificationQt());
-    }
-  }, [notificationQt])
-
   return (
     <header className={styles.header}>
       <div className={styles.header__logoWrap}>

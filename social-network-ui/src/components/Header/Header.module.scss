@@ -59,10 +59,9 @@
         color: $main-background-color;
         background-color: red;
         @include flex-center;
-        justify-content: center;
         top: -6px;
         right: -6px;
-        font-size: 12px;
+        font-size: 14px;
         font-weight: 600;
 
       }

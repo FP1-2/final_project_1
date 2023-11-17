@@ -5,7 +5,6 @@ import {resetNotificationsState} from '../../redux-toolkit/notification/slice';
 import Notification from '../../components/Notification/Notification';
 import styles from './NotificationsPage.module.scss';
 import {createHandleScroll} from "../../utils/utils";
-import Loader from '../../components/Loader/Loader';
 
 export default function NotificationsPage() {
   const scrollContainerRef = useRef(null);
@@ -41,7 +40,6 @@ export default function NotificationsPage() {
 
   return (
     <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
-      {status === 'pending' && content.length === 0 && <Loader/>}
       <ul>
         {content.map((notification) => (
           <li key={notification.id}>
@@ -49,8 +47,7 @@ export default function NotificationsPage() {
           </li>
         ))}
       </ul>
-      {status === 'pending' && content.length > 0 && <Loader/>}
-      {pageNumber === totalPages && status !== 'pending' && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
+      {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
     </div>
   );
 }
