@@ -1,7 +1,13 @@
-import React, {useEffect, useRef, useState} from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import style from './PostPage.module.scss';
 import Comment from "../../components/Comment/Comment";
-import {useDispatch, useSelector} from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
+import { ReactComponent as LikedPostBtn } from "../../img/likedPostBtn.svg";
+import { ReactComponent as CommentPostBtn } from "../../img/commentPostBtn.svg";
+import { ReactComponent as SharePostBtn } from "../../img/sharePostBtn.svg";
+import { ReactComponent as SendCommentPost } from "../../img/sendCommentPost.svg";
+import { NavLink } from "react-router-dom";
 import {
   appendComment,
   clearStatePost,
@@ -13,12 +19,12 @@ import {
   addComment,
   addLike, addRepost
 } from "../../redux-toolkit/post/thunks";
-import {useParams} from "react-router-dom";
-import {createHandleScroll} from "../../utils/utils";
+import { useParams } from "react-router-dom";
+import { createHandleScroll } from "../../utils/utils";
 import Likes from "../../components/Icons/Likes";
-import {Field, Form, Formik} from "formik";
+import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
-import {showMessage} from "../../redux-toolkit/popup/slice";
+import { showMessage } from "../../redux-toolkit/popup/slice";
 
 const CommentSchema = Yup.object().shape({
   comment: Yup.string()
@@ -27,7 +33,7 @@ const CommentSchema = Yup.object().shape({
     .required('Required'),
 });
 
-export default function PostPage(){
+export default function PostPage() {
   const { id } = useParams();
   const scrollContainerRef = useRef(null);
   const dispatch = useDispatch();
@@ -35,8 +41,8 @@ export default function PostPage(){
   const {
     id: userId,
     avatar: userAvatar,
-    username:  userName,
-    surname:   surName,
+    username: userName,
+    surname: surName,
   } = useSelector(state => state.auth.user.obj);
 
   const {
@@ -50,7 +56,7 @@ export default function PostPage(){
     }
   } = useSelector(state => state.post.getCommentsPost);
 
-  const {obj: post} = useSelector(state => state.post.getPost);
+  const { obj: post } = useSelector(state => state.post.getPost);
 
   /**
    * Додаємо коментарі:
@@ -70,7 +76,7 @@ export default function PostPage(){
   const handleCommit = (values, { resetForm }) => {
     dispatch(addComment({
       postId: id,
-      content:  values.comment,
+      content: values.comment,
     }));
     resetForm();
   };
@@ -108,12 +114,12 @@ export default function PostPage(){
     obj: isLiked
   } = useSelector(state => state.post.addLike);
 
-  const isLikedByUser  = Array.isArray(post.likes)
-      && post.likes.includes(userId);
+  const isLikedByUser = Array.isArray(post.likes)
+    && post.likes.includes(userId);
 
   useEffect(() => {
     if (isLikeStatus === "fulfilled"
-        && !(isLikedByUser === isLiked.added)) {
+      && !(isLikedByUser === isLiked.added)) {
       dispatch(toggleLikePost(userId));
     }
   }, [isLikeStatus]);
@@ -131,9 +137,9 @@ export default function PostPage(){
   const prevStatusRef = useRef(repostedStatus);
 
   useEffect(() => {
-    if (prevStatusRef.current !== status){
+    if (prevStatusRef.current !== status) {
       if (repostedStatus === 'fulfilled') dispatch(showMessage('Reposted fulfilled'));
-      if(repostedStatus === 'rejected') dispatch(showMessage('Repost logic is not implemented'));
+      if (repostedStatus === 'rejected') dispatch(showMessage('Repost logic is not implemented'));
       prevStatusRef.current = status;
     }
   }, [repostedStatus]);
@@ -166,11 +172,11 @@ export default function PostPage(){
       dispatch(getCommentsPost({ page: pageNumber + 1, id }));
     }
   };
-  
+
   const handleScroll = createHandleScroll({
     scrollRef: scrollContainerRef,
     status: status,
-    fetchMore:  getMoreComments,
+    fetchMore: getMoreComments,
   });
 
   /**
@@ -185,19 +191,19 @@ export default function PostPage(){
    */
   const [zoomLevel, setZoomLevel] = useState(1);
 
-  const handleZoomIn =()=> zoomLevel <= 2
-      && setZoomLevel(zoomLevel + 0.5);
+  const handleZoomIn = () => zoomLevel <= 2
+    && setZoomLevel(zoomLevel + 0.5);
 
-  const handleZoomOut =()=> zoomLevel > 1
-      && setZoomLevel(zoomLevel - 0.5);
+  const handleZoomOut = () => zoomLevel > 1
+    && setZoomLevel(zoomLevel - 0.5);
 
   return (
     <div className={style.postWrapper}>
       <div className={style.postImageContainer}>
         <div className={style.zoomControls}>
-          <button onClick={handleZoomOut} 
+          <button onClick={handleZoomOut}
             className={style.zoomIn}></button>
-          <button onClick={handleZoomIn} 
+          <button onClick={handleZoomIn}
             className={style.zoomOut}></button>
         </div>
         <img
@@ -208,7 +214,7 @@ export default function PostPage(){
         />
       </div>
       <div onScroll={handleScroll}
-        ref={scrollContainerRef} 
+        ref={scrollContainerRef}
         className={style.postContainer}>
         <div className={style.post}>
           <div className={style.postHeader}>
@@ -217,14 +223,14 @@ export default function PostPage(){
               alt="User avatar"
               className={style.avatar}
             />
-            <span className={style.userName}>
+            <NavLink to={`/profile/${post.author.userId}`} className={style.userName}>
               {`${post.author.name} ${post.author.surname}`}
-            </span>
+            </NavLink>
           </div>
-          <div className={style.postBody}>
+          <p className={style.postBody}>
             {post.body}
-          </div>
-          {post.type ==="REPOST" && (
+          </p>
+          {post.type === "REPOST" && (
             <div className={style.originalPost}>
               <div className={style.originalPostHeader}>
                 <img
@@ -232,10 +238,10 @@ export default function PostPage(){
                   alt="Original author's avatar"
                   className={style.originalAvatar}
                 />
-                <span className={style.originalUserName}>
+                <NavLink to={`/profile/${post.originalPost.author.userId}`} className={style.originalUserName}>
                   {`${post.originalPost.author.name} 
                   ${post.originalPost.author.surname}`}
-                </span>
+                </NavLink>
               </div>
               <div className={style.originalPostBody}>
                 {post.originalPost.body}
@@ -244,7 +250,7 @@ export default function PostPage(){
           )}
           <div className={style.stats}>
             <div className={style.likesContainer}>
-              <Likes/>
+              <Likes />
               <span>
                 {post?.likes ? post.likes.length : 0}
               </span>
@@ -255,34 +261,31 @@ export default function PostPage(){
             </span>
           </div>
           <div className={style.postActions}>
-            <button>
-              <span onClick={handleToggleLike} 
-                className={
-                  `${style.icon} ${isLikedByUser ? 
-                    style.likeIconActive : style.likeIcon}`
-                }></span>
-              <span className="text">Like</span>
+            <button onClick={handleToggleLike}>
+              {isLikedByUser ?
+                <>
+                  <LikedPostBtn className={style.likeIcon} />
+                  Dislike</>
+                : <><LikePostBtn className={style.likeIconActive} />
+                  Like</>}
             </button>
-            <button>
-              <span onClick={toggleComments} 
-                className={`${style.icon} ${style.commentIcon}`}>
-              </span>
-              <span className="text">Comment</span>
+            <button onClick={toggleComments}>
+              <CommentPostBtn className={style.commentIcon} />
+              Comment
             </button>
-            <button>
-              <span onClick={handleShare} className={`${style.icon} ${style.shareIcon}`}>
-              </span>
-              <span className="text">Share</span>
+            <button onClick={handleShare}>
+              <SharePostBtn className={style.shareIcon} />
+              Share
             </button>
           </div>
           <div>
             {showComments && (
               <ul className={style.CommentsSection}>
-                {postComments.map((comment, index) =>(
-                  <li key={`${comment.id}-${index}`}><Comment el={comment}/></li>
+                {postComments.map((comment, index) => (
+                  <li key={`${comment.id}-${index}`}><Comment el={comment} /></li>
                 ))}
               </ul>
-            )};
+            )}
           </div>
           <div className={style.createCommentSection}>
             <Formik
@@ -293,7 +296,7 @@ export default function PostPage(){
               {({ errors, touched }) => (
                 <Form>
                   <div className={style.addComment}>
-                    <img src={userAvatar} alt={`${userName} ${surName}`} 
+                    <img src={userAvatar} alt={`${userName} ${surName}`}
                       className={style.commentAvatar} />
                     <Field
                       name="comment"
@@ -304,7 +307,9 @@ export default function PostPage(){
                     {errors.comment && touched.comment ? (
                       <div className={style.error}>{errors.comment}</div>
                     ) : null}
-                    <button type="submit" className={style.sendIcon}></button>
+                    <button type="submit" >
+                      <SendCommentPost className={style.sendIcon} />
+                    </button>
                   </div>
                 </Form>
               )}
