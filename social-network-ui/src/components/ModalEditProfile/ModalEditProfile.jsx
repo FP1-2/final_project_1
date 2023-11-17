@@ -7,7 +7,7 @@ import Input from "../Input/Input";
 import { useDispatch, useSelector } from "react-redux";
 import { modalEditProfileState } from "../../redux-toolkit/profile/slice";
 import { editUser } from "../../redux-toolkit/profile/thunks";
-import { getPhotoURL } from "../../redux-toolkit/profile/thunks";
+import { getPhotoURL } from "../../utils/thunks";
 
 const validationSchema = object({
   name: string().min(2, "Must be more than 2 characters"),

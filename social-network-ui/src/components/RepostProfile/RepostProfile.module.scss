@@ -262,6 +262,12 @@
                     }
                 }
 
+                .postBtnImgSaved {
+                    fill:#65676B;
+                    width: 25px;
+                    height: 25px;
+                }
+
                 @include width_576 {
                     font-size: 12px;
                     gap: 2px;
@@ -403,6 +409,16 @@
                     }
                 
                 
+                }
+            }
+            
+            .postOtherComents{
+                color:#65676B;
+                font-size: 15px;
+                font-weight: 400;
+
+                &:hover{
+                    text-decoration: underline;
                 }
             }
 

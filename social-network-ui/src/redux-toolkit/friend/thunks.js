@@ -13,6 +13,18 @@ export const getFriends = createAsyncThunk(
     }
 );
 
+export const getMyFriends = createAsyncThunk(
+    'friends/getMyFriends',
+    async (id, { rejectWithValue }) => {
+        try {
+            const response = await workAx("get",`api/friends/list/${id}`);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
 export const deleteMyFriend = createAsyncThunk(
     'friends/deleteFriend',
     async (obj, { rejectWithValue }) => {
@@ -65,7 +77,31 @@ export const requestsToMe = createAsyncThunk(
     'friends/requestsToMe',
     async (text,{ rejectWithValue }) => {
         try {
-            const response = await workAx("get",`api/friends/list/friend-requests`);
+            const response = await workAx("get",`api/friends/my-requests`);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const cancelRequest = createAsyncThunk(
+    'friends/cancelRequest',
+    async (obj,{ rejectWithValue }) => {
+        try {
+            const response = await workAx("put",`api/friends/cancel-request`, obj);
+            return response.data;
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
+);
+
+export const allRequests = createAsyncThunk(
+    'friends/allRequests',
+    async (text,{ rejectWithValue }) => {
+        try {
+            const response = await workAx("get",`api/friends/all-requests`);
             return response.data;
         } catch (err) {
             return rejectWithValue(err.response.data);

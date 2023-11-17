@@ -4,6 +4,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    getMyFriends:{
+        obj: [],
+        status: '',
+        error: '',
+    },
     deleteMyFriend:{
         obj: {},
         status: '',
@@ -26,6 +31,19 @@ const initialValue = {
     },
     requestsToMe:{
         obj: [],
+        status: '',
+        error: '',
+    },
+    cancelRequest:{
+        obj: [],
+        status: '',
+        error: '',
+    },
+    allRequests:{
+        obj: {
+            send:[],
+            received:[]
+        },
         status: '',
         error: '',
     },

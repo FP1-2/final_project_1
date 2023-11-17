@@ -1,7 +1,8 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import style from "./PostProfile.module.scss";
 import { ReactComponent as LikePostBtn } from "../../img/likePostBtn.svg";
+import { ReactComponent as LikedPostBtn } from "../../img/likedPostBtn.svg";
 import { ReactComponent as BlueLike } from "../../img/blueLike.svg";
 import { ReactComponent as CommentPostBtn } from "../../img/commentPostBtn.svg";
 import { ReactComponent as BlueComment } from "../../img/blueComment.svg";
@@ -15,10 +16,10 @@ import { NavLink } from "react-router-dom";
 import { useSelector } from "react-redux";
 import PropTypes from "prop-types";
 import Comment from "../Comment/Comment";
-import { clearComments, modalEditPostState, setPost, modalAddRepostState } from "../../redux-toolkit/post/slice";
-import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
-import { isFavourite, deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
-import { setIsFavourite, deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
+import { clearComments, modalEditPostState, setPost, modalAddRepostState, deleteLocalPost, appendCommentStart } from "../../redux-toolkit/post/slice";
+import { getCommentsPost, addLike, addComment, deletePost } from "../../redux-toolkit/post/thunks";
+import { deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
+import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
 
 
@@ -27,24 +28,65 @@ const PostProfile = ({ el }) => {
 
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
+  const [isFavouritePost, setIsFavouritePost] = useState(false);
+  const [countCommentsPost, setCountCommentsPost] = useState(0);
+  const [stateLikePost, setStateLikePost] = useState(false);
+  const [countLikePost, setCountLikePost] = useState(0);
   const commenttext = useRef();
 
-  const userAvatar = useSelector(state => state.auth.user.obj.avatar);
+  const {
+    id: userId,
+    avatar: userAvatar,
+    name,
+    surname,
+    username,
+  } = useSelector(state => state.auth.user.obj);
+  // const {
+  //   status: isLikeStatus,
+  //   obj: isLiked
+  // } = useSelector(state => state.post.addLike);
   const typeUser = useSelector(state => state.profile.profileUser.obj.user);
-  const postIsFavourite = useSelector(state => state.favourites.isFavourite.obj);
-
 
   const {
     getCommentsPost: {
-      obj,
+      obj: {
+        content,
+        size,
+        totalElements,
+      },
       status,
       error
     }
   } = useSelector(state => state.post);
 
+  useEffect(() => {
+    const isLikedByUser = Array.isArray(el.likes)
+    && el.likes.includes(userId);
+    setStateLikePost(isLikedByUser);
+    if(el.likes){
+      setCountLikePost(el.likes.length);
+    }
+  }, []);
+
+
+  useEffect(() => {
+    if (el.comments) {
+      setCountCommentsPost(el.comments.length);
+    }
+    if (el.isFavorite) {
+      setIsFavouritePost(true);
+    }
+  }, []);
+
 
   const changeClickLike = () => {
     dispatch(addLike(el.postId));
+    if(stateLikePost){
+      setCountLikePost(val=>val-1);
+    }else{
+      setCountLikePost(val=>val+1);
+    }
+    setStateLikePost(val=>!val);
   };
 
   const sendComment = () => {
@@ -52,7 +94,20 @@ const PostProfile = ({ el }) => {
       postId: el.postId,
       content: commenttext.current.value
     };
+    const objForPost = {
+      ...obj,
+      appUser: {
+        name,
+        surname,
+        username,
+        avatar: userAvatar,
+        userId
+      }
+    };
     dispatch(addComment(obj));
+    setCountCommentsPost(val => val + 1);
+    dispatch(appendCommentStart(objForPost));
+    commenttext.current.value = "";
   };
 
   const sharePost = () => {
@@ -63,7 +118,9 @@ const PostProfile = ({ el }) => {
   const commentClick = () => {
     setClickComment((val => !val));
     dispatch(clearComments());
-    dispatch(getCommentsPost(el.postId));
+    if (el.comments) {
+      dispatch(getCommentsPost({ page: 0, size: 3, id: el.postId }));
+    }
   };
 
   const modalEditPostOpen = () => {
@@ -73,17 +130,17 @@ const PostProfile = ({ el }) => {
 
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
+    dispatch(deleteLocalPost(el.postId));
   };
 
   const savePostThunk = async () => {
-    await dispatch(isFavourite(el.postId));
-    if (postIsFavourite) {
+    if (isFavouritePost) {
       await dispatch(deleteFavourite(el.postId));
-      await dispatch(setIsFavourite(false));
       dispatch(deleteLocalFavourite(el.postId));
+      setIsFavouritePost(false);
     } else {
       dispatch(addToFavourites(el.postId));
-      await dispatch(setIsFavourite(true));
+      setIsFavouritePost(true);
     }
   };
 
@@ -91,7 +148,7 @@ const PostProfile = ({ el }) => {
     <div className={style.post}>
       <header className={style.postHeader}>
         <div className={style.postHeaderLinksWrapper}>
-          <NavLink to={`/profile/${el.author.userId}`} className={style.postAvatarLink}>
+          <NavLink to={`/post/${el.postId}`} className={style.postAvatarLink}>
             <img src={el.author.avatar
               ? el.author.avatar
               : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.postAvatar} />
@@ -115,22 +172,30 @@ const PostProfile = ({ el }) => {
           : null}
       </header>
       <p className={style.postText}>{el.body}</p>
-      {el.imageUrl ? <img src={el.imageUrl} alt="Photo of post" className={style.postImg} /> : null}
+      {el.imageUrl ?
+        <NavLink to={`/post/${el.postId}`}>
+          <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        </NavLink>  
+        : null}
       <div className={style.postFooterWrapper}>
         <div className={style.postFooterInfo}>
           <div className={style.postFooterLikes}>
             <BlueLike className={style.postFooterLikesImg} />
-            <p className={style.postFooterLikesText}>{el.likes ? el.likes.length : 0}</p>
+            <p className={style.postFooterLikesText}>{countLikePost}</p>
           </div>
           <div className={style.postFooterComments}>
             <BlueComment className={style.postFooterCommentsImg} />
-            <p className={style.postFooterCommentsText}>{el.comments ? el.comments.length : 0}</p>
+            <p className={style.postFooterCommentsText}>{countCommentsPost}</p>
           </div>
         </div>
         <div className={style.postFooterBtns}>
           <button className={style.postBtn} onClick={changeClickLike}>
-            <LikePostBtn className={style.postBtnImg} />
-            Like
+            {stateLikePost ?
+              <>
+                <LikedPostBtn className={style.postBtnImg} />
+                Dislike</>
+              : <><LikePostBtn className={style.postBtnImg} />
+                Like</>}
           </button>
           <button className={style.postBtn} onClick={commentClick}>
             <CommentPostBtn className={style.postBtnImg} />
@@ -141,8 +206,11 @@ const PostProfile = ({ el }) => {
             Share
           </button>
           <button className={style.postBtn} onClick={savePostThunk}>
-            <SavePost className={style.postBtnImg} />
-            Save
+            {isFavouritePost ?
+              <><SavePost className={style.postBtnImgSaved} />
+                Delete</>
+              : <><SavePost className={style.postBtnImg} />
+                Save</>}
           </button>
         </div>
         {clickComment ? <div className={style.postFooterComents}>
@@ -153,7 +221,13 @@ const PostProfile = ({ el }) => {
             : status === "rejected" ?
               <ErrorPage message={error ? error : "Oops something went wrong!"} />
               :
-              (obj.content.length ? obj.content.map((el) => <Comment el={el} key={el.id} />) : null)
+              (content.length ?
+                <>{content.map((elem) =>
+                  <Comment el={elem} key={elem.id?elem.id:el.postId} />)}
+                {totalElements > size ?
+                  <NavLink to={`/post/${el.postId}`} className={style.postOtherComents}>...comments</NavLink>
+                  : null}</>
+                : null)
           }
           <div className={style.postFooterAddComents}>
             <img src={userAvatar ? userAvatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="Avatar" className={style.postFooterAddComentsImg} />

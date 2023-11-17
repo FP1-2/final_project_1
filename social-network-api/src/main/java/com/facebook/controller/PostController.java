@@ -165,7 +165,8 @@ public class PostController {
      */
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable Long postId) {
-        PostResponse postResponse = postService.findPostDetailsById(postId);
+        PostResponse postResponse = postService
+                .findPostDetailsById(currentUserService.getCurrentUserId(), postId);
         return ResponseEntity.ok(postResponse);
     }
 
@@ -253,7 +254,8 @@ public class PostController {
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,desc") String sort) {
 
-        Page<PostResponse> postResponses = postService.findAllPosts(page, size, sort);
+        Page<PostResponse> postResponses = postService
+                .findAllPosts(currentUserService.getCurrentUserId(), page, size, sort);
         return ResponseEntity.ok(postResponses);
     }
 
