@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { useDispatch } from "react-redux";
-import style from './FriendsPage.module.scss'
+import style from './FriendsPage.module.scss';
 import FriendCardProfile from "../../components/FriendCardProfile/FriendCardProfile";
 import { useSelector } from "react-redux";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
