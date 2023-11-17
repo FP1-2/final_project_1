@@ -41,6 +41,9 @@ const notificationReducer = createSlice({
             state.notifications.obj.content = state.notifications.obj.content.filter(
                 notification => notification.id !== action.payload
             );
+        },
+        editNotificationQt:(state, action) => {
+            state.unread_count.obj = state.unread_count.obj + action.payload;
         }
     },
     extraReducers: (builder) => {
@@ -59,6 +62,7 @@ export const {
     resetMarkAsRead,
     resetFriendRequest,
     deleteFriendRequestNotification,
+    editNotificationQt
 } = notificationReducer.actions;
 
 export default notificationReducer.reducer;
