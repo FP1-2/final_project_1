@@ -2,6 +2,6 @@ const initialState = {
   newMessage: null,
   messageWithNewStatus: null,
   isVisible: false,
-  notification: null
+  notificationQt: null
 }
 export default initialState;
