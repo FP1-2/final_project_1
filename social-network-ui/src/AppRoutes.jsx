@@ -17,7 +17,6 @@ import PageNotFound from './pages/PageNotFound/PageNotFound';
 import PopupMessage from "./components/PopupMessage/PopupMessage";
 import MainPage from "./pages/MainPage/MainPage";
 import PostPage from "./pages/PostPage/PostPage";
-import HeaderLayout from "./pages/Layout/HeaderLayout";
 import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
 import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
 
@@ -32,6 +31,7 @@ function AppRoutes({ isAuth }) {
             <Route path='' element={<PostsPageProfile />} />
             <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}></ProtectedRoute> } />
           </Route>
+          <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
             <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
           </Route>
@@ -40,9 +40,6 @@ function AppRoutes({ isAuth }) {
           <Route path='/friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}/> } />
  
           <Route path={'*'} element={<PageNotFound />} />
-        </Route>
-        <Route path="/" element={<ProtectedRoute isAuth={isAuth} content={<HeaderLayout />} />}>
-          <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
         </Route>
         <Route path="/login" element={<LoginPage isAuth={isAuth} />} />
         <Route path='/registration' element={<RegistrationForm />} />

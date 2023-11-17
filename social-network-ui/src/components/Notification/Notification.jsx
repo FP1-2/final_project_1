@@ -9,6 +9,7 @@ import {
   resetFriendRequest,
   resetMarkAsRead,
   deleteFriendRequestNotification,
+  editNotificationQt,
 } from "../../redux-toolkit/notification/slice";
 
 export default function Notification({ notification }) {
@@ -53,6 +54,7 @@ export default function Notification({ notification }) {
   const handleMarkAsRead = () => {
     if (!notification.read) {
       dispatch(notificationMarkAsRead(notification.id));
+      dispatch(editNotificationQt(-1));
     }
   };
 
