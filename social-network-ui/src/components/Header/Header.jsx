@@ -18,7 +18,7 @@ export default function Header({authUser, showMessageIcon}) {
   const dispatch = useDispatch();
   const unreadMessQt = useSelector(state => state.messenger.unreadMessagesQt.obj);
   const newNotificationsQt = useSelector(state => state.notifications.unread_count.obj);
-  const notificationQt = useSelector(state => state.webSocket.notificationQt)
+  const notificationQt = useSelector(state => state.webSocket.notificationQt);
   const [showSearchField, setShowSearchField] = useState(false);
   const [textSearch, setTextSearch] = useState("");
   function openSearchPortal (e){
@@ -27,7 +27,7 @@ export default function Header({authUser, showMessageIcon}) {
   }
   useEffect(() => {
     dispatch(loadUnreadMessagesQt());
-    dispatch(loadUnreadCount())
+    dispatch(loadUnreadCount());
   }, []);
   
   useEffect(()=>{
@@ -35,7 +35,7 @@ export default function Header({authUser, showMessageIcon}) {
       dispatch(editNotificationQt(1));
       dispatch(resetNotificationQt());
     }
-  }, [notificationQt])
+  }, [notificationQt]);
 
   return (
     <header className={styles.header}>
