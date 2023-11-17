@@ -62,6 +62,7 @@
       padding: 0 20px 0;
       width: 100%;
       display: flex;
+      justify-content: center;
       flex-direction: column;
 
       .postHeader {
@@ -200,28 +201,21 @@
           }
 
           .likeIcon {
-            // background-position: 0 -98.3rem;
-            // filter: invert(50%);
             width: 25px;
             height: 25px;
           }
 
           .likeIconActive {
-            // background-position: 0 -66.3rem;
             width: 25px;
             height: 25px;
           }
 
           .commentIcon {
-            // background-position: 0 -53.9rem;
-            // filter: invert(50%);
             width: 25px;
             height: 25px;
           }
 
           .shareIcon {
-            // background-position: 0 -84.8rem;
-            // filter: invert(50%);
             width: 25px;
             height: 25px;
 
@@ -241,9 +235,9 @@
       }
 
       .createCommentSection {
-        position: sticky;
-        bottom: 64px;
-        width: 100%;
+        position: fixed;
+        bottom: 0px;
+        width: 315px;
         margin-top: 0.5rem;
         border-radius: 0.2rem;
         z-index: 2;
@@ -301,20 +295,16 @@
           }
 
           .sendIcon {
-            width: 35px;
-            height: 35px;
+            width: 25px;
+            height: 25px;
             path {
                 stroke: rgba(0, 0, 0, 0.4);
                 ;
             }
             position: absolute;
-            right: -1rem;
+            right: -0.5rem;
             bottom: 2.8rem;
-            // background-image: url('../../sprites/sprite_1.png');
-            // background-position: 0 -127.5rem;
-            // filter: invert(65%);
             cursor: pointer;
-            // background-repeat: no-repeat;
             display: inline-block;
           }
         }
@@ -347,6 +337,8 @@
         .createCommentSection {
           order: 5;
           bottom: -1px;
+          position: static;
+          width: 100%;
         }
       }
     }
