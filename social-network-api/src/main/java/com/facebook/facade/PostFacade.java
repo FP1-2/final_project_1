@@ -19,8 +19,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -119,7 +122,16 @@ public class PostFacade {
         result.setCommentIds((String) resultMap.get("COMMENT_IDS"));
         result.setLikeIds((String) resultMap.get("LIKE_USER_IDS"));
         result.setRepostIds((String) resultMap.get("REPOST_IDS"));
-        result.setIsFavorite((Boolean) resultMap.get("IS_FAVORITE"));
+
+        result.setIsFavorite(Stream.of(resultMap.get("IS_FAVORITE"))
+                .filter(Objects::nonNull)
+                .map(obj -> switch (obj.getClass().getSimpleName()) {
+                    case "Integer" -> (Integer) obj != 0;
+                    case "Long" -> (Long) obj != 0;
+                    default -> (Boolean) obj;
+                })
+                .findFirst()
+                .orElse(false));
 
         result.setOriginalCommentIds((String) resultMap.get("ORIGINAL_COMMENT_IDS"));
         result.setOriginalLikeIds((String) resultMap.get("ORIGINAL_LIKE_USER_IDS"));
