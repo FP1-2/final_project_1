@@ -8,7 +8,7 @@ import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
 import PostsPageProfile from "./components/PostsPageProfile/PostsPageProfile";
-import FriendPageProfile from "./components/FriendPageProfile/FriendPageProfile";
+import FriendsPage from './pages/FriendsPage/FriendsPage';
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Layout from "./pages/Layout/Layout";
 import PropTypes from "prop-types";
@@ -30,14 +30,14 @@ function AppRoutes({ isAuth }) {
           <Route index element={<ProtectedRoute isAuth={isAuth} content={<MainPage />} />} />
           <Route exact path='/profile/:id/*' element={<ProfilePage />}>
             <Route path='' element={<PostsPageProfile />} />
-            {/*             <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />}></ProtectedRoute> } />
- */}          </Route>
+            <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}></ProtectedRoute> } />
+          </Route>
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
             <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
           </Route>
           <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritesPage />} />} />
           <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
-          <Route path='/friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />}/> } />
+          <Route path='/friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}/> } />
  
           <Route path={'*'} element={<PageNotFound />} />
         </Route>
