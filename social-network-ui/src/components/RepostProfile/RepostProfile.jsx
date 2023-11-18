@@ -40,7 +40,6 @@ const RepostProfile = ({ el }) => {
     surname,
     username
   } = useSelector(state => state.auth.user.obj);
-  const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
     getCommentsPost: {
@@ -150,7 +149,7 @@ const RepostProfile = ({ el }) => {
           </NavLink>
           <NavLink to={`/profile/${el.author.userId}`} className={style.postNameLink} href="">{`${el.author.name} ${el.author.surname}`}</NavLink>
         </div>
-        {typeUser === "myUser" ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
+        {el.author.userId === userId ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
           <Dots className={style.postHeaderAlsoBtnImg} />
         </button>
           : null}

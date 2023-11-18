@@ -7,6 +7,7 @@ import { resetPostsInMainState } from "../../redux-toolkit/main/slice";
 import PostProfile from "../../components/PostProfile/PostProfile";
 import RepostProfile from "../../components/RepostProfile/RepostProfile";
 import ModalAddRepost from "../../components/ModalAddRepost/ModalAddRepost";
+import Loader from '../../components/Loader/Loader';
 
 export default function MainPage() {
   const scrollContainerRef = useRef(null);
@@ -43,6 +44,7 @@ export default function MainPage() {
     <>
       <ModalAddRepost />
       <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
+        {status === 'pending' && content.length === 0 && <Loader/>}
         <ul className={styles.container_cards_bloc}>
           {content.map((post) => (
             <li key={post.postId}>
@@ -52,7 +54,8 @@ export default function MainPage() {
             </li>
           ))}
         </ul>
-        {pageNumber === totalPages && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
+        {status === 'pending' && content.length > 0 && <Loader/>}
+        {pageNumber === totalPages && status !== 'pending' && <h4 className={styles.container_allCard}>That`s all for now!</h4>}
       </div>
     </>
 
