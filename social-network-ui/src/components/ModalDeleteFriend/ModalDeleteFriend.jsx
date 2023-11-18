@@ -3,7 +3,7 @@ import style from "./ModalDeleteFriend.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
 import { modalDeleteFriendState} from "../../redux-toolkit/friend/slice";
-import { deleteMyFriend } from "../../redux-toolkit/friend/thunks";
+import { deleteMyFriend,getFriends } from "../../redux-toolkit/friend/thunks";
 import { deleteLocalFriend } from "../../redux-toolkit/friend/slice";
 
 const ModalDeleteFriend = () => {
@@ -12,22 +12,25 @@ const ModalDeleteFriend = () => {
 
   const modalDeleteFriend = useSelector((state) => state.friends.modalDeleteFriend);
   const el = useSelector((state) => state.friends.friend.obj);
+  const myId = useSelector(state => state.auth.user.obj.id);
 
-  const modalDeleteFriendClose=()=>{
-    dispatch(modalDeleteFriendState(false));
+  const modalDeleteFriendClose=async ()=>{
+    await dispatch(modalDeleteFriendState(false));
   };
 
-  const deleteFriend=()=>{
-    dispatch(deleteMyFriend({friendId:el.id}));
-    dispatch(deleteLocalFriend(el.id));
-    dispatch(modalDeleteFriendState(false));
+  const deleteFriend=async ()=>{
+    await dispatch(deleteMyFriend({friendId:el.id}));
+    await dispatch(deleteLocalFriend(el.id));
+    await dispatch(modalDeleteFriendState(false));
+    await dispatch(getFriends(myId));
+
   };
 
   return (
     <div className={modalDeleteFriend?style.modalWrapper:style.displayNone} style={{top:`${scroll}px`}}>
       <div className={style.modal}>
         <header className={style.modalHeader}>
-          <h2 className={style.modalHeadertittle}>Remove {`${el.name} ${el.surname}`} from friends</h2>
+          <h2 className={style.modalHeaderTitle}>Remove {`${el.name} ${el.surname}`} from friends</h2>
           <button className={style.modalHeaderBtn}>
             <Cross className={style.modalHeaderBtnImg} onClick={modalDeleteFriendClose}/>
           </button>
