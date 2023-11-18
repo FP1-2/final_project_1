@@ -11,6 +11,7 @@ import {
   deleteFriendRequestNotification,
   editNotificationQt,
 } from "../../redux-toolkit/notification/slice";
+import {convertToLocalTime} from "../../utils/formatData";
 
 export default function Notification({ notification }) {
   const dispatch = useDispatch();
@@ -105,7 +106,7 @@ export default function Notification({ notification }) {
           </Link>
         </span>
         <div className={styles.card_info_date}>
-          {new Date(notification.createdDate).toLocaleString()}
+          {convertToLocalTime(notification.createdDate)}
         </div>
         <div className={styles.card_content}>
           <p className={styles.card_message}>{notification.message}</p>
