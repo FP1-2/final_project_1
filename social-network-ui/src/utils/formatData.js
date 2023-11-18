@@ -61,6 +61,6 @@ export const getTimeAgo = (nDate) => {
 }
 
 export const convertToLocalTime = (utcDate) => {
-  const date = parseISO(utcDate);
-  return format(date, 'dd-MM-yyyy HH:mm:ss')
+  const date = parseISO(utcDate + 'Z');
+  return format(date, 'dd-MM-yyyy HH:mm:ss');
 }
