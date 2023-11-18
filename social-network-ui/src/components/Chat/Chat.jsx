@@ -213,7 +213,8 @@ export default function Chat() {
             sendMessage={sendMessage}
             handleMessageChange={handleMessageChange}
             message={message}
-            emojiHandler={emojiHandler}/>}
+            emojiHandler={emojiHandler}
+            handleMessageClick={handleMouseEnter}/>}
         </div>
         {isModalOpen && createPortal(<Modal hideModal={() => setIsModalOpen(false)}>
           <img src={imgSrc} alt={imgSrc} onClick={e => e.stopPropagation()}

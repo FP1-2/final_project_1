@@ -31,6 +31,7 @@ export default function ChatBody({
     isCreatingNewChat &&
     <div className={`${messagesList.length === 0 ? styles.chat__emptyList : styles.chat__body}`}
       onMouseEnter={handleMouseEnter}
+      onTouchStart={handleMouseEnter}
       ref={containerRef}
       onScroll={handleScroll}
     >
