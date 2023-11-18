@@ -23,7 +23,6 @@ const ModalDeleteFriend = () => {
     await dispatch(deleteLocalFriend(el.id));
     await dispatch(modalDeleteFriendState(false));
     await dispatch(getFriends(myId));
-
   };
 
   return (

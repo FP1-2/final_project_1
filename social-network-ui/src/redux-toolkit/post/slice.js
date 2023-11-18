@@ -1,4 +1,4 @@
-import {createSlice} from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
 import {
     addPost,
@@ -11,8 +11,8 @@ import {
     postsUser,
     getPost,
 } from "./thunks";
-import builders, {buildersPagination} from '../builders';
-import {appendPaginationUtil} from "../../utils/utils";
+import builders, { buildersPagination } from '../builders';
+import { appendPaginationUtil } from "../../utils/utils";
 
 const postReducer = createSlice({
     name: "post",
@@ -76,16 +76,22 @@ const postReducer = createSlice({
             }
         },
         clearStatePost: (state) => {
-            state.initialState = {...initialValue}
+            state.initialState = { ...initialValue }
         },
         deleteLocalPost: (state, action) => {
             state.postsUser.obj.content = state.postsUser.obj.content.filter(
-              post => post.postId!== action.payload);
+                post => post.postId !== action.payload);
         },
         appendPost: (state, action) => {
             state.postsUser.obj.content = [
                 ...state.postsUser.obj.content,
                 action.payload
+            ];
+        },
+        appendPostStart: (state, action) => {
+            state.postsUser.obj.content = [
+                action.payload,
+                ...state.postsUser.obj.content
             ];
         },
     },
@@ -116,7 +122,8 @@ export const {
     clearStatePost,
     deleteLocalPost,
     appendPost,
-    appendCommentStart
+    appendCommentStart,
+    appendPostStart
 } = postReducer.actions;
 
 export default postReducer.reducer;

@@ -7,7 +7,7 @@ import style from "./ModalAddPost.module.scss";
 import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalAddPostState } from "../../redux-toolkit/post/slice";
+import { modalAddPostState, appendPostStart } from "../../redux-toolkit/post/slice";
 import { getPhotoURL } from "../../utils/thunks";
 import { addPost } from "../../redux-toolkit/post/thunks";
 
@@ -38,11 +38,13 @@ const ModalAddPost = () => {
     } else if (value.img === "") {
       dispatch(addPost({ imageUrl: "", body: value.text, title: "add new post" }));
       setErrorValidation(false);
+      dispatch(appendPostStart({author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, imageUrl: "", body: value.text, title: "add new post" }));
       dispatch(modalAddPostState(false));
     } else {
       const photo = (await getPhotoURL(value.img));
       dispatch(addPost({ imageUrl: photo, body: value.text, title: "add new post" }));
       setErrorValidation(false);
+      dispatch(appendPostStart({author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, imageUrl: photo, body: value.text, title: "add new post" }));
       dispatch(modalAddPostState(false));
     }
   };

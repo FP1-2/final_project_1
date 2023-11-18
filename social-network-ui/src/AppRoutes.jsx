@@ -9,6 +9,7 @@ import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
 import PostsPageProfile from "./components/PostsPageProfile/PostsPageProfile";
 import FriendsPage from './pages/FriendsPage/FriendsPage';
+import FriendPageProfile from './components/FriendPageProfile/FriendPageProfile';
 import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 import Layout from "./pages/Layout/Layout";
 import PropTypes from "prop-types";
@@ -29,7 +30,7 @@ function AppRoutes({ isAuth }) {
           <Route index element={<ProtectedRoute isAuth={isAuth} content={<MainPage />} />} />
           <Route exact path='/profile/:id/*' element={<ProfilePage />}>
             <Route path='' element={<PostsPageProfile />} />
-            <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}></ProtectedRoute> } />
+            <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />}></ProtectedRoute> } />
           </Route>
           <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
