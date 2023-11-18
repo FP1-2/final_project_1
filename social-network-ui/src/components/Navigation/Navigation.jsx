@@ -28,7 +28,7 @@ export default function Navigation({authUser}) {
           active={location.pathname.includes("/friends")}>
           <Friends className={styles.desktopNone}/>
         </NavItem>
-        <NavItem to="/messages" label="Messanger" icon="/img/messenger.png" isDesktop={true}
+        <NavItem to="/messages" label="Messenger" icon="/img/messenger.png" isDesktop={true}
           active={location.pathname.includes("/messages")}>
         </NavItem>
         <NavItem to="/favorites" label="Favorites" icon="/img/saved.png" isDesktop={false}
