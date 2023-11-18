@@ -80,7 +80,11 @@ export default function MessagesPage() {
     }
   }, [unreadMessagesQt.obj]);
 
-  
+  useEffect(()=>{
+    return ()=>{
+      document.title = `Facebook`;
+    };
+  }, []);
   return (
     <div className={styles.messengerPage}>
       <ChatNavigation

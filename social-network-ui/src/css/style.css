@@ -1,0 +1,25 @@
+* {
+  padding: 0;
+  margin: 0;
+  border: none;
+  outline: 0;
+  font-size: 100%;
+  vertical-align: baseline;
+  background: transparent;
+  -webkit-box-sizing: border-box;
+          box-sizing: border-box;
+  list-style: none;
+  text-decoration: none;
+}
+
+body {
+  background: #FFFFFF;
+  line-height: 1.34;
+  text-decoration: none;
+  color: #050505;
+}
+
+a {
+  cursor: pointer;
+  color: #050505;
+}/*# sourceMappingURL=style.css.map */

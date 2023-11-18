@@ -15,8 +15,11 @@ const webSocketReducer = createSlice({
     setIsVisible: (state, action) => {
       state.isVisible = action.payload;
     },
-    setNotification: (state, action) => {
-      state.isVisible = action.payload;
+    setNotificationQt: (state, action) => {
+      state.notificationQt = action.payload;
+    },
+    resetNotificationQt: (state) => {
+      state.notificationQt = initialState.notificationQt;
     },
   }
 });
@@ -25,7 +28,8 @@ export const {
   setNewMessage,
   setMessageWithNewStatus,
   setIsVisible,
-  setNotification
+  setNotificationQt,
+  resetNotificationQt
 } = webSocketReducer.actions;
 
 export default webSocketReducer.reducer;

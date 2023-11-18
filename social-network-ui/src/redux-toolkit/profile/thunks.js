@@ -2,13 +2,6 @@ import axios from "axios";
 import {workAx} from "../ax";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 
-export const getPhotoURL = async (file) => {
-    const formFIle = new FormData();
-    formFIle.append("file", file);
-    formFIle.append("upload_preset", "q8jkfqti");
-    const response= await(axios.post("https://api.cloudinary.com/v1_1/ditpsafw3/image/upload", formFIle));
-    return response;
-}
 
 export const loadUserProfile = createAsyncThunk(
     'profile/profileUser',

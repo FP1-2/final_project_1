@@ -15,7 +15,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { NavLink } from "react-router-dom";
 import { addLike, getCommentsPost, addComment, deletePost } from "../../redux-toolkit/post/thunks";
 import Comment from "../Comment/Comment";
-import { clearComments, setPost, modalAddRepostState, modalEditPostState, toggleLikePost} from "../../redux-toolkit/post/slice";
+import { clearComments, setPost, modalAddRepostState, modalEditPostState, appendCommentStart,deleteLocalPost} from "../../redux-toolkit/post/slice";
 import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
@@ -28,17 +28,18 @@ const RepostProfile = ({ el }) => {
   const [clickComment, setClickComment] = useState(false);
   const [btnAlso, setBtnAlso] = useState(false);
   const [isFavouritePost, setIsFavouritePost] = useState(false);
+  const [countCommentsPost, setCountCommentsPost] = useState(0);
+  const [stateLikePost, setStateLikePost] = useState(false);
+  const [countLikePost, setCountLikePost] = useState(0);
   const commenttext = useRef();
 
   const {
     id: userId,
     avatar: userAvatar,
+    name,
+    surname,
+    username
   } = useSelector(state => state.auth.user.obj);
-  const {
-    status: isLikeStatus,
-    obj: isLiked
-  } = useSelector(state => state.post.addLike);
-  const typeUser = useSelector(state => state.profile.profileUser.obj.user);
 
   const {
     getCommentsPost: {
@@ -53,19 +54,20 @@ const RepostProfile = ({ el }) => {
   } = useSelector(state => state.post);
 
 
-
-  const isLikedByUser = Array.isArray(el.likes)
+  useEffect(() => {
+    const isLikedByUser = Array.isArray(el.likes)
     && el.likes.includes(userId);
-
-  useEffect(() => {
-    if (isLikeStatus === "fulfilled"
-      && !(isLikedByUser === isLiked.added)) {
-      dispatch(toggleLikePost(userId));
+    setStateLikePost(isLikedByUser);
+    if (el.likes) {
+      setCountLikePost(el.likes.length);
     }
-  }, [isLikeStatus]);
+  }, []);
 
 
   useEffect(() => {
+    if (el.comments) {
+      setCountCommentsPost(el.comments.length);
+    }
     if (el.isFavorite) {
       setIsFavouritePost(true);
     }
@@ -74,6 +76,12 @@ const RepostProfile = ({ el }) => {
 
   const changeClickLike = () => {
     dispatch(addLike(el.postId));
+    if (stateLikePost) {
+      setCountLikePost(val => val - 1);
+    } else {
+      setCountLikePost(val => val + 1);
+    }
+    setStateLikePost(val => !val);
   };
 
   const commentClick = () => {
@@ -89,8 +97,20 @@ const RepostProfile = ({ el }) => {
       postId: el.postId,
       content: commenttext.current.value
     };
+    const objForPost = {
+      ...obj,
+      appUser: {
+        name,
+        surname,
+        username,
+        avatar: userAvatar,
+        userId
+      }
+    };
     dispatch(addComment(obj));
-    setClickComment(false);
+    setCountCommentsPost(val => val + 1);
+    dispatch(appendCommentStart(objForPost));
+    commenttext.current.value = "";
   };
   const sharePost = () => {
     dispatch(setPost(el));
@@ -104,6 +124,7 @@ const RepostProfile = ({ el }) => {
 
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
+    dispatch(deleteLocalPost(el.postId));
   };
 
   const savePostThunk = async () => {
@@ -121,14 +142,14 @@ const RepostProfile = ({ el }) => {
     <div className={style.post}>
       <header className={style.postHeader}>
         <div className={style.postHeaderLinksWrapper}>
-          <NavLink to={`/profile/${el.author.userId}`} className={style.postAvatarLink}>
+          <NavLink to={`/post/${el.postId}`} className={style.postAvatarLink}>
             <img src={el.author.avatar
               ? el.author.avatar
               : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.postAvatar} />
           </NavLink>
           <NavLink to={`/profile/${el.author.userId}`} className={style.postNameLink} href="">{`${el.author.name} ${el.author.surname}`}</NavLink>
         </div>
-        {typeUser === "myUser" ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
+        {el.author.userId === userId ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
           <Dots className={style.postHeaderAlsoBtnImg} />
         </button>
           : null}
@@ -158,25 +179,29 @@ const RepostProfile = ({ el }) => {
       </div>
       <p className={style.repostText}>{el.originalPost.body}</p>
       {el.imageUrl ?
-        <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        <NavLink to={`/post/${el.postId}`}>
+          <img src={el.imageUrl} alt="Photo of post" className={style.postImg} />
+        </NavLink>
         : null}
       <div className={style.postFooterWrapper}>
         <div className={style.postFooterInfo}>
           <div className={style.postFooterLikes}>
             <BlueLike className={style.postFooterLikesImg} />
-            <p className={style.postFooterLikesText}>{el.likes ? el.likes.length : 0}</p>
+            <p className={style.postFooterLikesText}>{countLikePost}</p>
           </div>
           <div className={style.postFooterComments}>
             <BlueComment className={style.postFooterCommentsImg} />
-            <p className={style.postFooterCommentsText}>{el.comments ? el.comments.length : 0}</p>
+            <p className={style.postFooterCommentsText}>{countCommentsPost}</p>
           </div>
         </div>
         <div className={style.postFooterBtns}>
           <button className={style.postBtn} onClick={changeClickLike}>
-            {isLikedByUser ?
-              <LikedPostBtn className={style.postBtnImg} />
-              : <LikePostBtn className={style.postBtnImg} />}
-            Like
+            {stateLikePost ?
+              <>
+                <LikedPostBtn className={style.postBtnImg} />
+                Dislike</>
+              : <><LikePostBtn className={style.postBtnImg} />
+                Like</>}
           </button>
           <button className={style.postBtn} onClick={commentClick}>
             <CommentPostBtn className={style.postBtnImg} />
@@ -187,8 +212,11 @@ const RepostProfile = ({ el }) => {
             Share
           </button>
           <button className={style.postBtn} onClick={savePostThunk}>
-            <SavePost className={isFavouritePost ? style.postBtnImgSaved : style.postBtnImg} />
-            Save
+            {isFavouritePost ?
+              <><SavePost className={style.postBtnImgSaved} />
+                Delete</>
+              : <><SavePost className={style.postBtnImg} />
+                Save</>}
           </button>
         </div>
         {clickComment ? <div className={style.postFooterComents}>

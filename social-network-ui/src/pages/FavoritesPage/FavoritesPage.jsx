@@ -7,6 +7,7 @@ import RepostProfile from '../../components/RepostProfile/RepostProfile';
 import ModalAddRepost from '../../components/ModalAddRepost/ModalAddRepost';
 import { resetFavouritesState } from '../../redux-toolkit/favourite/slice';
 import { createHandleScroll } from "../../utils/utils";
+import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 
 function FavoritesPage() {
   const dispatch = useDispatch();
@@ -19,6 +20,7 @@ function FavoritesPage() {
 
   const {
     status,
+    error,
     obj: {
       content,
       totalPages,
@@ -28,8 +30,9 @@ function FavoritesPage() {
     }
   } = useSelector(state => state.favourites.favouritesList);
 
+
   const getMoreFavourites = () => {
-    if (status !== 'pending' && pageNumber < totalPages) {
+    if (status !== 'pending' && pageNumber + 1 < totalPages) {
       dispatch(favouritesList({ page: pageNumber + 1 }));
     }
   };
@@ -42,18 +45,23 @@ function FavoritesPage() {
 
   return (
     <>
-      <ModalAddRepost />
-      <div className={style.favoritsWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
-        <ul className={style.favorits} >
-          {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
-            {el.type === "POST" ?
-              <PostProfile el={el}/>
-              : <RepostProfile el={el} />}</li>) : null}
-          {pageNumber === totalPages && <li className={style.container_allCard}>That`s all for now!</li>}
-        </ul>
-      </div>
+      {status === "rejected" ?
+        <ErrorPage message={error ? error : "Oops something went wrong!"} />
+        :
+        <>
+          <ModalAddRepost />
+          <div className={style.favoritsWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
+            <ul className={style.favorits} >
+              {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
+                {el.type === "POST" ?
+                  <PostProfile el={el} />
+                  : <RepostProfile el={el} />}
+              </li>) : null}
+            </ul>
+          </div>
+        </>
+      }
     </>
-
   );
 }
 

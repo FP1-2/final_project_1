@@ -182,6 +182,35 @@ class NotificationRepositoryTest {
         assertNotificationEquals(notification, notificationResult);
     }
 
+    /**
+     * Тест перевіряє видалення повідомлень за ідентифікаторами ініціатора, користувача та типу повідомлення.
+     */
+    @Test
+    void testDeleteByInitiatorAndUserAndType() {
+        // Перед видаленням
+        long countBefore = notificationRepository.count();
+
+        Notification existingNotification = entityManager.find(Notification.class, notification.getId());
+        assertNotNull(existingNotification);
+
+        // Видалення повідомлення
+        notificationRepository
+                .deleteByInitiatorAndUserAndType(notification.getInitiator().getId(),
+                        user.getId(),
+                        NotificationType.POST_COMMENTED);
+
+        entityManager.flush();
+        entityManager.clear();
+
+        // Перевірка видалення
+        long countAfter = notificationRepository.count();
+        assertThat(countBefore).isGreaterThan(countAfter);
+
+        // Перевірка, що повідомлення більше не існує в базі даних
+        Notification foundNotification = entityManager.find(Notification.class, notification.getId());
+        assertThat(foundNotification).isNull();
+    }
+
 }
 
 
