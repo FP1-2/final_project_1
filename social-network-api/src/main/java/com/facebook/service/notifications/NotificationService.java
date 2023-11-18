@@ -141,7 +141,6 @@ public class NotificationService {
         notificationRepository.save(notification);
     }
 
-
     /**
      * Отримує кількість непрочитаних повідомлень для користувача.
      *
