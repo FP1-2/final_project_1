@@ -5,18 +5,26 @@ import FriendCardProfile from "../FriendCardProfile/FriendCardProfile";
 import { useSelector } from "react-redux";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { getFriends } from "../../redux-toolkit/friend/thunks";
+import { useParams } from "react-router";
+import { clearFriends, clearMyFriends} from "../../redux-toolkit/friend/slice";
 
 const FriendProfile = () => {
   const dispatch = useDispatch();
-  const myId = useSelector(state => state.auth.user.obj.id);
+  const { id } = useParams();
 
   useEffect(() => {
-    dispatch(getFriends(myId));
+    dispatch(getFriends(id));
+    return (() => {
+      dispatch(clearFriends());
+      dispatch(clearMyFriends());
+    });
   }, []);
+
 
   const {
     getFriends: { obj, status, error },
   } = useSelector(state => state.friends);
+
 
   return (
     <>

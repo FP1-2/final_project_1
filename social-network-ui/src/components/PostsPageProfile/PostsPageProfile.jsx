@@ -10,10 +10,14 @@ import { ReactComponent as Calendar } from "../../img/calendarProfileInformation
 import { ReactComponent as Home } from "../../img/homeProfileInformation.svg";
 import ModalEditPost from "../ModalEditPost/ModalEditPost";
 import ModalAddRepost from "../ModalAddRepost/ModalAddRepost";
+import { useParams } from "react-router";
+import { postsUser } from "../../redux-toolkit/post/thunks";
 
 const PostPageProfile = () => {
 
   const dispatch = useDispatch();
+  let idNavigate = useParams().id;
+  idNavigate = parseInt(idNavigate);
   const scrollContainerRef = useRef(null);
   const userObject = useSelector(state => state.profile.profileUser.obj);
 
@@ -24,6 +28,7 @@ const PostPageProfile = () => {
   } = useSelector(state => state.post.postsUser);
 
   useEffect(() => {
+    dispatch(postsUser({ id: idNavigate, page: 0 }));
     return(()=>{dispatch(resetPostsState());});
   }, []);
 

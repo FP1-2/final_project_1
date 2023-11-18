@@ -2,7 +2,7 @@ import React, { useRef, useState, useEffect } from "react";
 import style from "./ProfilePage.module.scss";
 import ModalEditProfile from "../../components/ModalEditProfile/ModalEditProfile";
 import { modalDeleteFriendState, clearFriends, clearMyFriends, cancelLocalRequest, addLocalFriend, addLocalSendRequest, deleteLocalReceived } from "../../redux-toolkit/friend/slice";
-import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom";
 import { ReactComponent as HeaderCamera } from "../../img/camera_headerPhoto.svg";
 import { ReactComponent as AvatarCamera } from "../../img/camera_avatarPhoto.svg";
 import { ReactComponent as Pencil } from "../../img/pencil.svg";
@@ -14,7 +14,6 @@ import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/s
 import { getPhotoURL } from "../../utils/thunks";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
-import { useParams } from "react-router-dom";
 import { getFriends, cancelRequest, requestToFriend, getMyFriends } from "../../redux-toolkit/friend/thunks";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
 import { friend, allRequests, confirmFriendRequest } from "../../redux-toolkit/friend/thunks";
@@ -67,9 +66,7 @@ const ProfilePage = () => {
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
   const [sendRequest, setSendRequest] = useState("no request");
-  const [isMyFriend, setIsMyFriend] = useState();
-
-
+  const [isMyFriend, setIsMyFriend] = useState(false);
 
   useEffect(() => {
     if (newChat.status === 'fulfilled') {
@@ -110,13 +107,15 @@ const ProfilePage = () => {
   }, [idNavigate, deleteStatus, editUserStatus]);
 
   useEffect(() => {
-    if (myFriends.status === "fulfilled" && myFriends.obj.length !== 0)
+    if (myFriends.status === "fulfilled" && myFriends.obj.length !== 0) {
+      setIsMyFriend(false);
       for (const el of myFriends.obj) {
-        if (el.id === idNavigate)
+        if (el.id === idNavigate) {
           setIsMyFriend(true);
-        else
-          setIsMyFriend(false);
+        }
       }
+    }
+
     else if (myFriends.obj.length === 0)
       setIsMyFriend(false);
   }, [myFriends.status, myFriends.obj, idNavigate]);

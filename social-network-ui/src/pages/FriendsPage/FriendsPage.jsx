@@ -4,18 +4,18 @@ import style from './FriendsPage.module.scss';
 import FriendCardProfile from "../../components/FriendCardProfile/FriendCardProfile";
 import { useSelector } from "react-redux";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
-import { getFriends } from "../../redux-toolkit/friend/thunks";
+import { getMyFriends } from "../../redux-toolkit/friend/thunks";
 
 const FriendsPage = () => {
   const dispatch = useDispatch();
   const myId = useSelector(state => state.auth.user.obj.id);
 
   useEffect(() => {
-    dispatch(getFriends(myId));
+    dispatch(getMyFriends(myId));
   }, []);
 
   const {
-    getFriends: { obj, status, error },
+    getMyFriends: { obj, status, error },
   } = useSelector(state => state.friends);
 
   return (
