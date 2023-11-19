@@ -5,6 +5,7 @@ import FriendCardProfile from "../../components/FriendCardProfile/FriendCardProf
 import { useSelector } from "react-redux";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
 import { getMyFriends } from "../../redux-toolkit/friend/thunks";
+import Loader from "../../components/Loader/Loader";
 
 const FriendsPage = () => {
   const dispatch = useDispatch();
@@ -43,7 +44,7 @@ const FriendsPage = () => {
                 </ul>
               ) : status ==="pending"?
                 (
-                  <p>Loading</p>
+                  <Loader/>
                 ):
                 (
                   <p>No friends available</p>
