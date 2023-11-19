@@ -8,7 +8,6 @@ import ModalAddRepost from '../../components/ModalAddRepost/ModalAddRepost';
 import { resetFavouritesState } from '../../redux-toolkit/favourite/slice';
 import { createHandleScroll } from "../../utils/utils";
 import ErrorPage from "../..//components/ErrorPage/ErrorPage";
-import Loader from '../../components/Loader/Loader';
 
 function FavoritesPage() {
   const dispatch = useDispatch();
