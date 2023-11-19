@@ -48,22 +48,19 @@ function FavoritesPage() {
     <>
       {status === "rejected" ?
         <ErrorPage message={error ? error : "Oops something went wrong!"} />
-        :  status ==="pending"?
-          (
-            <Loader/>
-          ):
-          <>
-            <ModalAddRepost />
-            <div className={style.favoritsWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
-              <ul className={style.favorits} >
-                {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
-                  {el.type === "POST" ?
-                    <PostProfile el={el} />
-                    : <RepostProfile el={el} />}
-                </li>) : null}
-              </ul>
-            </div>
-          </>
+        :
+        <>
+          <ModalAddRepost />
+          <div className={style.favoritsWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
+            <ul className={style.favorits} >
+              {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
+                {el.type === "POST" ?
+                  <PostProfile el={el} />
+                  : <RepostProfile el={el} />}
+              </li>) : null}
+            </ul>
+          </div>
+        </>
       }
     </>
   );
