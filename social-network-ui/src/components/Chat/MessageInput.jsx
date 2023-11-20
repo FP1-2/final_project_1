@@ -10,7 +10,7 @@ import data from '@emoji-mart/data';
 import Picker from '@emoji-mart/react';
 import { getPhotoURL } from "../../utils/thunks";
 
-export default function MessageInput({sendMessage, handleMessageChange, message, emojiHandler}) {
+export default function MessageInput({sendMessage, handleMessageChange, message, emojiHandler, handleMessageClick}) {
   const [isOpen, setIsOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState(null);
   const handleFileUpload = (e) => {
@@ -78,6 +78,7 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
 
           <TextInput
             handleMessageChange={handleMessageChange}
+            handleMessageClick={handleMessageClick}
             handleKeyPress={handleKeyPress}
             message={message}
           />
@@ -98,6 +99,7 @@ export default function MessageInput({sendMessage, handleMessageChange, message,
 
 MessageInput.propTypes = {
   sendMessage: PropTypes.func.isRequired,
+  handleMessageClick: PropTypes.func.isRequired,
   handleMessageChange: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,
   emojiHandler: PropTypes.func.isRequired,
@@ -144,10 +146,11 @@ UploadedFile.propTypes = {
   handleDeleteFile: PropTypes.func.isRequired,
 };
 
-function TextInput({handleMessageChange, handleKeyPress, message}) {
+function TextInput({handleMessageChange, handleKeyPress, message, handleMessageClick}) {
   return (
     <textarea
       placeholder="Aa"
+      onClick={handleMessageClick}
       onChange={handleMessageChange}
       onKeyDown={handleKeyPress}
       value={message}
@@ -156,6 +159,7 @@ function TextInput({handleMessageChange, handleKeyPress, message}) {
 }
 
 TextInput.propTypes = {
+  handleMessageClick: PropTypes.func.isRequired,
   handleMessageChange: PropTypes.func.isRequired,
   handleKeyPress: PropTypes.func.isRequired,
   message: PropTypes.string.isRequired,

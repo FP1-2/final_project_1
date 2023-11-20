@@ -145,9 +145,6 @@
                 position: absolute;
             }
 
-            // @include width_992 {
-            //     gap: 15px;
-            // }
 
             @include width_880 {
                 flex-direction: column;
@@ -178,7 +175,7 @@
 
                 .infoAvatar {
                     position: relative;
-                    padding-left: 35px;
+                    padding-left: 20px;
 
                     @include width_880 {
                         padding-left: 0;
@@ -203,10 +200,10 @@
                         background-color: #E4E6EB;
                         position: absolute;
                         top: 120px;
-                        left: 170px;
+                        left: 150px;
 
                         @include width_880 {
-                            left: 140px;
+                            left: 130px;
                         }
 
 
@@ -228,7 +225,7 @@
                 display: flex;
                 flex-direction: column;
                 align-items: flex-start;
-                padding: 32px 10px 35px 230px;
+                padding: 32px 0 35px 205px;
                 z-index: 0;
 
                 @include width_880 {
@@ -302,9 +299,9 @@
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                gap: 25px;
+                gap: 10px;
                 padding-bottom: 35px;
-                padding-right: 30px;
+                padding-right: 10px;
                 z-index: 1;
 
                 .infoBtnDeleteFriend {
@@ -359,7 +356,7 @@
                 }
                 .infoBtnsFriendWrapper{
                     display: flex;
-                    gap: 10px;
+                    gap: 5px;
                 }
 
                 .infoBtnFriend {

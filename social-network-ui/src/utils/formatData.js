@@ -1,3 +1,5 @@
+import {parseISO, format} from 'date-fns';
+
 export const formatDate = (nDate) => {
   const date = new Date(nDate);
   return date.toLocaleTimeString('en-UK',{
@@ -56,4 +58,9 @@ export const getTimeAgo = (nDate) => {
   }
 
   return result;
+}
+
+export const convertToLocalTime = (utcDate) => {
+  const date = parseISO(utcDate + 'Z');
+  return format(date, 'dd-MM-yyyy HH:mm:ss');
 }

@@ -1,12 +1,14 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 import defaultInitialState from './defaultState';
-import builders, {buildersPagination} from '../builders';
-import {loadNotifications,
-        loadNotification,
-        notificationMarkAsRead,
-        loadUnreadCount,
-        updateFriendRequest} from './thunks';
-import {appendPaginationUtil} from "../../utils/utils";
+import builders, { buildersPagination } from '../builders';
+import {
+    loadNotifications,
+    loadNotification,
+    notificationMarkAsRead,
+    loadUnreadCount,
+    updateFriendRequest
+} from './thunks';
+import { appendPaginationUtil } from "../../utils/utils";
 
 const notificationReducer = createSlice({
     name: 'notifications',
@@ -42,7 +44,7 @@ const notificationReducer = createSlice({
                 notification => notification.id !== action.payload
             );
         },
-        editNotificationQt:(state, action) => {
+        editNotificationQt: (state, action) => {
             state.unread_count.obj = state.unread_count.obj + action.payload;
         }
     },
