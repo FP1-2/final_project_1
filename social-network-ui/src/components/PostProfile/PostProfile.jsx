@@ -21,6 +21,7 @@ import { getCommentsPost, addLike, addComment, deletePost } from "../../redux-to
 import { deleteFavourite, addToFavourites } from "../../redux-toolkit/favourite/thunks";
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import { useDispatch } from "react-redux";
+import { deletLocalMainPost } from "../../redux-toolkit/main/slice";
 
 
 const PostProfile = ({ el }) => {
@@ -126,6 +127,7 @@ const PostProfile = ({ el }) => {
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
     dispatch(deleteLocalPost(el.postId));
+    dispatch(deletLocalMainPost(el.postId));
   };
 
   const savePostThunk = async () => {
