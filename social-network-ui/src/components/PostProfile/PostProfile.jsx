@@ -128,6 +128,7 @@ const PostProfile = ({ el }) => {
     dispatch(deletePost(el.postId));
     dispatch(deleteLocalPost(el.postId));
     dispatch(deletLocalMainPost(el.postId));
+    dispatch(deleteLocalFavourite(el.postId));
   };
 
   const savePostThunk = async () => {
