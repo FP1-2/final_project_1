@@ -41,7 +41,7 @@ const ModalAddPost = () => {
       dispatch(appendPostStart({author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, imageUrl: "", body: value.text, title: "add new post" }));
       dispatch(modalAddPostState(false));
     } else {
-      const photo = (await getPhotoURL(value.img));
+      const photo = (await getPhotoURL(value.img)).data.url;
       dispatch(addPost({ imageUrl: photo, body: value.text, title: "add new post" }));
       setErrorValidation(false);
       dispatch(appendPostStart({author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, imageUrl: photo, body: value.text, title: "add new post" }));
