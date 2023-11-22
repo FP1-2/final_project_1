@@ -12,6 +12,7 @@ import ModalEditPost from "../ModalEditPost/ModalEditPost";
 import ModalAddRepost from "../ModalAddRepost/ModalAddRepost";
 import { useParams } from "react-router";
 import { postsUser } from "../../redux-toolkit/post/thunks";
+import { getMyFriends } from "../../redux-toolkit/friend/thunks";
 
 const PostPageProfile = () => {
 
@@ -20,6 +21,7 @@ const PostPageProfile = () => {
   idNavigate = parseInt(idNavigate);
   const scrollContainerRef = useRef(null);
   const userObject = useSelector(state => state.profile.profileUser.obj);
+  const myId = useSelector(state => state.auth.user.obj.id);
 
   const {
     obj: {
@@ -29,6 +31,7 @@ const PostPageProfile = () => {
 
   useEffect(() => {
     dispatch(postsUser({ id: idNavigate, page: 0 }));
+    dispatch(getMyFriends(myId));
     return(()=>{dispatch(resetPostsState());});
   }, []);
 
