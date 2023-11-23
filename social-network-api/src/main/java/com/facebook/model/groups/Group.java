@@ -29,6 +29,6 @@ public class Group extends AbstractEntity {
     private String description;
 
     @OneToMany(mappedBy = "group")
-    private Set<GroupMembership> members = new HashSet<>();
+    private Set<GroupMembers> members = new HashSet<>();
 
 }

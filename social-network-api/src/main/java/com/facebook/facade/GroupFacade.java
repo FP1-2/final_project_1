@@ -4,7 +4,7 @@ import com.facebook.dto.groups.GroupMembershipDto;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.UserGroup;
 import com.facebook.model.groups.Group;
-import com.facebook.model.groups.GroupMembership;
+import com.facebook.model.groups.GroupMembers;
 import com.facebook.model.groups.GroupRole;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -43,7 +43,7 @@ public class GroupFacade {
         return response;
     }
 
-    public GroupMembershipDto mapToGroupMembershipDto(GroupMembership membership) {
+    public GroupMembershipDto mapToGroupMembershipDto(GroupMembers membership) {
         GroupMembershipDto dto = new GroupMembershipDto();
         dto.setId(membership.getId());
         dto.setUser(modelMapper.map(membership.getUser(), UserGroup.class));

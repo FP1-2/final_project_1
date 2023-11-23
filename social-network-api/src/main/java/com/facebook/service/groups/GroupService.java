@@ -6,10 +6,10 @@ import com.facebook.exception.NotFoundException;
 import com.facebook.facade.GroupFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.groups.Group;
-import com.facebook.model.groups.GroupMembership;
+import com.facebook.model.groups.GroupMembers;
 import com.facebook.model.groups.GroupRole;
 import com.facebook.repository.AppUserRepository;
-import com.facebook.repository.groups.GroupMembershipRepository;
+import com.facebook.repository.groups.GroupMembersRepository;
 import com.facebook.repository.groups.GroupPostRepository;
 import com.facebook.repository.groups.GroupRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class GroupService {
 
     private final GroupRepository groupRepository;
 
-    private final GroupMembershipRepository groupMembershipRepository;
+    private final GroupMembersRepository groupMembersRepository;
 
     private final GroupPostRepository groupPostRepository;
 
@@ -47,11 +47,11 @@ public class GroupService {
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException("User not found"));
 
-        GroupMembership membership = new GroupMembership();
+        GroupMembers membership = new GroupMembers();
         membership.setUser(user);
         membership.setGroup(savedGroup);
         membership.setRoles(new GroupRole[]{GroupRole.ADMIN, GroupRole.MEMBER});
-        groupMembershipRepository.save(membership);
+        groupMembersRepository.save(membership);
 
         return getGroupWithMembers(savedGroup.getId());
     }
@@ -61,9 +61,9 @@ public class GroupService {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group not found"));
 
-        List<GroupMembership> admins = groupMembershipRepository
+        List<GroupMembers> admins = groupMembersRepository
                 .findAdminsByGroupId(groupId, GroupRole.ADMIN);
-        List<GroupMembership> lastMembers = groupMembershipRepository
+        List<GroupMembers> lastMembers = groupMembersRepository
                 .findLastMembersByGroupId(groupId, PageRequest.of(0, 10));
 
         GroupResponse groupResponse = groupFacade.mapToGroupResponse(group);

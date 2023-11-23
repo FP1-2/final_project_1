@@ -17,9 +17,9 @@ import java.util.stream.Collectors;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "group_memberships")
+@Table(name = "group_members")
 @EqualsAndHashCode(callSuper = true)
-public class GroupMembership extends AbstractEntity {
+public class GroupMembers extends AbstractEntity {
 
     private static final String DELIMITER = ":";
 
