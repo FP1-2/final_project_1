@@ -1,6 +1,5 @@
 package com.facebook.repository.groups;
 
-import com.facebook.dto.groups.GroupMembershipDto;
 import com.facebook.model.groups.GroupMembership;
 import com.facebook.model.groups.GroupRole;
 import org.springframework.data.domain.Pageable;
