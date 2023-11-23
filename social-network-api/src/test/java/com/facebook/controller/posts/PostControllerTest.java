@@ -16,7 +16,6 @@ import com.facebook.repository.posts.PostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.EmailHandlerService;
 import com.facebook.service.WebSocketService;
-import com.facebook.utils.MathUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
@@ -41,11 +40,8 @@ import org.springframework.test.context.support.DependencyInjectionTestExecution
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
-
-import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;

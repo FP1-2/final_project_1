@@ -10,7 +10,6 @@ import com.facebook.dto.post.RepostRequest;
 import com.facebook.model.AppUser;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.favorites.FavoriteRepository;
 import com.facebook.repository.posts.PostRepository;
 
