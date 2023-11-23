@@ -39,6 +39,8 @@ public class GroupService {
 
     private final AppUserRepository appUserRepository;
 
+    private final GroupQueryService groupQueryService;
+
     @Transactional
     public GroupResponse createGroup(GroupRequest groupRequest, Long userId) {
         Group group = modelMapper.map(groupRequest, Group.class);
@@ -53,27 +55,7 @@ public class GroupService {
         membership.setRoles(new GroupRole[]{GroupRole.ADMIN, GroupRole.MEMBER});
         groupMembersRepository.save(membership);
 
-        return getGroupWithMembers(savedGroup.getId());
-    }
-
-    @Transactional
-    public GroupResponse getGroupWithMembers(Long groupId) {
-        Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group not found"));
-
-        List<GroupMembers> admins = groupMembersRepository
-                .findAdminsByGroupId(groupId, GroupRole.ADMIN);
-        List<GroupMembers> lastMembers = groupMembersRepository
-                .findLastMembersByGroupId(groupId, PageRequest.of(0, 10));
-
-        GroupResponse groupResponse = groupFacade.mapToGroupResponse(group);
-        groupResponse.setAdmins(admins
-                .stream()
-                .map(groupFacade::mapToGroupMembershipDto).collect(Collectors.toSet()));
-        groupResponse.setMembers(lastMembers
-                .stream()
-                .map(groupFacade::mapToGroupMembershipDto).collect(Collectors.toSet()));
-        return groupResponse;
+        return groupQueryService.getGroupWithMembers(savedGroup.getId());
     }
 
 }

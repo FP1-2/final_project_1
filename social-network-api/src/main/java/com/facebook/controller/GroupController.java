@@ -3,6 +3,7 @@ package com.facebook.controller;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.service.CurrentUserService;
+import com.facebook.service.groups.GroupQueryService;
 import com.facebook.service.groups.GroupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,8 @@ public class GroupController {
 
     private final CurrentUserService currentUserService;
 
+    private final GroupQueryService groupQueryService;
+
     @PostMapping
     public ResponseEntity<GroupResponse> createGroup(@Validated
                                                      @RequestBody GroupRequest groupRequest) {
@@ -37,7 +40,7 @@ public class GroupController {
 
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId) {
-        GroupResponse groupResponse = groupService.getGroupWithMembers(groupId);
+        GroupResponse groupResponse = groupQueryService.getGroupWithMembers(groupId);
         return ResponseEntity.ok(groupResponse);
     }
 
