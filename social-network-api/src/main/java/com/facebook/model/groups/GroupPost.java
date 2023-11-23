@@ -1,7 +1,6 @@
-package com.facebook.model.group;
+package com.facebook.model.groups;
 
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.PostStatus;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;

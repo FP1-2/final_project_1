@@ -1,4 +1,4 @@
-package com.facebook.model.posts;
+package com.facebook.model.groups;
 
 /**
  * Перелічення статусів поста в системі.

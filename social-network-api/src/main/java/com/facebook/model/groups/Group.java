@@ -1,4 +1,4 @@
-package com.facebook.model.group;
+package com.facebook.model.groups;
 
 import com.facebook.model.AbstractEntity;
 import jakarta.persistence.Column;
