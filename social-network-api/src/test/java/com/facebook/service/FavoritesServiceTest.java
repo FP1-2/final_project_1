@@ -159,7 +159,6 @@ class FavoritesServiceTest {
         assertEquals("https://via.placeholder.com/150/66b7d2", postResponse.getAuthor().getAvatar());
         assertEquals("Facere sit possimus ut corporis nesciunt.", postResponse.getBody());
         assertEquals("sed", postResponse.getTitle());
-        assertEquals("PUBLISHED", postResponse.getStatus());
         assertEquals(58L, postResponse.getPostId());
     }
 

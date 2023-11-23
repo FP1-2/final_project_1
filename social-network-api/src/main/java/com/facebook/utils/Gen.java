@@ -16,7 +16,6 @@ import com.facebook.model.chat.Message;
 import com.facebook.model.chat.MessageStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
-import com.facebook.model.posts.PostStatus;
 import com.facebook.repository.ChatRepository;
 import com.facebook.repository.MessageRepository;
 import com.facebook.repository.posts.CommentRepository;
@@ -281,11 +280,6 @@ public class Gen {
 
         appUser.setPassword(encodedPassword);
         appUserService.save(appUser);
-    }
-
-    private static PostStatus getRandomPostStatus() {
-        return PostStatus
-                .values()[MathUtils.random(0, PostStatus.values().length - 1)];
     }
 
     private List<Like> genLikes() {

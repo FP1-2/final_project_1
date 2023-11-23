@@ -16,6 +16,7 @@ import com.facebook.repository.posts.PostRepository;
 import com.facebook.service.AppUserService;
 import com.facebook.service.EmailHandlerService;
 import com.facebook.service.WebSocketService;
+import com.facebook.utils.MathUtils;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.extern.log4j.Log4j2;
@@ -27,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -40,8 +42,10 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -165,7 +169,11 @@ class PostControllerTest {
     void testGetCommentsByPostIdWithPagination() {
         // Знаходження поста з понад 4 коментарями
         Post targetPost = postRepository
-                .findPostWithMoreThanFourComments()
+                .findFirstPostWithMoreThanFourComments(PageRequest.of(0, 10))
+                .getContent()
+                .stream()
+                .skip((int) (Math.random() * 10))
+                .findFirst()
                 .orElse(null);
 
         assertNotNull(targetPost,
@@ -758,7 +766,11 @@ class PostControllerTest {
     @Test
     void testGetCommentById() {
         Post targetPost = postRepository
-                .findPostWithMoreThanFourComments()
+                .findFirstPostWithMoreThanFourComments(PageRequest.of(0, 10))
+                .getContent()
+                .stream()
+                .skip((int) (Math.random() * 10))
+                .findFirst()
                 .orElse(null);
 
         assertNotNull(targetPost, "Не знайдено жодного посту з коментарями.");

@@ -70,7 +70,6 @@ public class PostFacade {
         post.setImageUrl(request.getImageUrl());
         post.setTitle(request.getTitle());
         post.setBody(request.getBody());
-        post.setStatus(PostStatus.PUBLISHED);
         post.setType(request.getType());
         post.setUser(user);
         return post;
@@ -81,7 +80,6 @@ public class PostFacade {
         post.setImageUrl(request.getImageUrl());
         post.setTitle(request.getTitle());
         post.setBody(request.getBody());
-        post.setStatus(PostStatus.PUBLISHED);
         post.setType(request.getType());
         post.setUser(user);
         post.setOriginalPostId(request.getOriginalPostId());
@@ -207,7 +205,6 @@ public class PostFacade {
         originalPost.setPostId(sqlResult.getOriginalPostId());
         originalPost.setTitle(sqlResult.getOriginalTitle());
         originalPost.setBody(sqlResult.getOriginalBody());
-        originalPost.setStatus(sqlResult.getOriginalStatus());
         originalPost.setType(sqlResult.getOriginalType());
         originalPost.setIsFavorite(null);
 

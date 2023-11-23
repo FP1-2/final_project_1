@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -63,7 +64,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             p.image_url,
                             p.title,
                             p.body,
-                            p.status,
                             p.type,
                             p.original_post_id,
                           
@@ -74,7 +74,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             u.avatar,
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                            (SELECT GROUP_CONCAT(l.user_id) FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
+                            (SELECT
+                                 GROUP_CONCAT(l.user_id)
+                                 FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
                             GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
@@ -85,13 +87,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                           
                             op.title AS original_title,
                             op.body AS original_body,
-                            op.status AS original_status,
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
-                            (SELECT GROUP_CONCAT(ol.user_id) FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
+                            (SELECT
+                                 GROUP_CONCAT(ol.user_id)
+                                 FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
                             GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids,
-                            (SELECT COUNT(*) FROM favorites f WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
+                            (SELECT COUNT(*)
+                             FROM favorites f
+                             WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
+                             
                         FROM
                             posts p
                         LEFT JOIN posts op ON p.original_post_id = op.id
@@ -163,22 +169,24 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     Long countPostsByUserId(@Param("userId") Long userId);
 
     /**
-     * Знаходить перший пост, який має більше ніж 4 коментарі.
+     * Знаходить сторінку постів, кожен з яких має більше ніж 4 коментарі.
      * <p>
-     * Метод використовує нативний SQL-запит для пошуку поста,
-     * до якого додано понад 4 коментарі. Якщо такий пост знайдено,
-     * він повертається. Якщо ні - повертається пусте значення.
+     * Метод використовує JPQL-запит для пошуку постів, до кожного з яких додано понад 4 коментарі.
+     * Повертається сторінка результатів згідно з параметрами пагінації.
+     * Якщо пости відповідно до умов запиту не знайдені, повертається пуста сторінка.
      * </p>
      *
-     * @return Опціональний об'єкт Post,
-     * який може містити знайдений пост або бути пустим.
+     * @param pageable параметри пагінації, які визначають, які пости та скільки постів будуть повернуті.
+     * @return Сторінка об'єктів Post, яка може містити знайдені пости або бути пустою.
      */
-    @Query(value = """
-            SELECT p.* FROM posts p
-            WHERE (SELECT COUNT(c.id) FROM comments c
-            WHERE c.post_id = p.id) > 4 LIMIT 1
-            """, nativeQuery = true)
-    Optional<Post> findPostWithMoreThanFourComments();
+    @Query("""
+       SELECT p
+       FROM Post p
+       WHERE (SELECT COUNT(c.id)
+              FROM Comment c
+              WHERE c.post.id = p.id) > 4
+       """)
+    Page<Post> findFirstPostWithMoreThanFourComments(Pageable pageable);
 
     /**
      * Виконує запит до бази даних для отримання деталей усіх постів з пагінацією.
