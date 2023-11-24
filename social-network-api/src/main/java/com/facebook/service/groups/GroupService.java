@@ -54,6 +54,10 @@ public class GroupService {
 
     private final GroupQueryService groupQueryService;
 
+    private final String GROUP_NOT_FOUND = "Group not found with id: ";
+
+    private final String USER_NOT_FOUND = "User not found with id: ";
+
     /**
      * Створює нову групу на основі запиту і додає користувача як адміністратора групи.
      *
@@ -68,7 +72,7 @@ public class GroupService {
         Group savedGroup = groupRepository.save(group);
 
         AppUser user = appUserRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found"));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
 
         GroupMembers membership = new GroupMembers();
         membership.setUser(user);
@@ -93,7 +97,7 @@ public class GroupService {
     @Transactional
     public GroupResponse joinGroup(Long groupId, Long userId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group not found"));
+                .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
 
         Optional<GroupMembers> existingMemberOpt = groupMembersRepository
                 .findByUserIdAndGroupId(userId, groupId);
@@ -111,7 +115,7 @@ public class GroupService {
 
         GroupMembers newMember = new GroupMembers();
         newMember.setUser(appUserRepository.findById(userId)
-                .orElseThrow(() -> new NotFoundException("User not found")));
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId)));
         newMember.setGroup(group);
         newMember.setRoles(new GroupRole[]{GroupRole.MEMBER});
         groupMembersRepository.save(newMember);
@@ -135,18 +139,16 @@ public class GroupService {
     public Page<GroupMembersDto> getGroupMembersByRoles(Long groupId,
                                                         GroupRoleRequest roleRequest,
                                                         int page, int size, String sort) {
-        groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group not found with id: " + groupId));
 
-        String roleMember = roleRequest.getRoles().contains(GroupRole.MEMBER) ? "MEMBER" : "";
-        String roleAdmin = roleRequest.getRoles().contains(GroupRole.ADMIN) ? "ADMIN" : "";
-        String roleBanned = roleRequest.getRoles().contains(GroupRole.BANNED) ? "BANNED" : "";
+        if (!groupRepository.existsById(groupId)) {
+            throw new NotFoundException(GROUP_NOT_FOUND + groupId);
+        }
 
         return groupMembersRepository
                 .findMembersByGroupIdAndRoles(groupId,
-                        roleMember,
-                        roleAdmin,
-                        roleBanned,
+                        roleRequest.getRoles().contains(GroupRole.MEMBER) ? "MEMBER" : "",
+                        roleRequest.getRoles().contains(GroupRole.ADMIN) ? "ADMIN" : "",
+                        roleRequest.getRoles().contains(GroupRole.BANNED) ? "BANNED" : "",
                         PageRequest.of(page, size, SortUtils.getSorting(sort)))
                 .map(groupFacade::mapToGroupMembersDto);
     }

@@ -36,6 +36,7 @@ public class GroupQueryService {
     private final GroupFacade groupFacade;
 
     private final ModelMapper modelMapper;
+    private final String GROUP_NOT_FOUND = "Group not found with id: ";
 
     /**
      * Отримує деталі групи разом з її адміністраторами та останніми членами.
@@ -47,7 +48,7 @@ public class GroupQueryService {
     @Transactional
     public GroupResponse getGroupWithMembers(Long groupId) {
         Group group = groupRepository.findById(groupId)
-                .orElseThrow(() -> new NotFoundException("Group not found"));
+                .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
 
         GroupResponse groupResponse = modelMapper.map(group, GroupResponse.class);
 
