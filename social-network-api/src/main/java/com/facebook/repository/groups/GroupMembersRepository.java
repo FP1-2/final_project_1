@@ -1,32 +1,52 @@
 package com.facebook.repository.groups;
 
 import com.facebook.model.groups.GroupMembers;
-import com.facebook.model.groups.GroupRole;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long> {
-    @Query("""
-           SELECT gm
-           FROM GroupMembers gm
-           WHERE gm.group.id = :groupId
-             AND gm.roles LIKE %:adminRole%
-           """)
-    List<GroupMembers> findAdminsByGroupId(@Param("groupId") Long groupId,
-                                           @Param("adminRole") GroupRole adminRole);
 
+    /**
+     * Знаходить члена групи за ідентифікатором користувача та ідентифікатором групи.
+     *
+     * @param userId  Ідентифікатор користувача.
+     * @param groupId Ідентифікатор групи.
+     * @return Optional об'єкт, що містить члена групи або порожній, якщо член не знайдений.
+     */
+    Optional<GroupMembers> findByUserIdAndGroupId(Long userId, Long groupId);
+
+    /**
+     * Знаходить членів групи за заданим ідентифікатором групи та ролями.
+     * Дозволяє фільтрувати членів групи на основі їх ролей (ADMIN, MEMBER, BANNED)
+     * з використанням гнучких параметрів запиту.
+     *
+     * @param groupId Ідентифікатор групи, члени якої повинні бути знайдені.
+     * @param roleMember Рядкове представлення ролі MEMBER, якщо вона повинна бути включена у фільтрацію.
+     * @param roleAdmin Рядкове представлення ролі ADMIN, якщо вона повинна бути включена у фільтрацію.
+     * @param roleBanned Рядкове представлення ролі BANNED, якщо вона повинна бути включена у фільтрацію.
+     * @param pageable Параметри пагінації та сортування для оптимізації видачі результатів.
+     * @return Сторінка (Page) членів групи, які відповідають заданим критеріям фільтрації.
+     */
     @Query("""
-           SELECT gm
-           FROM GroupMembers gm
-           WHERE gm.group.id = :groupId
-           ORDER BY gm.createdDate DESC
-           """)
-    List<GroupMembers> findLastMembersByGroupId(@Param("groupId") Long groupId,
-                                                Pageable pageable);
+       SELECT gm
+       FROM GroupMembers gm
+       WHERE gm.group.id = :groupId
+         AND ( (:roleMember = '' AND :roleAdmin = '' AND :roleBanned = '')
+             OR (:roleMember != '' AND gm.roles LIKE %:roleMember%)
+             OR (:roleAdmin != '' AND gm.roles LIKE %:roleAdmin%)
+             OR (:roleBanned != '' AND gm.roles LIKE %:roleBanned%)
+         )
+       """)
+    Page<GroupMembers> findMembersByGroupIdAndRoles(@Param("groupId") Long groupId,
+                                                    @Param("roleMember") String roleMember,
+                                                    @Param("roleAdmin") String roleAdmin,
+                                                    @Param("roleBanned") String roleBanned,
+                                                    Pageable pageable);
 
 }
 

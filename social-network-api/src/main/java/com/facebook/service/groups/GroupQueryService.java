@@ -1,5 +1,6 @@
 package com.facebook.service.groups;
 
+import com.facebook.dto.groups.GroupMembersDto;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.GroupFacade;
@@ -11,9 +12,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -43,25 +46,41 @@ public class GroupQueryService {
      */
     @Transactional
     public GroupResponse getGroupWithMembers(Long groupId) {
-
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException("Group not found"));
 
         GroupResponse groupResponse = modelMapper.map(group, GroupResponse.class);
 
         groupResponse
-                .setAdmins(groupMembersRepository
-                .findAdminsByGroupId(groupId, GroupRole.ADMIN)
-                .stream()
-                .map(groupFacade::mapToGroupMembersDto).collect(Collectors.toSet()));
-
+                .setAdmins(getGroupMembersByRole(groupId, GroupRole.ADMIN));
         groupResponse
-                .setMembers(groupMembersRepository
-                .findLastMembersByGroupId(groupId, PageRequest.of(0, 10))
-                .stream()
-                .map(groupFacade::mapToGroupMembersDto).collect(Collectors.toSet()));
+                .setMembers(getGroupMembersByRole(groupId, GroupRole.MEMBER));
 
         return groupResponse;
+    }
+
+    /**
+     * Отримує членів групи за їх роллю.
+     * Використовує універсальний запит для фільтрації членів групи на основі конкретної ролі.
+     * Дозволяє отримати, наприклад, лише адміністраторів, звичайних членів або заблокованих користувачів групи,
+     * з врахуванням пагінації та сортування.
+     *
+     * @param groupId Ідентифікатор групи, члени якої будуть запитані.
+     * @param role Роль членів групи (ADMIN, MEMBER, BANNED), яких необхідно отримати.
+     * @return Набір DTO (GroupMembersDto) членів групи, відфільтрованих за заданою роллю.
+     */
+    private Set<GroupMembersDto> getGroupMembersByRole(Long groupId,
+                                                       GroupRole role) {
+     return groupMembersRepository
+                .findMembersByGroupIdAndRoles(groupId,
+                        role == GroupRole.MEMBER ? "MEMBER" : "",
+                        role == GroupRole.ADMIN ? "ADMIN" : "",
+                        role == GroupRole.BANNED ? "BANNED" : "",
+                        PageRequest.of(0, 10,
+                                Sort.Direction.DESC, "createdDate"))
+                .stream()
+                .map(groupFacade::mapToGroupMembersDto)
+                .collect(Collectors.toSet());
     }
 
 }

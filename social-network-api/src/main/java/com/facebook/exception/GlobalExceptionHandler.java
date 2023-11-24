@@ -70,6 +70,40 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
+    /**
+     * Обробляє винятки AlreadyMemberException.
+     * Цей метод викликається, коли користувач вже є членом або адміністратором групи.
+     *
+     * @param ex Виняток, що містить інформацію про конфлікт членства.
+     * @return ResponseEntity з типом помилки та повідомленням.
+     */
+    @ExceptionHandler(AlreadyMemberException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleAlreadyMemberException(AlreadyMemberException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Membership Conflict");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.CONFLICT);
+    }
+
+    /**
+     * Обробляє винятки BannedMemberException.
+     * Цей метод викликається, коли користувач заблокований від вступу до групи.
+     *
+     * @param ex Виняток, що містить інформацію про заборону членства.
+     * @return ResponseEntity з типом помилки та повідомленням.
+     */
+    @ExceptionHandler(BannedMemberException.class)
+    public ResponseEntity<Map<String, Object>>
+    handleBannedMemberException(BannedMemberException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Membership not acceptable");
+        body.put("message", ex.getMessage());
+
+        return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
+    }
+
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>>
     handleAlreadyExistsException(AlreadyExistsException ex) {
