@@ -4,7 +4,7 @@ import com.facebook.model.groups.GroupRole;
 import lombok.Data;
 
 @Data
-public class GroupMembershipDto {
+public class GroupMembersDto {
     private Long id;
     private UserGroup user;
     private GroupRole[] roles;

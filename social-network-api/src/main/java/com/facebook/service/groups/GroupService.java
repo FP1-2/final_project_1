@@ -18,6 +18,11 @@ import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+/**
+ * Основний сервіс для управління групами у соціальній мережі.
+ * Відповідає за створення нових груп та взаємодію з репозиторіями, пов'язаними з групами.
+ * Для оптимізації транзакційних викликів використовує GroupQueryService.
+ */
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -37,6 +42,14 @@ public class GroupService {
 
     private final GroupQueryService groupQueryService;
 
+    /**
+     * Створює нову групу на основі запиту і додає користувача як адміністратора групи.
+     *
+     * @param groupRequest Дані для створення нової групи.
+     * @param userId Ідентифікатор користувача, який створює групу.
+     * @return GroupResponse - DTO з інформацією про створену групу.
+     * @throws NotFoundException якщо користувач для створення групи не знайдений.
+     */
     @Transactional
     public GroupResponse createGroup(GroupRequest groupRequest, Long userId) {
         Group group = modelMapper.map(groupRequest, Group.class);

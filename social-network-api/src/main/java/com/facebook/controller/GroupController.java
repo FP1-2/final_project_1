@@ -17,6 +17,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * Контролер для управління групами в соціальній мережі.
+ * Обробляє HTTP-запити, пов'язані з діями над групами.
+ */
 @Log4j2
 @Validated
 @RestController
@@ -30,6 +34,12 @@ public class GroupController {
 
     private final GroupQueryService groupQueryService;
 
+    /**
+     * Створює нову групу на основі отриманого запиту.
+     *
+     * @param groupRequest DTO з даними для створення групи.
+     * @return ResponseEntity, що містить GroupResponse з інформацією про створену групу.
+     */
     @PostMapping
     public ResponseEntity<GroupResponse> createGroup(@Validated
                                                      @RequestBody GroupRequest groupRequest) {
@@ -38,6 +48,12 @@ public class GroupController {
         return new ResponseEntity<>(newGroupResponse, HttpStatus.CREATED);
     }
 
+    /**
+     * Отримує інформацію про групу за її ідентифікатором.
+     *
+     * @param groupId Ідентифікатор групи, інформацію про яку потрібно отримати.
+     * @return ResponseEntity, що містить GroupResponse з детальною інформацією про групу.
+     */
     @GetMapping("/{groupId}")
     public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId) {
         GroupResponse groupResponse = groupQueryService.getGroupWithMembers(groupId);

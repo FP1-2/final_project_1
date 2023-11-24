@@ -16,6 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.stream.Collectors;
 
+/**
+ * Допоміжний сервіс, який використовується для поділу логіки GroupService.
+ * Це дозволяє уникнути прямих викликів транзакційних методів через 'this'
+ * та вирішити проблему циклічних посилань у Spring-контейнері.
+ */
 @Log4j2
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,13 @@ public class GroupQueryService {
 
     private final ModelMapper modelMapper;
 
+    /**
+     * Отримує деталі групи разом з її адміністраторами та останніми членами.
+     *
+     * @param groupId Ідентифікатор групи, інформацію про яку потрібно отримати.
+     * @return GroupResponse - DTO з інформацією про групу, її адміністраторів та останніх членів.
+     * @throws NotFoundException якщо група з даним ідентифікатором не знайдена.
+     */
     @Transactional
     public GroupResponse getGroupWithMembers(Long groupId) {
 
@@ -41,13 +53,13 @@ public class GroupQueryService {
                 .setAdmins(groupMembersRepository
                 .findAdminsByGroupId(groupId, GroupRole.ADMIN)
                 .stream()
-                .map(groupFacade::mapToGroupMembershipDto).collect(Collectors.toSet()));
+                .map(groupFacade::mapToGroupMembersDto).collect(Collectors.toSet()));
 
         groupResponse
                 .setMembers(groupMembersRepository
                 .findLastMembersByGroupId(groupId, PageRequest.of(0, 10))
                 .stream()
-                .map(groupFacade::mapToGroupMembershipDto).collect(Collectors.toSet()));
+                .map(groupFacade::mapToGroupMembersDto).collect(Collectors.toSet()));
 
         return groupResponse;
     }
