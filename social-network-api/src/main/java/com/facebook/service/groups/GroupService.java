@@ -61,11 +61,11 @@ public class GroupService {
 
     private final GroupQueryService groupQueryService;
 
-    private final static String GROUP_NOT_FOUND = "Group not found with id: ";
+    private static final String GROUP_NOT_FOUND = "Group not found with id: ";
 
-    private final static String USER_NOT_FOUND = "User not found with id: ";
+    private static final String USER_NOT_FOUND = "User not found with id: ";
 
-    private final static String NOT_A_MEMBER =  "User is not a member of the group";
+    private static final String NOT_A_MEMBER =  "User is not a member of the group";
 
     /**
      * Створює нову групу на основі запиту і додає користувача як адміністратора групи.

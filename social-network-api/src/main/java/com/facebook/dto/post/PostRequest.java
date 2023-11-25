@@ -45,9 +45,8 @@ public class PostRequest {
 
     @Override
     public String toString() {
-        return """
-                PostRequest{imageUrl='%s', title='%s', body='%s', type=%s}"""
-                .formatted(imageUrl, title, body, type);
+        return String.format("PostRequest{imageUrl='%s', title='%s', body='%s', type=%s}",
+                imageUrl, title, body, type);
     }
 
 }

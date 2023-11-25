@@ -37,7 +37,7 @@ public class GroupQueryService {
 
     private final ModelMapper modelMapper;
 
-    private final static String GROUP_NOT_FOUND = "Group not found with id: ";
+    private static final String GROUP_NOT_FOUND = "Group not found with id: ";
 
     /**
      * Отримує деталі групи разом з її адміністраторами та останніми членами.
