@@ -4,6 +4,7 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -98,9 +99,28 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Map<String, Object>>
     handleBannedMemberException(BannedMemberException ex) {
         Map<String, Object> body = new LinkedHashMap<>();
-        body.put("type", "Membership not acceptable");
+        body.put("type", "Members not acceptable");
         body.put("message", ex.getMessage());
 
+        return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
+    }
+
+    /**
+     * Обробник виняткового випадку, коли доступ заборонено.
+     * <p>
+     * Цей метод обробляє винятки {@link AccessDeniedException}, які виникають, коли користувачеві
+     * відмовлено в доступі до певного ресурсу або дії через відсутність відповідних прав.
+     * Відповідь містить тип помилки і деталізоване повідомлення про причину відмови.
+     * </p>
+     *
+     * @param ex Виняток, який містить інформацію про причину відмови у доступі.
+     * @return Відповідь ResponseEntity з інформацією про помилку та відповідним HTTP статусом.
+     */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<Map<String, Object>> handleAccessDeniedException(AccessDeniedException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Access Denied");
+        body.put("message", ex.getMessage());
         return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
     }
 

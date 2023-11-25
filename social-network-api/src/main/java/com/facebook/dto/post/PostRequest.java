@@ -43,4 +43,11 @@ public class PostRequest {
      */
     private final PostType type = PostType.POST;
 
+    @Override
+    public String toString() {
+        return """
+                PostRequest{imageUrl='%s', title='%s', body='%s', type=%s}"""
+                .formatted(imageUrl, title, body, type);
+    }
+
 }

@@ -36,7 +36,8 @@ public class GroupQueryService {
     private final GroupFacade groupFacade;
 
     private final ModelMapper modelMapper;
-    private final String GROUP_NOT_FOUND = "Group not found with id: ";
+
+    private final static String GROUP_NOT_FOUND = "Group not found with id: ";
 
     /**
      * Отримує деталі групи разом з її адміністраторами та останніми членами.
@@ -72,6 +73,7 @@ public class GroupQueryService {
      */
     private Set<GroupMembersDto> getGroupMembersByRole(Long groupId,
                                                        GroupRole role) {
+
      return groupMembersRepository
                 .findMembersByGroupIdAndRoles(groupId,
                         role == GroupRole.MEMBER ? "MEMBER" : "",

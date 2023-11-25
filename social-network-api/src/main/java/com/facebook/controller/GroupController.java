@@ -1,6 +1,9 @@
 package com.facebook.controller;
 
 import com.facebook.dto.groups.GroupMembersDto;
+import com.facebook.dto.groups.GroupPostBase;
+import com.facebook.dto.groups.GroupPostRequest;
+import com.facebook.dto.groups.GroupPostResponse;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
@@ -53,11 +56,13 @@ public class GroupController {
      * @return ResponseEntity, що містить GroupResponse з інформацією про створену групу.
      */
     @PostMapping
-    public ResponseEntity<GroupResponse> createGroup(@Validated
-                                                     @RequestBody GroupRequest groupRequest) {
-        Long userId = currentUserService.getCurrentUserId();
-        GroupResponse newGroupResponse = groupService.createGroup(groupRequest, userId);
-        return new ResponseEntity<>(newGroupResponse, HttpStatus.CREATED);
+    public ResponseEntity<GroupResponse>
+    createGroup(@Validated
+                @RequestBody GroupRequest groupRequest) {
+        return new ResponseEntity<>(groupService
+                .createGroup(groupRequest,
+                        currentUserService.getCurrentUserId()),
+                HttpStatus.CREATED);
     }
 
     /**
@@ -67,9 +72,10 @@ public class GroupController {
      * @return ResponseEntity, що містить GroupResponse з детальною інформацією про групу.
      */
     @GetMapping("/{groupId}")
-    public ResponseEntity<GroupResponse> getGroup(@PathVariable Long groupId) {
-        GroupResponse groupResponse = groupQueryService.getGroupWithMembers(groupId);
-        return ResponseEntity.ok(groupResponse);
+    public ResponseEntity<GroupResponse>
+    getGroup(@PathVariable Long groupId) {
+        return ResponseEntity.ok(groupQueryService
+                .getGroupWithMembers(groupId));
     }
 
     /**
@@ -84,10 +90,11 @@ public class GroupController {
      * @throws BannedMemberException Якщо користувач заблокований у групі.
      */
     @PostMapping("/{groupId}/join")
-    public ResponseEntity<GroupResponse> joinGroup(@PathVariable Long groupId) {
-        Long userId = currentUserService.getCurrentUserId();
-        GroupResponse response = groupService.joinGroup(groupId, userId);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<GroupResponse>
+    joinGroup(@PathVariable Long groupId) {
+        return ResponseEntity.ok(groupService
+                .joinGroup(groupId,
+                        currentUserService.getCurrentUserId()));
     }
 
     /**
@@ -109,15 +116,56 @@ public class GroupController {
      * @return Відповідь ResponseEntity, що містить сторінку членів групи (GroupMembersDto).
      */
     @GetMapping("/{groupId}/members")
-    public ResponseEntity<Page<GroupMembersDto>> getGroupMembersByRole(
+    public ResponseEntity<Page<GroupMembersDto>>
+    getGroupMembersByRole(
             @PathVariable Long groupId,
             @RequestParam(required = false) List<GroupRole> roles,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,desc") String sort) {
         GroupRoleRequest roleRequest = new GroupRoleRequest();
-        roleRequest.setRoles(new HashSet<>(roles != null ? roles : Collections.emptyList()));
-        return ResponseEntity.ok(groupService.getGroupMembersByRoles(groupId, roleRequest, page, size, sort));
+        roleRequest.setRoles(new HashSet<>(roles != null
+                ? roles : Collections.emptyList()));
+        return ResponseEntity.ok(groupService
+                .getGroupMembersByRoles(groupId,
+                        roleRequest, page, size, sort));
+    }
+
+    /**
+     * Создает новый пост в группе.
+     *
+     * @param groupId Идентификатор группы, в которой создается пост.
+     * @param request Тело запроса, содержащее данные для создания поста.
+     * @return Ответ с созданным постом и статусом HTTP CREATED.
+     */
+    @PostMapping("/{groupId}/posts")
+    public ResponseEntity<GroupPostBase>
+    createGroupPost(@PathVariable Long groupId,
+                    @Validated @RequestBody GroupPostRequest request) {
+        return new ResponseEntity<>(groupService
+                .createGroupPost(request,
+                        currentUserService.getCurrentUserId(),
+                        groupId), HttpStatus.CREATED);
+    }
+
+    /**
+     * Ендпойнт для отримання деталей поста у групі.
+     * Перевіряє, чи є поточний користувач членом групи та забезпечує доступ до детальної інформації про пост.
+     * Якщо пост є репостом, також повертає інформацію про оригінальний пост.
+     *
+     * @param groupId Ідентифікатор групи, в якій знаходиться пост.
+     * @param postId Ідентифікатор поста, деталі якого потрібно отримати.
+     * @return ResponseEntity, що містить {@link GroupPostResponse} з деталями поста.
+     */
+    @GetMapping("/{groupId}/posts/{postId}")
+    public ResponseEntity<GroupPostResponse>
+    getGroupPostDetails(
+            @PathVariable Long groupId,
+            @PathVariable Long postId) {
+        return ResponseEntity.ok(groupService
+                .getGroupPostDetails(groupId,
+                        postId,
+                        currentUserService.getCurrentUserId()));
     }
 
 }

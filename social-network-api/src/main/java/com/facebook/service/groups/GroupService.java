@@ -1,6 +1,9 @@
 package com.facebook.service.groups;
 
 import com.facebook.dto.groups.GroupMembersDto;
+import com.facebook.dto.groups.GroupPostBase;
+import com.facebook.dto.groups.GroupPostRequest;
+import com.facebook.dto.groups.GroupPostResponse;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
@@ -11,7 +14,9 @@ import com.facebook.facade.GroupFacade;
 import com.facebook.model.AppUser;
 import com.facebook.model.groups.Group;
 import com.facebook.model.groups.GroupMembers;
+import com.facebook.model.groups.GroupPost;
 import com.facebook.model.groups.GroupRole;
+import com.facebook.model.groups.PostStatus;
 import com.facebook.repository.AppUserRepository;
 import com.facebook.repository.groups.GroupMembersRepository;
 import com.facebook.repository.groups.GroupPostRepository;
@@ -20,8 +25,10 @@ import com.facebook.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,9 +61,11 @@ public class GroupService {
 
     private final GroupQueryService groupQueryService;
 
-    private final String GROUP_NOT_FOUND = "Group not found with id: ";
+    private final static String GROUP_NOT_FOUND = "Group not found with id: ";
 
-    private final String USER_NOT_FOUND = "User not found with id: ";
+    private final static String USER_NOT_FOUND = "User not found with id: ";
+
+    private final static String NOT_A_MEMBER =  "User is not a member of the group";
 
     /**
      * Створює нову групу на основі запиту і додає користувача як адміністратора групи.
@@ -151,6 +160,83 @@ public class GroupService {
                         roleRequest.getRoles().contains(GroupRole.BANNED) ? "BANNED" : "",
                         PageRequest.of(page, size, SortUtils.getSorting(sort)))
                 .map(groupFacade::mapToGroupMembersDto);
+    }
+
+    /**
+     * Створює новий пост у групі. Метод виконує перевірку, чи користувач є членом групи,
+     * а також визначає роль користувача в групі. Якщо користувач є адміністратором,
+     * пост автоматично публікується. Інакше, пост зберігається як чернетка.
+     *
+     * @param request Об'єкт запиту для створення поста, що містить необхідну інформацію.
+     * @param userId Ідентифікатор користувача, який створює пост.
+     * @param groupId Ідентифікатор групи, в якій створюється пост.
+     * @return Об'єкт {@link GroupPostBase}, що представляє базову інформацію про створений пост.
+     * @throws NotFoundException якщо група або користувач не знайдені.
+     * @throws AccessDeniedException якщо користувач не є членом групи.
+     * @throws IllegalStateException якщо виникає проблема зі збереженням поста.
+     */
+    @Transactional
+    public GroupPostBase createGroupPost(GroupPostRequest request, Long userId, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
+
+        AppUser user = appUserRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
+
+        GroupMembers membership = groupMembersRepository
+                .findByUserIdAndGroupId(userId, groupId)
+                .orElseThrow(() -> new AccessDeniedException(NOT_A_MEMBER));
+
+        GroupPost groupPost = groupFacade
+                .convertGroupPostRequestToGroupPost(request, user, group);
+
+        if (Arrays.asList(membership.getRoles()).contains(GroupRole.ADMIN)) {
+            groupPost.setStatus(PostStatus.PUBLISHED);
+        } else {
+            groupPost.setStatus(PostStatus.DRAFT);
+        }
+
+        return Optional.of(groupPostRepository.save(groupPost))
+                .filter(savedPost -> savedPost.getId() != null)
+                .flatMap(savedPost -> groupPostRepository
+                        .findGroupPostDetailsById(savedPost.getId(), groupId, userId))
+                .orElseThrow(() -> new IllegalStateException("Failed to save or retrieve group post"));
+    }
+
+    /**
+     * Отримує деталі поста у групі. Витягує базову інформацію про пост
+     * за його ідентифікатором. Якщо це репост, також отримує інформацію
+     * про оригінальний пост.
+     *
+     * @param groupId Ідентифікатор групи, в якій розміщено пост.
+     * @param postId Ідентифікатор поста, деталі якого потрібно отримати.
+     * @param userId Ідентифікатор користувача, який запитує інформацію.
+     * @return Об'єкт {@link GroupPostResponse}, що містить детальну інформацію про пост,
+     *         включно з інформацією про оригінальний пост, якщо він існує.
+     * @throws AccessDeniedException якщо користувач не є членом групи.
+     * @throws NotFoundException якщо пост або оригінальний пост не знайдені.
+     */
+    @Transactional
+    public GroupPostResponse getGroupPostDetails(Long groupId, Long postId, Long userId) {
+ GroupPostBase basePost = groupPostRepository
+                .findGroupPostDetailsById(postId, groupId, userId)
+                .orElseThrow(() -> new NotFoundException("Group post not found with id: " + postId));
+
+        GroupPostResponse response = new GroupPostResponse();
+        BeanUtils.copyProperties(basePost, response);
+
+        if (basePost.getOriginalPostId() != null) {
+            response.setOriginalPost(groupPostRepository
+                    .findGroupPostDetailsById(basePost.getOriginalPostId(), groupId, userId)
+                    .map(base -> {
+                        GroupPostResponse originalResponse = new GroupPostResponse();
+                        BeanUtils.copyProperties(base, originalResponse);
+                        return originalResponse;
+                    })
+                    .orElseThrow(() -> new NotFoundException("Original group post not found with id: " + basePost.getOriginalPostId())));
+        }
+
+        return response;
     }
 
 }

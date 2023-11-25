@@ -1,8 +1,12 @@
 package com.facebook.facade;
 
 import com.facebook.dto.groups.GroupMembersDto;
+import com.facebook.dto.groups.GroupPostRequest;
 import com.facebook.dto.groups.UserGroup;
+import com.facebook.model.AppUser;
+import com.facebook.model.groups.Group;
 import com.facebook.model.groups.GroupMembers;
+import com.facebook.model.groups.GroupPost;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
@@ -31,6 +35,20 @@ public class GroupFacade {
         dto.setUser(modelMapper.map(members.getUser(), UserGroup.class));
         dto.setRoles(members.getRoles());
         return dto;
+    }
+
+    public GroupPost convertGroupPostRequestToGroupPost(GroupPostRequest request, AppUser user, Group group) {
+        GroupPost groupPost = new GroupPost();
+
+        groupPost.setImageUrl(request.getImageUrl());
+        groupPost.setTitle(request.getTitle());
+        groupPost.setBody(request.getBody());
+        groupPost.setType(request.getType());
+
+        groupPost.setGroup(group);
+        groupPost.setUser(user);
+
+        return groupPost;
     }
 
 }
