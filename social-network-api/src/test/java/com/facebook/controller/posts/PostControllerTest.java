@@ -253,7 +253,7 @@ class PostControllerTest {
             ).getBody();
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-                        {"type":"Not Found Error","message":"Post not found!"}
+                        {"type":"Not Found Error","message":"Post not found with id: 999"}
                     """
                     .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
@@ -326,7 +326,7 @@ class PostControllerTest {
             createRepost(invalidRepostRequest);
         } catch (HttpClientErrorException e) {
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
-            assertTrue(e.getResponseBodyAsString().contains("Original post not found!"));
+            assertTrue(e.getResponseBodyAsString().contains("Post not found with id: 9999"));
             return;
         }
         fail("Expected HttpClientErrorException with message 'Original post not found!'");
@@ -594,7 +594,7 @@ class PostControllerTest {
             );
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-                        {"type":"Not Found Error","message":"Post not found!"}
+                        {"type":"Not Found Error","message":"Post not found with id: 9999"}
                     """
                     .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
