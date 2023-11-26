@@ -74,6 +74,8 @@ public class GroupService {
             + " as this post is marked for deletion.";
     private static final String ORIGINAL_GROUP_POST_NOT_FOUND = "Original group post not found with id: ";
     private static final String GROUP_POST_NOT_FOUND = "Group post not found with id: ";
+    private static final String  ALREADY_PUBLISHED = "Post is already published.";
+    private static final String UNKNOWN_POST_STATUS = "Unknown post status encountered.";
 
     /**
      * Створює нову групу на основі запиту і додає користувача як адміністратора групи.
@@ -342,6 +344,8 @@ public class GroupService {
             case DRAFT -> throw new AccessDeniedException(DRAFT_STATUS_ACCESS_DENIED_MESSAGE);
             case ARCHIVED -> throw new AccessDeniedException(ARCHIVED_STATUS_ACCESS_DENIED_MESSAGE);
             case REJECTED -> throw new AccessDeniedException(REJECTED_STATUS_ACCESS_DENIED_MESSAGE);
+            case PUBLISHED -> log.info(ALREADY_PUBLISHED);
+            default -> throw new AccessDeniedException(UNKNOWN_POST_STATUS);
         }
     }
 

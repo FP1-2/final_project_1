@@ -9,14 +9,10 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 
-/**
- * Клас DTO для базової інформації про пости у групах.
- * Використовується для представлення даних, отриманих з запитів до бази даних.
- */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class GroupPostBase {
+public class GroupPostBase{
     private Long id;
     private Long groupId;
     private PostStatus status;
@@ -32,4 +28,5 @@ public class GroupPostBase {
     private Long likes;
     private Long reposts;
     private Long originalPostId;
+
 }

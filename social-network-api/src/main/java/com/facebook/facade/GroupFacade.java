@@ -91,7 +91,9 @@ public class GroupFacade {
         GroupPostResponse response = modelMapper.map(base, GroupPostResponse.class);
         GroupMember groupMember = modelMapper.map(members, GroupMember.class);
         groupMember.setUser(modelMapper.map(members.getUser(), UserGroup.class));
-        response.setAuthor(groupMember);
+        response.setAuthorMember(groupMember);
+        response.setAuthor(null);
+        response.setOriginalPostId(null);
         return response;
     }
 
