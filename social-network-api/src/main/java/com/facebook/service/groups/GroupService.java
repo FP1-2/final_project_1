@@ -1,9 +1,10 @@
 package com.facebook.service.groups;
 
-import com.facebook.dto.groups.GroupMembersDto;
+import com.facebook.dto.groups.GroupMember;
 import com.facebook.dto.groups.GroupPostBase;
 import com.facebook.dto.groups.GroupPostRequest;
 import com.facebook.dto.groups.GroupPostResponse;
+import com.facebook.dto.groups.GroupRepostRequest;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
@@ -25,7 +26,6 @@ import com.facebook.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
-import org.springframework.beans.BeanUtils;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.access.AccessDeniedException;
@@ -60,18 +60,26 @@ public class GroupService {
     private final AppUserRepository appUserRepository;
 
     private final GroupQueryService groupQueryService;
-
+    private static final String USER_IS_BANNED = "User is banned from joining the group";
+    private static final String ALREADY_A_MEMBER = "User is already a member or admin of the group.";
     private static final String GROUP_NOT_FOUND = "Group not found with id: ";
-
     private static final String USER_NOT_FOUND = "User not found with id: ";
-
-    private static final String NOT_A_MEMBER =  "User is not a member of the group";
+    private static final String NOT_A_MEMBER = "User is not a member of the group";
+    private static final String FAILED_TO_SAVE = "Failed to save or retrieve group";
+    private static final String DRAFT_STATUS_ACCESS_DENIED_MESSAGE = "You cannot access"
+            + " this post as it is currently in draft status.";
+    private static final String ARCHIVED_STATUS_ACCESS_DENIED_MESSAGE = "This post is archived"
+            + " and no longer accessible.";
+    private static final String REJECTED_STATUS_ACCESS_DENIED_MESSAGE = "Access is denied"
+            + " as this post is marked for deletion.";
+    private static final String ORIGINAL_GROUP_POST_NOT_FOUND = "Original group post not found with id: ";
+    private static final String GROUP_POST_NOT_FOUND = "Group post not found with id: ";
 
     /**
      * Створює нову групу на основі запиту і додає користувача як адміністратора групи.
      *
      * @param groupRequest Дані для створення нової групи.
-     * @param userId Ідентифікатор користувача, який створює групу.
+     * @param userId       Ідентифікатор користувача, який створює групу.
      * @return GroupResponse - DTO з інформацією про створену групу.
      * @throws NotFoundException якщо користувач для створення групи не знайдений.
      */
@@ -97,11 +105,11 @@ public class GroupService {
      * адміністратором групи, або чи не заблокований він в цій групі.
      *
      * @param groupId Ідентифікатор групи, до якої користувач намагається вступити.
-     * @param userId Ідентифікатор користувача, який намагається вступити до групи.
+     * @param userId  Ідентифікатор користувача, який намагається вступити до групи.
      * @return GroupResponse - DTO з інформацією про групу після вступу користувача.
-     * @throws NotFoundException якщо група або користувач не знайдені.
+     * @throws NotFoundException      якщо група або користувач не знайдені.
      * @throws AlreadyMemberException якщо користувач вже є членом або адміністратором групи.
-     * @throws BannedMemberException якщо користувач заблокований в групі.
+     * @throws BannedMemberException  якщо користувач заблокований в групі.
      */
     @Transactional
     public GroupResponse joinGroup(Long groupId, Long userId) {
@@ -116,9 +124,11 @@ public class GroupService {
             Set<GroupRole> roles = new HashSet<>(Arrays.asList(existingMember.getRoles()));
 
             if (roles.contains(GroupRole.ADMIN) || roles.contains(GroupRole.MEMBER)) {
-                throw new AlreadyMemberException("User is already a member or admin of the group");
+                throw new AlreadyMemberException(ALREADY_A_MEMBER);
+
             } else if (roles.contains(GroupRole.BANNED)) {
-                throw new BannedMemberException("User is banned from joining the group");
+                throw new BannedMemberException(USER_IS_BANNED);
+
             }
         }
 
@@ -137,17 +147,17 @@ public class GroupService {
      * Цей метод використовує GroupRoleRequest для фільтрації членів групи в залежності від їх ролей,
      * включаючи ADMIN, MEMBER та BANNED. Також використовується пагінація та сортування.
      *
-     * @param groupId Ідентифікатор групи, члени якої повинні бути знайдені.
+     * @param groupId     Ідентифікатор групи, члени якої повинні бути знайдені.
      * @param roleRequest Запит, що містить набір ролей для фільтрації членів групи.
-     * @param page Номер сторінки для пагінації.
-     * @param size Кількість записів на сторінку.
-     * @param sort Параметр сортування у форматі "поле,направлення".
+     * @param page        Номер сторінки для пагінації.
+     * @param size        Кількість записів на сторінку.
+     * @param sort        Параметр сортування у форматі "поле,направлення".
      * @return Сторінка членів групи (GroupMembersDto), які відповідають заданим критеріям.
      * @throws NotFoundException Якщо група з заданим ідентифікатором не знайдена.
      */
-    public Page<GroupMembersDto> getGroupMembersByRoles(Long groupId,
-                                                        GroupRoleRequest roleRequest,
-                                                        int page, int size, String sort) {
+    public Page<GroupMember> getGroupMembersByRoles(Long groupId,
+                                                    GroupRoleRequest roleRequest,
+                                                    int page, int size, String sort) {
 
         if (!groupRepository.existsById(groupId)) {
             throw new NotFoundException(GROUP_NOT_FOUND + groupId);
@@ -168,29 +178,29 @@ public class GroupService {
      * пост автоматично публікується. Інакше, пост зберігається як чернетка.
      *
      * @param request Об'єкт запиту для створення поста, що містить необхідну інформацію.
-     * @param userId Ідентифікатор користувача, який створює пост.
+     * @param userId  Ідентифікатор користувача, який створює пост.
      * @param groupId Ідентифікатор групи, в якій створюється пост.
      * @return Об'єкт {@link GroupPostBase}, що представляє базову інформацію про створений пост.
-     * @throws NotFoundException якщо група або користувач не знайдені.
+     * @throws NotFoundException     якщо група або користувач не знайдені.
      * @throws AccessDeniedException якщо користувач не є членом групи.
      * @throws IllegalStateException якщо виникає проблема зі збереженням поста.
      */
     @Transactional
-    public GroupPostBase createGroupPost(GroupPostRequest request, Long userId, Long groupId) {
+    public GroupPostResponse createGroupPost(GroupPostRequest request, Long userId, Long groupId) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
 
         AppUser user = appUserRepository.findById(userId)
                 .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
 
-        GroupMembers membership = groupMembersRepository
+        GroupMembers members = groupMembersRepository
                 .findByUserIdAndGroupId(userId, groupId)
                 .orElseThrow(() -> new AccessDeniedException(NOT_A_MEMBER));
 
         GroupPost groupPost = groupFacade
                 .convertGroupPostRequestToGroupPost(request, user, group);
 
-        if (Arrays.asList(membership.getRoles()).contains(GroupRole.ADMIN)) {
+        if (Arrays.asList(members.getRoles()).contains(GroupRole.ADMIN)) {
             groupPost.setStatus(PostStatus.PUBLISHED);
         } else {
             groupPost.setStatus(PostStatus.DRAFT);
@@ -200,7 +210,60 @@ public class GroupService {
                 .filter(savedPost -> savedPost.getId() != null)
                 .flatMap(savedPost -> groupPostRepository
                         .findGroupPostDetailsById(savedPost.getId(), groupId, userId))
-                .orElseThrow(() -> new IllegalStateException("Failed to save or retrieve group post"));
+                .map(base -> groupFacade.convertGroupPostBaseToGroupPostResponse(base, members))
+                .orElseThrow(() -> new IllegalStateException(FAILED_TO_SAVE + " post"));
+    }
+
+    /**
+     * Створює репост у вказаній групі від імені вказаного користувача. Метод виконує перевірку наявності групи, користувача та членства користувача у групі.
+     * Також перевіряється, що оригінальний пост існує та доступний для репосту (не архівований чи відхилений). Залежно від ролі користувача у групі,
+     * статус репосту може бути встановлений як опублікований або чорновик. Після збереження репосту в базу даних, виконується його отримання
+     * та конвертація у GroupPostResponse, де також додається інформація про оригінальний пост.
+     *
+     * @param request Об'єкт запиту для створення репосту.
+     * @param userId Ідентифікатор користувача, який робить репост.
+     * @param groupId Ідентифікатор групи, у якій робиться репост.
+     * @return GroupPostResponse - об'єкт відповіді, що містить інформацію про створений репост.
+     * @throws NotFoundException Якщо не знайдено групу, користувача або оригінальний пост.
+     * @throws AccessDeniedException Якщо користувач не є членом групи або оригінальний пост не доступний для репосту.
+     * @throws IllegalStateException Якщо виникає помилка під час збереження репосту.
+     */
+    @Transactional
+    public GroupPostResponse createGroupRepost(GroupRepostRequest request, Long userId, Long groupId) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
+
+        AppUser user = appUserRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + userId));
+
+        GroupMembers members = groupMembersRepository
+                .findByUserIdAndGroupId(userId, groupId)
+                .orElseThrow(() -> new AccessDeniedException(NOT_A_MEMBER));
+
+        GroupPost groupPost = groupFacade
+                .convertGroupRepostRequestToGroupPost(request, user, group);
+
+        GroupPostBase originalPost = groupPostRepository
+                .findGroupPostDetailsById(request.getOriginalPostId(), groupId, userId)
+                .orElseThrow(()-> new NotFoundException(ORIGINAL_GROUP_POST_NOT_FOUND
+                        + request.getOriginalPostId()));
+        checkPostStatus(originalPost.getStatus());
+
+        if (Arrays.asList(members.getRoles()).contains(GroupRole.ADMIN)) {
+            groupPost.setStatus(PostStatus.PUBLISHED);
+        } else groupPost.setStatus(PostStatus.DRAFT);
+
+        return Optional.of(groupPostRepository.save(groupPost))
+                .filter(savedPost -> savedPost.getId() != null)
+                .flatMap(savedPost -> groupPostRepository
+                        .findGroupPostDetailsById(savedPost.getId(), groupId, userId))
+                .map(basePost -> {
+                    GroupPostResponse response = groupFacade
+                            .convertGroupPostBaseToGroupPostResponse(basePost, members);
+                    addOriginalPost(response, basePost, groupId, userId);
+                    return response;
+                })
+                .orElseThrow(() -> new IllegalStateException(FAILED_TO_SAVE + " repost"));
     }
 
     /**
@@ -209,34 +272,77 @@ public class GroupService {
      * про оригінальний пост.
      *
      * @param groupId Ідентифікатор групи, в якій розміщено пост.
-     * @param postId Ідентифікатор поста, деталі якого потрібно отримати.
-     * @param userId Ідентифікатор користувача, який запитує інформацію.
+     * @param postId  Ідентифікатор поста, деталі якого потрібно отримати.
+     * @param userId  Ідентифікатор користувача, який запитує інформацію.
      * @return Об'єкт {@link GroupPostResponse}, що містить детальну інформацію про пост,
-     *         включно з інформацією про оригінальний пост, якщо він існує.
+     * включно з інформацією про оригінальний пост, якщо він існує.
      * @throws AccessDeniedException якщо користувач не є членом групи.
-     * @throws NotFoundException якщо пост або оригінальний пост не знайдені.
+     * @throws NotFoundException     якщо пост або оригінальний пост не знайдені.
      */
     @Transactional
     public GroupPostResponse getGroupPostDetails(Long groupId, Long postId, Long userId) {
- GroupPostBase basePost = groupPostRepository
+        GroupPostBase basePost = groupPostRepository
                 .findGroupPostDetailsById(postId, groupId, userId)
-                .orElseThrow(() -> new NotFoundException("Group post not found with id: " + postId));
+                .orElseThrow(() -> new NotFoundException(GROUP_POST_NOT_FOUND + postId));
 
-        GroupPostResponse response = new GroupPostResponse();
-        BeanUtils.copyProperties(basePost, response);
+        GroupMembers members = groupMembersRepository
+                .findByUserIdAndGroupId(basePost.getAuthor().getUserId(), groupId)
+                .orElseThrow(() -> new AccessDeniedException(NOT_A_MEMBER));
+
+        GroupPostResponse response = groupFacade
+                .convertGroupPostBaseToGroupPostResponse(basePost, members);
 
         if (basePost.getOriginalPostId() != null) {
-            response.setOriginalPost(groupPostRepository
-                    .findGroupPostDetailsById(basePost.getOriginalPostId(), groupId, userId)
-                    .map(base -> {
-                        GroupPostResponse originalResponse = new GroupPostResponse();
-                        BeanUtils.copyProperties(base, originalResponse);
-                        return originalResponse;
-                    })
-                    .orElseThrow(() -> new NotFoundException("Original group post not found with id: " + basePost.getOriginalPostId())));
+            addOriginalPost(response, basePost, groupId, userId);
         }
 
         return response;
+    }
+
+    /**
+     * Додає інформацію про оригінальний пост у відповідь, якщо пост є репостом.
+     * Метод виконує перевірку наявності оригінального поста та членства автора оригінального поста у групі.
+     * Якщо оригінальний пост знайдено і користувач є членом групи, інформація про оригінальний пост конвертується
+     * та додається до відповіді.
+     *
+     * @param response Відповідь, до якої буде додано оригінальний пост.
+     * @param basePost Базова інформація про поточний пост.
+     * @param groupId Ідентифікатор групи, у якій знаходиться пост.
+     * @param userId Ідентифікатор користувача, який виконує запит.
+     * @throws NotFoundException Якщо не знайдено оригінальний пост або користувача.
+     * @throws AccessDeniedException Якщо автор оригінального поста не є членом групи.
+     */
+    private void addOriginalPost(GroupPostResponse response,
+                                 GroupPostBase basePost,
+                                 Long groupId,
+                                 Long userId) {
+        response.setOriginalPost(groupPostRepository
+                .findGroupPostDetailsById(basePost.getOriginalPostId(),
+                        groupId, userId)
+                .map(base -> {
+                    GroupMembers membersOriginalPost = groupMembersRepository
+                            .findByUserIdAndGroupId(base.getAuthor().getUserId(), groupId)
+                            .orElseThrow(() -> new AccessDeniedException(NOT_A_MEMBER));
+                    return groupFacade
+                            .convertGroupPostBaseToGroupPostResponse(base, membersOriginalPost);
+                })
+                .orElseThrow(() -> new NotFoundException(ORIGINAL_GROUP_POST_NOT_FOUND
+                        + basePost.getOriginalPostId())));
+    }
+
+    /**
+     * Перевіряє статус поста та кидає виняток AccessDeniedException, якщо статус не дозволяє дій.
+     * Цей метод забезпечує обмеження на репост або взаємодію з постами, які мають певний статус.
+     *
+     * @param status Статус поста, який необхідно перевірити.
+     * @throws AccessDeniedException Якщо статус поста є DRAFT, ARCHIVED або REJECTED.
+     */
+    private void checkPostStatus(PostStatus status){
+        switch (status) {
+            case DRAFT -> throw new AccessDeniedException(DRAFT_STATUS_ACCESS_DENIED_MESSAGE);
+            case ARCHIVED -> throw new AccessDeniedException(ARCHIVED_STATUS_ACCESS_DENIED_MESSAGE);
+            case REJECTED -> throw new AccessDeniedException(REJECTED_STATUS_ACCESS_DENIED_MESSAGE);
+        }
     }
 
 }

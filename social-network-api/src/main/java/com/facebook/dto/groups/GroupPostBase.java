@@ -3,7 +3,6 @@ package com.facebook.dto.groups;
 import com.facebook.dto.post.Author;
 import com.facebook.model.groups.PostStatus;
 import com.facebook.model.posts.PostType;
-import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,7 +16,6 @@ import java.time.LocalDateTime;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroupPostBase {
     private Long id;
     private Long groupId;

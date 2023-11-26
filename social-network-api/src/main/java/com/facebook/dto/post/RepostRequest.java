@@ -48,5 +48,15 @@ public class RepostRequest {
     @NotNull(message = "Original post ID is required for reposting.")
     private Long originalPostId;
 
+    @Override
+    public String toString() {
+        return String.format("PostRequest{imageUrl='%s', "
+                        + "title='%s', "
+                        + "body='%s', "
+                        + "type=%s, "
+                        + "originalPostId='%s'}",
+                imageUrl, title, body, type, originalPostId);
+    }
+
 }
 

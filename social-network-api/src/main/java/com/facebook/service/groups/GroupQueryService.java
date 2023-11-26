@@ -1,6 +1,6 @@
 package com.facebook.service.groups;
 
-import com.facebook.dto.groups.GroupMembersDto;
+import com.facebook.dto.groups.GroupMember;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.GroupFacade;
@@ -71,8 +71,8 @@ public class GroupQueryService {
      * @param role Роль членів групи (ADMIN, MEMBER, BANNED), яких необхідно отримати.
      * @return Набір DTO (GroupMembersDto) членів групи, відфільтрованих за заданою роллю.
      */
-    private Set<GroupMembersDto> getGroupMembersByRole(Long groupId,
-                                                       GroupRole role) {
+    private Set<GroupMember> getGroupMembersByRole(Long groupId,
+                                                   GroupRole role) {
 
      return groupMembersRepository
                 .findMembersByGroupIdAndRoles(groupId,

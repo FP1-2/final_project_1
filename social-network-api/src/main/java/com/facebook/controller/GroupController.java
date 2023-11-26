@@ -1,9 +1,9 @@
 package com.facebook.controller;
 
-import com.facebook.dto.groups.GroupMembersDto;
-import com.facebook.dto.groups.GroupPostBase;
+import com.facebook.dto.groups.GroupMember;
 import com.facebook.dto.groups.GroupPostRequest;
 import com.facebook.dto.groups.GroupPostResponse;
+import com.facebook.dto.groups.GroupRepostRequest;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
@@ -116,7 +116,7 @@ public class GroupController {
      * @return Відповідь ResponseEntity, що містить сторінку членів групи (GroupMembersDto).
      */
     @GetMapping("/{groupId}/members")
-    public ResponseEntity<Page<GroupMembersDto>>
+    public ResponseEntity<Page<GroupMember>>
     getGroupMembersByRole(
             @PathVariable Long groupId,
             @RequestParam(required = false) List<GroupRole> roles,
@@ -139,11 +139,29 @@ public class GroupController {
      * @return Ответ с созданным постом и статусом HTTP CREATED.
      */
     @PostMapping("/{groupId}/posts")
-    public ResponseEntity<GroupPostBase>
+    public ResponseEntity<GroupPostResponse>
     createGroupPost(@PathVariable Long groupId,
                     @Validated @RequestBody GroupPostRequest request) {
         return new ResponseEntity<>(groupService
                 .createGroupPost(request,
+                        currentUserService.getCurrentUserId(),
+                        groupId), HttpStatus.CREATED);
+    }
+
+    /**
+     * Створює репост для поста в групі.
+     *
+     * @param groupId Ідентифікатор групи, в якій створюється репост.
+     * @param request Об'єкт запиту для створення репосту.
+     * @return ResponseEntity з об'єктом GroupPostResponse,
+     * що відображає деталі створеного репосту, та статусом CREATED.
+     */
+    @PostMapping("/{groupId}/reposts")
+    public ResponseEntity<GroupPostResponse>
+    createGroupRepost(@PathVariable Long groupId,
+                    @Validated @RequestBody GroupRepostRequest request) {
+        return new ResponseEntity<>(groupService
+                .createGroupRepost(request,
                         currentUserService.getCurrentUserId(),
                         groupId), HttpStatus.CREATED);
     }

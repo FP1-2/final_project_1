@@ -130,10 +130,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список мап, де кожна мапа представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-             WHERE p.user_id = :userId
+             WHERE p.post_type = 'Post' AND p.user_id = :userId
              GROUP BY p.id, u.id, op.id, ou.id
             """,
-            countQuery = "SELECT count(*) FROM posts WHERE user_id = :userId",
+            countQuery = """
+                    SELECT count(*) FROM posts p
+                    WHERE p.post_type = 'Post' AND user_id = :userId
+                    """,
             nativeQuery = true)
     List<Map<String, Object>> findPostDetailsByUserId(@Param("userId") Long userId, Pageable pageable);
 
@@ -152,7 +155,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = POST_DETAILS_SELECT + """
             WHERE
-                p.id = :postId
+                p.post_type = 'Post' AND p.id = :postId
             GROUP BY p.id, u.id, op.id, ou.id
             """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("userId") Long userId,
@@ -165,7 +168,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param userId Ідентифікатор користувача.
      * @return Кількість постів, які належать даному користувачу.
      */
-    @Query(value = "SELECT count(*) FROM posts WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = """
+            SELECT count(*) FROM posts p
+            WHERE p.post_type = 'Post' AND user_id = :userId
+            """, nativeQuery = true)
     Long countPostsByUserId(@Param("userId") Long userId);
 
     /**
@@ -182,9 +188,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("""
        SELECT p
        FROM Post p
-       WHERE (SELECT COUNT(c.id)
+       WHERE TYPE(p) = Post
+       AND (SELECT COUNT(c.id)
               FROM Comment c
-              WHERE c.post.id = p.id) > 4
+              WHERE c.post = p) > 4
        """)
     Page<Post> findFirstPostWithMoreThanFourComments(Pageable pageable);
 
@@ -195,9 +202,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список постів з деталями.
      */
     @Query(value = POST_DETAILS_SELECT + """
+         WHERE p.post_type = 'Post'
          GROUP BY p.id, u.id, op.id, ou.id
         """,
-            countQuery = "SELECT count(*) FROM posts",
+            countQuery = """
+                    SELECT count(*) FROM posts p
+                    WHERE p.post_type = 'Post'
+                    """,
             nativeQuery = true)
     List<Map<String, Object>> findAllPostDetails(@Param("userId") Long userId,
                                                  Pageable pageable);
@@ -207,7 +218,11 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      *
      * @return Загальна кількість постів.
      */
-    @Query(value = "SELECT count(*) FROM posts", nativeQuery = true)
+    @Query(value = """
+                    SELECT count(*) FROM posts p
+                    WHERE p.post_type = 'Post'
+                    """,
+            nativeQuery = true)
     Long countAllPosts();
 
     List<Post> findByOriginalPostId(Long originalPostId);

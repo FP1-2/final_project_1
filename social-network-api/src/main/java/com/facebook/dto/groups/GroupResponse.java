@@ -5,6 +5,11 @@ import lombok.Data;
 import java.time.LocalDateTime;
 import java.util.Set;
 
+/**
+ * DTO (Data Transfer Object) клас для представлення інформації про групу в соціальній мережі.
+ * Включає інформацію про ідентифікатор групи, дату створення, дату останньої модифікації,
+ * URL зображення групи, назву, опис, а також набори членів та адміністраторів групи.
+ */
 @Data
 public class GroupResponse {
     private Long id;
@@ -13,6 +18,6 @@ public class GroupResponse {
     private String imageUrl;
     private String name;
     private String description;
-    private Set<GroupMembersDto> members;
-    private Set<GroupMembersDto> admins;
+    private Set<GroupMember> members;
+    private Set<GroupMember> admins;
 }
