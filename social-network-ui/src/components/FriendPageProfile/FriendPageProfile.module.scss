@@ -78,42 +78,6 @@
                     @include width_576 {
                         gap: 15px;
                     }
-
-                    .profileFriendsHeaderInputWrapper {
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        background-color: #F0F2F5;
-                        border-radius: 50px;
-
-                        .profileFriendsHeaderInputImg {
-                            width: 16px;
-                            height: auto;
-                            fill: #606770;
-                            padding-right: 10px;
-                            &:hover{
-                                cursor: pointer;
-                            }
-                        }
-
-                        .profileFriendsHeaderInput {
-                            padding: 7px 6px 9px 10px;
-                            border: none;
-                            background-color: #F0F2F5;
-                            border-top-left-radius: 50px;
-                            border-bottom-left-radius: 50px;
-                            color: #050505;
-                            font-size: 15px;
-
-                            &::placeholder {
-                                color: #606770;
-                            }
-
-                            &:focus{
-                                outline: none;
-                            }
-                        }
-                    }
                     .profileFriendsHeaderBtn{
                         color: #0064D1;
                         border: none;
@@ -122,8 +86,8 @@
                         font-weight: 600;
                         line-height: 1.3333;
                         padding:10px 12px;
-                        min-width: 200px;
                         background-color: transparent;
+                        text-align: center;
 
                         @include width_576 {
                             padding-left: 0;
@@ -137,9 +101,6 @@
                         }
                     }
                 }
-            }
-            .profileRequests{
-                
             }
             .profileFriends{
                 display: grid;
