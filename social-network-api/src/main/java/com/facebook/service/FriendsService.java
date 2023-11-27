@@ -38,6 +38,8 @@ public class FriendsService {
 
     private final AppUserFacade userFacade;
 
+    private final AppUserService appUserService;
+
     private final NotificationRepository notificationRepository;
 
     private static final String FRIENDS_NOT_FOUND_ERROR_MSG = "Friends pair not found";
@@ -145,6 +147,15 @@ public class FriendsService {
         friendRequests.setSend(send);
 
         return friendRequests;
+    }
+
+    public List<AppUserResponse> searchFriends(String input) {
+        AppUser authUser = appUserService.getAuthUser();
+
+        return appUserRepository.searchFriendsByNameAndSurname(input, authUser.getId())
+                .stream()
+                .map(userFacade::convertToAppUserResponse)
+                .toList();
     }
 
 }

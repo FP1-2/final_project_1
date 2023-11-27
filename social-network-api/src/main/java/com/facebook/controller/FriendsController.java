@@ -82,4 +82,9 @@ public class FriendsController {
         return ResponseEntity.ok(friendsService.allFriendsRequests(userId));
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<AppUserResponse>> searchFriends(@RequestParam String input) {
+        return ResponseEntity.ok(friendsService.searchFriends(input));
+    }
+
 }
