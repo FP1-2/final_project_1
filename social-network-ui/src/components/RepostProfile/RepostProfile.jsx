@@ -20,6 +20,7 @@ import { addToFavourites, deleteFavourite } from "../../redux-toolkit/favourite/
 import { deleteLocalFavourite } from "../../redux-toolkit/favourite/slice";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import PropTypes from "prop-types";
+import { deletLocalMainPost } from "../../redux-toolkit/main/slice";
 
 
 const RepostProfile = ({ el }) => {
@@ -125,6 +126,8 @@ const RepostProfile = ({ el }) => {
   const deletePostThunk = () => {
     dispatch(deletePost(el.postId));
     dispatch(deleteLocalPost(el.postId));
+    dispatch(deletLocalMainPost(el.postId));
+    dispatch(deleteLocalFavourite(el.postId));
   };
 
   const savePostThunk = async () => {
