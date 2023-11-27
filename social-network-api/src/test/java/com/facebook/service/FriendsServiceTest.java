@@ -161,7 +161,7 @@ class FriendsServiceTest {
 
         when(appUserService.getAuthUser()).thenReturn(authUser);
 
-        when(appUserRepository.searchFriendsByNameAndSurname(eq(searchInput), eq(authUser.getId())))
+        when(appUserRepository.searchFriendsByNameAndSurname(searchInput, authUser.getId()))
                 .thenReturn(list);
 
         List<AppUserResponse> actualSearchResults = friendsService.searchFriends(searchInput);
