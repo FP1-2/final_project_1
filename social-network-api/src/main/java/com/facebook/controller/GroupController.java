@@ -7,16 +7,21 @@ import com.facebook.dto.groups.GroupRepostRequest;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
+import com.facebook.dto.groups.PostStatusRequest;
 import com.facebook.exception.AlreadyMemberException;
 import com.facebook.exception.BannedMemberException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.model.groups.GroupRole;
+import com.facebook.model.groups.PostStatus;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.groups.GroupQueryService;
 import com.facebook.service.groups.GroupService;
+import com.facebook.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -123,12 +128,18 @@ public class GroupController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,desc") String sort) {
+
         GroupRoleRequest roleRequest = new GroupRoleRequest();
+
         roleRequest.setRoles(new HashSet<>(roles != null
                 ? roles : Collections.emptyList()));
+
+        Pageable pageable = PageRequest.of(page,
+                size, SortUtils.getSorting(sort));
+
         return ResponseEntity.ok(groupService
                 .getGroupMembersByRoles(groupId,
-                        roleRequest, page, size, sort));
+                        roleRequest, pageable));
     }
 
     /**
@@ -184,6 +195,48 @@ public class GroupController {
                 .getGroupPostDetails(groupId,
                         postId,
                         currentUserService.getCurrentUserId()));
+    }
+
+    /**
+     * Отримує сторінку постів групи за заданими параметрами.
+     *
+     * @param groupId Ідентифікатор групи.
+     * @param user Ідентифікатор користувача для фільтрації постів.
+     * @param statuses Список статусів постів для фільтрації.
+     * @param page Номер сторінки для пагінації.
+     * @param size Розмір сторінки для пагінації.
+     * @param sort Параметри сортування.
+     * @return ResponseEntity зі сторінкою відповідей на пости групи.
+     *
+     * <p> Приклад URL-адреси для використання в Postman:
+     * {@code
+     *   http://localhost:9000/api/groups/1/posts?user=3&statuses=DRAFT,PUBLISHED&page=0&size=10&sort=id,desc
+     * }
+     * У цьому прикладі запитується сторінка постів для групи з ідентифікатором 1,
+     * фільтрація постів виконується за користувачем з ідентифікатором 3 і статусами DRAFT та PUBLISHED.
+     * Пагінація встановлена на першу сторінку (page=0) з 10 записами на сторінку,
+     * і сортування виконується за ідентифікатором постів у спадному порядку.
+     * </p>
+     */
+    @GetMapping("/{groupId}/posts")
+    public ResponseEntity<Page<GroupPostResponse>> getAllGroupPosts(
+            @PathVariable Long groupId,
+            @RequestParam(required = false) Long user,
+            @RequestParam(required = false) List<PostStatus> statuses,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "id,desc") String sort) {
+
+        Pageable pageable = PageRequest.of(page, size, SortUtils.getSorting(sort));
+        Page<GroupPostResponse> posts = groupService
+                .getAllGroupPosts(groupId,
+        //id поточного авторизованого користувача для встановлення поля is Favorite
+                        currentUserService.getCurrentUserId(),
+        //id користувача для фільтрації постів групи
+                        user,
+                        PostStatusRequest.of(statuses),
+                        pageable);
+        return ResponseEntity.ok(posts);
     }
 
 }

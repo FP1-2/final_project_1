@@ -1,15 +1,17 @@
 package com.facebook.repository.groups;
 
 import com.facebook.dto.groups.GroupPostBase;
-import com.facebook.dto.groups.GroupPostResponse;
 import com.facebook.model.groups.GroupPost;
+import com.facebook.model.groups.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * Репозиторій для роботи з постами групи в соціальній мережі.
@@ -65,22 +67,58 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
                                                      @Param("userId") Long userId);
 
     /**
-     * Запит для отримання сторінки детальної інформації про всі пости певної групи.
+     * Знаходить всі деталі постів групи з урахуванням ідентифікатора групи,
+     * користувача та статусів постів.
+     *
+     * @param groupId Ідентифікатор групи.
+     * @param userId Ідентифікатор користувача для встановлення поля isFavorite.
+     * @param user Ідентифікатор користувача для фільтрації постів.
+     * @param draft Статус поста DRAFT для фільтрації.
+     * @param published Статус поста PUBLISHED для фільтрації.
+     * @param archived Статус поста ARCHIVED для фільтрації.
+     * @param rejected Статус поста REJECTED для фільтрації.
+     * @param pageable Параметри пагінації.
+     * @return Сторінка постів групи у вигляді Page<GroupPostBase>.
+     */
+    @Query(GROUP_POST_DETAILS_SELECT + """
+            FROM GroupPost gp
+            JOIN gp.user u
+            WHERE gp.group.id = :groupId
+              AND (:user IS NULL OR gp.user.id = :user)
+              AND ( (:draft = null AND :published = null AND :archived = null AND :rejected = null)
+                                OR (:draft != null AND gp.status = :draft)
+                                OR (:published != null AND gp.status = :published)
+                                OR (:archived != null AND gp.status = :archived)
+                                OR (:rejected != null AND gp.status = :rejected))
+            """)
+    Page<GroupPostBase> findAllGroupPostDetailsByGroupId(@Param("groupId") Long groupId,
+             //id поточного авторизованого користувача для встановлення поля is Favorite
+                                                         @Param("userId") Long userId,
+                                            //id користувача для фільтрації постів групи
+                                                         @Param("user") Long user,
+                                                         @Param("draft") PostStatus draft,
+                                                         @Param("published") PostStatus published,
+                                                         @Param("archived") PostStatus archived,
+                                                         @Param("rejected") PostStatus rejected,
+                                                         Pageable pageable);
+
+    /**
+     * Знаходить всі пости групи за ідентифікаторами.
      *
      * @param groupId Ідентифікатор групи.
      * @param userId Ідентифікатор користувача.
-     * @param pageable Параметри пагінації та сортування.
-     * @return Сторінка об'єктів GroupPostResponse з деталями постів.
+     * @param postIds Набір ідентифікаторів постів.
+     * @return Список GroupPostBase.
      */
-    @Query(GROUP_POST_DETAILS_SELECT + """
-       FROM GroupPost gp
-       JOIN gp.user u
-       WHERE gp.group.id = :groupId
-         AND (:userId IS NULL OR gp.user.id = :userId)
-       """)
-    Page<GroupPostResponse> findAllGroupPostDetailsByGroupId(@Param("groupId") Long groupId,
-                                                             @Param("userId") Long userId,
-                                                             Pageable pageable);
+        @Query(GROUP_POST_DETAILS_SELECT + """
+           FROM GroupPost gp
+           JOIN gp.user u
+           WHERE gp.group.id = :groupId
+             AND gp.id IN :postIds
+           """)
+        List<GroupPostBase> findAllByGroupIdAndPostIds(@Param("groupId") Long groupId,
+                                                       @Param("userId") Long userId,
+                                                       @Param("postIds") Set<Long> postIds);
 
 }
 

@@ -1,6 +1,7 @@
 package com.facebook.dto.groups;
 
 import com.facebook.model.groups.GroupRole;
+import lombok.AllArgsConstructor;
 import lombok.Data;
 
 /**

@@ -7,7 +7,9 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long> {
 
@@ -48,5 +50,18 @@ public interface GroupMembersRepository extends JpaRepository<GroupMembers, Long
                                                     @Param("roleBanned") String roleBanned,
                                                     Pageable pageable);
 
+    /**
+     * Знаходить всіх членів групи за ідентифікатором групи та ідентифікаторами користувачів.
+     *
+     * @param groupId Ідентифікатор групи.
+     * @param userIds Набір ідентифікаторів користувачів.
+     * @return Список GroupMembers.
+     */
+    @Query("""
+            SELECT gm FROM GroupMembers gm
+            WHERE gm.group.id = :groupId AND gm.user.id IN :userIds
+            """)
+    List<GroupMembers> findAllByGroupIdAndUserIds(@Param("groupId") Long groupId,
+                                                  @Param("userIds") Set<Long> userIds);
 }
 
