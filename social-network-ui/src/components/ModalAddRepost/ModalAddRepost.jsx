@@ -4,7 +4,7 @@ import { object, string } from "yup";
 import style from "./ModalAddRepost.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalAddRepostState } from "../../redux-toolkit/post/slice";
+import { modalAddRepostState,appendPostStart} from "../../redux-toolkit/post/slice";
 import { addRepost } from "../../redux-toolkit/post/thunks";
 
 const validationSchema = object({
@@ -25,8 +25,10 @@ const ModalAddRepost = () => {
   const onSubmit = async (value) => {
     if (post.type === "REPOST") {
       dispatch(addRepost({ imageUrl: post.originalPost.imageUrl, body: value.text, title: "add repost", originalPostId: post.originalPost.postId }));
+      dispatch(appendPostStart({...post,author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, imageUrl: post.originalPost.imageUrl, body: value.text, title: "add repost", originalPostId: post.originalPost.postId }));
     } else {
       dispatch(addRepost({ imageUrl: post.imageUrl, body: value.text, title: "add repost", originalPostId: post.postId }));
+      dispatch(appendPostStart({author:{avatar:userObject.avatar, name:userObject.name,surname:userObject.surname}, type:"REPOST", imageUrl: post.imageUrl, body: value.text, title: "add repost", originalPostId: post.postId, originalPost:post}));
     }
     dispatch(modalAddRepostState(false));
   };
