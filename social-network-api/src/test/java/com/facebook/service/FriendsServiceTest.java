@@ -1,5 +1,6 @@
 package com.facebook.service;
 
+import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.facade.AppUserFacade;
 import com.facebook.facade.FriendsFacade;
 import com.facebook.model.AppUser;
@@ -15,8 +16,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.modelmapper.ModelMapper;
 
+import java.util.List;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.*;
 
@@ -34,6 +37,9 @@ class FriendsServiceTest {
     @Mock
     private NotificationRepository notificationRepository;
 
+    @Mock
+    private AppUserService appUserService;
+
     private FriendsService friendsService;
 
     private static final Long USER_ID_1 = 123L;
@@ -50,11 +56,13 @@ class FriendsServiceTest {
 
         AppUserFacade userFacade = new AppUserFacade(modelMapper);
 
+
         friendsService = new FriendsService(friendsRepository,
                 appUserRepository,
                 friendsFacade,
                 notificationService,
                 userFacade,
+                appUserService,
                 notificationRepository);
     }
 
@@ -137,6 +145,28 @@ class FriendsServiceTest {
 
         assertThrows(NotFoundException.class,
                 () -> friendsService.cancelFriendRequest(USER_ID_1, USER_ID_2));
+    }
+
+    @Test
+    void testSearchFriends() {
+        String searchInput = "John"; // Example search input
+        AppUser authUser = new AppUser();
+        authUser.setId(USER_ID_1); // Example authenticated user ID
+
+        AppUser u1 = new AppUser();
+        u1.setName("John Doe");
+        AppUser u2 = new AppUser();
+        u2.setName("Johnny Smith");
+        List<AppUser> list = List.of(u1, u2);
+
+        when(appUserService.getAuthUser()).thenReturn(authUser);
+
+        when(appUserRepository.searchFriendsByNameAndSurname(searchInput, authUser.getId()))
+                .thenReturn(list);
+
+        List<AppUserResponse> actualSearchResults = friendsService.searchFriends(searchInput);
+
+        assertEquals(2, actualSearchResults.size());
     }
 
 }

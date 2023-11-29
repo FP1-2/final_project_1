@@ -31,4 +31,9 @@ public interface AppUserRepository extends JpaRepository<AppUser, Long> {
 
     @Query(value = "SELECT u.* FROM users u INNER JOIN friends f ON u.ID = f.FRIEND_ID AND f.STATUS ='PENDING'  WHERE f.USER_ID = :userId", nativeQuery = true)
     List<AppUser> findUserSendFriendsRequestsByUserId(@Param("userId") Long userId);
+
+    @Query(value = "SELECT u.* FROM users u INNER JOIN friends f ON u.id = f.friend_id AND f.status ='APPROVED'" +
+            "WHERE CONCAT(LOWER(u.name), ' ', LOWER(u.surname)) " +
+            "LIKE LOWER(CONCAT('%', :input, '%')) AND u.id <> :id AND f.user_id = :id", nativeQuery = true)
+    List<AppUser> searchFriendsByNameAndSurname(@Param("input") String input, @Param("id") Long excludedAuthUserId);
 }
