@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
 @SpringBootTest(classes = FriendsController.class)
@@ -107,6 +108,24 @@ class FriendsControllerTest {
 
         verify(currentUserService).getCurrentUserId();
         verify(friendsService).cancelFriendRequest(USER_ID_2, USER_ID_1);
+    }
+
+    @Test
+    void searchFriendsTest() {
+        String searchInput = "John";
+        AppUserResponse u1 = new AppUserResponse();
+        u1.setName("John Doe");
+        AppUserResponse u2 = new AppUserResponse();
+        u2.setName("Johnny Smith");
+        List<AppUserResponse> list = List.of(u1, u2);
+
+        when(friendsService.searchFriends(searchInput)).thenReturn(list);
+
+        ResponseEntity<List<AppUserResponse>> responseEntity = friendsController.searchFriends(searchInput);
+
+        assertEquals(200, responseEntity.getStatusCodeValue());
+        List<AppUserResponse> actualSearchResults = responseEntity.getBody();
+        assertEquals(list.size(), actualSearchResults.size());
     }
 
 }
