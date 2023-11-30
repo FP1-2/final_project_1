@@ -8,12 +8,14 @@ import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
 import com.facebook.dto.groups.PostStatusRequest;
+import com.facebook.dto.post.ActionResponse;
 import com.facebook.exception.AlreadyMemberException;
 import com.facebook.exception.BannedMemberException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.model.groups.GroupRole;
 import com.facebook.model.groups.PostStatus;
 import com.facebook.service.CurrentUserService;
+import com.facebook.service.PostService;
 import com.facebook.service.groups.GroupQueryService;
 import com.facebook.service.groups.GroupService;
 import com.facebook.utils.SortUtils;
@@ -53,6 +55,8 @@ public class GroupController {
     private final CurrentUserService currentUserService;
 
     private final GroupQueryService groupQueryService;
+
+    private final PostService postService;
 
     /**
      * Створює нову групу на основі отриманого запиту.
@@ -237,6 +241,15 @@ public class GroupController {
                         PostStatusRequest.of(statuses),
                         pageable);
         return ResponseEntity.ok(posts);
+    }
+
+    @PostMapping("/like/{postId}")
+    public ResponseEntity<ActionResponse> likeGroupPost(@PathVariable Long postId) {
+        postService.checkPostType(postId, "GroupPost");
+        Long userId = currentUserService.getCurrentUserId();
+        return postService.likePost(userId, postId)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
 }

@@ -51,46 +51,25 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 @Log4j2
 @SuppressWarnings("all")
 public class Gen {
-
     private static final String AVATAR = "https://via.placeholder.com/150/66b7d2";
-
     private static final String HEADER_PHOTO = "https://source.unsplash.com/random?wallpapers";
-
     private static final String DEFAULT_USERNAME = "test";
-
     private static final String DEFAULT_PASSWORD = "Password1!";
-
     private static final String DEFAULT_USERNAME2 = "test2";
-
     private static final String DEFAULT_PASSWORD2 = "Password2!";
-
     public final ApplicationContext context;
-
     private final LikeRepository likeRepository;
-
     private final CommentRepository commentRepository;
-
     private final AppUserService appUserService;
-
     private final FriendsService friendsService;
-
     private final PasswordEncoder passwordEncoder;
-
     private final AppUserFacade appUserFacade;
-
     private final PostService postService;
-
     private final FavoritesService favoritesService;
-
     private List<AppUser> appUsers1;
-
     private List<PostResponse> posts;
-
     private List<Comment> comments;
-
     private List<Like> likes;
-
-
     private final ChatService chatService;
     private final ChatRepository chatRepository;
     private final MessageService messageService;
@@ -135,7 +114,7 @@ public class Gen {
                     "Greak",
                     "g_rafk@ukr.net",
                     "Westmorland Virginia",
-                    AVATAR,
+                    "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png",
                     HEADER_PHOTO,
                     42),
             new GenAppUser("Bret",
@@ -143,23 +122,23 @@ public class Gen {
                     "BretNickname",
                     "Sincere@april.biz",
                     "Random Address 1",
-                    AVATAR,
+                    "https://i0.hippopx.com/photos/595/53/187/boy-fashion-model-young-preview.jpg",
                     HEADER_PHOTO,
                     19),
-            new GenAppUser("Ervin",
-                    "Smith",
+            new GenAppUser("__清きよ",
+                    "__",
                     "ErvinNickname",
                     "Shanna@melissa.tv",
                     "Random Address 2",
-                    AVATAR,
+                    "https://metropolevsech.eu/wp-content/uploads/2017/06/F5A5982-768x512.jpg",
                     HEADER_PHOTO,
                     31),
-            new GenAppUser("Clementine",
-                    "Jones",
+            new GenAppUser("Maxime Nienow",
+                    "Nienow",
                     "ClemNickname",
                     "clementine_b@ukr.net",
                     "Random Address 3",
-                    AVATAR,
+                    "https://images.pexels.com/photos/3170635/pexels-photo-3170635.jpeg",
                     HEADER_PHOTO,
                     27),
             new GenAppUser("Patricia",
@@ -167,7 +146,7 @@ public class Gen {
                     "PattyNickname",
                     "Nathan@yesenia.net",
                     "Random Address 4",
-                    AVATAR,
+                    "https://images.pexels.com/photos/7929720/pexels-photo-7929720.jpeg",
                     HEADER_PHOTO,
                     58),
             new GenAppUser("Karianne",
@@ -175,7 +154,7 @@ public class Gen {
                     "KariNickname",
                     "Julianne.OConner@kory.org",
                     "Random Address 5",
-                    AVATAR,
+                    "https://images.pexels.com/photos/12260620/pexels-photo-12260620.jpeg",
                     HEADER_PHOTO,
                     29),
             new GenAppUser("Kamren",
@@ -186,12 +165,12 @@ public class Gen {
                     AVATAR,
                     HEADER_PHOTO,
                     19),
-            new GenAppUser("Leopoldo_Corkery",
-                    "Miller",
+            new GenAppUser("Leopoldo",
+                    "Calvo-Sotelo",
                     "LeoNickname",
                     "Karley_Dach@jasper.info",
                     "Random Address 7",
-                    AVATAR,
+                    "https://upload.wikimedia.org/wikipedia/commons/4/44/Visita_del_Calvo-Sotelo_1976.jpg",
                     HEADER_PHOTO,
                     56),
             new GenAppUser("Elwyn.Skiles",
@@ -199,39 +178,39 @@ public class Gen {
                     "ElwynNickname",
                     "Telly.Hoeger@billy.biz",
                     "Random Address 8",
-                    AVATAR,
+                    "https://images.pexels.com/photos/3078343/pexels-photo-3078343.jpeg",
                     HEADER_PHOTO,
                     45),
-            new GenAppUser("Maxime_Nienow",
+            new GenAppUser("Clementine Jones",
                     "Garcia",
                     "MaxNickname",
                     "Sherwood@rosamond.me",
                     "Random Address 9",
-                    AVATAR,
+                    "https://images.pexels.com/photos/4006576/pexels-photo-4006576.jpeg",
                     HEADER_PHOTO,
                     98),
-            new GenAppUser("Glenna Reichert",
+            new GenAppUser("Jhon Reichert",
                     "Wilson",
                     "GlenNickname",
                     "Chaim_McDermott@dana.io",
                     "Random Address 10",
-                    AVATAR,
+                    "https://images.pexels.com/photos/3214789/pexels-photo-3214789.jpeg",
                     HEADER_PHOTO,
                     39),
-            new GenAppUser("Clementina DuBuque",
+            new GenAppUser("George Soros",
                     "Moore",
                     "ClemenNickname",
                     "Rey.Padberg@karina.biz",
                     "Random Address 11",
-                    AVATAR,
+                    "https://www.kntu.kr.ua/img/novin/2022/novyn_23.09.2022/1.jpg",
                     HEADER_PHOTO,
                     51),
-            new GenAppUser("Julius",
-                    "Caesar",
+            new GenAppUser("Julia",
+                    "Gaius Caesar's",
                     "GaiusJuliusCaesar",
                     "J_Caesar@roma.republic",
                     "Suburra, Ancient Rome",
-                    AVATAR,
+                    "https://pro.te.ua/wp-content/uploads/2018/08/38461309_944800705703709_3732371595776229376_n-768x509.jpg",
                     HEADER_PHOTO,
                     55)
     );
@@ -250,7 +229,7 @@ public class Gen {
                 DEFAULT_USERNAME,
                 "test@test.biz",
                 "Address 11",
-                AVATAR,
+                "https://images.pexels.com/photos/13937077/pexels-photo-13937077.jpeg",
                 HEADER_PHOTO,
                 51));
 
@@ -259,7 +238,7 @@ public class Gen {
                 DEFAULT_USERNAME2,
                 "test2@test.biz",
                 "Address 22",
-                AVATAR,
+                "https://images.pexels.com/photos/3892464/pexels-photo-3892464.jpeg",
                 HEADER_PHOTO,
                 52));
 

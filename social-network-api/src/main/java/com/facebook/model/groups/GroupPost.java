@@ -19,7 +19,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "group_posts")
 @EqualsAndHashCode(callSuper = true)
-@DiscriminatorValue("group_posts")
+@DiscriminatorValue("GroupPost")
 public class GroupPost extends Post {
 
     @ManyToOne
