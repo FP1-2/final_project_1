@@ -147,11 +147,11 @@ public class GroupController {
     }
 
     /**
-     * Создает новый пост в группе.
+     * Створює новий пост у групі.
      *
-     * @param groupId Идентификатор группы, в которой создается пост.
-     * @param request Тело запроса, содержащее данные для создания поста.
-     * @return Ответ с созданным постом и статусом HTTP CREATED.
+     * @param groupId Ідентифікатор групи, в якій створюється пост.
+     * @param request Тіло запиту, що містить дані для створення посту.
+     * @return Відповідь із створеним постом та статусом HTTP CREATED.
      */
     @PostMapping("/{groupId}/posts")
     public ResponseEntity<GroupPostResponse>
