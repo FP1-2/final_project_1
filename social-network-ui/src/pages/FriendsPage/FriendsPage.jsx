@@ -59,10 +59,10 @@ const FriendsPage = () => {
                     <Link to="" className={linkAllFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">All friends</Link>
                   </li>
                   <li className={linkIncomingRequests === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkIncomingRequests}>
-                    <Link to="incoming-requests" className={linkIncomingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Incoming requests</Link>
+                    <Link to="incoming-requests" className={linkIncomingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friend requests</Link>
                   </li>
                   <li className={linkOutgoingRequests === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkOutgoingRequests}>
-                    <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Outgoing requests</Link>
+                    <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Sent requests</Link>
                   </li>
                 </ul>
               </div>
