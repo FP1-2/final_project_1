@@ -6,6 +6,7 @@ import * as Yup from "yup";
 import { string } from 'yup';
 import PropTypes from 'prop-types';
 import Input from '../Input/Input';
+import {useSelector} from "react-redux";
 
 const validationSchema = Yup.object().shape({
   username: string() 
@@ -14,6 +15,7 @@ const validationSchema = Yup.object().shape({
 });
 
 const LoginForm = ({ handleSubmit }) => {
+  const {status, error:{error}} = useSelector(state => state.auth.token);
   return (
     <div className={styles.root}>
       <Formik
@@ -28,6 +30,7 @@ const LoginForm = ({ handleSubmit }) => {
           <div className={styles.passwordInputWrapper}>
             <Input type="password" name="password" placeholder="Password" />
           </div>
+          {status==='rejected' && <div className={styles.error} >{error}</div>}
           <button type="submit" className={styles.submit}>Log In</button>
           <NavLink to="/reset-password" className={styles.link}>Forgotten password?</NavLink>
           <NavLink to="/registration" className={styles.create}>Create new account</NavLink>
