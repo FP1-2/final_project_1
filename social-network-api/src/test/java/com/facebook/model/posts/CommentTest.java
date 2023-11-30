@@ -47,7 +47,6 @@ class CommentTest {
         Post post = new Post();
         post.setTitle("Title");
         post.setBody("Body");
-        post.setStatus(PostStatus.DRAFT);
         post.setUser(user);
         post.setImageUrl("image.jpg");
         post.setType(PostType.POST);

@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -38,7 +39,6 @@ import org.springframework.test.context.TestExecutionListeners;
 import org.springframework.test.context.support.DependencyInjectionTestExecutionListener;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
-
 
 import java.util.List;
 import java.util.Objects;
@@ -165,7 +165,11 @@ class PostControllerTest {
     void testGetCommentsByPostIdWithPagination() {
         // Знаходження поста з понад 4 коментарями
         Post targetPost = postRepository
-                .findPostWithMoreThanFourComments()
+                .findFirstPostWithMoreThanFourComments(PageRequest.of(0, 10))
+                .getContent()
+                .stream()
+                .skip((int) (Math.random() * 10))
+                .findFirst()
                 .orElse(null);
 
         assertNotNull(targetPost,
@@ -249,7 +253,7 @@ class PostControllerTest {
             ).getBody();
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-                        {"type":"Not Found Error","message":"Post not found!"}
+                        {"type":"Not Found Error","message":"Post not found with id: 999"}
                     """
                     .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
@@ -322,7 +326,7 @@ class PostControllerTest {
             createRepost(invalidRepostRequest);
         } catch (HttpClientErrorException e) {
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
-            assertTrue(e.getResponseBodyAsString().contains("Original post not found!"));
+            assertTrue(e.getResponseBodyAsString().contains("Post not found with id: 9999"));
             return;
         }
         fail("Expected HttpClientErrorException with message 'Original post not found!'");
@@ -590,7 +594,7 @@ class PostControllerTest {
             );
         } catch (HttpClientErrorException.NotFound e) {
             String expectedErrorMessage = """
-                        {"type":"Not Found Error","message":"Post not found!"}
+                        {"type":"Not Found Error","message":"Post not found with id: 9999"}
                     """
                     .strip();
             log.info("Реальне повідомлення про помилку: " + e.getResponseBodyAsString());
@@ -758,7 +762,11 @@ class PostControllerTest {
     @Test
     void testGetCommentById() {
         Post targetPost = postRepository
-                .findPostWithMoreThanFourComments()
+                .findFirstPostWithMoreThanFourComments(PageRequest.of(0, 10))
+                .getContent()
+                .stream()
+                .skip((int) (Math.random() * 10))
+                .findFirst()
                 .orElse(null);
 
         assertNotNull(targetPost, "Не знайдено жодного посту з коментарями.");

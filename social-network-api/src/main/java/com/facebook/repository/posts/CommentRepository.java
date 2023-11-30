@@ -60,6 +60,25 @@ public interface CommentRepository extends JpaRepository<Comment, Long> {
             """)
     Optional<CommentDTO> findCommentDtoById(@Param("commentId") Long commentId);
 
+    /**
+     * Запит для отримання типу поста на основі ідентифікатора коментаря.
+     * <p>
+     * Цей метод виконує нативний SQL запит до бази даних, щоб з'єднати таблиці
+     * {@code posts} і {@code comments} за допомогою зовнішнього ключа, який вказує на пост,
+     * до якого належить коментар. В результаті запиту повертається тип поста,
+     * асоційованого з вказаним ідентифікатором коментаря.
+     *
+     * @param commentId Ідентифікатор коментаря, на основі якого потрібно отримати тип поста.
+     * @return {@code Optional<String>} з типом поста. Якщо пост не знайдено, повертається порожній {@code Optional}.
+     */
+    @Query(value = """
+              SELECT p.post_type
+              FROM posts p
+              JOIN comments c ON p.id = c.post_id
+              WHERE c.id = :commentId
+              """, nativeQuery = true)
+    Optional<String> findPostTypeByCommentId(@Param("commentId") Long commentId);
+
     void deleteByPostId(Long postId);
 
     List<Comment> findAllByPostIdIn(List<Long> postIds);

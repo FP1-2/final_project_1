@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -32,9 +33,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * <p>
      * Запит дозволяє отримати:
      * - основну інформацію по посту (ID, дати створення та модифікації,
-     *   URL зображення, заголовок, тіло, статус, тип);
+     * URL зображення, заголовок, тіло, статус, тип);
      * - дані користувача, який опублікував пост (ID, ім'я, прізвище,
-     *   ім'я користувача, аватар);
+     * ім'я користувача, аватар);
      * - списки ID коментарів, лайків та репостів, які відносяться до посту.
      * </p>
      * <p>
@@ -45,9 +46,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * <p>
      * Цей запит використовується в двох основних методах:
      * - {@link #findPostDetailsByUserId(Long, Pageable)}:
-     *   для отримання деталей усіх постів певного користувача;
+     * для отримання деталей усіх постів певного користувача;
      * - {@link #findPostDetailsById(Long, Long)}:
-     *   для отримання деталей конкретного посту за його ID.
+     * для отримання деталей конкретного посту за його ID.
      * </p>
      * <p>
      * Зверніть увагу, що ця константа містить базову частину запиту,
@@ -63,7 +64,6 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             p.image_url,
                             p.title,
                             p.body,
-                            p.status,
                             p.type,
                             p.original_post_id,
                           
@@ -74,7 +74,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                             u.avatar,
                           
                             GROUP_CONCAT(DISTINCT c.id) AS comment_ids,
-                            (SELECT GROUP_CONCAT(l.user_id) FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
+                            (SELECT
+                                 GROUP_CONCAT(l.user_id)
+                                 FROM likes l WHERE l.post_id = p.id) AS like_user_ids,
                             GROUP_CONCAT(DISTINCT r.id) AS repost_ids,
                            
                             ou.id AS original_user_id,
@@ -85,13 +87,17 @@ public interface PostRepository extends JpaRepository<Post, Long> {
                           
                             op.title AS original_title,
                             op.body AS original_body,
-                            op.status AS original_status,
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
-                            (SELECT GROUP_CONCAT(ol.user_id) FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
+                            (SELECT
+                                 GROUP_CONCAT(ol.user_id)
+                                 FROM likes ol WHERE ol.post_id = op.id) AS original_like_user_ids,
                             GROUP_CONCAT(DISTINCT orp.id) AS original_repost_ids,
-                            (SELECT COUNT(*) FROM favorites f WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
+                            (SELECT COUNT(*)
+                             FROM favorites f
+                             WHERE f.post_id = p.id AND f.user_id = :userId) > 0 AS is_favorite
+                             
                         FROM
                             posts p
                         LEFT JOIN posts op ON p.original_post_id = op.id
@@ -124,10 +130,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список мап, де кожна мапа представляє детальну інформацію про пост.
      */
     @Query(value = POST_DETAILS_SELECT + """
-             WHERE p.user_id = :userId
+             WHERE p.post_type = 'Post' AND p.user_id = :userId
              GROUP BY p.id, u.id, op.id, ou.id
             """,
-            countQuery = "SELECT count(*) FROM posts WHERE user_id = :userId",
+            countQuery = """
+                    SELECT count(*) FROM posts p
+                    WHERE p.post_type = 'Post' AND user_id = :userId
+                    """,
             nativeQuery = true)
     List<Map<String, Object>> findPostDetailsByUserId(@Param("userId") Long userId, Pageable pageable);
 
@@ -146,7 +155,7 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      */
     @Query(value = POST_DETAILS_SELECT + """
             WHERE
-                p.id = :postId
+                p.post_type = 'Post' AND p.id = :postId
             GROUP BY p.id, u.id, op.id, ou.id
             """, nativeQuery = true)
     Optional<Map<String, Object>> findPostDetailsById(@Param("userId") Long userId,
@@ -159,26 +168,32 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @param userId Ідентифікатор користувача.
      * @return Кількість постів, які належать даному користувачу.
      */
-    @Query(value = "SELECT count(*) FROM posts WHERE user_id = :userId", nativeQuery = true)
+    @Query(value = """
+            SELECT count(*) FROM posts p
+            WHERE p.post_type = 'Post' AND user_id = :userId
+            """, nativeQuery = true)
     Long countPostsByUserId(@Param("userId") Long userId);
 
     /**
-     * Знаходить перший пост, який має більше ніж 4 коментарі.
+     * Знаходить сторінку постів, кожен з яких має більше ніж 4 коментарі.
      * <p>
-     * Метод використовує нативний SQL-запит для пошуку поста,
-     * до якого додано понад 4 коментарі. Якщо такий пост знайдено,
-     * він повертається. Якщо ні - повертається пусте значення.
+     * Метод використовує JPQL-запит для пошуку постів, до кожного з яких додано понад 4 коментарі.
+     * Повертається сторінка результатів згідно з параметрами пагінації.
+     * Якщо пости відповідно до умов запиту не знайдені, повертається пуста сторінка.
      * </p>
      *
-     * @return Опціональний об'єкт Post,
-     * який може містити знайдений пост або бути пустим.
+     * @param pageable параметри пагінації, які визначають, які пости та скільки постів будуть повернуті.
+     * @return Сторінка об'єктів Post, яка може містити знайдені пости або бути пустою.
      */
-    @Query(value = """
-            SELECT p.* FROM posts p
-            WHERE (SELECT COUNT(c.id) FROM comments c
-            WHERE c.post_id = p.id) > 4 LIMIT 1
-            """, nativeQuery = true)
-    Optional<Post> findPostWithMoreThanFourComments();
+    @Query("""
+            SELECT p
+            FROM Post p
+            WHERE TYPE(p) = Post
+            AND (SELECT COUNT(c.id)
+                   FROM Comment c
+                   WHERE c.post = p) > 4
+            """)
+    Page<Post> findFirstPostWithMoreThanFourComments(Pageable pageable);
 
     /**
      * Виконує запит до бази даних для отримання деталей усіх постів з пагінацією.
@@ -187,9 +202,13 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      * @return Список постів з деталями.
      */
     @Query(value = POST_DETAILS_SELECT + """
-         GROUP BY p.id, u.id, op.id, ou.id
-        """,
-            countQuery = "SELECT count(*) FROM posts",
+             WHERE p.post_type = 'Post'
+             GROUP BY p.id, u.id, op.id, ou.id
+            """,
+            countQuery = """
+                    SELECT count(*) FROM posts p
+                    WHERE p.post_type = 'Post'
+                    """,
             nativeQuery = true)
     List<Map<String, Object>> findAllPostDetails(@Param("userId") Long userId,
                                                  Pageable pageable);
@@ -199,8 +218,31 @@ public interface PostRepository extends JpaRepository<Post, Long> {
      *
      * @return Загальна кількість постів.
      */
-    @Query(value = "SELECT count(*) FROM posts", nativeQuery = true)
+    @Query(value = """
+            SELECT count(*) FROM posts p
+            WHERE p.post_type = 'Post'
+            """,
+            nativeQuery = true)
     Long countAllPosts();
+
+    /**
+     * Запит для отримання типу поста на основі його ідентифікатора.
+     * <p>
+     * Цей метод виконує нативний SQL запит до бази даних для отримання значення поля
+     * {@code post_type} з таблиці {@code posts} для конкретного поста, ідентифікатор якого передається в метод.
+     * Тип поста використовується для ідентифікації конкретного класу або категорії постів.
+     * <p>
+     * @param postId Ідентифікатор поста, для якого потрібно отримати тип.
+     * @return {@code Optional<String>} з типом поста. Якщо пост з вказаним ідентифікатором не знайдено,
+     *         повертається порожній {@code Optional}.
+     */
+    @Query(value = """
+            SELECT post_type
+            FROM posts
+            WHERE id = :postId
+            """,
+            nativeQuery = true)
+    Optional<String> findPostTypeById(@Param("postId") Long postId);
 
     List<Post> findByOriginalPostId(Long originalPostId);
 

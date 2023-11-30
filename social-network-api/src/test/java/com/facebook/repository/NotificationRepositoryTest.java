@@ -6,7 +6,6 @@ import com.facebook.model.AppUser;
 import com.facebook.model.notifications.Notification;
 import com.facebook.model.notifications.NotificationType;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.PostStatus;
 import com.facebook.model.posts.PostType;
 import com.facebook.repository.notifications.NotificationRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -69,7 +68,6 @@ class NotificationRepositoryTest {
 
         // Створення та збереження поста
         post = new Post();
-        post.setStatus(PostStatus.DRAFT);
         post.setUser(user);
         post.setType(PostType.POST);
         entityManager.persist(post);

@@ -15,8 +15,15 @@ import lombok.extern.log4j.Log4j2;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
+import org.springframework.web.bind.annotation.DeleteMapping;
 
 /**
  * Контролер для обробки запитів, пов'язаних з постами.
@@ -55,7 +62,7 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,desc") String sort) {
-
+        postService.checkPostType(postId, "Post");
         return ResponseEntity.ok(postService.getCommentsByPostId(postId, page, size, sort));
     }
 
@@ -67,6 +74,7 @@ public class PostController {
      */
     @GetMapping("/comments/{commentId}")
     public ResponseEntity<CommentDTO> getCommentById(@PathVariable Long commentId) {
+        postService.checkCommentPostType(commentId, "Post");
         CommentDTO commentDTO = postService.getCommentById(commentId);
         return ResponseEntity.ok(commentDTO);
     }
@@ -84,6 +92,7 @@ public class PostController {
      */
     @PostMapping("/like/{postId}")
     public ResponseEntity<ActionResponse> likePost(@PathVariable Long postId) {
+        postService.checkPostType(postId, "Post");
         Long userId = currentUserService.getCurrentUserId();
         return postService.likePost(userId, postId)
                 .map(ResponseEntity::ok)
@@ -121,6 +130,7 @@ public class PostController {
     public ResponseEntity<CommentResponse> addComment(@Validated
                                                       @RequestBody
                                                       CommentRequest commentRequest) {
+        postService.checkPostType(commentRequest.getPostId(), "Post");
         Long userId = currentUserService.getCurrentUserId();
         return postService.addComment(userId, commentRequest)
                 .map(ResponseEntity::ok)
@@ -165,6 +175,7 @@ public class PostController {
      */
     @GetMapping("/{postId}")
     public ResponseEntity<PostResponse> getPostById(@PathVariable Long postId) {
+        postService.checkPostType(postId, "Post");
         PostResponse postResponse = postService
                 .findPostDetailsById(currentUserService.getCurrentUserId(), postId);
         return ResponseEntity.ok(postResponse);
@@ -212,6 +223,7 @@ public class PostController {
     public ResponseEntity<ActionResponse> createRepost(@Validated
                                                        @RequestBody
                                                        RepostRequest repostRequest) {
+        postService.checkPostType(repostRequest.getOriginalPostId(), "Post");
         Long userId = currentUserService.getCurrentUserId();
         return postService.createRepost(repostRequest, userId)
                 .map(ResponseEntity::ok)
@@ -230,6 +242,7 @@ public class PostController {
                                                    @Validated
                                                    @RequestBody
                                                    PostPatchRequest patchRequest) {
+        postService.checkPostType(postId, "Post");
         Long userId = currentUserService.getCurrentUserId();
         PostResponse postResponse = postService.updatePost(patchRequest, postId, userId);
         return ResponseEntity.ok(postResponse);
@@ -261,6 +274,7 @@ public class PostController {
 
     @DeleteMapping("/delete/{postId}")
     public ResponseEntity<String> deletePost(@PathVariable Long postId) {
+        postService.checkPostType(postId, "Post");
         Long userId = currentUserService.getCurrentUserId();
         postService.deletePost(userId, postId);
         return ResponseEntity.ok("Post deleted successfully!");

@@ -57,8 +57,7 @@ class PostTest {
      */
     @Test
     void dateSetting() {
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.DRAFT);
+        Post post = createPost(createAndSaveTestUser());
 
         Post savedPost = tem.persistAndFlush(post);
 
@@ -81,7 +80,7 @@ class PostTest {
     @Test
     void dateModification() throws InterruptedException {
         // 1. Створення і збереження поста
-        Post post = createPost(createAndSaveTestUser(), PostStatus.DRAFT);
+        Post post = createPost(createAndSaveTestUser());
         Post savedPost = tem.persistAndFlush(post);
 
         // 2. Отримання дати модифікації
@@ -104,73 +103,15 @@ class PostTest {
 
 
     /**
-     * Тестує статус "DRAFT" посту.
-     */
-    @Test
-    void testPostStatusDraft() {
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.DRAFT);
-
-        Post savedPost = tem.persistAndFlush(post);
-
-        assertThat(savedPost.getStatus())
-                .isEqualTo(PostStatus.DRAFT);
-    }
-
-    /**
-     * Тестує статус "PUBLISHED" посту.
-     */
-    @Test
-    void testPostStatusPublished() {
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.PUBLISHED);
-
-        Post savedPost = tem.persistAndFlush(post);
-
-        assertThat(savedPost.getStatus())
-                .isEqualTo(PostStatus.PUBLISHED);
-    }
-
-    /**
-     * Тестує статус "ARCHIVED" посту.
-     */
-    @Test
-    void testPostStatusArchived() {
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.ARCHIVED);
-
-        Post savedPost = tem.persistAndFlush(post);
-
-        assertThat(savedPost.getStatus())
-                .isEqualTo(PostStatus.ARCHIVED);
-    }
-
-    /**
-     * Тестує статус "REJECTED" посту.
-     */
-    @Test
-    void testPostStatusRejected() {
-        Post post = createPost(createAndSaveTestUser(),
-                PostStatus.REJECTED);
-
-        Post savedPost = tem.persistAndFlush(post);
-
-        assertThat(savedPost.getStatus())
-                .isEqualTo(PostStatus.REJECTED);
-    }
-
-    /**
      * Створює та повертає новий об'єкт типу "Post".
      *
      * @param user користувач, який створює повідомлення
-     * @param postStatus статус повідомлення
      * @return новий об'єкт типу "Post"
      */
-    private Post createPost(AppUser user, PostStatus postStatus){
+    private Post createPost(AppUser user){
         Post post = new Post();
         post.setTitle(TITLE);
         post.setBody(BODY);
-        post.setStatus(postStatus);
         post.setUser(user);
         post.setImageUrl(IMAGE);
         post.setType(PostType.POST);
