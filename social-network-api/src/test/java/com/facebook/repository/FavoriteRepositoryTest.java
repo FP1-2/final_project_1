@@ -3,7 +3,6 @@ package com.facebook.repository;
 import com.facebook.model.AppUser;
 import com.facebook.model.favorites.Favorite;
 import com.facebook.model.posts.Post;
-import com.facebook.model.posts.PostStatus;
 import com.facebook.model.posts.PostType;
 import com.facebook.repository.favorites.FavoriteRepository;
 import org.junit.jupiter.api.Test;
@@ -50,7 +49,6 @@ class FavoriteRepositoryTest {
         post = new Post();
         post.setTitle("Заголовок");
         post.setBody("Тіло поста");
-        post.setStatus(PostStatus.PUBLISHED);
         post.setType(PostType.POST);
         post.setUser(user);
         entityManager.persist(post);

@@ -3,9 +3,13 @@ package com.facebook.model.posts;
 import com.facebook.model.AbstractEntity;
 import com.facebook.model.AppUser;
 import jakarta.persistence.Column;
+import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.DiscriminatorType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.Inheritance;
+import jakarta.persistence.InheritanceType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
@@ -21,7 +25,6 @@ import lombok.NoArgsConstructor;
  *     <li>{@link #imageUrl} - URL зображення поста.</li>
  *     <li>{@link #title} - Заголовок поста.</li>
  *     <li>{@link #body} - Текстовий вміст поста.</li>
- *     <li>{@link #status} - Статус поста.</li>
  *     <li>{@link #user} - Користувач, який створив пост.</li>
  *     <li>{@link #type} - Тип поста.</li>
  *     <li>{@link #originalPostId} - ID оригінального поста (у випадку репоста).</li>
@@ -35,6 +38,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Table(name = "posts")
 @EqualsAndHashCode(callSuper = true)
+@Inheritance(strategy = InheritanceType.JOINED)
+@DiscriminatorColumn(name = "post_type", discriminatorType = DiscriminatorType.STRING)
 public class Post extends AbstractEntity {
 
     @Column(name = "image_url")
@@ -44,11 +49,6 @@ public class Post extends AbstractEntity {
 
     @Column(columnDefinition = "TEXT")
     private String body;
-
-    @NotNull
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private PostStatus status;
 
     @NotNull
     @ManyToOne
@@ -77,8 +77,8 @@ public class Post extends AbstractEntity {
                 String.format("User{id=%d, Name=%s, Surname=%s, Username=%s, Avatar=%s}",
                         user.getId(), user.getName(), user.getSurname(),
                         user.getUsername(), user.getAvatar());
-        return String.format("Post{id=%d, ImageUrl=%s, Title=%s, Body=%s, Status=%s, Type=%s, OriginalPostId=%s, %s}",
-                getId(), imageUrl, title, text, status, type, originalPostId, userFieldsForPost);
+        return String.format("Post{id=%d, ImageUrl=%s, Title=%s, Body=%s, Type=%s, OriginalPostId=%s, %s}",
+                getId(), imageUrl, title, text, type, originalPostId, userFieldsForPost);
     }
 
 }

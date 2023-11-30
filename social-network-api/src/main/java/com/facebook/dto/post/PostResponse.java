@@ -41,8 +41,6 @@ public class PostResponse {
 
     private String body;
 
-    private String status;
-
     private PostType type;
 
     private Boolean isFavorite;

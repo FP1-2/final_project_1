@@ -55,7 +55,6 @@ class LikeTest {
         Post post = new Post();
         post.setTitle("Title");
         post.setBody("Body");
-        post.setStatus(PostStatus.DRAFT);
         post.setUser(user);
         post.setImageUrl("image.jpg");
         post.setType(PostType.POST);
@@ -145,7 +144,6 @@ class LikeTest {
         Post repost = new Post();
         repost.setTitle("Repost Title");
         repost.setBody("Repost Body");
-        repost.setStatus(PostStatus.DRAFT);
         repost.setUser(user);
         repost.setImageUrl("repost_image.jpg");
         repost.setType(PostType.REPOST);

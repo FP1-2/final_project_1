@@ -30,6 +30,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -413,6 +414,44 @@ public class PostService {
         return new PageImpl<>(postResponses, pageable, totalElements);
     }
 
+    /**
+     * Перевіряє тип поста на основі його ідентифікатора.
+     * <p>
+     * Цей метод перевіряє, чи відповідає фактичний тип поста очікуваному типу. Якщо тип поста,
+     * отриманий з репозиторію, не відповідає очікуваному типу, викидається виняток.
+     * <p>
+     * @param postId Ідентифікатор поста, тип якого потрібно перевірити.
+     * @param expectedType Очікуваний тип поста.
+     * @throws NotFoundException якщо пост з вказаним ідентифікатором не знайдено.
+     * @throws AccessDeniedException якщо фактичний тип поста не відповідає очікуваному типу.
+     */
+    public void checkPostType(Long postId, String expectedType) {
+        String postType = postRepository.findPostTypeById(postId)
+                .orElseThrow(() -> new NotFoundException("Post not found with id: " + postId));
+        if (!expectedType.equals(postType)) {
+            throw new AccessDeniedException("Access to this type of post is denied.");
+        }
+    }
+
+    /**
+     * Перевіряє тип поста на основі ідентифікатора коментаря.
+     * <p>
+     * Цей метод перевіряє, чи відповідає фактичний тип поста, до якого відноситься коментар,
+     * очікуваному типу. Якщо тип поста, отриманий з репозиторію, не відповідає очікуваному типу,
+     * викидається виняток.
+     * <p>
+     * @param commentId Ідентифікатор коментаря, на основі якого потрібно перевірити тип поста.
+     * @param expectedType Очікуваний тип поста.
+     * @throws NotFoundException якщо коментар з вказаним ідентифікатором не знайдено.
+     * @throws AccessDeniedException якщо фактичний тип поста не відповідає очікуваному типу.
+     */
+    public void checkCommentPostType(Long commentId, String expectedType) {
+        String postType = commentRepository.findPostTypeByCommentId(commentId)
+                .orElseThrow(() -> new NotFoundException("Comment not found with id: " + commentId));
+        if (!expectedType.equals(postType)) {
+            throw new AccessDeniedException("Access to this type of post's comment is denied.");
+        }
+    }
 
     public void performRepostCascadeDeletion(Long postId) {
         List<Post> repostRepo = postRepository.findByOriginalPostId(postId);

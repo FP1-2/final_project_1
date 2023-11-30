@@ -3,7 +3,6 @@ package com.facebook.controller.favorites;
 import com.facebook.controller.FavoritesController;
 import com.facebook.dto.post.Author;
 import com.facebook.dto.post.PostResponse;
-import com.facebook.model.posts.PostStatus;
 import com.facebook.model.posts.PostType;
 import com.facebook.service.CurrentUserService;
 import com.facebook.service.EmailHandlerService;
@@ -123,7 +122,6 @@ class FavoritesControllerTest {
         mockResponse.setImageUrl("https://test.com/image.jpg");
         mockResponse.setTitle("Test Title");
         mockResponse.setBody("Test Body");
-        mockResponse.setStatus(PostStatus.PUBLISHED.name());
         mockResponse.setType(PostType.POST);
 
         List<PostResponse> content = List.of(mockResponse);
@@ -151,7 +149,6 @@ class FavoritesControllerTest {
                 .andExpect(jsonPath("$.content[0].imageUrl").value("https://test.com/image.jpg"))
                 .andExpect(jsonPath("$.content[0].title").value("Test Title"))
                 .andExpect(jsonPath("$.content[0].body").value("Test Body"))
-                .andExpect(jsonPath("$.content[0].status").value("PUBLISHED"))
                 .andExpect(jsonPath("$.content[0].type").value("POST"));
     }
 
