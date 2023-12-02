@@ -74,6 +74,8 @@ public class PostService {
 
     private final NotificationService notificationService;
 
+    private final WebSocketService webSocketService;
+
     private final FavoriteRepository favoriteRepository;
 
     /**
@@ -327,7 +329,9 @@ public class PostService {
                     postRepository.save(repost);
 
                     notificationService.createRepostNotification(user, repost, originalPost.getUser());
-
+                    postRepository.findPostDetailsById(user.getId(), repost.getId())
+                            .map(postFacade::convertToPostResponse)
+                            .ifPresent(webSocketService::sendPost);
                     return new ActionResponse(true, "Repost added");
                 }));
     }
@@ -350,9 +354,11 @@ public class PostService {
 
         notificationService.createFriendPostNotification(user, savedPost);
 
-        return postRepository.findPostDetailsById(userId, savedPost.getId())
+        PostResponse postResponse = postRepository.findPostDetailsById(userId, savedPost.getId())
                 .map(postFacade::convertToPostResponse)
                 .orElseThrow(() -> new NotFoundException("Post details not found after creation!"));
+        webSocketService.sendPost(postResponse);
+        return postResponse;
     }
 
     /**
