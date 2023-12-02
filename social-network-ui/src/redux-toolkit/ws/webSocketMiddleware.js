@@ -1,6 +1,6 @@
 import SockJS from "sockjs-client";
 import {Stomp} from "@stomp/stompjs";
-import {setNewMessage, setMessageWithNewStatus, setIsVisible, setNotificationQt} from "./slice";
+import {setNewMessage, setMessageWithNewStatus, setIsVisible, setNotificationQt, setNewPost} from "./slice";
 import {setUnreadMessagesQt} from "../messenger/slice";
 const baseURL = process.env.REACT_APP_BASE_URL;
 let client = null;
@@ -30,7 +30,8 @@ const webSocketMiddleware = (store) => (next) => (action) => {
           client.subscribe(`${queuePath}/messageStatus`, subscribeHandler('/queue/messageStatus', setMessageWithNewStatus), headers);
           client.subscribe(`${queuePath}/messageNotification`, subscribeHandler('/queue/messageNotification', setUnreadMessagesQt), headers);
           client.subscribe(`${queuePath}/notification`, subscribeHandler('/queue/notification', setNotificationQt), headers);
-        },
+          client.subscribe('/topic/posts', subscribeHandler('/topic/posts', setNewPost), headers)
+          },
         (error) => {
           console.log('Connection error:', error);
           store.dispatch(setIsVisible(true));

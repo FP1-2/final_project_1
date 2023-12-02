@@ -3,11 +3,12 @@ import React, { useEffect, useRef } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { createHandleScroll } from "../../utils/utils";
 import { loadPostsInMain } from "../../redux-toolkit/main/thunks";
-import { resetPostsInMainState } from "../../redux-toolkit/main/slice";
+import {addNewPost, resetPostsInMainState} from "../../redux-toolkit/main/slice";
 import PostProfile from "../../components/PostProfile/PostProfile";
 import RepostProfile from "../../components/RepostProfile/RepostProfile";
 import ModalAddRepost from "../../components/ModalAddRepost/ModalAddRepost";
 import Loader from '../../components/Loader/Loader';
+import {setNewPost} from "../../redux-toolkit/ws/slice";
 
 export default function MainPage() {
   const scrollContainerRef = useRef(null);
@@ -22,7 +23,7 @@ export default function MainPage() {
       }
     }
   } = useSelector(state => state.postsInMain.posts);
-
+  const newPost = useSelector(state => state.webSocket.newPost);
   useEffect(() => {
     dispatch(resetPostsInMainState());
     dispatch(loadPostsInMain({ page: 0 }));
@@ -39,7 +40,12 @@ export default function MainPage() {
     status: status,
     fetchMore: getMorePosts,
   });
-
+  useEffect(() => {
+    if(newPost){
+      dispatch(addNewPost(newPost));
+      dispatch(setNewPost(null));
+    }
+  }, [newPost]);
   return (
     <>
       <ModalAddRepost />
