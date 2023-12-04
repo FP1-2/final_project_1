@@ -20,7 +20,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "groups")
+@Table(name = "`groups`")
 @EqualsAndHashCode(callSuper = true)
 public class Group extends AbstractEntity {
 
