@@ -82,7 +82,7 @@ const ModalAddPost = () => {
               <div className={style.modalMain}>
                 <Textarea type="text" name="text" placeholder="Anything new?" />
                 {values.img && <button type="button" className={style.modalMainBtn} onClick={() => {
-                  values.img = "";}}>
+                  setFieldValue("img","");}}>
                   Clear photo</button>}
                 {values.img && <PreviewImage file={values.img}/>}
               </div>

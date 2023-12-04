@@ -68,9 +68,9 @@ const ModalEditProfile = () => {
     dateOfBirth: "",
   };
 
-  
+
   const onSubmit = async (value) => {
-    const obj={};
+    const obj = {};
     for (const key in value) {
       if (value[key] !== "") {
         obj[key] = value[key];
@@ -99,7 +99,7 @@ const ModalEditProfile = () => {
                 <div className={style.modalMainAvatar}>
                   <div className={style.modalMainAvatarWrapper}>
                     <h2 className={style.modalMainAvatarTitle}>Profile photo</h2>
-                    <input type="file" ref={avatar} style={{ display: "none" }} onChange={(e) => downloadInputAvatarPicture(e)}/>
+                    <input type="file" ref={avatar} style={{ display: "none" }} onChange={(e) => {downloadInputAvatarPicture(e);}} />
                     <button type="button" className={style.modalMainAvatarBtn} onClick={clickDownloadAvatar}>Edit</button>
                   </div>
                   <img src={userObject.avatar ? userObject.avatar : "https://senfil.net/uploads/posts/2015-10/1444553580_10.jpg"} alt="" className={style.modalMainAvatarImg} />
@@ -107,7 +107,7 @@ const ModalEditProfile = () => {
                 <div className={style.modalMainHeaderPhoto}>
                   <div className={style.modalMainHeaderPhotoWrapper}>
                     <h2 className={style.modalMainHeaderPhotoTitle}>Cover photo</h2>
-                    <input type="file" ref={headerPhoto} style={{ display: "none" }} onChange={(e) => downloadInputHeaderPicture(e)}/>
+                    <input type="file" ref={headerPhoto} style={{ display: "none" }} onChange={(e) => downloadInputHeaderPicture(e)} />
                     <button type="button" className={style.modalMainHeaderPhotoBtn} onClick={clickDownloadHeaderPhoto}>Edit</button>
                   </div>
                   <img src={userObject.headerPhoto ? userObject.headerPhoto : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="" className={style.modalMainHeaderPhotoImg} />

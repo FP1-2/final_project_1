@@ -18,6 +18,9 @@ const PostsInMainReducer = createSlice({
             state.posts.obj.content = state.posts.obj.content.filter(
                 post => post.postId !== action.payload);
         },
+        addNewPost: (state, action) => {
+            state.posts.obj.content.unshift(action.payload);
+        },
     },
     extraReducers: (builder) => {
         buildersPagination(builder, loadPostsInMain, 'posts');
@@ -28,6 +31,7 @@ export const {
     appendPostsInMain,
     resetPostsInMainState,
     deletLocalMainPost,
+    addNewPost
 } = PostsInMainReducer.actions;
 
 export default PostsInMainReducer.reducer;
