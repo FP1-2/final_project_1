@@ -8,6 +8,7 @@ import ErrorPage from "../ErrorPage/ErrorPage";
 import { getFriends } from "../../redux-toolkit/friend/thunks";
 import { useParams } from "react-router";
 import { clearFriends, clearMyFriends } from "../../redux-toolkit/friend/slice";
+import Loader from "../Loader/Loader";
 
 const FriendProfile = () => {
   const dispatch = useDispatch();
@@ -47,20 +48,27 @@ const FriendProfile = () => {
                     <Link className={style.profileFriendsHeaderBtn} to="/friends">Requests</Link>
                     <Link className={style.profileFriendsHeaderBtn} to="/friends">Find friends</Link>
                   </div>
-                  :null
+                  : null
                 }
               </div>
-              {obj.length ? (
-                <ul className={style.profileFriends}>
-                  {obj.map(el => (
-                    <li key={el.id}>
-                      <FriendCardProfile el={el} />
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p>No friends available</p>
-              )}
+              {status === "pending" ?
+                <Loader />
+                :
+                (
+                  obj.length ? (
+                    <ul className={style.profileFriends}>
+                      {obj.map(el => (
+                        <li key={el.id}>
+                          <FriendCardProfile el={el} />
+                        </li>
+                      ))}
+                    </ul>
+                  ) : (
+                    <p>No friends available</p>
+                  )
+                )
+              }
+
             </div>
           </div>
         </div>

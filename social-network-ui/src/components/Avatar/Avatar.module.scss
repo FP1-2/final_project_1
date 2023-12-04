@@ -8,6 +8,7 @@
     @include sizeCircle(100%);
     font-size: 8px;
     border: $border;
+    object-fit: cover;
   }
 }
 

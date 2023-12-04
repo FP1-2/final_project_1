@@ -217,7 +217,7 @@ const RepostProfile = ({ el }) => {
           <button className={style.postBtn} onClick={savePostThunk}>
             {isFavouritePost ?
               <><SavePost className={style.postBtnImgSaved} />
-                Delete</>
+                Saved</>
               : <><SavePost className={style.postBtnImg} />
                 Save</>}
           </button>
