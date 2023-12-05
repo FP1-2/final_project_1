@@ -12,7 +12,7 @@ export default function Layout() {
   const isVisible = useSelector(state => state.webSocket.isVisible);
   const authUser = useSelector(state => state.auth.user.obj);
   const location = useLocation();
-  const excludedPaths = ['/messages', '/profile', '/post'];
+  const excludedPaths = ['/messages', '/profile', '/post', '/group'];
   const showAside = !excludedPaths.some(path => location.pathname.startsWith(path));
 
 

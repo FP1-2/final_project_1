@@ -18,6 +18,7 @@ import PageNotFound from './pages/PageNotFound/PageNotFound';
 import PopupMessage from "./components/PopupMessage/PopupMessage";
 import MainPage from "./pages/MainPage/MainPage";
 import PostPage from "./pages/PostPage/PostPage";
+import GroupPage from "./pages/GroupPage/GroupPage";
 import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
 import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
 
@@ -33,6 +34,7 @@ function AppRoutes({ isAuth }) {
             <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />}></ProtectedRoute> } />
           </Route>
           <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
+          <Route path="/group/:id" element={<ProtectedRoute isAuth={isAuth} content={<GroupPage />} />} />
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
             <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
           </Route>
