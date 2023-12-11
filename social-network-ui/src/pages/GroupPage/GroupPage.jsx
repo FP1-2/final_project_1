@@ -12,27 +12,43 @@ export default function GroupPage() {
   const adm = true;
 
   /** управління адмін меню */
-
+  const [activeTab, setActiveTab] = useState('Posts');
+  const [hideAdm, setHideAdm] = useState(false);
   const [hideAdmMenu, setHideAdmMenu] = useState(false);
-  const toggleAdmMenu = () => {
+  //const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
+
+  const toggleMoreMenu = () => {
     setHideAdmMenu(prevState => !prevState);
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (event.target.closest(`.${style.tab}`)) {
-        // Якщо клацнути всередині елемента з класом .tab, нічого не робимо
-        return;
-      }
+  const handleTabClick = (tabName) => {
+    if (tabName !== 'More') {
+      setActiveTab(tabName);
       setHideAdmMenu(false);
+    } else {
+      if (!hideAdmMenu) {
+        setActiveTab(tabName);
+      }
+      toggleMoreMenu();
+    }
+  };
+
+
+  useEffect(() => {
+    const handleClickOutside = event => {
+      if (!event.target.closest(`.${style.tab}`)) {
+        setHideAdmMenu(false);
+      }
     };
 
-    document.addEventListener('click', handleClickOutside);
+    if (hideAdmMenu) {
+      document.addEventListener('click', handleClickOutside);
+    }
 
     return () => {
       document.removeEventListener('click', handleClickOutside);
     };
-  }, []);
+  }, [hideAdmMenu]);
 
   const getDraft =()=>{};
   const getArchived =()=>{};
@@ -40,19 +56,22 @@ export default function GroupPage() {
 
   /** прибираємо адмін меню в мобільній версії */
 
-  const [hideAdm, setHideAdm] = useState(false);
-
   useEffect(() => {
-    if(adm) {
+    if (adm) {
       const mediaQuery = window.matchMedia('(max-width: 800px)');
-      const handleMediaChange = event => setHideAdm(event.matches);
+      const handleMediaChange = event => {
+        setHideAdm(event.matches);
+        if (event.matches) {
+          setHideAdmMenu(false);
+        }
+      };
       handleMediaChange(mediaQuery);
       mediaQuery.addEventListener('change', handleMediaChange);
       return () => {
         mediaQuery.removeEventListener('change', handleMediaChange);
       };
     }
-  }, []);
+  }, [adm]);
 
   /** динамічний градієнт хедера */
 
@@ -108,15 +127,32 @@ export default function GroupPage() {
             <div className={style.horizontalLine}></div>
             <div className={style.lowerBlock}>
               <div className={style.tabs}>
-                <div className={`${style.tab} ${style.active}`}>Posts</div>
-                <div className={style.tab}>My Posts</div>
-                {hideAdm ? <div className={style.tab} onClick={toggleAdmMenu}> More
-                  <Tick className={style.tick}/>
+                <div
+                  className={`${style.tab} ${activeTab === 'Posts' ? style.active : ''}`}
+                  onClick={() => handleTabClick('Posts')}
+                >Posts</div>
+                <div
+                  className={`${style.tab} ${activeTab === 'My Posts' ? style.active : ''}`}
+                  onClick={() => handleTabClick('My Posts')}
+                >My Posts</div>
+                {hideAdm ? <div
+                  className={`${style.tab} ${activeTab === 'More' ? style.active : ''}`}
+                  onClick={() => handleTabClick('More')}
+                > More<Tick/>
                 </div> : <div>
                   {adm && <div className={style.adm}>
-                    <div className={style.tab}>Draft</div>
-                    <div className={style.tab}>Archived</div>
-                    <div className={style.tab}>Rejected</div>
+                    <div
+                      className={`${style.tab} ${activeTab === 'Draft' ? style.active : ''}`}
+                      onClick={() => handleTabClick('Draft')}
+                    >Draft</div>
+                    <div
+                      className={`${style.tab} ${activeTab === 'Archived' ? style.active : ''}`}
+                      onClick={() => handleTabClick('Archived')}
+                    >Archived</div>
+                    <div
+                      className={`${style.tab} ${activeTab === 'Rejected' ? style.active : ''}`}
+                      onClick={() => handleTabClick('Rejected')}
+                    >Rejected</div>
                   </div>} </div>
                 }
               </div>

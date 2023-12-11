@@ -31,7 +31,6 @@ $width-imageContainer: 60vw;
     position: relative;
 
     .header {
-      //position: relative;
       height: $Header-height;
       width: 100%;
       box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
@@ -101,7 +100,7 @@ $width-imageContainer: 60vw;
       .upperBlock {
         display: flex;
         justify-content: space-between;
-        padding: 1rem 1.7rem;
+        padding: 0.8rem 1.7rem;
         align-items: flex-start;
         flex-direction: column;
 
@@ -114,7 +113,7 @@ $width-imageContainer: 60vw;
         @include absolute-translateX-center;
         height: 1px;
         background-color: rgb(199, 206, 224);
-        bottom: 3.5rem;
+        bottom: 3.3rem;
         width: 95%;
         align-self: center;
       }
@@ -126,7 +125,6 @@ $width-imageContainer: 60vw;
         padding-left: 1.7rem;
         padding-right: 1.7rem;
         position: relative;
-
 
         .tabs {
           display: flex;
@@ -219,14 +217,8 @@ $width-imageContainer: 60vw;
       }
     }
 
-    .contentContainer {
-      .tripleMenu {
-        left: 17.5rem;
-      }
-
-      .content {
-        width: calc(80vw - $width-sidebar);
-      }
+    .contentContainer .content {
+      width: calc(80vw - $width-sidebar);
     }
   }
 }
@@ -234,10 +226,6 @@ $width-imageContainer: 60vw;
 @media (min-width: $break-large) {
   .groupWrapper .main .contentContainer {
     width: calc($width-imageContainer - 3vw);
-
-    .tripleMenu {
-      left: 12.5rem;
-    }
 
     .content {
       left: 0;
