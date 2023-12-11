@@ -15,7 +15,6 @@ export default function GroupPage() {
   const [activeTab, setActiveTab] = useState('Posts');
   const [hideAdm, setHideAdm] = useState(false);
   const [hideAdmMenu, setHideAdmMenu] = useState(false);
-  //const [isMoreMenuOpen, setIsMoreMenuOpen] = useState(false);
 
   const toggleMoreMenu = () => {
     setHideAdmMenu(prevState => !prevState);
