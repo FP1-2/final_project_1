@@ -1,0 +1,27 @@
+.tripleMenu {
+  display: flex;
+  flex-direction: column;
+  width: 8rem;
+  height: 8rem;
+  background-color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .menuItem {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: #1C1E21;
+    transition: background-color 0.3s;
+    border-radius: 0.4rem;
+
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+  }
+}

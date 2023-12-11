@@ -1,53 +1,55 @@
 @import "../../styles/variables.scss";
-$break-small: 900px;
+
+$break-small: 800px;
 $break-large: 1250px;
-$with-sidebar-left: 22rem;
+$width-sidebar: 22vw;
+$Header-height: 38rem;
+$width-imageContainer: 60vw;
+@mixin absolute-translateX-center($position: absolute) {
+  position: $position;
+  left: 50%;
+  transform: translateX(-50%);
+}
 
 .groupWrapper {
 
   .sidebarLeft {
+    display: none;
     position: fixed;
     top: 0;
     left: 0;
     box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
     margin-top: 3.7rem;
     height: 100vh;
-    width: $with-sidebar-left;
+    width: $width-sidebar;
     padding: 20px;
   }
 
   .main {
-    margin-left: $with-sidebar-left;
+    margin-left: 0;
     background: rgb(199, 206, 214);
+    position: relative;
 
     .header {
-      position: relative;
-      height: 38rem;
+      //position: relative;
+      height: $Header-height;
       width: 100%;
-      background: linear-gradient(to bottom, rgb(177, 180, 187), rgb(255, 255, 255));
       box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
       display: flex;
 
       .imageContainer {
-        position: absolute;
+        @include absolute-translateX-center;
         top: 0;
-        left: 50%;
-        transform: translateX(-50%);
-        height: 28rem;
+        height: calc($Header-height - 10rem);
         width: 100%;
         border-bottom-left-radius: 0.8rem;
         border-bottom-right-radius: 0.8rem;
         overflow: hidden;
 
-        @media (min-width: $break-large) {
-          width: 60vw;
-        }
-
         .image {
           position: relative;
           width: 100%;
           height: 100%;
-
 
           img {
             width: 100%;
@@ -56,7 +58,7 @@ $with-sidebar-left: 22rem;
             object-position: center;
           }
 
-          .strip{
+          .strip {
             position: absolute;
             bottom: 0;
             left: 0;
@@ -67,11 +69,11 @@ $with-sidebar-left: 22rem;
             align-items: center;
             padding: 1rem;
 
-            span{
+            span {
               color: #FFFFFF;
               font-weight: bold;
 
-              .stripLink{
+              .stripLink {
                 padding-left: 0.5rem;
                 color: inherit;
 
@@ -84,107 +86,168 @@ $with-sidebar-left: 22rem;
           }
         }
       }
+    }
 
-      .tabsContainer {
-        position: absolute;
-        height: 9rem;
-        width: 100%;
-        bottom: 0;
-        left: 50%;
-        transform: translateX(-50%);
+
+    .tabsContainer {
+      @include absolute-translateX-center;
+      width: 100%;
+      bottom: 0;
+      height: 9.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .upperBlock {
         display: flex;
-        flex-direction: column;
         justify-content: space-between;
+        padding: 1rem 1.7rem;
+        align-items: flex-start;
+        flex-direction: column;
 
-        @media (min-width: $break-large) {
-          width: 60vw;
+        h2 {
+          font-size: 2rem;
         }
+      }
 
-        .upperBlock {
+      .horizontalLine {
+        @include absolute-translateX-center;
+        height: 1px;
+        background-color: rgb(199, 206, 224);
+        bottom: 3.5rem;
+        width: 95%;
+        align-self: center;
+      }
+
+      .lowerBlock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 1.7rem;
+        padding-right: 1.7rem;
+        position: relative;
+
+
+        .tabs {
           display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-top: 1rem;
-          padding-left: 1.7rem;
-          padding-right: 1.7rem;
 
-          h2 {
-            font-size: 2rem;
-          }
-        }
+          .tab {
+            font-weight: bold;
+            color: gray;
+            padding: 1rem;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
 
-        .horizontalLine {
-          position: absolute;
-          height: 1px;
-          background-color: rgb(199, 206, 224);
-          bottom: 3.5rem;
-          width: 95%;
-          left: 50%;
-          transform: translateX(-50%);
-          align-self: center;
-        }
+            &:hover {
+              cursor: pointer;
+            }
 
-        .lowerBlock {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          padding-left: 1.7rem;
-          padding-right: 1.7rem;
-
-          .tabs {
-            display: flex;
-
-            .tab {
-              font-weight: bold;
-              color: gray;
-              padding: 1rem;
-              border-bottom: 3px solid transparent;
-
-              &:hover{
-                cursor: pointer;
-              }
-
-              &.active {
-                border-bottom-color: #008bd7;
-              }
+            &.active {
+              border-bottom-color: $btn-blue;
             }
           }
 
-          .searchIcon {
-            // Стили для значка поиска
+          .tick {
+
           }
         }
+
+        .adm {
+          display: flex;
+          flex-direction: row;
+        }
+
+        .searchIcon {
+          cursor: pointer;
+
+        }
+      }
+    }
+
+
+    .contentContainer {
+      @include absolute-translateX-center(relative);
+      width: 100%;
+
+      .tripleMenu {
+        position: absolute;
+        top: -1rem;
+        left: 12.5rem;
+        z-index: 1;
+      }
+
+      .content {
+        @include absolute-translateX-center;
+        width: 99%;
+        margin-right: 0;
+        margin-top: 2rem;
+        border: 1px solid black;
+        height: 100rem;
+      }
+
+      .sidebarRight {
+        display: none;
+        position: sticky;
+        top: 0;
+        margin-left: 35vw;
+        width: $width-sidebar;
+        border: 1px solid black;
+        height: 5rem;
+      }
+    }
+  }
+}
+
+@media (min-width: $break-small) {
+  .groupWrapper .sidebarLeft {
+    display: block;
+  }
+
+  .groupWrapper .main {
+    margin-left: $width-sidebar;
+
+    .header .imageContainer {
+      width: $width-imageContainer;
+    }
+
+    .header .tabsContainer {
+      width: $width-imageContainer;
+
+      .upperBlock {
+        align-items: center;
+        flex-direction: row;
       }
     }
 
     .contentContainer {
-      width: calc(100% - $with-sidebar-left);
-      margin-left: $with-sidebar-left;
-
-      .content {
-
+      .tripleMenu {
+        left: 17.5rem;
       }
 
-      .sidebarRight {
-
+      .content {
+        width: calc(80vw - $width-sidebar);
       }
     }
   }
 }
 
-@media (max-width: $break-small) {
-  .groupWrapper .sidebarLeft {
-    display: none;
-  }
+@media (min-width: $break-large) {
+  .groupWrapper .main .contentContainer {
+    width: calc($width-imageContainer - 3vw);
 
-  .groupWrapper .main {
-    margin-left: 0;
+    .tripleMenu {
+      left: 12.5rem;
+    }
+
+    .content {
+      left: 0;
+      transform: none;
+      width: 34vw;
+      margin-right: 5rem;
+    }
+
+    .sidebarRight {
+      display: block;
+    }
   }
 }
-
-@media (max-width: $break-large) {
-  .sidebarRight {
-    display: block;
-  }
-}
-
