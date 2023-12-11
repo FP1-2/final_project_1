@@ -5,6 +5,7 @@ $break-large: 1250px;
 $width-sidebar: 22vw;
 $Header-height: 38rem;
 $width-imageContainer: 60vw;
+
 @mixin absolute-translateX-center($position: absolute) {
   position: $position;
   left: 50%;
@@ -16,8 +17,6 @@ $width-imageContainer: 60vw;
   .sidebarLeft {
     display: none;
     position: fixed;
-    top: 0;
-    left: 0;
     box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
     margin-top: 3.7rem;
     height: 100vh;
@@ -86,7 +85,6 @@ $width-imageContainer: 60vw;
         }
       }
     }
-
 
     .tabsContainer {
       @include absolute-translateX-center;
