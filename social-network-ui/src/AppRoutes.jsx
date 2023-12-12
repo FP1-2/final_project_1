@@ -35,7 +35,7 @@ function AppRoutes({ isAuth }) {
             <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />} />} />
           </Route>
           <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
-          <Route path="/group/:id" element={<ProtectedRoute isAuth={isAuth} content={<GroupPage />} />} />
+          <Route path="/groups/:id" element={<ProtectedRoute isAuth={isAuth} content={<GroupPage />} />} />
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
             <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
           </Route>

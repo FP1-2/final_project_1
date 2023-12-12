@@ -21,7 +21,7 @@ $width-imageContainer: 60vw;
     box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
     height: 100vh;
     width: $width-sidebar-left;
-    padding: 1rem;
+    padding: 0.625rem;
   }
 
   .main {
@@ -104,6 +104,21 @@ $width-imageContainer: 60vw;
 
         h2 {
           font-size: 2rem;
+          white-space: nowrap;
+        }
+
+        .wrpBlueButton{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 1rem;
+
+          .customBlueButton{
+            height: 2.4rem;
+            font-weight: 600;
+            width: 100%;
+          }
         }
       }
 
@@ -130,7 +145,7 @@ $width-imageContainer: 60vw;
           .tab {
             font-weight: bold;
             color: gray;
-            padding: 1rem;
+            padding: 0.5rem;
             border-bottom: 3px solid transparent;
             white-space: nowrap;
 
@@ -214,11 +229,16 @@ $width-imageContainer: 60vw;
     }
 
     .header .tabsContainer {
+
       width: $width-imageContainer;
 
       .upperBlock {
         align-items: center;
         flex-direction: row;
+
+        .customBlueButton{
+          width: 10rem;
+        }
       }
     }
 

@@ -6,6 +6,7 @@ import Search from "../../components/Icons/Search";
 import Vibrant from 'node-vibrant';
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
+import GroupCard from "../../components/GroupCard/GroupCard";
 
 export default function GroupPage() {
   const { id } = useParams();
@@ -136,22 +137,37 @@ export default function GroupPage() {
   };
 
   const join =()=>{};
+
+  const groupImg = "https://source.unsplash.com/random?wallpapers";
+  const groupName = "Radio market";
+  const relatedGroup = "Zaporozhye View";
+  const relatedGroupLink = "/#";
+  const memberCount = 50;
+  const isPublic = true;
+
   return (
     <div className={style.groupWrapper}>
-      <aside className={style.sidebarLeft}>{id}</aside>
+      <aside className={style.sidebarLeft}>
+        <GroupCard
+          pathImage={groupImg}
+          groupName={groupName}
+          memberCount={memberCount}
+          isPublic={isPublic}
+        />
+      </aside>
       <div className={style.main}>
         <div ref={headerRef} className={style.header}>
           <div className={style.imageContainer}>
             <div className={style.image}>
               <img
                 ref={imgRef}
-                src={"https://source.unsplash.com/random?wallpapers"}
+                src={groupImg}
                 alt="Group image"
               />
               <div className={style.strip}>
                 <span>Group profile
-                  <NavLink to={`/profile`} className={style.stripLink}>
-                    {"Zaporozhye View"}
+                  <NavLink to={relatedGroupLink} className={style.stripLink}>
+                    {relatedGroup}
                   </NavLink>
                 </span>
               </div>
@@ -159,8 +175,15 @@ export default function GroupPage() {
           </div>
           <div className={style.tabsContainer}>
             <div className={style.upperBlock}>
-              <h2>Radio market</h2>
-              <BlueButton onClick={join} text={"join the group"}/>
+              <h2>{groupName}</h2>
+              <div className={style.wrpBlueButton}>
+                <BlueButton
+                  onClick={join}
+                  text={"join the group"}
+                  className={style.customBlueButton}
+                />
+                {hideAdm && <span className={style.searchIcon}><Search/></span>}
+              </div>
             </div>
             <div className={style.horizontalLine}></div>
             <div className={style.lowerBlock}>
@@ -194,9 +217,7 @@ export default function GroupPage() {
                   </div>} </div>
                 }
               </div>
-              <span className={style.searchIcon}>
-                <Search/>
-              </span>
+              {!hideAdm && <span className={style.searchIcon}><Search/></span>}
             </div>
           </div>
         </div>
