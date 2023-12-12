@@ -7,7 +7,8 @@ import RepostProfile from '../../components/RepostProfile/RepostProfile';
 import ModalAddRepost from '../../components/ModalAddRepost/ModalAddRepost';
 import { resetFavouritesState } from '../../redux-toolkit/favourite/slice';
 import { createHandleScroll } from "../../utils/utils";
-import ErrorPage from "../..//components/ErrorPage/ErrorPage";
+import ErrorPage from "../../components/ErrorPage/ErrorPage";
+import Loader from "../../components/Loader/Loader";
 
 function FavoritesPage() {
   const dispatch = useDispatch();
@@ -47,19 +48,21 @@ function FavoritesPage() {
     <>
       {status === "rejected" ?
         <ErrorPage message={error ? error : "Oops something went wrong!"} />
-        :
-        <>
-          <ModalAddRepost />
-          <div className={style.favoritsWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
-            <ul className={style.favorits} >
-              {content ? content.map(el => <li className={style.favoritsElem} key={el.postId}>
-                {el.type === "POST" ?
-                  <PostProfile el={el} />
-                  : <RepostProfile el={el} />}
-              </li>) : null}
-            </ul>
-          </div>
-        </>
+        : status === 'pending' && content.length === 0 ? 
+          <Loader/>
+          :
+          <>
+            <ModalAddRepost />
+            <div className={style.favoritesWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
+              <ul className={style.favorites} >
+                {content ? content.map(el => <li className={style.favoritesElem} key={el.postId}>
+                  {el.type === "POST" ?
+                    <PostProfile el={el} />
+                    : <RepostProfile el={el} />}
+                </li>) : null}
+              </ul>
+            </div>
+          </>
       }
     </>
   );

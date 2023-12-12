@@ -21,6 +21,7 @@ import PostPage from "./pages/PostPage/PostPage";
 import GroupPage from "./pages/GroupPage/GroupPage";
 import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
 import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
+import GroupsPage from "./pages/GroupsPage/GroupsPage";
 
 function AppRoutes({ isAuth }) {
   return (
@@ -31,13 +32,14 @@ function AppRoutes({ isAuth }) {
           <Route index element={<ProtectedRoute isAuth={isAuth} content={<MainPage />} />} />
           <Route exact path='/profile/:id/*' element={<ProfilePage />}>
             <Route path='' element={<PostsPageProfile />} />
-            <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />}></ProtectedRoute> } />
+            <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />} />} />
           </Route>
           <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
           <Route path="/group/:id" element={<ProtectedRoute isAuth={isAuth} content={<GroupPage />} />} />
           <Route path="/messages" element={<ProtectedRoute isAuth={isAuth} content={<MessagesPage />} />}>
             <Route path="/messages/:chatId" element={<ProtectedRoute isAuth={isAuth} content={<Chat />} />} />
           </Route>
+          <Route path="/groups" element={<ProtectedRoute isAuth={isAuth} content={<GroupsPage />} />} />
           <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritesPage />} />} />
           <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
           <Route path='/friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}/> } />

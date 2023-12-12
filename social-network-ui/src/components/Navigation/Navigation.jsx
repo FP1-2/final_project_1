@@ -21,23 +21,33 @@ export default function Navigation({authUser}) {
           <Avatar name={authUser.name} photo={authUser.avatar}
             additionalClass={`${styles.nav__list__item__link__user} ${styles.mobileNone}`}/>
         </NavItem>
+
         <NavItem to="/" label="Main" icon="/img/main.png" active={location.pathname === '/'} isDesktop={false}>
           <MainIcon className={styles.desktopNone}/>
         </NavItem>
+
         <NavItem to="/friends" label="Friends" icon="/img/friends.png" isDesktop={false}
           active={location.pathname.includes("/friends")}>
           <Friends className={styles.desktopNone}/>
         </NavItem>
+
         <NavItem to="/messages" label="Messenger" icon="/img/messenger.png" isDesktop={true}
           active={location.pathname.includes("/messages")}>
         </NavItem>
+
+        <NavItem to="/groups" label="Groups" icon="/img/groups.png" isDesktop={true}
+          active={location.pathname.includes("/groups")}>
+        </NavItem>
+
         <NavItem to="/favorites" label="Favorites" icon="/img/saved.png" isDesktop={false}
           active={location.pathname.includes("/favorites")}>
           <Favorites className={styles.desktopNone}/>
         </NavItem>
+
         <NavItem to="/notifications" label="Notifications" icon="/img/notification.png" isDesktop={true}
           active={location.pathname.includes("/notifications")}>
         </NavItem>
+
         <li className={styles.nav__list__item}>
           <button className={styles.nav__list__item__link} onClick={() => logout()}>
             <Exit className={styles.nav__list__item__link__exit}/>
