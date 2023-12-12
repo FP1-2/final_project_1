@@ -1,8 +1,9 @@
 @import "../../styles/variables.scss";
 
-$break-small: 800px;
+$break-small: 820px;
 $break-large: 1250px;
-$width-sidebar: 22vw;
+$width-sidebar-left: 19rem;
+$width-sidebar-Right: 22vw;
 $Header-height: 38rem;
 $width-imageContainer: 60vw;
 
@@ -18,10 +19,9 @@ $width-imageContainer: 60vw;
     display: none;
     position: fixed;
     box-shadow: 1px 0 2px rgba(0, 0, 0, 0.1);
-    margin-top: 3.7rem;
     height: 100vh;
-    width: $width-sidebar;
-    padding: 20px;
+    width: $width-sidebar-left;
+    padding: 1rem;
   }
 
   .main {
@@ -177,8 +177,11 @@ $width-imageContainer: 60vw;
         width: 99%;
         margin-right: 0;
         margin-top: 2rem;
-        border: 1px solid black;
         height: 100rem;
+
+        border: 1px solid rgb(199, 206, 224);
+        border-radius: 0.5rem;
+        background-color: #fff;
       }
 
       .sidebarRight {
@@ -186,9 +189,13 @@ $width-imageContainer: 60vw;
         position: sticky;
         top: 0;
         margin-left: 35vw;
-        width: $width-sidebar;
-        border: 1px solid black;
-        height: 5rem;
+        width: $width-sidebar-Right;
+        height: 10rem;
+        padding: 1rem;
+
+        border: 1px solid rgb(199, 206, 224);
+        border-radius: 0.5rem;
+        background-color: #fff;
       }
     }
   }
@@ -200,7 +207,7 @@ $width-imageContainer: 60vw;
   }
 
   .groupWrapper .main {
-    margin-left: $width-sidebar;
+    margin-left: $width-sidebar-left;
 
     .header .imageContainer {
       width: $width-imageContainer;
@@ -216,7 +223,7 @@ $width-imageContainer: 60vw;
     }
 
     .contentContainer .content {
-      width: calc(80vw - $width-sidebar);
+      width: calc(80vw - $width-sidebar-Right);
     }
   }
 }
