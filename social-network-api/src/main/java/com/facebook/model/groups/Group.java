@@ -33,6 +33,9 @@ public class Group extends AbstractEntity {
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
 
+    @Column(name = "is_public", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isPublic = true;
+
     /**
      * Перелік членів групи.
      * Визначається відношенням "один до багатьох".
