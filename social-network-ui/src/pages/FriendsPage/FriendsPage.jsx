@@ -5,8 +5,12 @@ import style from './FriendsPage.module.scss';
  */import { useSelector } from "react-redux";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
 import { getMyFriends } from "../../redux-toolkit/friend/thunks";
+import { createPortal } from "react-dom";
+
 /* import Loader from "../../components/Loader/Loader";
- */import { Link, Outlet } from "react-router-dom";
+ */
+import SearchFriend from '../../components/SearchFriend/SearchFriend';
+import { Link, Outlet } from "react-router-dom";
 import { useState } from "react";
 const FriendsPage = () => {
   const dispatch = useDispatch();
@@ -14,6 +18,14 @@ const FriendsPage = () => {
   const [linkAllFriends, setLinkAllFriends]=useState("focus");
   const [linkIncomingRequests, setLinkIncomingRequests]=useState("unfocus");
   const [linkOutgoingRequests, setLinkOutgoingRequests]=useState("unfocus");
+  const [textSearch, setTextSearch] = useState("");
+  const [showSearchField, setShowSearchField] = useState(false);
+  const searchInput = document.getElementById("searchInput");
+
+  function openSearchPortal (e){
+    e.stopPropagation();
+    setShowSearchField(true);
+  }
 
   const clickLinkAllFriends=()=>{
     setLinkAllFriends("focus");
@@ -65,7 +77,11 @@ const FriendsPage = () => {
                     <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Sent requests</Link>
                   </li>
                   <li>
-                    <input type="text" className={style.friendsSearch} name="text" placeholder="Search" defaultValue=""></input>
+                    <input id="searchInput" type="text" className={style.friendsSearch} name="text" placeholder="Search on Facebook" 
+                      onClick={openSearchPortal} defaultValue="" />
+
+                    {showSearchField && createPortal(<SearchFriend textSearch={textSearch}
+                      setTextSearch={setTextSearch} handleBack={()=> {setShowSearchField(false);}}/>, searchInput)}
                   </li>
                 </ul>
               </div>
