@@ -1,0 +1,58 @@
+.groupCard {
+  display: flex;
+  align-items: center;
+  padding: 0 0.625rem 0.625rem 0.625rem;
+  border-radius: 8px;
+
+  .imageWrapper {
+    flex-shrink: 0;
+    width: 3rem;
+    height: 3rem;
+    border-radius: 8px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+
+  .info {
+    margin-left: 15px;
+
+    .groupName {
+      font-size: 1.2rem;
+      color: black;
+      margin-bottom: 0.3rem;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    .details {
+      font-size: 0.8rem;
+      color: grey;
+      display: flex;
+      align-items: center;
+
+
+      .iconGlobe {
+        background-image: url("../../sprites/sprite_4.png");
+        background-position: -1rem -20.1rem;
+        background-size: auto;
+        width: 0.85rem;
+        height: 0.85rem;
+        background-repeat: no-repeat;
+        display: inline-block;
+        margin-right: 5px;
+      }
+    }
+
+    .memberCount {
+      font-size: 0.875rem;
+      color: grey;
+    }
+  }
+}

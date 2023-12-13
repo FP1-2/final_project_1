@@ -6,53 +6,124 @@ import Search from "../../components/Icons/Search";
 import Vibrant from 'node-vibrant';
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
+import GroupCard from "../../components/GroupCard/GroupCard";
+import {groupTest as group} from "./obj_test_group";
+import {useSelector} from "react-redux";
 
 export default function GroupPage() {
   const { id } = useParams();
-  const adm = true;
+  const {
+    profileUser: {
+      obj,
+      // status,
+      // error
+    }
+  } = useSelector(state => state.profile);
 
-  /** управління адмін меню */
-
+  const ownerId = group.admins[0].user.userId;
+  const adm = obj.id === ownerId;
+  const [activeTab, setActiveTab] = useState('Posts');
+  const [tab, setTab] = useState('');
+  const [hideAdm, setHideAdm] = useState(false);
+  const [search, setSearch] = useState(false);
   const [hideAdmMenu, setHideAdmMenu] = useState(false);
-  const toggleAdmMenu = () => {
-    setHideAdmMenu(prevState => !prevState);
+  const POSTS = 'Posts', MY_POSTS = 'My Posts', 
+    MORE = 'More', DRAFT = 'Draft', ARCHIVED = 'Archived',
+    REJECTED = 'Rejected';
+
+  const getPosts =()=>{
+    handleTabClick(POSTS);
+    //
+  };
+  
+  const getMyPosts =()=>{
+    handleTabClick(MY_POSTS);
+    //
   };
 
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (event.target.closest(`.${style.tab}`)) {
-        // Якщо клацнути всередині елемента з класом .tab, нічого не робимо
-        return;
-      }
-      setHideAdmMenu(false);
-    };
+  const getDraft = () => {
+    if (!adm){
+      setTab(DRAFT);
+      setActiveTab(MORE);
+    } else handleTabClick(DRAFT);
+    //
+  };
 
-    document.addEventListener('click', handleClickOutside);
+  const getArchived = () => {
+    if (!adm){
+      setTab(ARCHIVED);
+      setActiveTab(MORE);
+    } else handleTabClick(ARCHIVED);
+    //
+  };
 
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
+  const getRejected = () => {
+    if (!adm){
+      setTab(REJECTED);
+      setActiveTab(MORE);
+    } else handleTabClick(REJECTED);
+    //
+  };
 
-  const getDraft =()=>{};
-  const getArchived =()=>{};
-  const getRejected =()=>{};
-
-  /** прибираємо адмін меню в мобільній версії */
-
-  const [hideAdm, setHideAdm] = useState(false);
-
-  useEffect(() => {
-    if(adm) {
-      const mediaQuery = window.matchMedia('(max-width: 800px)');
-      const handleMediaChange = event => setHideAdm(event.matches);
-      handleMediaChange(mediaQuery);
-      mediaQuery.addEventListener('change', handleMediaChange);
-      return () => {
-        mediaQuery.removeEventListener('change', handleMediaChange);
-      };
+  /** Селектор параметрів меню:
+   * впливає локальними змінними на параметри стилів 'TripleMenu'. */
+  const getActiveTab =tab=> {
+    switch (tab) {
+    case DRAFT:
+      return 'tabOne';
+    case ARCHIVED:
+      return 'tabTwo';
+    case REJECTED:
+      return 'tabThree';
+    default:
+      return '';
     }
-  }, []);
+  };
+
+  /** Перемикач стану 'TripleMenu'. */
+  const toggleAdmMenu =()=> setHideAdmMenu(state => !state);
+
+  /** Функція табів */
+  const handleTabClick = (tabName) => {
+    setTab('');
+    setHideAdmMenu(false);
+    if (tabName !== MORE) {
+      setActiveTab(tabName);
+    }
+  };
+
+  /** Прибирає 'TripleMenu' при кліку в довільну область */
+  useEffect(() => {
+    const handleClickOutside = event => {
+      !event.target.closest(`.${style.tab}`) && setHideAdmMenu(false);
+    };
+    if (hideAdmMenu) document.addEventListener('click', handleClickOutside);
+    return () => document.removeEventListener('click', handleClickOutside);
+  }, [hideAdmMenu]);
+
+  /** Управління стилями табов за шириною в'юпорту. */
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 800px)');
+    const handleMediaChange = event => {
+      const matches = event.matches;
+      setSearch(matches);
+      if (adm) {
+        setHideAdm(matches);
+        // Desktop.
+        if (!matches) {
+          if (activeTab === MORE) setActiveTab(tab);
+          setHideAdmMenu(false);
+          // Mobile.
+        } else if ([DRAFT, ARCHIVED, REJECTED].includes(activeTab)) {
+          setTab(activeTab);
+          setActiveTab(MORE);
+        }
+      }
+    };
+    handleMediaChange(mediaQuery);
+    mediaQuery.addEventListener('change', handleMediaChange);
+    return () => mediaQuery.removeEventListener('change', handleMediaChange);
+  }, [adm, activeTab, tab]);
 
   /** динамічний градієнт хедера */
 
@@ -79,22 +150,31 @@ export default function GroupPage() {
   };
 
   const join =()=>{};
+  const isPublic = true;
+
   return (
     <div className={style.groupWrapper}>
-      <aside className={style.sidebarLeft}>{id}</aside>
+      <aside className={style.sidebarLeft}>
+        <GroupCard
+          pathImage={group.imageUrl}
+          groupName={group.name}
+          memberCount={group.memberCount}
+          isPublic={isPublic}
+        />
+      </aside>
       <div className={style.main}>
         <div ref={headerRef} className={style.header}>
           <div className={style.imageContainer}>
             <div className={style.image}>
               <img
                 ref={imgRef}
-                src={"https://source.unsplash.com/random?wallpapers"}
+                src={group.imageUrl}
                 alt="Group image"
               />
               <div className={style.strip}>
                 <span>Group profile
-                  <NavLink to={`/profile`} className={style.stripLink}>
-                    {"Zaporozhye View"}
+                  <NavLink to={`/profile/${ownerId}`} className={style.stripLink}>
+                    {`${group.admins[0].user.name} ${group.admins[0].user.surname}`}
                   </NavLink>
                 </span>
               </div>
@@ -102,39 +182,62 @@ export default function GroupPage() {
           </div>
           <div className={style.tabsContainer}>
             <div className={style.upperBlock}>
-              <h2>Radio market</h2>
-              <BlueButton onClick={join} text={"join the group"}/>
+              <h2>{group.name}</h2>
+              <div className={style.wrpBlueButton}>
+                <BlueButton
+                  onClick={join}
+                  text={"join the group"}
+                  className={style.customBlueButton}
+                />
+                {search && <span className={style.searchIcon}><Search/></span>}
+              </div>
             </div>
             <div className={style.horizontalLine}></div>
             <div className={style.lowerBlock}>
               <div className={style.tabs}>
-                <div className={`${style.tab} ${style.active}`}>Posts</div>
-                <div className={style.tab}>My Posts</div>
-                {hideAdm ? <div className={style.tab} onClick={toggleAdmMenu}> More
-                  <Tick className={style.tick}/>
+                <div
+                  className={`${style.tab} ${activeTab === POSTS ? style.active : ''}`}
+                  onClick={getPosts}
+                >Posts</div>
+                <div
+                  className={`${style.tab} ${activeTab === MY_POSTS ? style.active : ''}`}
+                  onClick={getMyPosts}
+                >My Posts</div>
+                {hideAdm ? <div
+                  className={`${style.tab} ${activeTab === MORE ? style.active : ''}`}
+                  onClick={toggleAdmMenu}
+                > More<Tick/>
                 </div> : <div>
                   {adm && <div className={style.adm}>
-                    <div className={style.tab}>Draft</div>
-                    <div className={style.tab}>Archived</div>
-                    <div className={style.tab}>Rejected</div>
+                    <div
+                      className={`${style.tab} ${activeTab === DRAFT ? style.active : ''}`}
+                      onClick={getDraft}
+                    >Draft</div>
+                    <div
+                      className={`${style.tab} ${activeTab === ARCHIVED ? style.active : ''}`}
+                      onClick={getArchived}
+                    >Archived</div>
+                    <div
+                      className={`${style.tab} ${activeTab === REJECTED ? style.active : ''}`}
+                      onClick={getRejected}
+                    >Rejected</div>
                   </div>} </div>
                 }
               </div>
-              <span className={style.searchIcon}>
-                <Search/>
-              </span>
+              {!search && <span className={style.searchIcon}><Search/></span>}
             </div>
           </div>
         </div>
         <div className={style.contentContainer}>
           {hideAdmMenu && <TripleMenu
             className={style.tripleMenu}
-            one={"Draft"}
-            two={"Archived"}
-            three={"Rejected"}
+            one={DRAFT}
+            two={ARCHIVED}
+            three={REJECTED}
             onOne={getDraft}
             onTwo={getArchived}
             onThree={getRejected}
+            activeTab={getActiveTab(tab)}
           />}
           <div className={style.content}>
             <aside className={style.sidebarRight}>{id}</aside>
