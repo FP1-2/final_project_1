@@ -21,6 +21,9 @@ const webSocketReducer = createSlice({
     resetNotificationQt: (state) => {
       state.notificationQt = initialState.notificationQt;
     },
+    setNewPost: (state, action)=>{
+      state.newPost = action.payload;
+    }
   }
 });
 
@@ -29,7 +32,8 @@ export const {
   setMessageWithNewStatus,
   setIsVisible,
   setNotificationQt,
-  resetNotificationQt
+  resetNotificationQt,
+  setNewPost
 } = webSocketReducer.actions;
 
 export default webSocketReducer.reducer;

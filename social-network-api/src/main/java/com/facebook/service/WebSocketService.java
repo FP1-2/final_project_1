@@ -1,5 +1,6 @@
 package com.facebook.service;
 
+import com.facebook.dto.post.PostResponse;
 import com.facebook.model.AppUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -14,6 +15,9 @@ public class WebSocketService {
     private final SimpMessagingTemplate messagingTemplate;
     public void sendNotification(AppUser user) {
         sendMessageToUser(user, "/queue/notification", 1);
+    }
+    public void sendPost(PostResponse post) {
+        messagingTemplate.convertAndSend("/topic/posts", post);
     }
     public void sendNewMessage(AppUser user, Object message) {
         sendMessageToUser(user, "/queue/messages", message);

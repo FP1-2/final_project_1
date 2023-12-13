@@ -2,6 +2,7 @@ const initialState = {
   newMessage: null,
   messageWithNewStatus: null,
   isVisible: false,
-  notificationQt: null
+  notificationQt: null,
+  newPost: null
 }
 export default initialState;

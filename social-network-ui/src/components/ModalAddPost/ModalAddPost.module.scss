@@ -157,6 +157,7 @@
 
             @include width_576 {
                 flex-direction: column;
+                height: 112px;
             }
 
 
@@ -164,7 +165,7 @@
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                min-height: 100%;
+                height: 36px;
                 width: 229px;
                 border: 1px solid #dfe0e2;
                 border-radius: 5px;
@@ -177,7 +178,6 @@
 
                 @include width_576 {
                     width: 100%;
-                    min-height: 50%;
                 }
 
                 &:hover {
@@ -191,8 +191,8 @@
             }
 
             .modalPublish {
-                min-height: 100%;
-                min-width: 229px;
+                height: 36px;
+                width: 229px;
                 border: none;
                 border-radius: 5px;
                 font-size: 15px;
@@ -204,6 +204,11 @@
                 &:hover {
                     cursor: pointer;
                 }
+
+                @include width_576 {
+                    width: 100%;
+                }
+
             }
         }
     }
