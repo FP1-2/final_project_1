@@ -64,6 +64,9 @@ const FriendsPage = () => {
                   <li className={linkOutgoingRequests === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkOutgoingRequests}>
                     <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Sent requests</Link>
                   </li>
+                  <li>
+                    <input type="text" className={style.friendsSearch} name="text" placeholder="Search" defaultValue=""></input>
+                  </li>
                 </ul>
               </div>
               <Outlet/>

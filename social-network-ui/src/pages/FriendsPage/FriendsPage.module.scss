@@ -1,3 +1,4 @@
+@import "../../styles/variables.scss";
 @import "../../styles/mixin.scss";
 
 .bodyWrapper {
@@ -165,7 +166,9 @@
         justify-content: flex-start;
         width: 940px;
         margin: 0;
+        margin-top: 20px;
         padding: 0;
+        position:relative;
 
         @include width_992 {
             width: 850px;
@@ -184,7 +187,7 @@
             height: 45px;
             padding-left: 16px;
             padding-right: 16px;
-            width: 120px;
+            width: 150px;
             border-radius: 5px;
 
             &:hover {
@@ -215,7 +218,7 @@
             height: 45px;
             padding-left: 16px;
             padding-right: 16px;
-            width: 120px;
+            width: 150px;
             border-radius: 5px;
             position: relative;
 
@@ -245,4 +248,13 @@
             }
         }
     }
+}
+.friendsSearch{
+    display: flex;
+    @include input-field;
+    padding: 0 16px;
+    position: absolute;
+    margin:3px;
+    right: 15px;
+    background-color: #F0F2F5;
 }
