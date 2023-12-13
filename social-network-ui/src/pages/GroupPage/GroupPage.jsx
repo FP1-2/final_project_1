@@ -7,13 +7,25 @@ import Vibrant from 'node-vibrant';
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
 import GroupCard from "../../components/GroupCard/GroupCard";
+import {groupTest as group} from "./obj_test_group";
+import {useSelector} from "react-redux";
 
 export default function GroupPage() {
   const { id } = useParams();
-  const adm = true;
+  const {
+    profileUser: {
+      obj,
+      // status,
+      // error
+    }
+  } = useSelector(state => state.profile);
+
+  const ownerId = group.admins[0].user.userId;
+  const adm = obj.id === ownerId;
   const [activeTab, setActiveTab] = useState('Posts');
   const [tab, setTab] = useState('');
   const [hideAdm, setHideAdm] = useState(false);
+  const [search, setSearch] = useState(false);
   const [hideAdmMenu, setHideAdmMenu] = useState(false);
   const POSTS = 'Posts', MY_POSTS = 'My Posts', 
     MORE = 'More', DRAFT = 'Draft', ARCHIVED = 'Archived',
@@ -91,25 +103,26 @@ export default function GroupPage() {
 
   /** Управління стилями табов за шириною в'юпорту. */
   useEffect(() => {
-    if (adm) {
-      const mediaQuery = window.matchMedia('(max-width: 800px)');
-      const handleMediaChange = event => {
-        setHideAdm(event.matches);
+    const mediaQuery = window.matchMedia('(max-width: 800px)');
+    const handleMediaChange = event => {
+      const matches = event.matches;
+      setSearch(matches);
+      if (adm) {
+        setHideAdm(matches);
         // Desktop.
-        if (!event.matches) {
+        if (!matches) {
           if (activeTab === MORE) setActiveTab(tab);
           setHideAdmMenu(false);
-        // Mobile.
-        } else if ([DRAFT, ARCHIVED, REJECTED].includes(activeTab)){
+          // Mobile.
+        } else if ([DRAFT, ARCHIVED, REJECTED].includes(activeTab)) {
           setTab(activeTab);
           setActiveTab(MORE);
         }
-      };
-
-      handleMediaChange(mediaQuery);
-      mediaQuery.addEventListener('change', handleMediaChange);
-      return () => mediaQuery.removeEventListener('change', handleMediaChange);
-    }
+      }
+    };
+    handleMediaChange(mediaQuery);
+    mediaQuery.addEventListener('change', handleMediaChange);
+    return () => mediaQuery.removeEventListener('change', handleMediaChange);
   }, [adm, activeTab, tab]);
 
   /** динамічний градієнт хедера */
@@ -137,21 +150,15 @@ export default function GroupPage() {
   };
 
   const join =()=>{};
-
-  const groupImg = "https://source.unsplash.com/random?wallpapers";
-  const groupName = "Radio market";
-  const relatedGroup = "Zaporozhye View";
-  const relatedGroupLink = "/#";
-  const memberCount = 50;
   const isPublic = true;
 
   return (
     <div className={style.groupWrapper}>
       <aside className={style.sidebarLeft}>
         <GroupCard
-          pathImage={groupImg}
-          groupName={groupName}
-          memberCount={memberCount}
+          pathImage={group.imageUrl}
+          groupName={group.name}
+          memberCount={group.memberCount}
           isPublic={isPublic}
         />
       </aside>
@@ -161,13 +168,13 @@ export default function GroupPage() {
             <div className={style.image}>
               <img
                 ref={imgRef}
-                src={groupImg}
+                src={group.imageUrl}
                 alt="Group image"
               />
               <div className={style.strip}>
                 <span>Group profile
-                  <NavLink to={relatedGroupLink} className={style.stripLink}>
-                    {relatedGroup}
+                  <NavLink to={`/profile/${ownerId}`} className={style.stripLink}>
+                    {`${group.admins[0].user.name} ${group.admins[0].user.surname}`}
                   </NavLink>
                 </span>
               </div>
@@ -175,14 +182,14 @@ export default function GroupPage() {
           </div>
           <div className={style.tabsContainer}>
             <div className={style.upperBlock}>
-              <h2>{groupName}</h2>
+              <h2>{group.name}</h2>
               <div className={style.wrpBlueButton}>
                 <BlueButton
                   onClick={join}
                   text={"join the group"}
                   className={style.customBlueButton}
                 />
-                {hideAdm && <span className={style.searchIcon}><Search/></span>}
+                {search && <span className={style.searchIcon}><Search/></span>}
               </div>
             </div>
             <div className={style.horizontalLine}></div>
@@ -217,7 +224,7 @@ export default function GroupPage() {
                   </div>} </div>
                 }
               </div>
-              {!hideAdm && <span className={style.searchIcon}><Search/></span>}
+              {!search && <span className={style.searchIcon}><Search/></span>}
             </div>
           </div>
         </div>
