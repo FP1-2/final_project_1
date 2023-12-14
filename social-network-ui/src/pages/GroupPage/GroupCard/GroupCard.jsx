@@ -1,13 +1,12 @@
 import React from 'react';
 import style from './GroupCard.module.scss';
 import PropTypes from "prop-types";
+import GroupAvatar from "../GroupAvatar/GroupAvatar";
 
 export default function GroupCard({ pathImage, groupName, memberCount, isPublic }) {
   return (
     <div className={style.groupCard}>
-      <div className={style.imageWrapper}>
-        <img src={pathImage} alt="Group" />
-      </div>
+      <GroupAvatar pathImage={pathImage}/>
       <div className={style.info}>
         <h2 className={style.groupName}>{groupName}</h2>
         <p className={style.details}>

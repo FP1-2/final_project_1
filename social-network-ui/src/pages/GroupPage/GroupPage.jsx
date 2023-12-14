@@ -5,20 +5,21 @@ import BlueButton from "../../components/BlueButton/BlueButton";
 import Vibrant from 'node-vibrant';
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
-import GroupCard from "../../components/GroupCard/GroupCard";
+import GroupCard from "./GroupCard/GroupCard";
 import {groupTest as group} from "./obj_test_group";
 import {useSelector} from "react-redux";
 import Search from "../../components/Icons/Search";
+import GroupDetails from "./GroupDetails/GroupDetails";
 
 export default function GroupPage() {
   const { id } = useParams();
   const {
-    profileUser: {
+    user: {
       obj,
       // status,
       // error
     }
-  } = useSelector(state => state.profile);
+  } = useSelector(state => state.auth);
 
   const ownerId = group.admins[0].user.userId;
   const adm = obj.id === ownerId;
@@ -163,6 +164,7 @@ export default function GroupPage() {
           memberCount={group.memberCount}
           isPublic={group.isPublic}
         />
+        {id}
       </aside>
       <div className={style.main}>
         <div ref={headerRef} className={style.header}>
@@ -242,7 +244,9 @@ export default function GroupPage() {
             activeTab={getActiveTab(tab)}
           />}
           <div className={style.content}>
-            <aside className={style.sidebarRight}>{id}</aside>
+            <aside className={style.sidebarRight}>
+              <GroupDetails group={group}/>
+            </aside>
           </div>
         </div>
       </div>

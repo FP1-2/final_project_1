@@ -204,7 +204,7 @@ $width-imageContainer: 60vw;
         top: 0;
         margin-left: 35vw;
         width: $width-sidebar-Right;
-        height: 10rem;
+        min-height: 10rem;
         padding: 1rem;
 
         border: 1px solid rgb(199, 206, 224);

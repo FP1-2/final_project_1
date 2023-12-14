@@ -35,6 +35,162 @@ export const groupTest = {
       "roles": [
         "ADMIN"
       ]
-    }
+    },
+    {
+      "id": 4,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 5,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 6,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 7,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 8,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 9,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 10,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 11,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 12,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 13,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 14,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
+    {
+      "id": 15,
+      "user": {
+        "userId": 1,
+        "name": "George",
+        "surname": "Washington",
+        "username": "Greak",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png"
+      },
+      "roles": [
+        "ADMIN"
+      ]
+    },
   ]
 };
