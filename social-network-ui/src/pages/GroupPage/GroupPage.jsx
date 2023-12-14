@@ -2,13 +2,13 @@ import {NavLink, useParams} from "react-router-dom";
 import style from './GroupPage.module.scss';
 import React, {useEffect, useRef, useState} from "react";
 import BlueButton from "../../components/BlueButton/BlueButton";
-import Search from "../../components/Icons/Search";
 import Vibrant from 'node-vibrant';
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
 import GroupCard from "../../components/GroupCard/GroupCard";
 import {groupTest as group} from "./obj_test_group";
 import {useSelector} from "react-redux";
+import Search from "../../components/Icons/Search";
 
 export default function GroupPage() {
   const { id } = useParams();
@@ -22,6 +22,7 @@ export default function GroupPage() {
 
   const ownerId = group.admins[0].user.userId;
   const adm = obj.id === ownerId;
+
   const [activeTab, setActiveTab] = useState('Posts');
   const [tab, setTab] = useState('');
   const [hideAdm, setHideAdm] = useState(false);
@@ -30,6 +31,10 @@ export default function GroupPage() {
   const POSTS = 'Posts', MY_POSTS = 'My Posts', 
     MORE = 'More', DRAFT = 'Draft', ARCHIVED = 'Archived',
     REJECTED = 'Rejected';
+
+  const join =()=>{
+    //
+  };
 
   const getPosts =()=>{
     handleTabClick(POSTS);
@@ -139,7 +144,7 @@ export default function GroupPage() {
     }
   }, []);
 
-  const applyDynamicGradient = (img) => {
+  const applyDynamicGradient = img => {
     Vibrant.from(img.src).getPalette()
       .then((palette) => {
         const rgbColor = palette.LightMuted ? palette.LightMuted.rgb : [255, 255, 255];
@@ -149,9 +154,6 @@ export default function GroupPage() {
       });
   };
 
-  const join =()=>{};
-  const isPublic = true;
-
   return (
     <div className={style.groupWrapper}>
       <aside className={style.sidebarLeft}>
@@ -159,7 +161,7 @@ export default function GroupPage() {
           pathImage={group.imageUrl}
           groupName={group.name}
           memberCount={group.memberCount}
-          isPublic={isPublic}
+          isPublic={group.isPublic}
         />
       </aside>
       <div className={style.main}>
@@ -189,7 +191,7 @@ export default function GroupPage() {
                   text={"join the group"}
                   className={style.customBlueButton}
                 />
-                {search && <span className={style.searchIcon}><Search/></span>}
+                {search && <span className={style.search}><Search/></span>}
               </div>
             </div>
             <div className={style.horizontalLine}></div>
@@ -224,7 +226,7 @@ export default function GroupPage() {
                   </div>} </div>
                 }
               </div>
-              {!search && <span className={style.searchIcon}><Search/></span>}
+              {!search && <span className={style.search}><Search/></span>}
             </div>
           </div>
         </div>

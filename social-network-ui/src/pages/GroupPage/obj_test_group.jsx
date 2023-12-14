@@ -6,6 +6,7 @@ export const groupTest = {
   "name": "Java Development",
   "description": "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
   "memberCount": 2000,
+  "isPublic": true,
   "members": [
     {
       "id": 2,

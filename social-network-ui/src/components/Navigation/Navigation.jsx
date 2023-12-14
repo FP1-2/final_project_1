@@ -12,13 +12,16 @@ import PropTypes from "prop-types";
 
 export default function Navigation({authUser}) {
   const location = useLocation();
-
+  const sizeAvatar = 38;
   return (
     <nav className={styles.nav}>
       <ul className={styles.nav__list}>
         <NavItem to={`/profile/${authUser.id}`} label={`${authUser.name} ${authUser.surname}`}
           active={location.pathname === '/profile/' + authUser.id} isDesktop={true}>
-          <Avatar name={authUser.name} photo={authUser.avatar}
+          <Avatar
+            styleWrap={{height: sizeAvatar, width: sizeAvatar, position: "relative", left: -3}}
+            style={{height: sizeAvatar, width: sizeAvatar}}
+            name={authUser.name} photo={authUser.avatar}
             additionalClass={`${styles.nav__list__item__link__user} ${styles.mobileNone}`}/>
         </NavItem>
 

@@ -15,6 +15,7 @@ import popupReducer from "./popup/slice"
 import PostsInMainReducer from "./main/slice"
 import resetPasswordSlice from "./ResetPassword/slice"
 import passwordUpdateReducer from "./UpdatePassword/slice"
+import groupsReducer from "./group/slice"
 
 const RESET_STATE = 'RESET_STATE';
 
@@ -23,14 +24,15 @@ const rootReducer = (state, action) => {
         return {
             registration: undefined,
             auth: undefined,
-            profile:undefined,
-            post:undefined,
-            friend:undefined,
-            favourites:undefined,
+            profile: undefined,
+            post: undefined,
+            friend: undefined,
+            favourites: undefined,
             messenger: undefined,
             notifications: undefined,
             popup: undefined,
             postsInMain: undefined,
+            group: undefined,
         };
     }
     return combineReducers({
@@ -39,14 +41,15 @@ const rootReducer = (state, action) => {
         passwordUpdate: passwordUpdateReducer,
         auth: loginReducer,
         profile:profileReducer,
-        post:postReducer,
-        friends:friendsReducer,
-        favourites:favouritesReducer,
+        post: postReducer,
+        friends: friendsReducer,
+        favourites: favouritesReducer,
         messenger: chatsReducer,
         webSocket: webSocketReducer,
         notifications: notificationReducer,
         popup: popupReducer,
         postsInMain: PostsInMainReducer,
+        group: groupsReducer,
     })(state, action);
 }
 
