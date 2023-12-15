@@ -26,7 +26,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
     setTextSearch('');
   }
   function addRecentSearch (searchUser){
-    setRecentSearch.unshift(searchUser);
+    setRecentSearch(recentSearch.unshift(searchUser));
   }
   return (
     <div className={styles.searchUser} id="search-user-portal" >
