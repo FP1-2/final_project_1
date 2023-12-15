@@ -51,7 +51,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       </div>
 
       <ul className={styles.searchUser__filteredUsers}>
-        {searchUsers.status === '' ? <p className={styles.searchUser__filteredUsers__text}>enter name/username for searching user</p>
+        {searchUsers.status === '' ? <p className={styles.searchUser__filteredUsers__text}>Enter name/username for searching user</p>
           : (searchUsers.status === 'pending' ? <Loader/> :
             (searchUsers.obj.length === 0 ? 
               <p  className={styles.searchUser__filteredUsers__text}>no results</p>

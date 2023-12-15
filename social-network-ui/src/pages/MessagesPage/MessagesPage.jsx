@@ -101,7 +101,7 @@ export default function MessagesPage() {
         className={(!showChat) ? `${styles.chatFieldSection} ${styles.hide}` : styles.chatFieldSection}>
         {(!showChat) ?
           <div className={styles.chatFieldSection__empty}>
-            <h1>Виберіть чат або почніть нову переписку</h1>
+            <h1>Select a chat or start a new conversation</h1>
           </div>
           : <Outlet/>}
       </section>

@@ -54,7 +54,7 @@ export default function ChatHeader({
       </NavLink>
       {isCreatingNewChat ? (
         <>
-          <h2>Кому: </h2>
+          <h2>To: </h2>
           <InputSearch
             textSearch={userSearch}
             placeholder={"Enter user's name/surname"}
