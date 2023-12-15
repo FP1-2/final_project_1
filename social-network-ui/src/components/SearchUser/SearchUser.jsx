@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import styles from './SearchUser.module.scss';
 import PropTypes from 'prop-types';
 import { useDispatch, useSelector } from "react-redux";
@@ -58,7 +58,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
               :
               searchUsers.obj.map(({ id, avatar, name, surname }) => (
                 <li key={id} onClick={closePortal}
-                className={styles.searchUser__filteredUsers__item}>
+                  className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
                   </NavLink>

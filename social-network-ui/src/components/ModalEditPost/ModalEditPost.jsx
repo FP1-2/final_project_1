@@ -33,7 +33,7 @@ const ModalEditPost = () => {
   };
 
   const initialValues = {
-    text: post.text.length > 0 ? post.text : '',
+    text: "",
     img: ""
   };
 
