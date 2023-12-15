@@ -60,7 +60,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
                             p.image_url,
                             p.title,
                             p.body,
-                            p.status,
                             p.type,
                             p.original_post_id,
                           
@@ -82,7 +81,6 @@ public interface FavoriteRepository extends JpaRepository<Favorite, Long> {
                           
                             op.title AS original_title,
                             op.body AS original_body,
-                            op.status AS original_status,
                             op.type AS original_type,
                           
                             GROUP_CONCAT(DISTINCT oc.id) AS original_comment_ids,
