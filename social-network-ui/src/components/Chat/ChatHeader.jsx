@@ -72,7 +72,7 @@ export default function ChatHeader({
             <ul className={styles.chat__filteredUsers} id="search-user-chat">
               {searchUsers.status === 'pending' ? <Loader/> 
                 : (searchUsers.obj.length === 0 ? 
-                  <p className={styles.chat__filteredUsers__no-res}>no results</p>
+                  <p className={styles.chat__filteredUsers__nores}>no results</p>
                   : 
                   searchUsers.obj.map(({ id, avatar, name, surname, username }) => (
                     <li key={id} onClick={() => {
