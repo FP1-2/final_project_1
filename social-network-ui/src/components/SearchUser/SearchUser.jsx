@@ -56,7 +56,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       <ul className={styles.searchUser__filteredUsers}>
         {searchUsers.status === '' ? 
           (recentSearch.length === 0 ? 
-            "enter name/username for searching user" 
+            <p>"enter name/username for searching user" </p>
             : 
             (<React.Fragment>
               <p>Recently:</p>

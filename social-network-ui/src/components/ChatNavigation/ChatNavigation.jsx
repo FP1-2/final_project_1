@@ -4,7 +4,7 @@ import Search from "../Icons/Search";
 import Close from "../Icons/Close";
 import BackIcon from "../Icons/BackIcon";
 import PropTypes from 'prop-types';
-import {Link, NavLink, useParams} from 'react-router-dom';
+import {NavLink, useParams} from 'react-router-dom';
 import ChatLoader from "./ChatLoader";
 import {checkSentStatus, checkReadStatus} from "../../utils/statusType";
 import {useState} from "react";
@@ -117,7 +117,7 @@ export default function ChatNavigation({
                 }
                 )
                 :(
-                  searchChats.status === '' ? "enter name/surname" : 
+                  searchChats.status === '' ? <p>"enter name/surname" </p>: 
                     ( searchChats.status === 'pending' ? <Loader/> :
                       (searchChats.obj.length === 0 ? <p>no results</p> :
                         searchChats.obj.map(({id, chatParticipant}) => {
