@@ -56,13 +56,13 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       <ul className={styles.searchUser__filteredUsers}>
         {searchUsers.status === '' ? 
           (recentSearch.length === 0 ? 
-            <p>"enter name/username for searching user" </p>
+            <p>enter name/username for searching user</p>
             : 
             (<React.Fragment>
               <p>Recently:</p>
               {recentSearch.map(({ id, avatar, name, surname }) => (
                 <li key={id} onClick={()=> closePortal()} 
-                className={styles.searchUser__filteredUsers__item}>
+                  className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
                   </NavLink>
