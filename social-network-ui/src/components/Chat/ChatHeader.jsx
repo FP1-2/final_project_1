@@ -71,7 +71,7 @@ export default function ChatHeader({
           {showSearchPortal && createPortal(
             <ul className={styles.chat__filteredUsers} id="search-user-chat">
               {searchUsers.status === 'pending' ? <Loader/> 
-                :( searchUsers.status === 'fullfiled' && (searchUsers.obj.length === 0 ? 
+                :( searchUsers.status === 'fulfilled' && (searchUsers.obj.length === 0 ? 
                   <p className={styles.chat__filteredUsers__nores}>no results</p>
                   : 
                   searchUsers.obj.map(({ id, avatar, name, surname, username }) => (

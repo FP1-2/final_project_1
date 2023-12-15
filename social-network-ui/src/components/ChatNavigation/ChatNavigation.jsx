@@ -117,9 +117,9 @@ export default function ChatNavigation({
                 }
                 )
                 :(
-                  searchChats.status === '' ? <p  className={styles.chatNavSection__chatList__items}>enter name/surname</p>: 
+                  searchChats.status === '' ? <p className={styles.chatNavSection__chatList__items__res}>enter name/surname</p>: 
                     ( searchChats.status === 'pending' ? <Loader/> :
-                      (searchChats.obj.length === 0 ? <p>no results</p> :
+                      (searchChats.obj.length === 0 ? <p className={styles.chatNavSection__chatList__items__res}>no results</p> :
                         searchChats.obj.map(({id, chatParticipant}) => {
                           return (
                             <li key={id} className={styles.chatNavSection__chatList__items__item}>

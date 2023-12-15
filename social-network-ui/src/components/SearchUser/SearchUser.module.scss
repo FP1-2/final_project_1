@@ -64,7 +64,7 @@
     overflow: auto;
     @include flex-center;
     width: 100%;
-    height: auto;
+    height: 100%;
       &__item {
         width: 100%;
         cursor: pointer;
