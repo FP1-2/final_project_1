@@ -1,54 +1,79 @@
-import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import style from './FriendsPage.module.scss';
-/* import FriendCardProfile from "../../components/FriendCardProfile/FriendCardProfile";
- */import { useSelector } from "react-redux";
 import ErrorPage from "../../components/ErrorPage/ErrorPage";
 import { getMyFriends } from "../../redux-toolkit/friend/thunks";
-import { createPortal } from "react-dom";
+import { loadUserProfile } from "../../redux-toolkit/profile/thunks";
 
-/* import Loader from "../../components/Loader/Loader";
- */
-import SearchFriend from '../../components/SearchFriend/SearchFriend';
-import { Link, Outlet } from "react-router-dom";
-import { useState } from "react";
 const FriendsPage = () => {
+
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const myId = useSelector(state => state.auth.user.obj.id);
-  const [linkAllFriends, setLinkAllFriends]=useState("focus");
-  const [linkIncomingRequests, setLinkIncomingRequests]=useState("unfocus");
-  const [linkOutgoingRequests, setLinkOutgoingRequests]=useState("unfocus");
-  const [textSearch, setTextSearch] = useState("");
-  const [showSearchField, setShowSearchField] = useState(false);
-  const searchInput = document.getElementById("searchInput");
+  const [linkAllFriends, setLinkAllFriends] = useState("focus");
+  const [linkIncomingRequests, setLinkIncomingRequests] = useState("unfocus");
+  const [linkOutgoingRequests, setLinkOutgoingRequests] = useState("unfocus");
+  const [searchValue, setSearchValue] = useState(''); 
+  const [isSearchFocused, setIsSearchFocused] = useState(false); 
 
-  function openSearchPortal (e){
-    e.stopPropagation();
-    setShowSearchField(true);
-  }
 
-  const clickLinkAllFriends=()=>{
+  const clickLinkAllFriends = () => {
     setLinkAllFriends("focus");
     setLinkIncomingRequests("unfocus");
     setLinkOutgoingRequests("unfocus");
+    navigate('/friends');
   };
-  const clickLinkIncomingRequests=()=>{
+
+  const clickLinkIncomingRequests = () => {
     setLinkAllFriends("unfocus");
     setLinkIncomingRequests("focus");
     setLinkOutgoingRequests("unfocus");
+    navigate('/friends/incoming-requests');
   };
-  const clickLinkOutgoingRequests=()=>{
+
+  const clickLinkOutgoingRequests = () => {
     setLinkAllFriends("unfocus");
     setLinkIncomingRequests("unfocus");
     setLinkOutgoingRequests("focus");
+    navigate('/friends/outgoing-requests');
   };
+
   useEffect(() => {
-    dispatch(getMyFriends(myId));
-  }, []);
+    const fetchProfileAndFriends = async () => {
+      await dispatch(loadUserProfile({ user: "myUser", id: myId }));
+      await dispatch(getMyFriends(myId));
+    };
+    fetchProfileAndFriends();
+  }, [dispatch, myId]);
 
   const {
-    getMyFriends: { /* obj,  */status, error },
+    getMyFriends: { status, error },
   } = useSelector(state => state.friends);
+
+  const handleInputChange = (e) => {
+    setSearchValue(e.target.value);
+  };
+
+  const handleInputKeyPress = (e) => {
+    if (e.key === 'Enter' && searchValue) {
+      navigate(`/friends/search-friend?query=${searchValue}`);
+    }
+  };
+
+  const handleFocus = () => {
+    setIsSearchFocused(true);
+    setLinkAllFriends("unfocus");
+    setLinkIncomingRequests("unfocus");
+    setLinkOutgoingRequests("unfocus");
+    navigate(`/friends/search-friend?query=${searchValue}`);
+
+  };
+
+
+  const handleBlur = () => {
+    setIsSearchFocused(false);
+  };
 
   return (
     <>
@@ -61,46 +86,36 @@ const FriendsPage = () => {
           <div className={style.body}>
             <div className={style.friendsWrapper}>
               <div className={style.friendsHeader}>
-                <a className={style.friendsHeaderLink} href="">
-                  Friends
-                </a>
+                <a className={style.friendsHeaderLink} href="">Friends</a>
               </div>
               <div className={style.linksListWrapper}>
                 <ul className={style.linksList}>
                   <li className={linkAllFriends === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkAllFriends}>
-                    <Link to="" className={linkAllFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">All friends</Link>
+                    <Link to="" className={linkAllFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick}>All friends</Link>
                   </li>
                   <li className={linkIncomingRequests === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkIncomingRequests}>
-                    <Link to="incoming-requests" className={linkIncomingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friend requests</Link>
+                    <Link to="incoming-requests" className={linkIncomingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick}>Friend requests</Link>
                   </li>
                   <li className={linkOutgoingRequests === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkOutgoingRequests}>
-                    <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Sent requests</Link>
+                    <Link to="outgoing-requests" className={linkOutgoingRequests === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick}>Sent requests</Link>
                   </li>
                   <li>
-                    <input id="searchInput" type="text" className={style.friendsSearch} name="text" placeholder="Search on Facebook" 
-                      onClick={openSearchPortal} defaultValue="" />
-
-                    {showSearchField && createPortal(<SearchFriend textSearch={textSearch}
-                      setTextSearch={setTextSearch} handleBack={()=> {setShowSearchField(false);}}/>, searchInput)}
+                    <input 
+                      id="searchInput" 
+                      type="text" 
+                      className={`${style.friendsSearch} ${isSearchFocused ? style.friendsSearchActive : ''}`} // Conditional class application
+                      name="text" 
+                      placeholder="Search on Facebook" 
+                      value={searchValue}
+                      onChange={handleInputChange}
+                      onKeyPress={handleInputKeyPress}
+                      onFocus={handleFocus}
+                      onBlur={handleBlur}
+                    />
                   </li>
                 </ul>
               </div>
               <Outlet/>
-              {/* {obj.length ? (
-                <ul className={style.friendsList}>
-                  {obj.map(el => (
-                    <li key={el.id}>
-                      <FriendCardProfile el={el} />
-                    </li>
-                  ))}
-                </ul>
-              ) : status ==="pending"?
-                (
-                  <Loader/>
-                ):
-                (
-                  <p>No friends available</p>
-                )} */}
             </div>
           </div>
         </div>

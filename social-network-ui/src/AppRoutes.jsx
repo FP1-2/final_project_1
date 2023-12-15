@@ -10,6 +10,7 @@ import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistr
 import AllFriends from './components/AllFriends/AllFriends';
 import IncomingFriendRequests from './components/IncomingFriendRequests/IncomingFriendRequests';
 import OutgoingFriendRequests from './components/OutgoingFriendRequests/OutgoingFriendRequests';
+import SearchFriend from './components/SearchFriend/SearchFriend';
 import PostsPageProfile from "./components/PostsPageProfile/PostsPageProfile";
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendPageProfile from './components/FriendPageProfile/FriendPageProfile';
@@ -45,7 +46,9 @@ function AppRoutes({ isAuth }) {
             <Route path='' element={<ProtectedRoute isAuth={isAuth} content={<AllFriends />}></ProtectedRoute> }></Route>
             <Route path='incoming-requests' element={<ProtectedRoute isAuth={isAuth} content={<IncomingFriendRequests />}></ProtectedRoute> }></Route>
             <Route path='outgoing-requests' element={<ProtectedRoute isAuth={isAuth} content={<OutgoingFriendRequests />}></ProtectedRoute> }></Route>
+            <Route path='search-friend' element={<ProtectedRoute isAuth={isAuth} content={<SearchFriend />}></ProtectedRoute> }></Route>
           </Route>
+          
           <Route path={'*'} element={<PageNotFound />} />
         </Route>
         <Route path="/login" element={<LoginPage isAuth={isAuth} />} />

@@ -2,9 +2,32 @@ import styles from './FriendRequestCard.module.scss';
 import PropTypes from "prop-types";
 import { Link } from 'react-router-dom';
 import { convertToLocalTime } from '../../utils/formatData';
+import { cancelRequest, confirmFriendRequest, allRequests, requestsToMe } from '../../redux-toolkit/friend/thunks';
+import { useDispatch } from 'react-redux';
+
 const FriendRequestCard=({type, friendRequest})=>{
+  const dispatch=useDispatch();
   const {name, surname, avatar, id, created_date}=friendRequest;
-  console.log(friendRequest);
+  const handleConfirmBtn= async ()=>{
+    await dispatch(confirmFriendRequest({ 
+      userId: id, 
+      status: true 
+    }));
+    await dispatch(requestsToMe());
+  };
+  const handleDeleteFriendBtn=async()=>{
+    await dispatch(confirmFriendRequest({ 
+      userId: id, 
+      status: false 
+    }));
+    await dispatch(requestsToMe());
+  };
+  const handleDeleteSentBtn=async()=>{
+    await dispatch(cancelRequest({ 
+      friendId: id
+    }));
+    await dispatch(allRequests());
+  };
   return(
     <div className={styles.card}>
       <div className={styles.card_aside}>
@@ -37,11 +60,11 @@ const FriendRequestCard=({type, friendRequest})=>{
         <div className={styles.card_footer}>
           {type==="FRIEND_REQUEST"?(
             <>
-              <button className={styles.card_button}>Confirm</button>
-              <button className={styles.card_buttonSecondary}>Delete</button>
+              <button className={styles.card_button} onClick={()=>{handleConfirmBtn();}}>Confirm</button>
+              <button className={styles.card_buttonSecondary} onClick={()=>{handleDeleteFriendBtn();}}>Delete</button>
             </>):type==="SENT_REQUEST"?(
             <>
-              <button className={styles.card_buttonSecondary}>Delete</button>
+              <button className={styles.card_buttonSecondary} onClick={()=>{handleDeleteSentBtn();}}>Delete</button>
             </>
           ):null}
         </div>

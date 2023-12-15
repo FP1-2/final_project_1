@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import ErrorPage from "../ErrorPage/ErrorPage";
 import { getMyFriends } from "../../redux-toolkit/friend/thunks";
 import Loader from "../Loader/Loader";
+import EmptyMessage from "../EmptyMessage/EmptyMessage";
 
 const AllFriends = () => {
   const dispatch = useDispatch();
@@ -40,7 +41,7 @@ const AllFriends = () => {
               <Loader/>
             ):
             (
-              <p>No friends available</p>
+              <EmptyMessage message="No friends available."/>
             )}
         </>
       )}

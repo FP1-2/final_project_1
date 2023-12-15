@@ -4,8 +4,7 @@ import { useDispatch } from 'react-redux';
 import { useEffect } from 'react';
 import { useSelector } from 'react-redux/es/hooks/useSelector';
 import FriendRequestCard from '../FriendRequestCard/FriendRequestCard';
-/* import {convertToLocalTime} from "../../utils/formatData";
- */
+import EmptyMessage from '../EmptyMessage/EmptyMessage';
 const IncomingFriendRequests=()=>{
   const dispatch=useDispatch();
   useEffect(()=>{
@@ -14,13 +13,17 @@ const IncomingFriendRequests=()=>{
   const incomingFriendRequests=useSelector(state=>state.friends.requestsToMe.obj);
   return(
     <div className={style.s}>
-      <ul>
-        {incomingFriendRequests.map((el)=>(
-          <li key={el.id}>
-            <FriendRequestCard type='FRIEND_REQUEST' friendRequest={el}></FriendRequestCard>
-          </li>
-        ))}
-      </ul>
+      {incomingFriendRequests.length > 0 ? (
+        <ul>
+          {incomingFriendRequests.map((el) => (
+            <li key={el.id}>
+              <FriendRequestCard type='FRIEND_REQUEST' friendRequest={el} />
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <EmptyMessage message="No incoming friend requests." />
+      )}
     </div>
     
   );

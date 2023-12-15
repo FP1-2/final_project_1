@@ -9,6 +9,7 @@ import { getFriends } from "../../redux-toolkit/friend/thunks";
 import { useParams } from "react-router";
 import { clearFriends, clearMyFriends } from "../../redux-toolkit/friend/slice";
 import Loader from "../Loader/Loader";
+import EmptyMessage from "../EmptyMessage/EmptyMessage";
 
 const FriendProfile = () => {
   const dispatch = useDispatch();
@@ -64,7 +65,7 @@ const FriendProfile = () => {
                       ))}
                     </ul>
                   ) : (
-                    <p>No friends available</p>
+                    <EmptyMessage message="No friends available"/>
                   )
                 )
               }
