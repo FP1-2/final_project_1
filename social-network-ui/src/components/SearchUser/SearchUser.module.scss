@@ -80,11 +80,11 @@
         }
       }
     }
-    &.text{
+    &__text{
       font-size: 18px;
       color: $text-color-gray;
     }
-    &.recently{
+    &__recently{
       color: $text-color-gray;
       font-weight: bold;
     }
