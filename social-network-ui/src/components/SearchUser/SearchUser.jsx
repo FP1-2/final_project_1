@@ -24,6 +24,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
   function closePortal(){
     handleBack();
     setTextSearch('');
+    handleResetSearchResult();
   }
   function addRecentSearch (searchUser){
     setRecentSearch([searchUser, ...recentSearch]);
