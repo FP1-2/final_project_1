@@ -77,7 +77,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
               :
               searchUsers.obj.map(({ id, avatar, name, surname }) => (
                 <li key={id} onClick={() => {
-                  addRecentSearch({ id, avatar, name, surname });
+                  addRecentSearch({ id:id, avatar:avatar, name:name, surname:surname });
                   closePortal();}} 
                 className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
