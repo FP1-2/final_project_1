@@ -123,7 +123,7 @@ export default function ChatNavigation({
                         searchChats.obj.map(({id, chatParticipant}) => {
                           return (
                             <li key={id} className={styles.chatNavSection__chatList__items__item}>
-                              <Link to={`/messages/${id}`}>
+                              <NavLink to={`/messages/${id}`} onClick={handleBackIcon}>
                                 <ChatItem
                                   additionalClass={styles.chatNavSection__chatList__items__item__avatar}
                                   name={chatParticipant.name + " " + chatParticipant.surname}
@@ -132,7 +132,7 @@ export default function ChatNavigation({
                                     handleLoadChat(id);
                                   }}
                                 />
-                              </Link>
+                              </NavLink>
                             </li>
                           );
                         }))

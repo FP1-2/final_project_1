@@ -61,9 +61,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
             (<React.Fragment>
               <p>Recently:</p>
               {recentSearch.map(({ id, avatar, name, surname }) => (
-                <li key={id} onClick={() => {
-                  addRecentSearch({ id, avatar, name, surname });
-                  closePortal;}} 
+                <li key={id} onClick={()=> closePortal()} 
                 className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
@@ -79,7 +77,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
               searchUsers.obj.map(({ id, avatar, name, surname }) => (
                 <li key={id} onClick={() => {
                   addRecentSearch({ id, avatar, name, surname });
-                  closePortal;}} 
+                  closePortal();}} 
                 className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
