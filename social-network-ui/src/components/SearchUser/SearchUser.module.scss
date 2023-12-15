@@ -64,7 +64,7 @@
     overflow: auto;
     @include flex-center;
     width: 100%;
-    
+    height: auto;
       &__item {
         width: 100%;
         cursor: pointer;
@@ -80,8 +80,13 @@
         }
       }
     }
-    & p{
+    &.text{
+      font-size: 18px;
       color: $text-color-gray;
+    }
+    &.recently{
+      color: $text-color-gray;
+      font-weight: bold;
     }
     }
     
