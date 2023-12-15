@@ -6,6 +6,7 @@ import styles from './Chat.module.scss';
 import PropTypes from 'prop-types';
 import { createPortal } from "react-dom";
 import InputSearch from '../SearchUser/InputSearch';
+import Loader from "../Loader/Loader";
 export default function ChatHeader({
   id,
   chat,
@@ -33,7 +34,16 @@ export default function ChatHeader({
       document.removeEventListener('click', handleClickOutside);
     };
   }, []);
-
+  const openPortal = () => {
+    setShowSearchPortal(true);
+  };
+  useEffect(()=>{
+    if(userSearch.length > 0) {
+      openPortal();
+    } else{
+      setShowSearchPortal(false);
+    }
+  }, [userSearch]);
   return (
     <div className={styles.chat__header} id='chat__header'>
       <NavLink to='/messages' className={styles.back} onClick={() => {
@@ -47,29 +57,32 @@ export default function ChatHeader({
           <h2>Кому: </h2>
           <InputSearch
             textSearch={userSearch}
-            placeholder={""}
+            placeholder={"Enter user's name/surname"}
             setTextSearch={setUserSearch}
             handleGetSearchResult={handleGetSearchResult}
             handleResetSearchResult={handleResetSearchResult}
-            openPortal={(e) => {
+            openPortal={(e)=>{
               e.stopPropagation();
-              setShowSearchPortal(true);
+              openPortal;
             }}
             element={'search-user-chat'}
             closePortal={() => {setShowSearchPortal(false);}}
           />
           {showSearchPortal && createPortal(
             <ul className={styles.chat__filteredUsers} id="search-user-chat">
-              {searchUsers.status === 'fulfilled' &&
-                searchUsers.obj.map(({ id, avatar, name, surname, username }) => (
-                  <li key={id} onClick={() => {
-                    setShowSearchPortal(false);
-                    handleCreateChat(username);
-                  }}
-                  className={styles.chat__filteredUsers__item}>
-                    <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.chat__header__filter} />
-                  </li>
-                ))}
+              {searchUsers.status === 'pending' ? <Loader/> 
+                : (searchUsers.status === 'fullfiled' && (searchUsers.obj.length === 0 ? 
+                  <p>no results</p>
+                  : 
+                  searchUsers.obj.map(({ id, avatar, name, surname, username }) => (
+                    <li key={id} onClick={() => {
+                      setShowSearchPortal(false);
+                      handleCreateChat(username);
+                    }}
+                    className={styles.chat__filteredUsers__item}>
+                      <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.chat__header__filter} />
+                    </li>
+                  ))))}
             </ul>, document.getElementById("chat__header")
           )}
         </>

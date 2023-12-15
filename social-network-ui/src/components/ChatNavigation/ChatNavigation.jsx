@@ -13,6 +13,7 @@ import {resetSearchChats, resetChatAndMessages} from "../../redux-toolkit/messen
 import {useDispatch, useSelector} from "react-redux";
 import {checkContentType} from "../../utils/contentType";
 import InputSearch from "../SearchUser/InputSearch";
+import Loader from "../Loader/Loader";
 
 export default function ChatNavigation({
   chatsStatus,
@@ -50,7 +51,7 @@ export default function ChatNavigation({
         <>
           <div className={styles.chatNavSection__header}>
             <div className={styles.chatNavSection__header__text}>
-              <h1>Чати</h1>
+              <h1>Chats</h1>
             </div>
             <NavLink to='/messages/new' onClick={()=> dispatch(resetChatAndMessages())}>
               <div className={styles.chatNavSection__header__buttonWrapper}>
@@ -115,23 +116,28 @@ export default function ChatNavigation({
                   );
                 }
                 )
-                :
-                searchChats.obj.map(({id, chatParticipant}) => {
-                  return (
-                    <li key={id} className={styles.chatNavSection__chatList__items__item}>
-                      <Link to={`/messages/${id}`}>
-                        <ChatItem
-                          additionalClass={styles.chatNavSection__chatList__items__item__avatar}
-                          name={chatParticipant.name + " " + chatParticipant.surname}
-                          photo={chatParticipant.avatar}
-                          message={null} clickHandler={() => {
-                            handleLoadChat(id);
-                          }}
-                        />
-                      </Link>
-                    </li>
-                  );
-                })
+                :(
+                  searchChats.status === '' ? "enter name/surname" : 
+                    ( searchChats.status === 'pending' ? <Loader/> :
+                      (searchChats.obj.length === 0 ? <p>no results</p> :
+                        searchChats.obj.map(({id, chatParticipant}) => {
+                          return (
+                            <li key={id} className={styles.chatNavSection__chatList__items__item}>
+                              <Link to={`/messages/${id}`}>
+                                <ChatItem
+                                  additionalClass={styles.chatNavSection__chatList__items__item__avatar}
+                                  name={chatParticipant.name + " " + chatParticipant.surname}
+                                  photo={chatParticipant.avatar}
+                                  message={null} clickHandler={() => {
+                                    handleLoadChat(id);
+                                  }}
+                                />
+                              </Link>
+                            </li>
+                          );
+                        }))
+                    )
+                )
               }
             </ul>
             {<div className={styles.chatNavSection__chatList__pagination}>

@@ -71,6 +71,11 @@
       cursor: pointer;
       padding: 2px;
     }
+    & p{
+      font-size: 18px;
+      width: fit-content;
+      margin: 20px auto;
+    }
   }
 
   &__body {
