@@ -1,0 +1,33 @@
+@import "../../../styles/variables.scss";
+
+.groupDetails {
+  width: 22vw;
+
+  .description,
+  .title {
+    display: inline-block;
+    font-size: 1.1rem;
+    padding-bottom: 0.5rem;
+    width: 100%;
+    padding-right: 2rem;
+  }
+
+  .description {
+    font-size: 1rem;
+  }
+
+  .admins {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    margin-right: 2rem;
+  }
+
+  .more {
+    display: inline-block;
+    font-size: 0.8rem;
+    padding-top: 0.5rem;
+    color: $color-font-grey;
+    cursor: pointer;
+  }
+}

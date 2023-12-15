@@ -1,0 +1,40 @@
+.tripleMenu {
+  display: flex;
+  flex-direction: column;
+  width: 10rem;
+  height: 8rem;
+  background-color: #fff;
+  border-radius: 0.4rem;
+  padding: 0.5rem 0.5rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+
+  .menuItem {
+    flex: 1;
+    display: flex;
+    justify-content: flex-start;
+    padding: 0.5rem;
+    cursor: pointer;
+    font-weight: bold;
+    color: #1C1E21;
+    transition: background-color 0.3s;
+    border-radius: 0.4rem;
+    position: relative;
+    &:hover {
+      background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    &.active::before{
+      content: '';
+      position: absolute;
+      width: 1.5rem;
+      height: 1.5rem;
+      //спрайт(галка) та фільтр оригінальні налаштування
+      filter: invert(19%) sepia(70%) saturate(5671%) hue-rotate(203deg) brightness(96%) contrast(101%);
+      background-image: url('../../sprites/sprite_3.png');
+      background-position: 0 -1.6rem;
+      top: 50%;
+      right: 0.5rem;
+      transform: translateY(-50%) scale(0.8, 0.8);
+    }
+  }
+}

@@ -20,7 +20,7 @@ import java.util.Set;
 @Data
 @Entity
 @NoArgsConstructor
-@Table(name = "groups")
+@Table(name = "`groups`")
 @EqualsAndHashCode(callSuper = true)
 public class Group extends AbstractEntity {
 
@@ -32,6 +32,9 @@ public class Group extends AbstractEntity {
 
     @Column(nullable = false, columnDefinition = "TEXT")
     private String description;
+
+    @Column(name = "is_public", nullable = false, columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isPublic = true;
 
     /**
      * Перелік членів групи.
