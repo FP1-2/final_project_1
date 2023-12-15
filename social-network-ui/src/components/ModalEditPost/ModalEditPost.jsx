@@ -33,7 +33,7 @@ const ModalEditPost = () => {
   };
 
   const initialValues = {
-    text: "",
+    text: post.text.length > 0 ? post.text : '',
     img: ""
   };
 
@@ -76,7 +76,7 @@ const ModalEditPost = () => {
                 </div>
               </div>
               <div className={style.modalMain}>
-                <Textarea type="text" name="text" placeholder="Enter text of publication" text="heli"/>
+                <Textarea type="text" name="text" placeholder="Enter text of publication"/>
                 {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = ""; }}>Clear photo</button>}
                 {values.img && <PreviewImage file={values.img} />}
               </div>

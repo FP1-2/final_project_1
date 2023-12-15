@@ -14,7 +14,6 @@ import Loader from "../Loader/Loader";
 export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
   const dispatch = useDispatch();
   const { searchUsers } = useSelector(state => state.messenger);
-  const [recentSearch, setRecentSearch] = useState([]);
   const handleGetSearchResult = (searchValue) => {
     dispatch(searchUser({ input: searchValue, page: 0, size: 20 }));
   };
@@ -25,9 +24,6 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
     handleBack();
     setTextSearch('');
     handleResetSearchResult();
-  }
-  function addRecentSearch (user){
-    setRecentSearch(prevRecentSearch => [user, ...prevRecentSearch]);
   }
   return (
     <div className={styles.searchUser} id="search-user-portal" >
@@ -55,30 +51,13 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       </div>
 
       <ul className={styles.searchUser__filteredUsers}>
-        {searchUsers.status === '' ? 
-          (recentSearch.length === 0 ? 
-            <p className={styles.searchUser__filteredUsers__text}>enter name/username for searching user</p>
-            : 
-            (<React.Fragment>
-              <p className={styles.searchUser__filteredUsers__recetly}>Recently:</p>
-              {recentSearch.map(({ id, avatar, name, surname }) => (
-                <li key={id} onClick={closePortal} 
-                  className={styles.searchUser__filteredUsers__item}>
-                  <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
-                    <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
-                  </NavLink>
-                </li>
-              ))}
-            </React.Fragment>)
-          )
+        {searchUsers.status === '' ? <p className={styles.searchUser__filteredUsers__text}>enter name/username for searching user</p>
           : (searchUsers.status === 'pending' ? <Loader/> :
             (searchUsers.obj.length === 0 ? 
               <p  className={styles.searchUser__filteredUsers__text}>no results</p>
               :
               searchUsers.obj.map(({ id, avatar, name, surname }) => (
-                <li key={id} onClick={() => {
-                  addRecentSearch({ id:id, avatar:avatar, name:name, surname:surname });
-                  closePortal();}} 
+                <li key={id} onClick={closePortal}
                 className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
