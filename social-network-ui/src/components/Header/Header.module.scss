@@ -16,6 +16,8 @@
     background-color: $main-background-color;
 
     & svg {
+      position: relative;
+      left: 0;
       height: 40px;
       width: auto;
     }
@@ -71,9 +73,7 @@
         @include size(40px);
       }
     }
-
   }
-
 }
 
 .smallLogo {
@@ -90,6 +90,10 @@
     padding-right: 30px;
 
     &__logoWrap {
+      & svg {
+          left: -16px;
+      }
+
       &__search {
         display: flex;
         @include input-field;

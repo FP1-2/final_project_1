@@ -1,10 +1,10 @@
 package com.facebook.service.groups;
 
+import com.facebook.dto.groups.GroupJpql;
 import com.facebook.dto.groups.GroupMember;
 import com.facebook.dto.groups.GroupResponse;
 import com.facebook.exception.NotFoundException;
 import com.facebook.facade.GroupFacade;
-import com.facebook.model.groups.Group;
 import com.facebook.model.groups.GroupRole;
 import com.facebook.repository.groups.GroupMembersRepository;
 import com.facebook.repository.groups.GroupRepository;
@@ -48,7 +48,7 @@ public class GroupQueryService {
      */
     @Transactional
     public GroupResponse getGroupWithMembers(Long groupId) {
-        Group group = groupRepository.findById(groupId)
+        GroupJpql group = groupRepository.getGroupById(groupId)
                 .orElseThrow(() -> new NotFoundException(GROUP_NOT_FOUND + groupId));
 
         GroupResponse groupResponse = modelMapper.map(group, GroupResponse.class);
