@@ -1,5 +1,5 @@
 const initialValue = {
-    group:{
+    getGroup:{
         obj: {
             id: null,
             createdDate: "",
@@ -7,8 +7,8 @@ const initialValue = {
             imageUrl: "",
             name: "",
             description: "",
-            memberCount: null,
-            isPublic: null,
+            memberCount: 0,
+            isPublic: true,
             members: [],
             admins: [],
         },

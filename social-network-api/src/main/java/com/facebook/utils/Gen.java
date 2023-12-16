@@ -2,6 +2,7 @@ package com.facebook.utils;
 
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
+import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.PostRequest;
 import com.facebook.dto.post.PostResponse;
@@ -26,6 +27,7 @@ import com.facebook.service.ChatService;
 import com.facebook.service.MessageService;
 import com.facebook.service.PostService;
 import com.facebook.service.favorites.FavoritesService;
+import com.facebook.service.groups.GroupService;
 import com.github.javafaker.Faker;
 
 import java.util.ArrayList;
@@ -66,6 +68,7 @@ public class Gen {
     private final AppUserFacade appUserFacade;
     private final PostService postService;
     private final FavoritesService favoritesService;
+    private final GroupService groupService;
     private List<AppUser> appUsers1;
     private List<PostResponse> posts;
     private List<Comment> comments;
@@ -88,6 +91,7 @@ public class Gen {
         this.friendsService = context.getBean(FriendsService.class);
         this.chatService = context.getBean(ChatService.class);
         this.messageService = context.getBean(MessageService.class);
+        this.groupService = context.getBean(GroupService.class);
 
         this.likeRepository = context.getBean(LikeRepository.class);
         this.commentRepository = context.getBean(CommentRepository.class);
@@ -100,6 +104,7 @@ public class Gen {
         this.likes = genLikes();
         genFriends();
         genFavorites();
+        genGrops();
         this.chats = genChats();
         this.messages = genMessages();
     }
@@ -424,4 +429,21 @@ public class Gen {
             }
         });
     }
+
+    private void genGrops(){
+     List<GroupRequest> g = List.of(new GroupRequest("Java Development",
+                     "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
+                     "https://upload.wikimedia.org/wikipedia/commons/7/7f/JavaUniverse.png"),
+             new GroupRequest("About hamsters",
+                     "Hamsters are small rodents that are commonly kept as house pets.",
+                     "https://upload.wikimedia.org/wikipedia/commons/c/ce/Roborofskiohamster.jpg"),
+             new GroupRequest("Funy cats",
+                     "A social group celebrating hilarious cat moments, uniting cat enthusiasts in laughter and joy.",
+                     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cat_yawn_with_exposed_teeth_and_claws.jpg/1280px-Cat_yawn_with_exposed_teeth_and_claws.jpg"));
+
+       for(int userId = 13, groupId = 0 ; userId < 16; userId++, groupId++) {
+           groupService.createGroup(g.get(groupId), (long) userId);
+       };
+    }
+
 }
