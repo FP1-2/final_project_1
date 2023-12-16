@@ -3,7 +3,7 @@ import style from './GroupDetails.module.scss';
 import PropTypes from "prop-types";
 import GroupAvatar from "../GroupAvatar/GroupAvatar";
 import {Link} from "react-router-dom";
-import {convertToLocalTime} from "../../../utils/formatData";
+//import {convertToLocalTime} from "../../../utils/formatData";
 
 export default function GroupDetails({ group }) {
   const [showAll, setShowAll] = useState(false);
@@ -14,7 +14,7 @@ export default function GroupDetails({ group }) {
 
   return (
     <div className={style.groupDetails}>
-      <span className={style.date}>created: {convertToLocalTime(group.createdDate)}</span>
+      <span className={style.date}>created: {"16-12-2023"}</span>
       <span className={style.title}>Information:</span>
       <span className={style.description}>{group.description}</span>
         
