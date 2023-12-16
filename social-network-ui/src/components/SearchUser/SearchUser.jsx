@@ -10,10 +10,10 @@ import Close from '../Icons/Close';
 import ChatItem from '../ChatNavigation/ChatItem';
 import InputSearch from "./InputSearch";
 import { NavLink } from "react-router-dom";
+import Loader from "../Loader/Loader";
 export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
   const dispatch = useDispatch();
   const { searchUsers } = useSelector(state => state.messenger);
-  
   const handleGetSearchResult = (searchValue) => {
     dispatch(searchUser({ input: searchValue, page: 0, size: 20 }));
   };
@@ -23,6 +23,7 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
   function closePortal(){
     handleBack();
     setTextSearch('');
+    handleResetSearchResult();
   }
   return (
     <div className={styles.searchUser} id="search-user-portal" >
@@ -50,17 +51,20 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       </div>
 
       <ul className={styles.searchUser__filteredUsers}>
-        {
-          searchUsers.status === 'fulfilled' &&
-          searchUsers.obj.map(({ id, avatar, name, surname }) => (
-            <li key={id} onClick={closePortal} className={styles.searchUser__filteredUsers__item}>
-              <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
-                <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
-              </NavLink>
-            </li>
-
-          ))
-        }
+        {searchUsers.status === '' ? <p className={styles.searchUser__filteredUsers__text}>Enter name/username for searching user</p>
+          : (searchUsers.status === 'pending' ? <Loader/> :
+            (searchUsers.obj.length === 0 ? 
+              <p  className={styles.searchUser__filteredUsers__text}>no results</p>
+              :
+              searchUsers.obj.map(({ id, avatar, name, surname }) => (
+                <li key={id} onClick={closePortal}
+                  className={styles.searchUser__filteredUsers__item}>
+                  <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
+                    <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
+                  </NavLink>
+                </li>
+              )))
+          )}
       </ul>
     </div>
   );
