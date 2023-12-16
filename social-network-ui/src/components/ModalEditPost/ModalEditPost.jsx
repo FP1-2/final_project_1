@@ -1,13 +1,13 @@
-import React, { useState, useRef} from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
-import Textarea from "../Textarea/Textarea";
+// import Textarea from "../Textarea/Textarea";
 import PreviewImage from "../PreviewImage/PreviewImage";
 import style from "./ModalEditPost.module.scss";
 import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalEditPostState} from "../../redux-toolkit/post/slice";
+import { modalEditPostState } from "../../redux-toolkit/post/slice";
 import { getPhotoURL } from "../../utils/thunks";
 import { editPost } from "../../redux-toolkit/post/thunks";
 
@@ -17,15 +17,21 @@ const validationSchema = object({
 
 const ModalEditPost = () => {
 
-  const dispatch = useDispatch();
-
-  const [errorValidation, setErrorValidation] = useState(false);
-  const img = useRef();
-
-
   const modalEditPost = useSelector((state) => state.post.modalEditPost);
   const userObject = useSelector(state => state.profile.profileUser.obj);
   const post = useSelector((state) => state.post.postObj);
+
+  const dispatch = useDispatch();
+  const img = useRef();
+
+  const [errorValidation, setErrorValidation] = useState(false);
+  const [valueText, setValueText] = useState(post.body);
+
+  useEffect(() => {
+    if (valueText !== post.body) {
+      setValueText(post.body);
+    }
+  }, [post]);
 
 
   const clickDownloadImg = () => {
@@ -57,8 +63,8 @@ const ModalEditPost = () => {
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >
-      {({ setFieldValue, values }) => (
-        <div  className={modalEditPost ? style.modalWrapper : style.displayNone}>
+      {({ setFieldValue, values, errors }) => (
+        <div className={modalEditPost ? style.modalWrapper : style.displayNone}>
           <Form className={style.modal}>
             <div>
               <div className={style.modalHeader}>
@@ -76,8 +82,11 @@ const ModalEditPost = () => {
                 </div>
               </div>
               <div className={style.modalMain}>
-                <Textarea type="text" name="text" placeholder="Enter text of publication"/>
-                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { values.img = ""; }}>Clear photo</button>}
+                <div className={style.textareaWrapper}>
+                  <textarea className={style.textarea} value={valueText} onChange={(e) => { setValueText(e.target.value); setFieldValue("text", e.target.value); }} />
+                  {errors ? <p className={style.errorNames}>{errors.text}</p> : null}
+                </div>
+                {values.img && <button type="button" className={style.modalMainBtn} onClick={() => { setFieldValue("img", ""); }}>Clear photo</button>}
                 {values.img && <PreviewImage file={values.img} />}
               </div>
             </div>
@@ -96,8 +105,8 @@ const ModalEditPost = () => {
               </div>
             </div>
           </Form>
-        </div>)}
-    </Formik>
+        </div >)}
+    </Formik >
   );
 };
 export default ModalEditPost;

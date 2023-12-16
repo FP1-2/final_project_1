@@ -119,6 +119,7 @@ const RepostProfile = ({ el }) => {
   };
 
   const modalEditPostOpen = () => {
+    setBtnAlso(false);
     dispatch(setPost(el));
     dispatch(modalEditPostState(true));
   };
