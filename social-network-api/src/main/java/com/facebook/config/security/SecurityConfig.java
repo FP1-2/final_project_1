@@ -1,7 +1,6 @@
 package com.facebook.config.security;
 
 import java.util.Arrays;
-import java.util.Collections;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -31,12 +30,15 @@ public class SecurityConfig {
     @Value("${frontend.url}")
     private String clientUrl;
 
+    @Value("${frontend.urlPreview}")
+    private String urlPreview;
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         //дозволяти основні запити із програми на clientUrl
         http.cors(cors -> cors.configurationSource(request -> {
             CorsConfiguration configuration = new CorsConfiguration();
-            configuration.setAllowedOrigins(Collections.singletonList(clientUrl));
+            configuration.setAllowedOriginPatterns(Arrays.asList(clientUrl, urlPreview));
             configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
             configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
             configuration.setAllowCredentials(true);

@@ -18,6 +18,8 @@ public class GroupResponse {
     private String imageUrl;
     private String name;
     private String description;
+    private Long memberCount;
+    private Boolean isPublic;
     private Set<GroupMember> members;
     private Set<GroupMember> admins;
 }

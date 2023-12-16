@@ -15,6 +15,10 @@ import lombok.NoArgsConstructor;
 public class Message extends AbstractEntity {
     @Column(nullable = false)
     private ContentType contentType;
+    /**
+     * Для генерації у профілі 'prod':
+     * //@Column(columnDefinition = "VARCHAR(255) COLLATE utf8mb4_unicode_ci")
+     */
     private String content;
     @ManyToOne
     @JoinColumn(name = "sender_id", nullable = false)

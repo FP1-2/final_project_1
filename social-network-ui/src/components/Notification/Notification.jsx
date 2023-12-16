@@ -12,6 +12,7 @@ import {
   editNotificationQt,
 } from "../../redux-toolkit/notification/slice";
 import {convertToLocalTime} from "../../utils/formatData";
+import BlueButton from "../BlueButton/BlueButton";
 
 export default function Notification({ notification }) {
   const dispatch = useDispatch();
@@ -113,10 +114,10 @@ export default function Notification({ notification }) {
         </div>
         {isFriendRequest && (
           <div className={styles.card_footer}>
-            <button className={styles.card_button}
-              onClick={handleAcceptRequest}>
-              Accept Friend Request
-            </button>
+            <BlueButton
+              onClick={handleAcceptRequest}
+              text={"Accept Friend Request"}
+            />
             <button className={styles.card_buttonSecondary}
               onClick={handleRejectRequest}>
               Ignore

@@ -21,5 +21,5 @@ const Search = () => {
     </svg>
   );
 };
-export default Search;
 
+export default Search;

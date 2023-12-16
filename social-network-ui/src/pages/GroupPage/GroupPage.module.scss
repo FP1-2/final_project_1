@@ -1,0 +1,277 @@
+@import "../../styles/variables.scss";
+
+$break-small: 820px;
+$break-large: 1250px;
+$width-sidebar-left: 19rem;
+$width-sidebar-Right: 22vw;
+$Header-height: 38rem;
+$width-imageContainer: 60vw;
+
+@mixin absolute-translateX-center($position: absolute) {
+  position: $position;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.groupWrapper {
+
+  .sidebarLeft {
+    display: none;
+    position: fixed;
+    box-shadow: 1px 0 2px $box-shadow;
+    height: 100vh;
+    width: $width-sidebar-left;
+    padding: 0.625rem;
+  }
+
+  .main {
+    margin-left: 0;
+    background: $main-background-color;
+    position: relative;
+
+    .header {
+      height: $Header-height;
+      width: 100%;
+      box-shadow: 1px 0 2px $box-shadow;
+      display: flex;
+
+      .imageContainer {
+        @include absolute-translateX-center;
+        top: 0;
+        height: calc($Header-height - 9.3rem);
+        width: 100%;
+        border-bottom-left-radius: 0.8rem;
+        border-bottom-right-radius: 0.8rem;
+        overflow: hidden;
+
+        .image {
+          position: relative;
+          width: 100%;
+          height: 100%;
+
+          img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center;
+          }
+
+          .strip {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3rem;
+            background-color: $btn-blue;
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+
+            span {
+              color: $color-font-white;
+              font-weight: bold;
+
+              .stripLink {
+                padding-left: 0.5rem;
+                color: inherit;
+
+                &:hover {
+                  text-decoration: underline;
+                  text-decoration-color: $main-text-color;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .tabsContainer {
+      @include absolute-translateX-center;
+      width: 100%;
+      bottom: 0;
+      max-height: 10rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+
+      .upperBlock {
+        display: flex;
+        justify-content: space-between;
+        padding-left: 1.7rem;
+        padding-right: 1.7rem;
+        padding-bottom: 0.4rem;
+        align-items: flex-start;
+        flex-direction: column;
+
+        h2 {
+          padding-top: 0.5rem;
+          padding-bottom: 0.5rem;
+          font-size: 2rem;
+          white-space: nowrap;
+        }
+
+        .wrpBlueButton{
+          width: 100%;
+          display: flex;
+          align-items: center;
+          justify-content: flex-end;
+          gap: 1rem;
+
+          .customBlueButton{
+            height: 2.4rem;
+            font-weight: 600;
+            width: 100%;
+          }
+        }
+      }
+
+      .horizontalLine {
+        @include absolute-translateX-center;
+        height: 1px;
+        background-color: $color-line;
+        bottom: 2.5rem;
+        width: 95%;
+        align-self: center;
+      }
+
+      .lowerBlock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding-left: 1.7rem;
+        padding-right: 1.7rem;
+        padding-top: 0.5rem;
+        position: relative;
+
+        .tabs {
+          display: flex;
+
+          .tab {
+            font-weight: bold;
+            color: $color-font-grey;
+            padding: 0.4rem 0.8rem;
+            border-bottom: 3px solid transparent;
+            white-space: nowrap;
+
+            &:hover {
+              cursor: pointer;
+            }
+
+            &.active {
+              border-bottom-color: $btn-blue;
+            }
+          }
+
+          .tick {
+
+          }
+        }
+
+        .adm {
+          display: flex;
+          flex-direction: row;
+        }
+      }
+    }
+
+    .contentContainer {
+      @include absolute-translateX-center(relative);
+      width: 100%;
+
+      .tripleMenu {
+        position: absolute;
+        top: -1rem;
+        left: 12.5rem;
+        z-index: 1;
+      }
+
+      .content {
+        @include absolute-translateX-center;
+        width: 99%;
+        margin-right: 0;
+        margin-top: 2rem;
+        height: 100rem;
+
+        border: 1px solid rgb(199, 206, 224);
+        border-radius: 0.5rem;
+        background-color: #fff;
+      }
+
+      .sidebarRight {
+        display: none;
+        position: sticky;
+        top: 0;
+        margin-left: 35vw;
+        width: $width-sidebar-Right;
+        min-height: 10rem;
+        padding: 1rem;
+
+        border: 1px solid rgb(199, 206, 224);
+        border-radius: 0.5rem;
+        background-color: #fff;
+      }
+    }
+  }
+}
+
+@media (min-width: $break-small) {
+  .groupWrapper .sidebarLeft {
+    display: block;
+  }
+
+  .groupWrapper .main {
+    margin-left: $width-sidebar-left;
+
+    .header .imageContainer {
+      width: $width-imageContainer;
+      height: calc($Header-height - 7.4rem);
+    }
+
+    .header .tabsContainer {
+      width: $width-imageContainer;
+
+      .upperBlock {
+        align-items: center;
+        flex-direction: row;
+
+        .customBlueButton{
+          width: 10rem;
+        }
+      }
+    }
+
+    .contentContainer .content {
+      width: calc(80vw - $width-sidebar-Right);
+    }
+  }
+}
+
+@media (min-width: $break-large) {
+  .groupWrapper .main .contentContainer {
+    width: calc($width-imageContainer - 3vw);
+
+    .content {
+      left: 0;
+      transform: none;
+      width: 34vw;
+      margin-right: 5rem;
+    }
+
+    .sidebarRight {
+      display: block;
+    }
+  }
+}
+
+.search {
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 3rem;
+  height: 2rem;
+  background-color: #e4e6eb;
+  border-radius: 4px;
+  color: $text-color-gray;
+}
