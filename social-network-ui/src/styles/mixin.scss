@@ -1,79 +1,85 @@
-@import "variables.scss";
+    @import "variables.scss";
 
-@mixin width_576 {
-    @media (max-width: 576px){
-        @content;
+    @mixin width_576 {
+        @media (max-width: 576px){
+            @content;
+        }
     }
-}
 
-@mixin width_768 {
-    @media (max-width: 768px){
-        @content;
+    @mixin width_768 {
+        @media (max-width: 768px){
+            @content;
+        }
     }
-}
 
-@mixin width_880 {
-    @media (max-width: 880px){
-        @content;
+    @mixin width_880 {
+        @media (max-width: 880px){
+            @content;
+        }
     }
-}
 
-@mixin width_992 {
-    @media (max-width: 992px){
-        @content;
+    @mixin width_992 {
+        @media (max-width: 992px){
+            @content;
+        }
     }
-}
 
-@mixin flex-center{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-@mixin flex-center-row{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-@mixin flex-reverse{
-
-}
-
-@mixin input-field{
-    background-color: $input-color-main;
-    border-radius: 16px;
-    color: $text-color-gray;
-    height: 36px;
-}
-
-@mixin buttonStyle{
-    cursor: pointer;
-    padding: 6px;
-    background-color: $input-color-main;
-    color: $text-color-gray;
-    border-radius: $main-border-radius;
-    &:hover{
-        background-color: $hover-background-color;
+    @mixin width_1271 {
+        @media (max-width: 1271px) {
+            @content;
+        }
     }
-}
 
-@mixin size($size){
-    width: $size;
-    height: $size;
-}
+    @mixin flex-center{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
 
-@mixin sizeCircle($size){
-    width: $size;
-    height: $size;
-    border-radius: 50%;
-}
+    @mixin flex-center-row{
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+    }
 
-@mixin pageableContainer{
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 1rem;
-    height: 100%;
-    overflow:auto;
-}
+    @mixin flex-reverse{
+
+    }
+
+    @mixin input-field{
+        background-color: $input-color-main;
+        border-radius: 16px;
+        color: $text-color-gray;
+        height: 36px;
+    }
+
+    @mixin buttonStyle{
+        cursor: pointer;
+        padding: 6px;
+        background-color: $input-color-main;
+        color: $text-color-gray;
+        border-radius: $main-border-radius;
+        &:hover{
+            background-color: $hover-background-color;
+        }
+    }
+
+    @mixin size($size){
+        width: $size;
+        height: $size;
+    }
+
+    @mixin sizeCircle($size){
+        width: $size;
+        height: $size;
+        border-radius: 50%;
+    }
+
+    @mixin pageableContainer{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 1rem;
+        height: 100%;
+        overflow:auto;
+    }

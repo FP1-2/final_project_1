@@ -45,6 +45,10 @@
                 padding-left: 15px;
             }
 
+            @include width_1271 {
+                width: 78%;
+            }
+
             .friendsHeader {
                 display: flex;
                 align-items: center;
@@ -54,7 +58,7 @@
                 @include width_576 {
                     flex-direction: column;
                     align-items: start;
-                    gap: 5px;
+                    gap: 1px;
                 }
 
                 .friendsHeaderLink {
@@ -179,7 +183,9 @@
             justify-content: center;
         }
         @include width_576 {
-            gap:10px;
+            gap: 5px;
+            font-size: 10px;
+            justify-content: left;
         }
 
         .linksListElem {
@@ -195,7 +201,8 @@
             }
 
             @include width_576 {
-                width: 50px;
+                width: 70px;
+                font-size: 8px;
             }
 
 
@@ -210,6 +217,9 @@
                 font-weight: 600;
                 font-size: 15px;
                 color: #65676B;
+                @include width_576{
+                    font-size: 13px;
+                }
             }
         }
 
@@ -222,10 +232,6 @@
             border-radius: 5px;
             position: relative;
 
-            @include width_576 {
-                width: 50px;
-            }
-
             &::after {
                 content: "";
                 position: absolute;
@@ -234,10 +240,14 @@
                 width: 100%;
             }
 
+            @include width_576 {
+                width: 70px;
+            }
+
             .linksListElemLinkClick {
                 text-decoration: none;
-                width: 100%;
-                height: 100%;
+/*                 width: 100%;
+ */                height: 100%;
                 display: flex;
                 align-items: center;
                 justify-content: center;
@@ -245,6 +255,9 @@
                 font-weight: 600;
                 font-size: 15px;
                 color: #0866FF;
+                @include width_576{
+                    font-size: 13px;
+                }
             }
         }
     }
@@ -257,6 +270,13 @@
     margin:3px;
     right: 15px;
     background-color: #F0F2F5;
+    @include width_576 {
+        width: 30%;
+        font-size: 10px;
+        right: 1px;
+        padding: 0 5px;
+        
+    }
 }
 .friendsSearchActive {
     background-color: #e7f3ff; 

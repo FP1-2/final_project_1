@@ -47,7 +47,7 @@ const FriendRequestCard=({type, friendRequest})=>{
         {type==="FRIEND_REQUEST"?(
           <>
             <div className={styles.card_content}>
-              <p className={styles.card_message}>You sent friend request</p>
+              <p className={styles.card_message}>{name} sent you a friend request</p>
             </div>
               
           </>):type==="SENT_REQUEST"?(
