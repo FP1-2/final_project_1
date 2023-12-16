@@ -22,6 +22,7 @@ import GroupPage from "./pages/GroupPage/GroupPage";
 import ResetPassword from './pages/ChangePasswordForm/ResetPassword';
 import UpdatePass from './pages/ChangePasswordForm/UpdatePassword';
 import GroupsPage from "./pages/GroupsPage/GroupsPage";
+import GroupsPageProfile from "./components/GroupsPageProfile/GroupsPageProfile";
 
 function AppRoutes({ isAuth }) {
   return (
@@ -33,6 +34,7 @@ function AppRoutes({ isAuth }) {
           <Route exact path='/profile/:id/*' element={<ProfilePage />}>
             <Route path='' element={<PostsPageProfile />} />
             <Route path='friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendPageProfile />} />} />
+            <Route path='groups' element={<ProtectedRoute isAuth={isAuth} content={<GroupsPageProfile />} />} />
           </Route>
           <Route path="/post/:id" element={<ProtectedRoute isAuth={isAuth} content={<PostPage />} />} />
           <Route path="/groups/:id" element={<ProtectedRoute isAuth={isAuth} content={<GroupPage />} />} />

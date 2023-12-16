@@ -15,6 +15,17 @@ const initialValue = {
         status: '',
         error: '',
     },
+    userGroups:{
+        obj: {
+            content: [],
+            totalPages:0,
+            pageable: {
+                pageNumber:0,
+            },
+        },
+        status: '',
+        error: '',
+    },
 }
 
 export default initialValue;

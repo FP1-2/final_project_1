@@ -78,13 +78,15 @@ export default function ChatNavigation({
                   e.stopPropagation();
                   setShow(true);
                 }}
+                element={"chat-list"}
+                closePortal={() => {setShow(false);}}
               />
               <span onClick={handleBackIcon}>
                 <Close style={{cursor: "pointer"}}/>
               </span>
             </div>
           </div>
-          <div className={styles.chatNavSection__chatList}>
+          <div className={styles.chatNavSection__chatList} id="chat-list">
             <ul className={styles.chatNavSection__chatList__items}>
               {!show
                 ? chats.map(({id, chatParticipant, lastMessage}) => {

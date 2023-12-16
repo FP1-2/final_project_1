@@ -7,7 +7,7 @@ import { ReactComponent as LikedPostBtn } from "../../img/likedPostBtn.svg";
 import { ReactComponent as CommentPostBtn } from "../../img/commentPostBtn.svg";
 import { ReactComponent as SharePostBtn } from "../../img/sharePostBtn.svg";
 import { ReactComponent as SendCommentPost } from "../../img/sendCommentPost.svg";
-import { NavLink } from "react-router-dom";
+import {NavLink, useNavigate} from "react-router-dom";
 import {
   appendComment,
   clearStatePost,
@@ -25,6 +25,7 @@ import Likes from "../../components/Icons/Likes";
 import { Field, Form, Formik } from "formik";
 import * as Yup from 'yup';
 import { showMessage } from "../../redux-toolkit/popup/slice";
+import Close from "../../components/Icons/Close";
 
 const CommentSchema = Yup.object().shape({
   comment: Yup.string()
@@ -196,10 +197,16 @@ export default function PostPage() {
 
   const handleZoomOut = () => zoomLevel > 1
     && setZoomLevel(zoomLevel - 0.5);
-
+  const navigate = useNavigate();
+  const handleBack = () => {
+    navigate(-1);
+  };
   return (
     <div className={style.postWrapper}>
       <div className={style.postImageContainer}>
+        <button className={style.backBtn} onClick={handleBack}>
+          <Close />
+        </button>
         <div className={style.zoomControls}>
           <button onClick={handleZoomOut}
             className={style.zoomIn}></button>

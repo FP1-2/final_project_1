@@ -7,7 +7,7 @@ import style from "./ModalEditPost.module.scss";
 import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalEditPostState } from "../../redux-toolkit/post/slice";
+import {modalEditPostState} from "../../redux-toolkit/post/slice";
 import { getPhotoURL } from "../../utils/thunks";
 import { editPost } from "../../redux-toolkit/post/thunks";
 
@@ -58,7 +58,11 @@ const ModalEditPost = () => {
   const modalEditPostClose = () => {
     dispatch(modalEditPostState(false));
   };
-
+  useEffect(() => {
+    return ()=>{
+      modalEditPostClose();
+    };
+  }, []);
 
 
   return (

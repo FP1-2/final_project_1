@@ -46,6 +46,7 @@ export default function MainPage() {
       dispatch(setNewPost(null));
     }
   }, [newPost]);
+
   return (
     <>
       <ModalAddRepost />
