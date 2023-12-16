@@ -3,10 +3,19 @@
 .groupDetails {
   width: 22vw;
 
+  .date{
+    font-size: 0.8rem;
+    color: $color-font-grey;
+    display: flex;
+    justify-content: flex-end;
+    padding-right: 2rem;
+  }
+
   .description,
   .title {
     display: inline-block;
     font-size: 1.1rem;
+    padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     width: 100%;
     padding-right: 2rem;
