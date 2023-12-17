@@ -112,6 +112,7 @@ export default function ChatNavigation({
                           showTime={true}
                           time={lastMessage.createdAt}
                           chatItemClass={id == chatId ? styles.isActive : ''}
+                          isMess={true}
                         />
                       </NavLink>
                     </li>

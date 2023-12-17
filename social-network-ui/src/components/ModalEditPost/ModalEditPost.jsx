@@ -7,7 +7,7 @@ import style from "./ModalEditPost.module.scss";
 import { ReactComponent as AddPhoto } from "../../img/addPhoto.svg";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import { useDispatch, useSelector } from "react-redux";
-import {modalEditPostState} from "../../redux-toolkit/post/slice";
+import {modalEditPostState, updatePost} from "../../redux-toolkit/post/slice";
 import { getPhotoURL } from "../../utils/thunks";
 import { editPost } from "../../redux-toolkit/post/thunks";
 
@@ -39,17 +39,19 @@ const ModalEditPost = () => {
   };
 
   const initialValues = {
-    text: post.body,
+    text: post.body || "",
     img: ""
   };
 
   const onSubmit = async (value) => {
     if (value.img === "") {
       dispatch(editPost({ obj: { imageUrl: post.imageUrl, body: value.text, title: "add new post" }, id: post.postId }));
+      dispatch(updatePost({id: post.postId, imageUrl: post.imageUrl, body: value.text} ));
       setErrorValidation(false);
     } else {
-      const photo = (await getPhotoURL(value.img));
+      const photo = (await getPhotoURL(value.img)).data.url;
       dispatch(editPost({ obj: { imageUrl: photo, body: value.text, title: "add new post" }, id: post.postId }));
+      dispatch(updatePost({id: post.postId, imageUrl: photo, body: value.text} ));
       setErrorValidation(false);
     }
     dispatch(modalEditPostState(false));
