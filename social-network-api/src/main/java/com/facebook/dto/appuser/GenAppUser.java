@@ -3,7 +3,6 @@ package com.facebook.dto.appuser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 /**
  * Цей DTO використовується для генерації в базу мок-даними
