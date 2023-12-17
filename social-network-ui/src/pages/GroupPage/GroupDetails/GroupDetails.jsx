@@ -48,7 +48,7 @@ export default function GroupDetails({ group }) {
       </ul>
       {group.members.length > 5 && (
         <span className={style.more} onClick={toggleShowAll}>
-          {showAll ? 'hide' : '...all administrators'}
+          {showAll ? 'hide' : '...all members'}
         </span>
       )}   
     </div>
