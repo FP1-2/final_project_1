@@ -7,6 +7,10 @@ import NotificationsPage from './pages/NotificationsPage/NotificationsPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import RegistrationForm from "./components/RegistrationForm/RegistrationForm";
 import ConfirmRegistration from "./components/ConfirmRegistration/ConfirmRegistration";
+import AllFriends from './components/AllFriends/AllFriends';
+import IncomingFriendRequests from './components/IncomingFriendRequests/IncomingFriendRequests';
+import OutgoingFriendRequests from './components/OutgoingFriendRequests/OutgoingFriendRequests';
+import SearchFriend from './components/SearchFriend/SearchFriend';
 import PostsPageProfile from "./components/PostsPageProfile/PostsPageProfile";
 import FriendsPage from './pages/FriendsPage/FriendsPage';
 import FriendPageProfile from './components/FriendPageProfile/FriendPageProfile';
@@ -42,8 +46,13 @@ function AppRoutes({ isAuth }) {
           <Route path="/groups" element={<ProtectedRoute isAuth={isAuth} content={<GroupsPage />} />} />
           <Route path="/favorites" element={<ProtectedRoute isAuth={isAuth} content={<FavoritesPage />} />} />
           <Route path="/notifications" element={<ProtectedRoute isAuth={isAuth} content={<NotificationsPage />} />} />
-          <Route path='/friends' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}/> } />
- 
+          <Route path='/friends/*' element={<ProtectedRoute isAuth={isAuth} content={<FriendsPage />}/> }>
+            <Route path='' element={<ProtectedRoute isAuth={isAuth} content={<AllFriends />}></ProtectedRoute> }></Route>
+            <Route path='incoming-requests' element={<ProtectedRoute isAuth={isAuth} content={<IncomingFriendRequests />}></ProtectedRoute> }></Route>
+            <Route path='outgoing-requests' element={<ProtectedRoute isAuth={isAuth} content={<OutgoingFriendRequests />}></ProtectedRoute> }></Route>
+            <Route path='search-friend' element={<ProtectedRoute isAuth={isAuth} content={<SearchFriend />}></ProtectedRoute> }></Route>
+          </Route>
+          
           <Route path={'*'} element={<PageNotFound />} />
         </Route>
         <Route path="/login" element={<LoginPage isAuth={isAuth} />} />

@@ -48,5 +48,10 @@ const initialValue = {
         error: '',
     },
     modalDeleteFriend:false,
+    friendSearchRequest:{
+        obj:{},
+        status: '',
+        error:''
+    }
 }
 export default initialValue;
