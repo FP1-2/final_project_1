@@ -2,7 +2,7 @@ import {NavLink, useParams} from "react-router-dom";
 import style from './GroupPage.module.scss';
 import React, {useEffect, useRef, useState} from "react";
 import BlueButton from "../../components/BlueButton/BlueButton";
-import Vibrant from 'node-vibrant';
+
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
 import GroupCard from "./GroupCard/GroupCard";
@@ -21,7 +21,7 @@ export default function GroupPage() {
   useEffect(() => {
     dispatch(clearGroup());
     dispatch(getGroup({id}));
-  }, []);
+  }, [dispatch]);
   
   const {obj: group, status, error} = useSelector(s => s.groups.getGroup);
   const {obj: user} = useSelector(state => state.auth.user);
@@ -137,29 +137,24 @@ export default function GroupPage() {
   }, [adm, activeTab, tab]);
 
   /** динамічний градієнт хедера */
-
-  const imgRef = useRef(null);
   const headerRef = useRef(null);
 
   useEffect(() => {
-    const img = imgRef.current;
-    if (group.imageUrl === "" && img && img.complete) {
-      applyDynamicGradient(img);
-    } else if (img) {
-      img.onload = () => applyDynamicGradient(img);
-    }
-  }, []);
+    applyRandomGradient();
+  }, [group.imageUrl]);
 
-  const applyDynamicGradient = img => {
-    Vibrant.from(img.src).getPalette()
-      .then((palette) => {
-        const rgbColor = palette.LightMuted ? palette.LightMuted.rgb : [255, 255, 255];
-        const gradientStart = `rgba(${rgbColor.join(',')}, 0.5)`;
-        const gradientEnd = 'rgb(255, 255, 255)';
-        if (headerRef.current) {
-          headerRef.current.style.background = `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`;
-        }
-      });
+  const applyRandomGradient = () => {
+    const randomColor = () => {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgba(${r},${g},${b},0.2)`;
+    };
+
+    const color1 = randomColor();
+    const gradient = `linear-gradient(to bottom, ${color1}, rgba(255,255,255,1))`;
+
+    if (headerRef.current) headerRef.current.style.background = gradient;
   };
 
   switch (status) {
@@ -186,7 +181,6 @@ export default function GroupPage() {
             <div className={style.imageContainer}>
               <div className={style.image}>
                 <img
-                  ref={imgRef}
                   src={group.imageUrl}
                   alt="Group image"
                 />
