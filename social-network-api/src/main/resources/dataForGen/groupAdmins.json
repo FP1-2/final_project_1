@@ -1,0 +1,102 @@
+[
+    {
+        "name": "Stephen",
+        "surname": "Phillips",
+        "username": "ydawson",
+        "email": "kristinhernandez@hughes.net",
+        "address": "3476 Courtney Oval\nSouth Jose, ND 21069",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/a/ae/Stephen_Graham_%26_Mickey_DeHara_%28crop%29.png",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 72
+    },
+    {
+        "name": "Kelly",
+        "surname": "Hale",
+        "username": "benjaminwalker",
+        "email": "michaelbruce@powers.net",
+        "address": "USS Nichols\nFPO AE 91608",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/cb/Grace_Kelly30419.jpg/382px-Grace_Kelly30419.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 77
+    },
+    {
+        "name": "Michelle",
+        "surname": "Walters",
+        "username": "kristen72",
+        "email": "alexandrahebert@rivers.biz",
+        "address": "856 Krista Stravenue Suite 321\nLaurastad, RI 20730",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1c/Michelle_Hurd_by_Gage_Skidmore.jpg/381px-Michelle_Hurd_by_Gage_Skidmore.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 56
+    },
+    {
+        "name": "Chelsea",
+        "surname": "Garcia",
+        "username": "gregorycurry",
+        "email": "christina44@gmail.com",
+        "address": "33990 Aguilar Views\nBurtontown, CT 26614",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/d/d6/Patricia_Cutts_1958.JPG/312px-Patricia_Cutts_1958.JPG",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 65
+    },
+    {
+        "name": "Brittney",
+        "surname": "Ross",
+        "username": "bhernandez",
+        "email": "zramirez@gmail.com",
+        "address": "4898 Kristy Freeway\nMorganchester, MT 09247",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/2/27/Sharon_Brown%2C_Miss_United_States_of_America.jpg/315px-Sharon_Brown%2C_Miss_United_States_of_America.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 80
+    },
+    {
+        "name": "James",
+        "surname": "Peterson",
+        "username": "ashleyosborne",
+        "email": "amymiller@dean.com",
+        "address": "746 Holmes Course\nToddview, AL 89575",
+        "avatar": "/img/default-avatar.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 75
+    },
+    {
+        "name": "Cody",
+        "surname": "Gordon",
+        "username": "xmills",
+        "email": "rodriguezlori@mathis-cook.com",
+        "address": "770 Underwood Courts\nLake Jacob, MD 79584",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/James-faulkner-2018.jpg/418px-James-faulkner-2018.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 41
+    },
+    {
+        "name": "Rebecca",
+        "surname": "Andrews",
+        "username": "mckinneytina",
+        "email": "steven34@jones.com",
+        "address": "2984 Jack Flats\nJustinhaven, CT 80751",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/c/c9/Rebecca_Schaeffer_86-88.JPG/359px-Rebecca_Schaeffer_86-88.JPG",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 37
+    },
+    {
+        "name": "Rebecca",
+        "surname": "Lawson",
+        "username": "lindsey08",
+        "email": "brandonmiller@jackson.org",
+        "address": "368 Shannon Mill\nKathrynside, NY 84862",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/b/b2/Rebecca_Leigh_Longendyke_for_Paco_Rabanne.jpg/480px-Rebecca_Leigh_Longendyke_for_Paco_Rabanne.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 24
+    },
+    {
+        "name": "Thomas",
+        "surname": "Bennett",
+        "username": "moorejane",
+        "email": "hernandezaustin@hotmail.com",
+        "address": "153 Moore Bridge Suite 105\nJeanshire, SC 39545",
+        "avatar": "https://upload.wikimedia.org/wikipedia/commons/thumb/f/f6/Frank_Thomas%2C_Future_Hall-of-Famer.jpg/480px-Frank_Thomas%2C_Future_Hall-of-Famer.jpg",
+        "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+        "dateOfBirth": 29
+    }
+]

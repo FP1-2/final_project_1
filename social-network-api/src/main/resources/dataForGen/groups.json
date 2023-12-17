@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Java Development",
+    "description": "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/7/7f/JavaUniverse.png"
+  },
+  {
+    "name": "About hamsters",
+    "description": "Hamsters are small rodents that are commonly kept as house pets.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/c/ce/Roborofskiohamster.jpg"
+  },
+  {
+    "name": "Funy cats",
+    "description": "A social group celebrating hilarious cat moments, uniting cat enthusiasts in laughter and joy.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cat_yawn_with_exposed_teeth_and_claws.jpg/1280px-Cat_yawn_with_exposed_teeth_and_claws.jpg"
+  },
+  {
+    "name": "Discoveries of the Universe.",
+    "description": "The physical universe is defined as all of space and time and their contents.",
+    "imageUrl": "https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/CMB_Timeline300_no_WMAP.jpg/1200px-CMB_Timeline300_no_WMAP.jpg"
+  }
+]

@@ -28,12 +28,20 @@ import com.facebook.service.MessageService;
 import com.facebook.service.PostService;
 import com.facebook.service.favorites.FavoritesService;
 import com.facebook.service.groups.GroupService;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.javafaker.Faker;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -55,6 +63,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class Gen {
     private static final String AVATAR = "https://via.placeholder.com/150/66b7d2";
     private static final String HEADER_PHOTO = "https://source.unsplash.com/random?wallpapers";
+    private static final Set<Integer> indexAdmins = new HashSet<>(Arrays.asList(19, 22, 23, 45, 51, 68, 73, 79, 81, 98));
     private static final String DEFAULT_USERNAME = "test";
     private static final String DEFAULT_PASSWORD = "Password1!";
     private static final String DEFAULT_USERNAME2 = "test2";
@@ -105,6 +114,8 @@ public class Gen {
         genFriends();
         genFavorites();
         genGrops();
+        genGropsMemmbers();
+        addedMemmbersToGrops();
         this.chats = genChats();
         this.messages = genMessages();
     }
@@ -113,141 +124,85 @@ public class Gen {
         return new Gen(context);
     }
 
-    private final List<GenAppUser> appUsers = List.of(
-            new GenAppUser("George",
-                    "Washington",
-                    "Greak",
-                    "g_rafk@ukr.net",
-                    "Westmorland Virginia",
-                    "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png",
-                    HEADER_PHOTO,
-                    42),
-            new GenAppUser("Bret",
-                    "Johnson",
-                    "BretNickname",
-                    "Sincere@april.biz",
-                    "Random Address 1",
-                    "https://i0.hippopx.com/photos/595/53/187/boy-fashion-model-young-preview.jpg",
-                    HEADER_PHOTO,
-                    19),
-            new GenAppUser("__清きよ",
-                    "__",
-                    "ErvinNickname",
-                    "Shanna@melissa.tv",
-                    "Random Address 2",
-                    "https://metropolevsech.eu/wp-content/uploads/2017/06/F5A5982-768x512.jpg",
-                    HEADER_PHOTO,
-                    31),
-            new GenAppUser("Maxime Nienow",
-                    "Nienow",
-                    "ClemNickname",
-                    "clementine_b@ukr.net",
-                    "Random Address 3",
-                    "https://images.pexels.com/photos/3170635/pexels-photo-3170635.jpeg",
-                    HEADER_PHOTO,
-                    27),
-            new GenAppUser("Patricia",
-                    "Williams",
-                    "PattyNickname",
-                    "Nathan@yesenia.net",
-                    "Random Address 4",
-                    "https://images.pexels.com/photos/7929720/pexels-photo-7929720.jpeg",
-                    HEADER_PHOTO,
-                    58),
-            new GenAppUser("Karianne",
-                    "Brown",
-                    "KariNickname",
-                    "Julianne.OConner@kory.org",
-                    "Random Address 5",
-                    "https://images.pexels.com/photos/12260620/pexels-photo-12260620.jpeg",
-                    HEADER_PHOTO,
-                    29),
-            new GenAppUser("Kamren",
-                    "Taylor",
-                    "KamNickname",
-                    "Lucio_Hettinger@annie.ca",
-                    "Random Address 6",
-                    AVATAR,
-                    HEADER_PHOTO,
-                    19),
-            new GenAppUser("Leopoldo",
-                    "Calvo-Sotelo",
-                    "LeoNickname",
-                    "Karley_Dach@jasper.info",
-                    "Random Address 7",
-                    "https://upload.wikimedia.org/wikipedia/commons/4/44/Visita_del_Calvo-Sotelo_1976.jpg",
-                    HEADER_PHOTO,
-                    56),
-            new GenAppUser("Elwyn.Skiles",
-                    "Davis",
-                    "ElwynNickname",
-                    "Telly.Hoeger@billy.biz",
-                    "Random Address 8",
-                    "https://images.pexels.com/photos/3078343/pexels-photo-3078343.jpeg",
-                    HEADER_PHOTO,
-                    45),
-            new GenAppUser("Clementine Jones",
-                    "Garcia",
-                    "MaxNickname",
-                    "Sherwood@rosamond.me",
-                    "Random Address 9",
-                    "https://images.pexels.com/photos/4006576/pexels-photo-4006576.jpeg",
-                    HEADER_PHOTO,
-                    98),
-            new GenAppUser("Jhon Reichert",
-                    "Wilson",
-                    "GlenNickname",
-                    "Chaim_McDermott@dana.io",
-                    "Random Address 10",
-                    "https://images.pexels.com/photos/3214789/pexels-photo-3214789.jpeg",
-                    HEADER_PHOTO,
-                    39),
-            new GenAppUser("George Soros",
-                    "Moore",
-                    "ClemenNickname",
-                    "Rey.Padberg@karina.biz",
-                    "Random Address 11",
-                    "https://www.kntu.kr.ua/img/novin/2022/novyn_23.09.2022/1.jpg",
-                    HEADER_PHOTO,
-                    51),
-            new GenAppUser("Julia",
-                    "Gaius Caesar's",
-                    "GaiusJuliusCaesar",
-                    "J_Caesar@roma.republic",
-                    "Suburra, Ancient Rome",
-                    "https://pro.te.ua/wp-content/uploads/2018/08/38461309_944800705703709_3732371595776229376_n-768x509.jpg",
-                    HEADER_PHOTO,
-                    55)
-    );
+    private <T> List<T> readJsonData(String resourcePath, TypeReference<List<T>> typeReference) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        try (InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream("./dataForGen/" + resourcePath)) {
+            if (inputStream == null) {
+                throw new FileNotFoundException("Ресурс не найден: "
+                        + "dataForGen/" + resourcePath);
+            }
+            return objectMapper.readValue(inputStream, typeReference);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return Collections.emptyList();
+        }
+    }
+
+    private final List<GenAppUser> appUsers = readJsonData("users.json",
+            new TypeReference<List<GenAppUser>>() {});
 
     private final String[] password = new String[]{"568D!6s", "S06i7*378", "Ff063?82@",
             "ldsf~gb1K", "oEk%jdf57", "0&98ZnSdfg", "*g!H235h", "WgfIl63?", "2hdsU56F!",
             "gdhC%12U", "0Qwezx&63", "0!H7jfd3?", "09jjI3*U"};
 
     private List<AppUser> genAppUser() {
-
-        appUsers.forEach(dto -> createAppUser(dto));
-
-        //Окремо додаємо дефолтного користувача.
-        createAppUser(new GenAppUser("Clementina DuBuque",
-                "test",
-                DEFAULT_USERNAME,
-                "test@test.biz",
-                "Address 11",
-                "https://images.pexels.com/photos/13937077/pexels-photo-13937077.jpeg",
-                HEADER_PHOTO,
-                51));
-
-        createAppUser(new GenAppUser("Second Default User",
-                "test2",
-                DEFAULT_USERNAME2,
-                "test2@test.biz",
-                "Address 22",
-                "https://images.pexels.com/photos/3892464/pexels-photo-3892464.jpeg",
-                HEADER_PHOTO,
-                52));
+        appUsers.forEach(user -> createAppUser(user));
+        //Додаємо дефолтних користувачів.
+        readJsonData("defaultUsers.json", new TypeReference<List<GenAppUser>>() {})
+                .forEach(user -> createAppUser(user));
 
         return appUserService.findAll();
+    }
+
+    private void genGropsMemmbers(){
+        List<GenAppUser> members = readJsonData("groupMembers.json",
+                new TypeReference<List<GenAppUser>>() {});
+        List<GenAppUser> admins = readJsonData("groupAdmins.json",
+                new TypeReference<List<GenAppUser>>() {});
+
+        for(int i = 0, a = 0, m = 0; i < 109; i++ ) {
+            if(indexAdmins.contains(i)) {
+                createAppUser(admins.get(a));
+                a++;
+            }
+            else {
+                createAppUser(members.get(m));
+                m++;
+            }
+        }
+    }
+
+    private void addedMemmbersToGrops(){
+
+        for (int userId = 16; userId <= 124; userId++) {
+            // Пропускаємо адмінів існуючих груп
+            if (userId == 13 || userId == 14 || userId == 15) {
+                continue;
+            }
+
+            int groupCount = determineGroupCount();
+            Set<Integer> assignedGroups = new HashSet<>();
+
+            for (int i = 0; i < groupCount; i++) {
+                int groupId;
+                do {
+                    groupId = MathUtils.random(1, 4);
+                // Гарантуємо унікальність групи для користувача
+                } while (!assignedGroups.add(groupId));
+
+                groupService.joinGroup((long) groupId, (long) userId);
+            }
+        }
+    }
+
+    private static int determineGroupCount() {
+        int chance = MathUtils.random(1, 100);
+        if (chance <= 10) return 4;   // 10% на 4 групи
+        if (chance <= 30) return 3;   // 20% на 3 групи
+        if (chance <= 60) return 2;   // 30% на 2 групи
+        return 1;                     // Решта на 1 групу
     }
 
     private void createAppUser(GenAppUser dto) {
@@ -431,19 +386,14 @@ public class Gen {
     }
 
     private void genGrops(){
-     List<GroupRequest> g = List.of(new GroupRequest("Java Development",
-                     "Java is a high-level, class-based, object-oriented programming language that is designed to have as few implementation dependencies as possible.",
-                     "https://upload.wikimedia.org/wikipedia/commons/7/7f/JavaUniverse.png"),
-             new GroupRequest("About hamsters",
-                     "Hamsters are small rodents that are commonly kept as house pets.",
-                     "https://upload.wikimedia.org/wikipedia/commons/c/ce/Roborofskiohamster.jpg"),
-             new GroupRequest("Funy cats",
-                     "A social group celebrating hilarious cat moments, uniting cat enthusiasts in laughter and joy.",
-                     "https://upload.wikimedia.org/wikipedia/commons/thumb/1/19/Cat_yawn_with_exposed_teeth_and_claws.jpg/1280px-Cat_yawn_with_exposed_teeth_and_claws.jpg"));
+        //groups.json
+     List<GroupRequest> g = readJsonData("groups.json",
+             new TypeReference<List<GroupRequest>>() {});
 
        for(int userId = 13, groupId = 0 ; userId < 16; userId++, groupId++) {
            groupService.createGroup(g.get(groupId), (long) userId);
        };
+        groupService.createGroup(g.get(3), 14L);
     }
 
 }
