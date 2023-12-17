@@ -149,6 +149,38 @@
                     background-color: rgba(0, 0, 0, 0.05);
                 }
             }
+            .textareaWrapper{
+                position: relative;
+            
+                .textarea {
+                    box-sizing: border-box;
+                    min-height: 160px;
+                    max-height: 210px;
+                    padding: 0 16px;
+                    border: none;
+                    text-align: left;
+                    font-size: 24px;
+                    resize: none;
+                    width: 100%;
+                
+                    &::placeholder {
+                        font-size: 24px;
+                    }
+                
+                    &:focus {
+                        outline: none;
+                    }
+                }
+                .errorNames {
+                    font-size: 10px;
+                    color: red;
+                    margin: 0;
+                    bottom: 5px;
+                    left: 16px;
+                    display: block;
+                    position: absolute;
+                }
+            }
         }
 
 

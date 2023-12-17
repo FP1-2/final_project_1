@@ -1,5 +1,6 @@
 package com.facebook.dto.groups;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -11,6 +12,7 @@ import java.util.Set;
  * URL зображення групи, назву, опис, а також набори членів та адміністраторів групи.
  */
 @Data
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class GroupResponse {
     private Long id;
     private LocalDateTime createdDate;
