@@ -1,5 +1,5 @@
 const initialValue = {
-    getGroup: {
+    getGroup:{
         obj: {
             id: null,
             createdDate: "",
@@ -11,6 +11,17 @@ const initialValue = {
             isPublic: true,
             members: [],
             admins: [],
+        },
+        status: '',
+        error: '',
+    },
+    userGroups:{
+        obj: {
+            content: [],
+            totalPages:0,
+            pageable: {
+                pageNumber:0,
+            },
         },
         status: '',
         error: '',

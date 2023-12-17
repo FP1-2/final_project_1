@@ -10,6 +10,7 @@ const defaultInitialState = {
         status: '',
         error: '',
     },
+    recentSearch: []
 };
 
 export default defaultInitialState;

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Formik, Form } from 'formik';
 import Input from "../Input/Input";
 import style from "./RegistrationForm.module.scss";
@@ -6,6 +6,7 @@ import { object, string, ref } from "yup";
 import { useDispatch, useSelector } from "react-redux";
 import { registrationThunkRequest } from "../../redux-toolkit/registration/thunks";
 import ErrorPage from "../ErrorPage/ErrorPage";
+import { resetRegistrationThunkRequest } from "../../redux-toolkit/registration/slice";
 
 
 const validationSchema = object({
@@ -55,10 +56,10 @@ const RegistrationForm = () => {
     delete newObject.repeatPassword;
     newObject.username = newObject.email;
     dispatch(registrationThunkRequest(newObject));
-
-
   };
-
+  useEffect (()=>{
+    dispatch(resetRegistrationThunkRequest());
+  },[]);
   return (
     <>{registrationStatus==="rejected"?<ErrorPage message="Oops, something went wrong!"/>:
       <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>

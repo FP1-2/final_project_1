@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Formik, Form } from 'formik';
 import { object, string } from "yup";
 import style from "./ModalAddRepost.module.scss";
@@ -38,7 +38,11 @@ const ModalAddRepost = () => {
     dispatch(modalAddRepostState(false));
   };
 
-
+  useEffect(() => {
+    return ()=>{
+      modalAddRepostClose();
+    };
+  }, []);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >

@@ -7,7 +7,9 @@ const registrationReducer = createSlice({
     name: "registration",
     initialState: initialValue,
     reducers: {
-
+        resetRegistrationThunkRequest: (state) => {
+            state.registrationMassage = initialValue.registrationMassage;
+          },
     },
     extraReducers:(builder)=>{
         builders(builder, registrationThunkRequest,'registrationMassage');
@@ -16,7 +18,7 @@ const registrationReducer = createSlice({
 });
 
 export const {
-
+    resetRegistrationThunkRequest
 } = registrationReducer.actions;
 
 export default registrationReducer.reducer;

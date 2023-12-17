@@ -6,7 +6,7 @@ import {getTimeAgo} from "../../utils/formatData";
 export default function ChatItem({
   chatItemClass, message, photo, name,
   isUnread, isRead, additionalClass, additionalClass2,
-  clickHandler, time, showTime
+  clickHandler, time, showTime, isMess
 })
 {
   return (
@@ -16,9 +16,9 @@ export default function ChatItem({
         <Avatar photo={photo} name={name} additionalClass={additionalClass}/>
       </div>
       <div className={styles.chatItemContainer__infoWrap}>
-        <div className={styles.chatItemContainer__info}>
-          <p className={styles.chatItemContainer__info__username}>{name}</p>
-          <div className={styles.chatItemContainer__info__text}>
+        <div className={`${styles.chatItemContainer__info} ${!isMess && styles.chatItemContainer__info__notMess}`}  >
+          <p className={`${styles.chatItemContainer__info__username} ${!isMess && styles.chatItemContainer__info__username__notMess}`}>{name}</p>
+          {isMess && <div className={styles.chatItemContainer__info__text}>
             <span
               className={`${styles.chatItemContainer__info__text__lastMessage} ${isUnread && styles.unread}`}>{message}
             </span>
@@ -26,14 +26,14 @@ export default function ChatItem({
               className={`${styles.chatItemContainer__info__text__time} ${!showTime && styles.none}`}>
               {getTimeAgo(time)}
             </span>
-          </div>
+          </div>}
         </div>
-        <div className={styles.chatItemContainer__status}>
+        {isMess && <div className={styles.chatItemContainer__status}>
           {isUnread && <div className={styles.chatItemContainer__status__unread}></div>}
           {isRead && <div className={styles.chatItemContainer__status__read}>
             <Avatar photo={photo} additionalClass={additionalClass2} name={name}/>
           </div>}
-        </div>
+        </div>}
       </div>
     </div>
   );
@@ -50,5 +50,6 @@ ChatItem.propTypes = {
   clickHandler: PropTypes.func,
   showTime: PropTypes.bool,
   time: PropTypes.string,
-  chatItemClass: PropTypes.string
+  chatItemClass: PropTypes.string,
+  isMess: PropTypes.bool
 };

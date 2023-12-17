@@ -1,7 +1,11 @@
 import React, {useEffect, useRef} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {loadNotifications} from '../../redux-toolkit/notification/thunks';
-import {resetNotificationsState} from '../../redux-toolkit/notification/slice';
+import {loadNotifications, notificationMarkAsRead} from '../../redux-toolkit/notification/thunks';
+import {
+  editNotificationQt,
+  markNotificationAsRead,
+  resetNotificationsState
+} from '../../redux-toolkit/notification/slice';
 import Notification from '../../components/Notification/Notification';
 import styles from './NotificationsPage.module.scss';
 import {createHandleScroll} from "../../utils/utils";
@@ -39,6 +43,15 @@ export default function NotificationsPage() {
     fetchMore:  getMoreNotifications,
   });
 
+  useEffect(()=>{
+    content.map(n => {
+      if(!n.read){
+        dispatch(notificationMarkAsRead(n.id));
+        dispatch(markNotificationAsRead(n.id));
+        dispatch(editNotificationQt(-1));
+      }
+    }, []);
+  });
   return (
     <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
       {status === 'pending' && content.length === 0 && <Loader/>}
