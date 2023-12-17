@@ -90,10 +90,6 @@
     padding-right: 30px;
 
     &__logoWrap {
-      & svg {
-          left: -16px;
-      }
-
       &__search {
         display: flex;
         @include input-field;

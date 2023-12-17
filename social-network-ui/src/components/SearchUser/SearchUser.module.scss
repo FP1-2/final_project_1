@@ -65,30 +65,69 @@
     @include flex-center;
     width: 100%;
     height: 100%;
-      &__item {
+
+    &__item {
+      width: 100%;
+      cursor: pointer;
+      padding: 0 16px;
+
+      &:hover {
+        background-color: $input-color-main;
+      }
+
+      &__link {
         width: 100%;
-        cursor: pointer;
-        padding: 0 16px;
-        &:hover {
-          background-color: $input-color-main;
-        }
-        &__link {
-          width: 100%;
+
         &__user {
           width: 56px;
           height: 56px;
         }
       }
     }
-    &__text{
+
+    &__text {
       font-size: 18px;
       color: $text-color-gray;
     }
-    &__recently{
-      color: $text-color-gray;
+
+    &__recent {
+      color: black;
       font-weight: bold;
+      font-size:12px;
+      margin-right: auto;
+      padding-left: 26px;
+      padding-bottom: 12px;
+      &__item {
+        width: 100%;
+        cursor: pointer;
+        padding: 0 16px;
+        @include flex-center-row;
+        font-size: 16px;
+        height: 48px;
+        & a{
+          height: 48px;
+          & div{
+            height: 48px;
+          }
+        }
+        & svg:hover{
+          fill: $text-color-gray;
+        }
+        &:hover {
+          background-color: $input-color-main;
+        }
+        &__link {
+          width: 100%;
+
+          &__user {
+            width: 48px;
+            height: 48px;
+            padding: 3px;
+          }
+        }
+      }
     }
-    }
+  }
     
 }
 

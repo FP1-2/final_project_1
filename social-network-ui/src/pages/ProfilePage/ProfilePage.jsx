@@ -65,6 +65,7 @@ const ProfilePage = () => {
 
   const [linkPosts, setLinkPosts] = useState("focus");
   const [linkFriends, setLinkFriends] = useState("unfocus");
+  const [linkGroups, setLinkGroups] = useState("unfocus");
   const [sendRequest, setSendRequest] = useState("no request");
   const [isMyFriend, setIsMyFriend] = useState(false);
 
@@ -201,13 +202,19 @@ const ProfilePage = () => {
   const clickLinkPosts = () => {
     setLinkPosts("focus");
     setLinkFriends("unfocus");
+    setLinkGroups("unfocus");
   };
 
   const clickLinkFriends = () => {
     setLinkPosts("unfocus");
     setLinkFriends("focus");
+    setLinkGroups("unfocus");
   };
-
+  const clickLinkGroups = () => {
+    setLinkPosts("unfocus");
+    setLinkFriends("unfocus");
+    setLinkGroups("focus");
+  };
 
   const createNewChat = () => {
     dispatch(createChat({ username: profileName.username }));
@@ -219,6 +226,8 @@ const ProfilePage = () => {
     clickLinkPosts();
   } else if (linkFriends !== "focus" && word === "friends") {
     clickLinkFriends();
+  } else if (linkGroups !== "focus" && word === "groups") {
+    clickLinkGroups();
   } else if (word !== "friends" && linkFriends === "focus") {
     clickLinkPosts();
   }
@@ -322,10 +331,16 @@ const ProfilePage = () => {
                 <li className={linkFriends === "unfocus" ? style.linksListElem : style.linksListElemClick} onClick={clickLinkFriends}>
                   <Link to="friends" className={linkFriends === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick} href="">Friends</Link>
                 </li>
+                {obj.user === "myUser" &&
+                  <li className={linkGroups === "unfocus" ? style.linksListElem : style.linksListElemClick}
+                    onClick={clickLinkGroups}>
+                    <Link to="groups"
+                      className={linkGroups === "unfocus" ? style.linksListElemLink : style.linksListElemLinkClick}
+                      href="">Groups</Link>
+                  </li>}
               </ul>
             </div>
             <Outlet />
-            {pageNumber === totalPages && <h4 className={style.container_allCard}>That`s all for now!</h4>}
           </div>
         </>
     }
