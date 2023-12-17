@@ -41,10 +41,6 @@
                 padding-right: 10px;
             }
 
-            @include width_576 {
-                padding-left: 15px;
-            }
-
             @include width_1271 {
                 width: 78%;
             }
@@ -180,10 +176,18 @@
 
         @include width_880 {
             width: 100%;
-            justify-content: center;
+            justify-content: left;
+            font-size: 12px;
+
+        }
+        
+        @include width_768{
+            font-size: 11px;
+            justify-content: left;
+
         }
         @include width_576 {
-            gap: 5px;
+            gap: 8px;
             font-size: 10px;
             justify-content: left;
         }
@@ -199,13 +203,26 @@
             &:hover {
                 background-color: #f2f2f2;
             }
-
-            @include width_576 {
-                width: 70px;
-                font-size: 8px;
+            /* @include width_992{
+                width: 110px;
+            } */
+            @include width_880{
+                width:8rem;
+                padding-left: 5px;
+                padding-right: 5px;
             }
 
+            @include width_768 {
+                width: 20%;
+                max-width: 75px;
+                font-size: 12px;
+            }
 
+            @include width_576{
+                width: 20%;
+                max-width: 67px;
+
+            }
             .linksListElemLink {
                 text-decoration: none;
                 width: 100%;
@@ -217,9 +234,13 @@
                 font-weight: 600;
                 font-size: 15px;
                 color: #65676B;
-                @include width_576{
-                    font-size: 13px;
+                @include width_768{
+                    font-size: 14px;
                 }
+                @include width_576{
+                    font-size: 12px;
+                }
+                
             }
         }
 
@@ -239,9 +260,23 @@
                 border-bottom: 3px solid #0866FF;
                 width: 100%;
             }
+            /* @include width_992{
+                width: 150px;
+            } */
+            @include width_880{
+                width: 8rem;
+                padding-left: 5px;
+                padding-right: 5px;
+            }
+            @include width_768 {
+                width: 20%;
+                max-width: 75px;
 
-            @include width_576 {
-                width: 70px;
+            }
+            @include width_576{
+                width: 20%;
+                max-width: 67px;
+
             }
 
             .linksListElemLinkClick {
@@ -255,8 +290,11 @@
                 font-weight: 600;
                 font-size: 15px;
                 color: #0866FF;
+                @include width_768{
+                    font-size: 14px;
+                }
                 @include width_576{
-                    font-size: 13px;
+                    font-size: 12px;
                 }
             }
         }
@@ -270,12 +308,20 @@
     margin:3px;
     right: 15px;
     background-color: #F0F2F5;
-    @include width_576 {
-        width: 30%;
-        font-size: 10px;
+    @include width_1271{
+        width: 28%
+    }
+    @include width_992{
         right: 1px;
+        width: 28%;
+    }
+    @include width_768 {
+        font-size: 10px;
         padding: 0 5px;
-        
+        width: 30%;
+    }
+    @include width_576{
+        width: 70px;
     }
 }
 .friendsSearchActive {

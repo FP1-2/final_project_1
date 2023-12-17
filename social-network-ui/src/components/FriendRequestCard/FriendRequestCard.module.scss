@@ -1,5 +1,8 @@
+@import "../../styles/variables.scss";
+@import "../../styles/mixin.scss";
+
 .card {
-  margin-top: 5px;
+    margin-top: 5px;
     background: white;
     border-radius: 6px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -9,10 +12,12 @@
     padding: 1rem;
     position: relative;
     min-width: 30rem;
-    @media screen and (max-width: 767px) {
+    @include width_768 {
       min-width: 20rem;
     }
-  
+    @include width_576 {
+      min-width: 14rem;
+    }
     &_aside {
       flex-shrink: 0;
       padding: 0.75rem;
@@ -55,11 +60,17 @@
         color: #606770;
         align-self: flex-end;
         margin-top: 0.375rem;
+        @include width_768{
+          align-self:flex-start;
+        }
       }
     }
   
     &_content {
       padding: 0 0.75rem 0.75rem;
+      @include width_768{
+        padding: 0;
+      }
     }
   
     &_message {

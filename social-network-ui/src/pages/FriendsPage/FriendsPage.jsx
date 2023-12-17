@@ -103,9 +103,9 @@ const FriendsPage = () => {
                     <input 
                       id="searchInput" 
                       type="text" 
-                      className={`${style.friendsSearch} ${isSearchFocused ? style.friendsSearchActive : ''}`} // Conditional class application
+                      className={`${style.friendsSearch} ${isSearchFocused ? style.friendsSearchActive : ''}`}
                       name="text" 
-                      placeholder="Search on Facebook" 
+                      placeholder="Search" 
                       value={searchValue}
                       onChange={handleInputChange}
                       onKeyPress={handleInputKeyPress}
