@@ -9,6 +9,7 @@ import RepostProfile from "../../components/RepostProfile/RepostProfile";
 import ModalAddRepost from "../../components/ModalAddRepost/ModalAddRepost";
 import Loader from '../../components/Loader/Loader';
 import {setNewPost} from "../../redux-toolkit/ws/slice";
+import ModalEditPost from "../../components/ModalEditPost/ModalEditPost";
 
 export default function MainPage() {
   const scrollContainerRef = useRef(null);
@@ -50,6 +51,7 @@ export default function MainPage() {
   return (
     <>
       <ModalAddRepost />
+      <ModalEditPost/>
       <div className={styles.container} onScroll={handleScroll} ref={scrollContainerRef}>
         {status === 'pending' && content.length === 0 && <Loader/>}
         <ul className={styles.container_cards_bloc}>
