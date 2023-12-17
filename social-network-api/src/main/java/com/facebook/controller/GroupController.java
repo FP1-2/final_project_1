@@ -252,4 +252,34 @@ public class GroupController {
                 .orElse(ResponseEntity.notFound().build());
     }
 
+    /**
+     * Отримує всі групи, в яких користувач є учасником або адміністратором.
+     * Якщо роль не передається, то повертаються всі групи, в яких користувач є учасником.
+     *
+     * @param userId      ID користувача, для якого потрібно отримати групи. Цей параметр передається в шляху запиту.
+     * @param role        Роль користувача у групі. Це необов'язковий параметр. Якщо він не вказаний,
+     *                    будуть повернуті всі групи, в яких користувач є учасником.
+     * @param page        Номер сторінки пагінації. За замовчуванням - 0.
+     * @param size        Розмір сторінки пагінації. За замовчуванням - 10.
+     * @param sort        Параметри сортування. За замовчуванням - за датою створення в порядку спадання.
+     * @return            Відповідь зі сторінкою об'єктів {@link GroupResponse}, яка містить дані про групи.
+     *
+     * Приклад запиту:
+     * GET https://yourhostel.world/api/groups/user/123?page=0&size=10&sort=createdDate,desc
+     * Тут 123 - це userId. Без параметра role повертаються всі групи користувача.
+     *
+     * GET https://yourhostel.world/api/groups/user/123?page=0&size=10&sort=createdDate,desc&role=ADMIN
+     * Тут role=ADMIN означає, що будуть повернуті групи, де користувач є адміністратором.
+     */
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<Page<GroupResponse>> getAllGroupsByUser(
+            @PathVariable Long userId,
+            @RequestParam(required = false) String role,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "createdDate,desc") String sort) {
+        Page<GroupResponse> groups = groupQueryService.getAllGroupsByUser(userId, role, page, size, sort);
+        return ResponseEntity.ok(groups);
+    }
+
 }

@@ -8,10 +8,13 @@ import com.facebook.facade.GroupFacade;
 import com.facebook.model.groups.GroupRole;
 import com.facebook.repository.groups.GroupMembersRepository;
 import com.facebook.repository.groups.GroupRepository;
+import com.facebook.utils.SortUtils;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -85,5 +88,15 @@ public class GroupQueryService {
                 .map(groupFacade::mapToGroupMembersDto)
                 .collect(Collectors.toSet());
     }
+
+    @Transactional
+    public Page<GroupResponse> getAllGroupsByUser(Long userId, String role, int page, int size, String sort) {
+        Sort sorting = SortUtils.getSorting(sort);
+        Pageable pageable = PageRequest.of(page, size, sorting);
+        Page<GroupJpql> groupsPage = groupRepository.findAllGroupsByUserIdAndRole(userId, role, pageable);
+
+        return groupsPage.map(group -> modelMapper.map(group, GroupResponse.class));
+    }
+
 
 }
