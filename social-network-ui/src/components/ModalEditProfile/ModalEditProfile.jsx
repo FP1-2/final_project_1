@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, {useState, useRef, useEffect} from "react";
 import { Formik, Form } from 'formik';
 import { object, string, number } from "yup";
 import style from "./ModalEditProfile.module.scss";
@@ -79,7 +79,11 @@ const ModalEditProfile = () => {
     dispatch(editUser(obj));
     dispatch(modalEditProfileState(false));
   };
-
+  useEffect(() => {
+    return ()=>{
+      dispatch(modalEditProfileState(false));
+    };
+  }, []);
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema} >

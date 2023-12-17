@@ -94,6 +94,15 @@ const postReducer = createSlice({
                 ...state.postsUser.obj.content
             ];
         },
+        updatePost: (state, action) => {
+            const editedPost = action.payload
+            state.postsUser.obj.content = state.postsUser.obj.content.map(p =>{
+                if(editedPost.id === p.postId){
+                    return {...p, imageUrl: editedPost.imageUrl, body: editedPost.body}
+                }
+                return p;
+            });
+        }
     },
     extraReducers: (builder) => {
         buildersPagination(builder, postsUser, 'postsUser');
@@ -123,7 +132,8 @@ export const {
     deleteLocalPost,
     appendPost,
     appendCommentStart,
-    appendPostStart
+    appendPostStart,
+    updatePost
 } = postReducer.actions;
 
 export default postReducer.reducer;

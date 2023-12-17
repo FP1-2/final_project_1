@@ -218,6 +218,9 @@
     padding: 6px;
     @include size(100%);
     // overflow: hidden;
+    &__notMess{
+      align-items: center;
+    }
     &__username {
       font-size: 15px;
       font-weight: bold;
@@ -226,6 +229,9 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+      &__notMess{
+        padding-bottom: 0;
+      }
     }
 
     &__text {

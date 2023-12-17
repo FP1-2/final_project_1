@@ -11,9 +11,11 @@ import ChatItem from '../ChatNavigation/ChatItem';
 import InputSearch from "./InputSearch";
 import { NavLink } from "react-router-dom";
 import Loader from "../Loader/Loader";
+import {deleteFromRecentSearch, setRecentSearch} from "../../redux-toolkit/main/slice";
 export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
   const dispatch = useDispatch();
   const { searchUsers } = useSelector(state => state.messenger);
+  const recentSearch = useSelector(state => state.postsInMain.recentSearch);
   const handleGetSearchResult = (searchValue) => {
     dispatch(searchUser({ input: searchValue, page: 0, size: 20 }));
   };
@@ -25,6 +27,13 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
     setTextSearch('');
     handleResetSearchResult();
   }
+  const addToRecent = (el) => {
+    dispatch(setRecentSearch(el));
+  };
+  const handleDeleteRecent = (e, id) =>{
+    e.stopPropagation();
+    dispatch(deleteFromRecentSearch(id));
+  };
   return (
     <div className={styles.searchUser} id="search-user-portal" >
       <div className={styles.searchUser__search}>
@@ -51,14 +60,33 @@ export default function SearchUser({ handleBack, textSearch, setTextSearch}) {
       </div>
 
       <ul className={styles.searchUser__filteredUsers}>
-        {searchUsers.status === '' ? <p className={styles.searchUser__filteredUsers__text}>Enter name/username for searching user</p>
+        {searchUsers.status === '' ? (
+          recentSearch.length === 0 ? <p className={styles.searchUser__filteredUsers__text}>Enter name/username for searching user</p>
+            :
+            <>
+              <p className={styles.searchUser__filteredUsers__recent}>Recent:</p>
+              {recentSearch.map(({id, avatar, name, surname}) => (
+                <li key={id} onClick={closePortal}
+                  className={styles.searchUser__filteredUsers__recent__item}>
+                  <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__recent__item__link}>
+                    <ChatItem photo={avatar} name={name + ' ' + surname} isText={false}
+                      additionalClass={styles.searchUser__filteredUsers__recent__item__link__user}/>
+                  </NavLink>
+                  <Close clickHandler={(e) => handleDeleteRecent(e, id)}/>
+                </li>
+              ))}
+            </>
+        )
           : (searchUsers.status === 'pending' ? <Loader/> :
             (searchUsers.obj.length === 0 ? 
               <p  className={styles.searchUser__filteredUsers__text}>no results</p>
               :
               searchUsers.obj.map(({ id, avatar, name, surname }) => (
-                <li key={id} onClick={closePortal}
-                  className={styles.searchUser__filteredUsers__item}>
+                <li key={id} onClick={()=>{
+                  addToRecent({id, avatar, name, surname});
+                  closePortal();
+                }}
+                className={styles.searchUser__filteredUsers__item}>
                   <NavLink to={`/profile/${id}`} className={styles.searchUser__filteredUsers__item__link} >
                     <ChatItem photo={avatar} name={name + ' ' + surname} additionalClass={styles.searchUser__filteredUsers__item__link__user} />
                   </NavLink>

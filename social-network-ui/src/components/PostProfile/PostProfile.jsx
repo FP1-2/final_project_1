@@ -142,6 +142,19 @@ const PostProfile = ({ el }) => {
       setIsFavouritePost(true);
     }
   };
+  const outsideRef = useRef(null);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (outsideRef.current && !outsideRef.current.contains(event.target)) {
+        setBtnAlso(false);
+      }
+    }
+    document.addEventListener("click", handleClickOutside);
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, []);
 
   return (
     <div className={style.post}>
@@ -154,11 +167,14 @@ const PostProfile = ({ el }) => {
           </NavLink>
           <NavLink to={`/profile/${el.author.userId}`} className={style.postNameLink} href="">{`${el.author.name} ${el.author.surname}`}</NavLink>
         </div>
-        {el.author.userId === userId ? <button className={style.postHeaderAlsoBtn} onClick={() => setBtnAlso((val) => !val)}>
+        {el.author.userId === userId ? <button className={style.postHeaderAlsoBtn} onClick={(e) => {
+          e.stopPropagation();
+          setBtnAlso((val) => !val);
+        }}>
           <Dots className={style.postHeaderAlsoBtnImg} />
         </button>
           : null}
-        {btnAlso ? <div className={style.postHeaderBtnWrapper}>
+        {btnAlso ? <div className={style.postHeaderBtnWrapper} ref={outsideRef}>
           <button className={style.postHeaderBtn} onClick={modalEditPostOpen}>
             <Pencil className={style.postHeaderBtnImg} />
             Edit post

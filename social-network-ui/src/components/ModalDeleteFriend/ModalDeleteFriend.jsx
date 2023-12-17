@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import style from "./ModalDeleteFriend.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import {useDispatch,useSelector} from "react-redux";
@@ -17,7 +17,11 @@ const ModalDeleteFriend = () => {
   const modalDeleteFriendClose=async ()=>{
     await dispatch(modalDeleteFriendState(false));
   };
-
+  useEffect(() => {
+    return ()=>{
+      dispatch(modalDeleteFriendState(false));
+    };
+  }, []);
   const deleteFriend=async ()=>{
     await dispatch(deleteMyFriend({friendId:el.id}));
     await dispatch(deleteLocalFriend(el.id));

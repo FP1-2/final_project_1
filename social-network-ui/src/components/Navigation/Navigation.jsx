@@ -9,6 +9,7 @@ import Exit from "../Icons/Exit";
 import Avatar from "../Avatar/Avatar";
 import NavItem from "./NavItem";
 import PropTypes from "prop-types";
+import GroupIcon from "../Icons/Groups";
 
 export default function Navigation({authUser}) {
   const location = useLocation();
@@ -38,8 +39,9 @@ export default function Navigation({authUser}) {
           active={location.pathname.includes("/messages")}>
         </NavItem>
 
-        <NavItem to="/groups" label="Groups" icon="/img/groups.png" isDesktop={true}
+        <NavItem to="/groups" label="Groups" icon="/img/groups.png" isDesktop={false}
           active={location.pathname.includes("/groups")}>
+          <GroupIcon className={styles.desktopNone}/>
         </NavItem>
 
         <NavItem to="/favorites" label="Favorites" icon="/img/saved.png" isDesktop={false}
