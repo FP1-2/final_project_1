@@ -1,5 +1,6 @@
 @import "../../styles/variables.scss";
 
+$break-min: 540px;
 $break-small: 820px;
 $break-large: 1250px;
 $width-sidebar-left: 19rem;
@@ -11,6 +12,15 @@ $width-imageContainer: 60vw;
   position: $position;
   left: 50%;
   transform: translateX(-50%);
+}
+
+@mixin h2-format {
+  font-size: calc(1rem + 2vw);
+  font-weight: 600;
+  display: inline-flex;
+  justify-content: center;
+  width: 100%;
+  white-space: nowrap;
 }
 
 .groupWrapper {
@@ -89,39 +99,41 @@ $width-imageContainer: 60vw;
     .tabsContainer {
       @include absolute-translateX-center;
       width: 100%;
+      height: 100%;
       bottom: 0;
       max-height: 10rem;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
 
+
       .upperBlock {
         display: flex;
         justify-content: space-between;
         padding-left: 1.7rem;
         padding-right: 1.7rem;
-        padding-bottom: 0.4rem;
         align-items: flex-start;
         flex-direction: column;
+        align-content: center;
+        height: inherit;
 
         h2 {
-          padding-top: 0.5rem;
-          padding-bottom: 0.5rem;
-          font-size: 2rem;
-          white-space: nowrap;
+          padding-top: 0.8rem;
+          @include h2-format;
         }
 
-        .wrpBlueButton{
+        .wrpBlueButton {
           width: 100%;
           display: flex;
           align-items: center;
           justify-content: flex-end;
           gap: 1rem;
+          padding-top: 0.8rem;
 
-          .customBlueButton{
+          .customBlueButton {
             height: 2.4rem;
             font-weight: 600;
-            width: 100%;
+            width: inherit;
           }
         }
       }
@@ -130,7 +142,7 @@ $width-imageContainer: 60vw;
         @include absolute-translateX-center;
         height: 1px;
         background-color: $color-line;
-        bottom: 2.5rem;
+        bottom: 3rem;
         width: 95%;
         align-self: center;
       }
@@ -141,7 +153,7 @@ $width-imageContainer: 60vw;
         align-items: center;
         padding-left: 1.7rem;
         padding-right: 1.7rem;
-        padding-top: 0.5rem;
+        padding-top: 1rem;
         position: relative;
 
         .tabs {
@@ -189,6 +201,7 @@ $width-imageContainer: 60vw;
       .content {
         @include absolute-translateX-center;
         width: 99%;
+
         margin-right: 0;
         margin-top: 2rem;
         height: 100rem;
@@ -215,6 +228,36 @@ $width-imageContainer: 60vw;
   }
 }
 
+@media (min-width: $break-large) {
+  .groupWrapper .main {
+
+    .header {
+
+      .tabsContainer {
+
+        .upperBlock h2 {
+          @include h2-format;
+        }
+      }
+    }
+
+    .contentContainer {
+      width: calc($width-imageContainer - 3vw);
+
+      .content {
+        left: 0;
+        transform: none;
+        width: 34vw;
+        margin-right: 5rem;
+      }
+
+      .sidebarRight {
+        display: block;
+      }
+    }
+  }
+}
+
 @media (min-width: $break-small) {
   .groupWrapper .sidebarLeft {
     display: block;
@@ -225,7 +268,7 @@ $width-imageContainer: 60vw;
 
     .header .imageContainer {
       width: $width-imageContainer;
-      height: calc($Header-height - 7.4rem);
+      height: calc($Header-height - 9rem);
     }
 
     .header .tabsContainer {
@@ -235,31 +278,37 @@ $width-imageContainer: 60vw;
         align-items: center;
         flex-direction: row;
 
-        .customBlueButton{
-          width: 10rem;
+        h2 {
+          @include h2-format;
+        }
+
+        .wrpBlueButton {
+          width: 30%;
+
+          .customBlueButton {
+            width: 10rem;
+          }
         }
       }
     }
 
-    .contentContainer .content {
+    .contentContainer {
       width: calc(80vw - $width-sidebar-Right);
     }
   }
 }
 
-@media (min-width: $break-large) {
-  .groupWrapper .main .contentContainer {
-    width: calc($width-imageContainer - 3vw);
+@media (min-width: $break-min) {
+  .groupWrapper .main {
 
-    .content {
-      left: 0;
-      transform: none;
-      width: 34vw;
-      margin-right: 5rem;
-    }
+    .header {
 
-    .sidebarRight {
-      display: block;
+      .tabsContainer .upperBlock h2 {
+        font-size: 2rem;
+        font-weight: 400;
+        justify-content: flex-start;
+        white-space: unset;
+      }
     }
   }
 }
