@@ -1,0 +1,124 @@
+.card {
+    background: white;
+    border-radius: 6px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+    overflow: hidden;
+    display: flex;
+    padding: 1rem;
+    position: relative;
+    min-width: 30rem;
+    @media screen and (max-width: 767px) {
+      min-width: 20rem;
+    }
+  
+    &_aside {
+      flex-shrink: 0;
+      padding: 0.75rem;
+  
+      &_avatar {
+        width: 56px;
+        height: 56px;
+        border-radius: 50%;
+        overflow: hidden;
+        margin-right: 0.75rem;
+  
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+      }
+    }
+  
+    &_info {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex-grow: 1;
+  
+      &_link {
+        font-weight: bold;
+        text-decoration: none;
+        color: #385898;
+        &:hover {
+          text-decoration: underline;
+        }
+        &_wrapper{
+          display: inline;
+        }
+      }
+  
+      &_date {
+        font-size: 0.75rem;
+        color: #606770;
+        align-self: flex-end;
+        margin-top: 0.375rem;
+      }
+    }
+  
+    &_content {
+      padding: 0 0.75rem 0.75rem;
+    }
+  
+    &_message {
+      font-size: 0.875rem;
+      line-height: 1.4;
+      color: #1c1e21;
+    }
+  
+    &_unread {
+      background-color: #edf2fa;
+    }
+  
+    &_footer {
+      padding: 0.75rem;
+      border-top: 1px solid #ccd0d5;
+      display: flex;
+      justify-content: flex-end;
+    }
+  
+    &_button {
+      background-color: #4267b2;
+      border: none;
+      border-radius: 4px;
+      color: white;
+      padding: 0.375rem 0.75rem;
+      font-size: 0.875rem;
+      cursor: pointer;
+      &:hover {
+        background-color: #365899;
+      }
+    }
+  
+    &_buttonSecondary {
+      background-color: #e4e6eb;
+      color: #050505;
+      margin-left: 8px;
+      border-radius: 4px;
+      padding: 0.375rem 0.75rem;
+      cursor: pointer;
+      font-size: 0.875rem;
+      &:hover {
+        background-color: #d8dadf;
+      }
+    }
+  
+    &_status_indicator {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      width: 0.6rem;
+      height: 0.6rem;
+      border-radius: 50%;
+      background-color: rgba(0, 0, 0, 0);
+    }
+  
+    &_status_indicator_unread {
+      background-color: #4267B2;
+      box-shadow: 0 0 4px #4267B2;
+    }
+  }
+  
+  
+  
