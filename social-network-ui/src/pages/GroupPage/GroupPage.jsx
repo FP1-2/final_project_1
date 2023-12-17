@@ -13,6 +13,7 @@ import {getGroup} from "../../redux-toolkit/groups/thunks";
 import Loader from "../../components/Loader/Loader";
 import GroupError from "./GroupError/GroupError";
 import {clearGroup} from "../../redux-toolkit/groups/slice";
+import GroupPost from "./GroupPost/GroupPost";
 
 export default function GroupPage() {
   const {id} = useParams();
@@ -258,6 +259,7 @@ export default function GroupPage() {
               activeTab={getActiveTab(tab)}
             />}
             <div className={style.content}>
+              <GroupPost/>
               <aside className={style.sidebarRight}>
                 <GroupDetails group={group}/>
               </aside>

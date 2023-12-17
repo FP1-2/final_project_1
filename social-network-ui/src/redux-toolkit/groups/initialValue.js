@@ -1,5 +1,5 @@
 const initialValue = {
-    getGroup:{
+    getGroup: {
         obj: {
             id: null,
             createdDate: "",
@@ -15,6 +15,11 @@ const initialValue = {
         status: '',
         error: '',
     },
+    getPosts: {
+        obj: {},
+        status: '',
+        error: '',
+    }
 }
 
 export default initialValue;
