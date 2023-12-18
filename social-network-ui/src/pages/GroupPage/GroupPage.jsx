@@ -2,27 +2,62 @@ import {NavLink, useParams} from "react-router-dom";
 import style from './GroupPage.module.scss';
 import React, {useEffect, useRef, useState} from "react";
 import BlueButton from "../../components/BlueButton/BlueButton";
-import Vibrant from 'node-vibrant';
+
 import TripleMenu from "../../components/TripleMenu/TripleMenu";
 import Tick from "../../components/TripleMenu/Tick";
 import GroupCard from "./GroupCard/GroupCard";
 import {useDispatch, useSelector} from "react-redux";
 import Search from "../../components/Icons/Search";
 import GroupDetails from "./GroupDetails/GroupDetails";
-import {getGroup} from "../../redux-toolkit/groups/thunks";
+import {getGroup, getPosts} from "../../redux-toolkit/groups/thunks";
 import Loader from "../../components/Loader/Loader";
 import GroupError from "./GroupError/GroupError";
 import {clearGroup} from "../../redux-toolkit/groups/slice";
+import GroupPost from "./GroupPost/GroupPost";
+import {createHandleScroll} from "../../utils/utils";
 
 export default function GroupPage() {
   const {id} = useParams();
   const dispatch = useDispatch();
+  const headerRef = useRef(null);
+
+  const  { obj: {
+    content: posts,
+    totalPages,
+    pageable: {
+      pageNumber
+    }
+  }, 
+  status: statusPosts, 
+  error: errorPosts 
+  } = useSelector(state => state.groups.getPosts);
+
+  const errPosts = errorPosts === 'rejected';
+  
+  useEffect(() => {
+    dispatch(getPosts({page: 0, id}));
+  }, []);
+
+  const scrollContainerRef = useRef(null);
+
+  const getMorePosts = () => {
+    if (statusPosts !== 'pending' && pageNumber < totalPages) {
+      dispatch(getPosts({ page: pageNumber + 1, id }));
+    }
+  };
+
+  const handleScroll = createHandleScroll({
+    scrollRef: scrollContainerRef,
+    status: statusPosts,
+    fetchMore: getMorePosts,
+  });
 
   useEffect(() => {
     dispatch(clearGroup());
+    dispatch(getPosts({page: 0, id}));
     dispatch(getGroup({id}));
-  }, []);
-  
+  }, [dispatch]);
+
   const {obj: group, status, error} = useSelector(s => s.groups.getGroup);
   const {obj: user} = useSelector(state => state.auth.user);
 
@@ -42,7 +77,7 @@ export default function GroupPage() {
     //
   };
 
-  const getPosts = () => {
+  const receivePosts = () => {
     handleTabClick(POSTS);
     //
   };
@@ -138,41 +173,35 @@ export default function GroupPage() {
 
   /** динамічний градієнт хедера */
 
-  const imgRef = useRef(null);
-  const headerRef = useRef(null);
-
   useEffect(() => {
-    const img = imgRef.current;
-    if (group.imageUrl === "" && img && img.complete) {
-      applyDynamicGradient(img);
-    } else if (img) {
-      img.onload = () => applyDynamicGradient(img);
-    }
-  }, []);
+    applyRandomGradient();
+  }, [group.imageUrl]);
 
-  const applyDynamicGradient = img => {
-    Vibrant.from(img.src).getPalette()
-      .then((palette) => {
-        const rgbColor = palette.LightMuted ? palette.LightMuted.rgb : [255, 255, 255];
-        const gradientStart = `rgba(${rgbColor.join(',')}, 0.5)`;
-        const gradientEnd = 'rgb(255, 255, 255)';
-        if (headerRef.current) {
-          headerRef.current.style.background = `linear-gradient(to bottom, ${gradientStart}, ${gradientEnd})`;
-        }
-      });
+  const applyRandomGradient = () => {
+    const randomColor = () => {
+      const r = Math.floor(Math.random() * 256);
+      const g = Math.floor(Math.random() * 256);
+      const b = Math.floor(Math.random() * 256);
+      return `rgba(${r},${g},${b},0.2)`;
+    };
+
+    const color1 = randomColor();
+    const gradient = `linear-gradient(to bottom, ${color1}, rgba(255,255,255,1))`;
+
+    if (headerRef.current) headerRef.current.style.background = gradient;
   };
 
   switch (status) {
   case "rejected":
     return <GroupError type={error.type} message={error.message}/>;
-    
+
   case "pending":
-    return <Loader />;
+    return <Loader/>;
 
   default:
 
     return (
-      <div className={style.groupWrapper}>
+      <div className={style.groupWrapper} onScroll={handleScroll} ref={scrollContainerRef}>
         <aside className={style.sidebarLeft}>
           <GroupCard
             pathImage={group.imageUrl}
@@ -181,12 +210,11 @@ export default function GroupPage() {
             isPublic={group.isPublic}
           />
         </aside>
-        <div className={style.main}>
+        <div className={style.main} >
           <div ref={headerRef} className={style.header}>
             <div className={style.imageContainer}>
               <div className={style.image}>
                 <img
-                  ref={imgRef}
                   src={group.imageUrl}
                   alt="Group image"
                 />
@@ -216,7 +244,7 @@ export default function GroupPage() {
                 <div className={style.tabs}>
                   <div
                     className={`${style.tab} ${activeTab === POSTS ? style.active : ''}`}
-                    onClick={getPosts}
+                    onClick={receivePosts}
                   >Posts
                   </div>
                   <div
@@ -253,6 +281,7 @@ export default function GroupPage() {
             </div>
           </div>
           <div className={style.contentContainer}>
+
             {hideAdmMenu && <TripleMenu
               className={style.tripleMenu}
               one={DRAFT}
@@ -263,7 +292,17 @@ export default function GroupPage() {
               onThree={getRejected}
               activeTab={getActiveTab(tab)}
             />}
-            <div className={style.content}>
+
+            <ul className={style.content}>
+              { errPosts ? 
+                <li className={style.errorPosts}>Ops! Something went wrong...</li> 
+                : posts.map((post) => (
+                  <GroupPost key={post.id} adm={adm} post={post} />
+                ))}
+              <li className={style.errorPosts}>End!</li>
+            </ul>
+
+            <div >
               <aside className={style.sidebarRight}>
                 <GroupDetails group={group}/>
               </aside>

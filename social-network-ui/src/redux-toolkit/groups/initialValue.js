@@ -1,5 +1,5 @@
 const initialValue = {
-    getGroup:{
+    getGroup: {
         obj: {
             id: null,
             createdDate: "",
@@ -15,17 +15,27 @@ const initialValue = {
         status: '',
         error: '',
     },
-    userGroups:{
+    userGroups: {
         obj: {
             content: [],
-            totalPages:0,
+            totalPages: 0,
             pageable: {
-                pageNumber:0,
+                pageNumber: 0,
             },
         },
         status: '',
         error: '',
     },
+    getPosts: {
+        obj: {
+            content: [],
+            pageable: {
+                pageNumber: 0,
+            },
+        },
+        status: '',
+        error: '',
+    }
 }
 
 export default initialValue;

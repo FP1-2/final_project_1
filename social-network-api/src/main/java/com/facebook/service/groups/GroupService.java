@@ -418,4 +418,20 @@ public class GroupService {
         return new PageImpl<>(responses, pageable, groupPostBases.getTotalElements());
     }
 
+    public void checkMembership(Long userId, Long groupId) {
+        if (!groupMembersRepository.existsByUserIdAndGroupId(userId, groupId)) {
+            throw new AccessDeniedException(NOT_A_MEMBER);
+        }
+    }
+
+    @Transactional
+    public boolean updatePostStatus(Long postId, PostStatus status) {
+        int updatedRows = groupPostRepository.updatePostStatus(postId, status);
+        return updatedRows > 0;
+    }
+
+    /** For gen */
+    public List<Long> findMemberIdsByGroupId(Long id){
+        return groupMembersRepository.findMemberIdsByGroupId(id);
+    }
 }

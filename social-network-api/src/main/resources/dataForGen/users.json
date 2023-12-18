@@ -1,0 +1,132 @@
+[
+  {
+    "name": "George",
+    "surname": "Washington",
+    "username": "Greak",
+    "email": "g_rafk@ukr.net",
+    "address": "Westmorland Virginia",
+    "avatar": "https://upload.wikimedia.org/wikipedia/commons/2/28/98_quarter_obverse.png",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 42
+  },
+  {
+    "name": "Bret",
+    "surname": "Johnson",
+    "username": "BretNickname",
+    "email": "Sincere@april.biz",
+    "address": "Random Address 1",
+    "avatar": "https://i0.hippopx.com/photos/595/53/187/boy-fashion-model-young-preview.jpg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 19
+  },
+  {
+    "name": "__清きよ",
+    "surname": "__",
+    "username": "ErvinNickname",
+    "email": "Shanna@melissa.tv",
+    "address": "Random Address 2",
+    "avatar": "https://metropolevsech.eu/wp-content/uploads/2017/06/F5A5982-768x512.jpg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 31
+  },
+  {
+    "name": "Maxime Nienow",
+    "surname": "Nienow",
+    "username": "ClemNickname",
+    "email": "clementine_b@ukr.net",
+    "address": "Random Address 3",
+    "avatar": "https://images.pexels.com/photos/3170635/pexels-photo-3170635.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 27
+  },
+  {
+    "name": "Patricia",
+    "surname": "Williams",
+    "username": "PattyNickname",
+    "email": "Nathan@yesenia.net",
+    "address": "Random Address 4",
+    "avatar": "https://images.pexels.com/photos/7929720/pexels-photo-7929720.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 58
+  },
+  {
+    "name": "Karianne",
+    "surname": "Brown",
+    "username": "KariNickname",
+    "email": "Julianne.OConner@kory.org",
+    "address": "Random Address 5",
+    "avatar": "https://images.pexels.com/photos/12260620/pexels-photo-12260620.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 29
+  },
+  {
+    "name": "Kamren",
+    "surname": "Taylor",
+    "username": "KamNickname",
+    "email": "Lucio_Hettinger@annie.ca",
+    "address": "Random Address 6",
+    "avatar": "https://via.placeholder.com/150/66b7d2",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 19
+  },
+  {
+    "name": "Leopoldo",
+    "surname": "Calvo-Sotelo",
+    "username": "LeoNickname",
+    "email": "Karley_Dach@jasper.info",
+    "address": "Random Address 7",
+    "avatar": "https://upload.wikimedia.org/wikipedia/commons/4/44/Visita_del_Calvo-Sotelo_1976.jpg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 56
+  },
+  {
+    "name": "Elwyn.Skiles",
+    "surname": "Davis",
+    "username": "ElwynNickname",
+    "email": "Telly.Hoeger@billy.biz",
+    "address": "Random Address 8",
+    "avatar": "https://images.pexels.com/photos/3078343/pexels-photo-3078343.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 45
+  },
+  {
+    "name": "Clementine Jones",
+    "surname": "Garcia",
+    "username": "MaxNickname",
+    "email": "Sherwood@rosamond.me",
+    "address": "Random Address 9",
+    "avatar": "https://images.pexels.com/photos/4006576/pexels-photo-4006576.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 98
+  },
+  {
+    "name": "Jhon Reichert",
+    "surname": "Wilson",
+    "username": "GlenNickname",
+    "email": "Chaim_McDermott@dana.io",
+    "address": "Random Address 10",
+    "avatar": "https://images.pexels.com/photos/3214789/pexels-photo-3214789.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 39
+  },
+  {
+    "name": "George Soros",
+    "surname": "Moore",
+    "username": "ClemenNickname",
+    "email": "Rey.Padberg@karina.biz",
+    "address": "Random Address 11",
+    "avatar": "https://www.kntu.kr.ua/img/novin/2022/novyn_23.09.2022/1.jpg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 51
+  },
+  {
+    "name": "Julia",
+    "surname": "Gaius Caesar's",
+    "username": "GaiusJuliusCaesar",
+    "email": "J_Caesar@roma.republic",
+    "address": "Suburra, Ancient Rome",
+    "avatar": "https://pro.te.ua/wp-content/uploads/2018/08/38461309_944800705703709_3732371595776229376_n-768x509.jpg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 55
+  }
+]

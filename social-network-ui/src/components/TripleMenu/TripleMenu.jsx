@@ -28,4 +28,3 @@ TripleMenu.propTypes = {
   three: PropTypes.string,
   activeTab: PropTypes.string,
 };
-

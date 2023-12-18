@@ -62,7 +62,6 @@ public class PostController {
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "10") int size,
             @RequestParam(defaultValue = "id,desc") String sort) {
-        postService.checkPostType(postId, "Post");
         return ResponseEntity.ok(postService.getCommentsByPostId(postId, page, size, sort));
     }
 

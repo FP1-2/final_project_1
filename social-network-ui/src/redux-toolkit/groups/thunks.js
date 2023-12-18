@@ -1,6 +1,6 @@
 import {workAx} from "../ax";
 import {createAsyncThunk} from "@reduxjs/toolkit";
-import {addUserGroups} from "./slice";
+import {addUserGroups, appendPostsInGroupPage} from "./slice";
 
 export const getGroup = createAsyncThunk(
     'groups/getGroup',
@@ -15,6 +15,7 @@ export const getGroup = createAsyncThunk(
         }
     }
 );
+
 export const getUserGroups = createAsyncThunk(
   'groups/userGroups',
   async ({page = 0, size= 10, id}, {dispatch, rejectWithValue}) => {
@@ -30,5 +31,25 @@ export const getUserGroups = createAsyncThunk(
       return rejectWithValue(err.response.data);
     }
   }
+);
+
+export const getPosts = createAsyncThunk(
+    'groups/getPosts',
+    async ( {page = 0, size= 10, id}, {dispatch, rejectWithValue}) => {
+        const params = new URLSearchParams({ page, size });
+        try {
+            const response = await workAx("get", `/api/groups/${id}/posts?${params}`);
+            if (page > 0) {
+                dispatch(appendPostsInGroupPage({
+                    key: "getPosts",
+                    data: response.data
+                }));
+            } else {
+                return response.data;
+            }
+        } catch (err) {
+            return rejectWithValue(err.response.data);
+        }
+    }
 );
 

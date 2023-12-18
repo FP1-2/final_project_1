@@ -6,6 +6,7 @@ import com.facebook.model.groups.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -37,7 +38,9 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
                 ),
                 gp.createdDate,
                 gp.lastModifiedDate,
-                gp.imageUrl,
+                gp.imageUrl AS postImageUrl,
+                g.imageUrl AS groupImageUrl,
+                g.name AS groupName,
                 gp.title,
                 gp.body,
                 gp.type,
@@ -60,6 +63,7 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
     @Query(GROUP_POST_DETAILS_SELECT + """
             FROM GroupPost gp
             JOIN gp.user u
+            JOIN gp.group g
             WHERE gp.id = :postId AND gp.group.id = :groupId
             """)
     Optional<GroupPostBase> findGroupPostDetailsById(@Param("postId") Long postId,
@@ -83,8 +87,10 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
     @Query(GROUP_POST_DETAILS_SELECT + """
             FROM GroupPost gp
             JOIN gp.user u
+            JOIN gp.group g
             WHERE gp.group.id = :groupId
               AND (:user IS NULL OR gp.user.id = :user)
+              AND (1=1 OR :userId IS NULL)
               AND ( (:draft = null AND :published = null AND :archived = null AND :rejected = null)
                                 OR (:draft != null AND gp.status = :draft)
                                 OR (:published != null AND gp.status = :published)
@@ -113,12 +119,17 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
         @Query(GROUP_POST_DETAILS_SELECT + """
            FROM GroupPost gp
            JOIN gp.user u
+           JOIN gp.group g
            WHERE gp.group.id = :groupId
              AND gp.id IN :postIds
            """)
         List<GroupPostBase> findAllByGroupIdAndPostIds(@Param("groupId") Long groupId,
                                                        @Param("userId") Long userId,
                                                        @Param("postIds") Set<Long> postIds);
+
+    @Modifying
+    @Query("UPDATE GroupPost gp SET gp.status = :status WHERE gp.id = :postId")
+    int updatePostStatus(@Param("postId") Long postId, @Param("status") PostStatus status);
 
 }
 

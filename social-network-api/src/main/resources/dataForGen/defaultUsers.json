@@ -1,0 +1,22 @@
+[
+  {
+    "name": "Clementina DuBuque",
+    "surname": "test",
+    "username": "test",
+    "email": "test@test.biz",
+    "address": "Address 11",
+    "avatar": "https://images.pexels.com/photos/13937077/pexels-photo-13937077.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 51
+  },
+  {
+    "name": "Second Default User",
+    "surname": "test2",
+    "username": "test2",
+    "email": "test2@test.biz",
+    "address": "Address 22",
+    "avatar": "https://images.pexels.com/photos/3892464/pexels-photo-3892464.jpeg",
+    "headerPhoto": "https://source.unsplash.com/random?wallpapers",
+    "dateOfBirth": 52
+  }
+]

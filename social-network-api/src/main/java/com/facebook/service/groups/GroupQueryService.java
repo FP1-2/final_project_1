@@ -98,5 +98,4 @@ public class GroupQueryService {
         return groupsPage.map(group -> modelMapper.map(group, GroupResponse.class));
     }
 
-
 }

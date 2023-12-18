@@ -1,0 +1,211 @@
+@import "../../../styles/variables.scss";
+@import "../../../styles/mixin.scss";
+
+@mixin pendingParts {
+  padding-right: 0.7rem;
+  padding-left: 0.7rem;
+}
+
+@mixin greyTextBtn{
+  font-weight: 600;
+  color: $color-font-grey;
+  opacity: 0.8;
+  font-size: 0.85rem;
+  cursor: pointer;
+  &:hover{
+    text-decoration: underline;
+  }
+}
+
+@mixin content($margin-left: 6rem) {
+  margin-bottom: 0.8rem;
+  margin-left: $margin-left;
+  margin-right: 2rem;
+  padding: 0.4rem;
+  @include border-content;
+  border-radius: 1rem;
+  overflow: hidden;
+}
+
+.full{
+  height: 2rem;
+}
+
+.btnFull{
+  position: relative;
+  top: -0.5rem;
+  display: block;
+  width: 100%;
+  padding-right: 2rem;
+  justify-content: flex-end;
+  text-align: right;
+  @include greyTextBtn;
+}
+
+.postWrapper {
+  margin-bottom: 1rem;
+  @include border-content;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: 1rem;
+    padding-top: 0.7rem;
+    position: relative;
+    @include pendingParts;
+
+    .rightSection {
+      display: flex;
+      align-items: center;
+
+      .avatarSection {
+        position: relative;
+        height: 100%;
+
+        .userAvatar {
+          top: 1rem;
+          left: 1rem;
+          position: absolute;
+        }
+      }
+
+      .nameSection {
+        padding-left: 1rem;
+        display: flex;
+        flex-direction: column;
+        align-content: space-between;
+
+        .groupName .memberName {
+          display: block;
+        }
+
+        .groupName {
+          font-size: 1.5rem;
+        }
+
+        .memberName {
+          font-size: 1rem;
+          font-weight: 600;
+          color: $color-font-grey;
+        }
+      }
+    }
+
+    .spriteButton {
+      background-image: url('../../../sprites/sprite_3.png');
+      width: 2rem;
+      height: 2rem;
+      background-repeat: no-repeat;
+      cursor: pointer;
+      margin: 0.7rem 1rem 0;
+      background-position: 0.3rem -6rem;
+      transform: rotate(90deg);
+    }
+
+    .tripleMenu {
+      position: absolute;
+      z-index: 1;
+      right: 0;
+      top: 5rem;
+    }
+  }
+
+  .contentPosts {
+    @include content(2rem);
+  }
+
+  .original{
+    margin-left: 1rem;
+    font-weight: 600;
+    cursor: $color-font-grey;
+    font-size: 1rem;
+  }
+
+  .originalPost {
+    display: flex;
+    flex-direction: row;
+    min-height: 4rem;
+    padding-top: 0.5rem;
+    padding-left: 3rem;
+
+    .originalNameSection {
+      padding-left: 0.7rem;
+      padding-top: 0.7rem;
+
+    }
+  }
+
+  .originalContent {
+    @include content;
+  }
+
+  .postImage img {
+    width: 100%;
+    height: 22rem;
+    object-fit: cover;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+  }
+}
+
+.likeCommentInfo {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  @include pendingParts;
+
+  .likeIcon {
+    margin-right: 0.8rem;
+    width: 1.4rem;
+    height: 1.4rem;
+    position: relative;
+    top: 0.35rem;
+  }
+
+  span {
+    font-size: 1rem;
+  }
+}
+
+.actionButtons {
+  display: flex;
+  justify-content: space-between;
+  @include pendingParts;
+  margin-right: 2rem;
+  margin-left: 2rem;
+
+  .postBtnImg {
+    width: 25px;
+    height: 25px;
+    margin-right: 0.8rem;
+    position: relative;
+    top: 0.3rem;
+
+  }
+}
+
+.commentsSection {
+  overflow: auto;
+  padding: 0.5rem;
+
+
+  .moreComments{
+    @include greyTextBtn;
+  }
+}
+
+.fullComments {
+  overflow: hidden;
+  height: 2rem;
+}
+
+.wrapLine {
+  display: flex;
+  justify-content: center;
+
+  .horizontalLine {
+    border-top: 1px solid $color-line;
+    margin: 0.5rem 0;
+    width: 95%;
+  }
+}

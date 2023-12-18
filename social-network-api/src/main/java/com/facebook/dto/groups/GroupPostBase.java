@@ -19,7 +19,9 @@ public class GroupPostBase{
     private Author author;
     private LocalDateTime createdDate;
     private LocalDateTime lastModifiedDate;
-    private String imageUrl;
+    private String postImageUrl;
+    private String groupImageUrl;
+    private String groupName;
     private String title;
     private String body;
     private PostType type;
