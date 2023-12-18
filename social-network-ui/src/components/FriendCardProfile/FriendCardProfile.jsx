@@ -22,7 +22,7 @@ const FriendCardProfile = ({ el }) => {
     <div className={style.friendCardWrapper}>
       <ModalDeleteFriend />
       <NavLink to={`/profile/${el.id}`} className={style.friendCard}>
-        <img className={style.friendCardImg} src={el.avatar ? el.avatar : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="Avatar of profile" />
+        <img className={style.friendCardImg} src={el.avatar ? el.avatar : "/img/default-avatar.jpg"} alt="Avatar of profile" />
         <div className={style.friendCardInformWrapper}>
           <h3 className={style.friendCardInformTitle}>{`${el.name} ${el.surname}`}</h3>
           <p className={style.friendCardInformText}>{el.dateOfBirth ? `Age: ${el.dateOfBirth}` : el.address ? `Lives in: ${el.address}` : null}</p>

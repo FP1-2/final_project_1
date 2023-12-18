@@ -33,15 +33,7 @@
             box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
             padding: 20px 15px 15px;
 
-            @include width_992 {
-                width: 96%;
-                padding-left: 10px;
-                padding-right: 10px;
-            }
 
-            @include width_576 {
-                padding-left: 15px;
-            }
 
             .profileFriendsHeader {
                 display: flex;
@@ -92,7 +84,7 @@
                         @include width_576 {
                             padding-left: 0;
                             padding-right: 0;
-                            min-width: 0px;
+                            min-width: 0;
                         }
 
                         &:hover{
@@ -101,6 +93,15 @@
                         }
                     }
                 }
+            }
+            @include width_992 {
+                width: 96%;
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            @include width_576 {
+                padding-left: 15px;
             }
             .profileFriends{
                 display: grid;

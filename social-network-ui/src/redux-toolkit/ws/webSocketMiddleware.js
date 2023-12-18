@@ -12,14 +12,16 @@ const webSocketMiddleware = (store) => (next) => (action) => {
   if (!authUser || !token) {
     return next(action);
   }
-  
+
   switch (action.type) {
     case 'webSocket/connect': {
       const socket = new SockJS(`${baseURL}/ws`);
       client = Stomp.over(() => socket);
+      client.debug = () =>{};
       client.connect(
         headers,
         () => {
+
           const queuePath = `/user/${authUser.username}/queue`;
           const subscribeHandler = (queue, actionCreator) => (message) => {
             const messageResponse = JSON.parse(message.body);

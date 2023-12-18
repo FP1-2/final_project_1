@@ -101,7 +101,7 @@ export default function ChatNavigation({
                           message={lastMessage === null ? ""
                             : (lastMessage.sender.username === authUser.username
                               ?
-                              ("Ви: " + checkContentType(lastMessage.contentType, lastMessage.content))
+                              ("You: " + checkContentType(lastMessage.contentType, lastMessage.content))
                               : checkContentType(lastMessage.contentType, lastMessage.content))}
                           isUnread={lastMessage !== null && lastMessage.sender.username !== authUser.username && checkSentStatus(lastMessage.status)}
                           isRead={lastMessage !== null && lastMessage.sender.username === authUser.username && checkReadStatus(lastMessage.status)}

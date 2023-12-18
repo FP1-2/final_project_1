@@ -71,6 +71,8 @@ export default function ChatBody({
                       status={newMess !== null && newMess.id === id ? newMess.status : status}
                       index={index}
                       handleOpenImg={handleOpenImg}
+                      readerPhoto={authUser.username === sender.username ? sender.photo : authUser.photo}
+                      readerName={authUser.username === sender.username ? sender.name : authUser.name}
                     />
                   </li>
                 );
