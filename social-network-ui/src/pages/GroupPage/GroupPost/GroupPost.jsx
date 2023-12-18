@@ -31,19 +31,19 @@ export default function GroupPost({ adm }) {
   const setDraft = () => {
     setTab(DRAFT);
     //
-    console.log(DRAFT);
+    //console.log(DRAFT);
   };
 
   const setArchived = () => {
     setTab(ARCHIVED);
     //
-    console.log(ARCHIVED);
+    //console.log(ARCHIVED);
   };
 
   const setRejected = () => {
     setTab(REJECTED);
     //
-    console.log(REJECTED);
+    //console.log(REJECTED);
   };
 
   const getActiveTab = tab => {
