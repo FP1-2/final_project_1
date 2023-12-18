@@ -5,7 +5,7 @@ import style from "./ModalEditProfile.module.scss";
 import { ReactComponent as Cross } from "../../img/cross.svg";
 import Input from "../Input/Input";
 import { useDispatch, useSelector } from "react-redux";
-import { modalEditProfileState } from "../../redux-toolkit/profile/slice";
+import {modalEditProfileState, resetEditProfileState} from "../../redux-toolkit/profile/slice";
 import { editUser } from "../../redux-toolkit/profile/thunks";
 import { getPhotoURL } from "../../utils/thunks";
 
@@ -40,11 +40,13 @@ const ModalEditProfile = () => {
     const file = e.target.files[0];
     const photo = (await getPhotoURL(file)).data.url;
     dispatch(editUser({ avatar: photo }));
+    dispatch(resetEditProfileState());
   };
   const downloadInputHeaderPicture = async (e) => {
     const file = e.target.files[0];
     const photo = (await getPhotoURL(file)).data.url;
     dispatch(editUser({ headerPhoto: photo }));
+    dispatch(resetEditProfileState());
   };
 
   const modalEditProfileClose = () => {
@@ -78,6 +80,7 @@ const ModalEditProfile = () => {
     }
     dispatch(editUser(obj));
     dispatch(modalEditProfileState(false));
+    dispatch(resetEditProfileState());
   };
   useEffect(() => {
     return ()=>{

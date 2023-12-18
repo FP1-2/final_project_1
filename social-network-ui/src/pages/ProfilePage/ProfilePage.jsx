@@ -10,7 +10,7 @@ import { ReactComponent as DeleteFriend } from "../../img/deleteFriend.svg";
 import { ReactComponent as AddFriend } from "../../img/addFriend.svg";
 import { ReactComponent as FacebookMessenger } from "../../img/facebookMessenger.svg";
 import { useDispatch, useSelector } from "react-redux";
-import { modalEditProfileState, removeUser } from "../../redux-toolkit/profile/slice";
+import {modalEditProfileState, removeUser, resetEditProfileState} from "../../redux-toolkit/profile/slice";
 import { getPhotoURL } from "../../utils/thunks";
 import { editUser, loadUserProfile } from "../../redux-toolkit/profile/thunks";
 import { postsUser } from "../../redux-toolkit/post/thunks";
@@ -80,6 +80,7 @@ const ProfilePage = () => {
     return (() => {
       dispatch(clearFriends());
       dispatch(clearMyFriends());
+      dispatch(resetEditProfileState());
     });
   }, []);
 
@@ -151,12 +152,14 @@ const ProfilePage = () => {
     const file = e.target.files[0];
     const photo = (await getPhotoURL(file)).data.url;
     dispatch(editUser({ headerPhoto: photo }));
+    dispatch(resetEditProfileState());
   };
 
   const downloadInputAvatarPicture = async (e) => {
     const file = e.target.files[0];
     const photo = (await getPhotoURL(file)).data.url;
     dispatch(editUser({ avatar: photo }));
+    dispatch(resetEditProfileState());
   };
 
   const clickInputHeaderPicture = () => {

@@ -11,7 +11,7 @@ const GroupCardProfile = ({ el }) => {
         <img className={style.groupCardImg} src={el.imageUrl ? el.imageUrl : "https://www.colorbook.io/imagecreator.php?hex=f0f2f5&width=1080&height=1920&text=%201080x1920"} alt="Avatar of group" />
         <div className={style.groupCardInformWrapper}>
           <h3 className={style.groupCardInformTitle}>{`${el.name}`}</h3>
-          <p className={style.groupCardInformText}>{`${el.isPublic ? 'Public group' : 'Private group'} · ${el.memberCount} members`}</p>
+          <p className={style.groupCardInformText}><span className={style.iconGlobe}/> {`${el.isPublic ?'Public group' : 'Private group'} · ${el.memberCount} members`}</p>
         </div>
       </NavLink>
     </div>

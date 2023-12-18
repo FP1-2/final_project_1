@@ -14,7 +14,9 @@ export default function Message({
   name,
   status,
   index,
-  handleOpenImg
+  handleOpenImg,
+  readerPhoto,
+  readerName
 }) {
 
   return (
@@ -44,7 +46,7 @@ export default function Message({
         {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Sent</div>
           : (checkFailedStatus(status) ? <div className={styles.messageStatus__error}>Error</div>
             : <div className={styles.messageStatus__read}>
-              <Avatar photo={photo} name={name}/>
+              <Avatar photo={readerPhoto ? readerPhoto : "/img/default-avatar.jpg"} name={readerName}/>
             </div>)
         }
       </div>
@@ -61,5 +63,7 @@ Message.propTypes = {
   name: PropTypes.string.isRequired,
   status: PropTypes.string.isRequired,
   index: PropTypes.number.isRequired,
-  handleOpenImg: PropTypes.func.isRequired
+  handleOpenImg: PropTypes.func.isRequired,
+  readerPhoto:PropTypes.string,
+  readerName: PropTypes.string
 };

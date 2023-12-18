@@ -32,7 +32,7 @@ const FriendRequestCard=({type, friendRequest})=>{
     <div className={styles.card}>
       <div className={styles.card_aside}>
         <div className={styles.card_aside_avatar}>
-          <img src={avatar} alt={`${name}'s avatar`} />
+          <img src={avatar ? avatar : "/img/default-avatar.jpg"} alt={`${name}'s avatar`} />
         </div>
       </div>
       <div className={styles.card_info}>
