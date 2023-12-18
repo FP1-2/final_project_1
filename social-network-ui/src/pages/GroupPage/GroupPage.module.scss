@@ -24,6 +24,8 @@ $width-imageContainer: 60vw;
 }
 
 .groupWrapper {
+  height: 100%;
+  overflow-y: auto;
 
   .sidebarLeft {
     display: none;
@@ -38,6 +40,7 @@ $width-imageContainer: 60vw;
     margin-left: 0;
     background: $main-background-color;
     position: relative;
+
 
     .header {
       height: $Header-height;
@@ -204,6 +207,15 @@ $width-imageContainer: 60vw;
         width: 100%;
         margin-right: 0;
 
+        .errorPosts{
+          display: flex;
+          justify-content: center;
+          padding-top: 5vh;
+          padding-bottom: 5vh;
+          font-size: 1.2rem;
+          font-weight: 600;
+          color: $color-font-grey;
+        }
       }
 
       .sidebarRight {

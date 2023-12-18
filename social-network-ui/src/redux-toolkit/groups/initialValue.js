@@ -18,16 +18,19 @@ const initialValue = {
     userGroups:{
         obj: {
             content: [],
-            totalPages:0,
+            totalPages: 0,
             pageable: {
-                pageNumber:0,
+                pageNumber: 0,
             },
         },
         status: '',
         error: '',
     },
     getPosts: {
-        obj: {},
+        obj: {
+            content: [],
+            pageable: {},
+        },
         status: '',
         error: '',
     }

@@ -38,5 +38,5 @@ export default function FLikes({ className }) {
 }
 
 FLikes.propTypes = {
-  className: PropTypes.object,
+  className: PropTypes.string,
 };

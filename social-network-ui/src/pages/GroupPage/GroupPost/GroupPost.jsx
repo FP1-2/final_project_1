@@ -1,5 +1,4 @@
 import style from './GroupPost.module.scss';
-import { post } from './post_obj.jsx';
 import { ReactComponent as LikePostBtn } from "../../../img/likePostBtn.svg";
 import { ReactComponent as CommentPostBtn } from "../../../img/commentPostBtn.svg";
 import { ReactComponent as SharePostBtn } from "../../../img/sharePostBtn.svg";
@@ -9,7 +8,7 @@ import {useEffect, useState} from "react";
 import PropTypes from "prop-types";
 import FLikes from "../../../components/Icons/FLikes";
 
-export default function GroupPost({ adm }) {
+export default function GroupPost({ adm, post }) {
   const [fullPost, setFullPost] = useState(true);
   const togglePost =()=> setFullPost(state => !state);
 
@@ -68,7 +67,7 @@ export default function GroupPost({ adm }) {
   }, [hideAdmMenu]);
     
   return (
-    <div className={style.postWrapper}>
+    <li className={style.postWrapper}>
       <div className={style.header}>
         <div className={style.rightSection}>
           <div className={style.avatarSection}>
@@ -142,10 +141,11 @@ export default function GroupPost({ adm }) {
       <div className={`${style.commentsSection} ${fullComments && style.fullComments}`}>
         <span onClick={toggleComments} className={style.moreComments}>Comments</span>
       </div>
-    </div>
+    </li>
   );
 }
 
 GroupPost.propTypes = {
   adm: PropTypes.bool,
+  post: PropTypes.object,
 };

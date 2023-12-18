@@ -1,7 +1,9 @@
 import { createSlice } from "@reduxjs/toolkit";
 import initialValue from "./initialValue";
 import {getGroup, getUserGroups} from "./thunks";
-import builders from "../builders";
+import builders, {buildersPagination} from "../builders";
+import {appendPaginationUtil} from "../../utils/utils";
+import {getPosts} from "./thunks";
 
 const groupsReducer = createSlice({
     name: "groups",
@@ -9,6 +11,9 @@ const groupsReducer = createSlice({
     reducers: {
         clearGroup: (state) => {
             state.getGroup = { ...initialValue.getGroup}
+        },
+        appendPostsInGroupPage: (state, action) => {
+            appendPaginationUtil(state, action)
         },
         addUserGroups: (state, action) => {
             state.userGroups.obj.content = [
@@ -23,12 +28,14 @@ const groupsReducer = createSlice({
     extraReducers:(builder)=>{
         builders(builder, getGroup, 'getGroup');
         builders(builder, getUserGroups, 'userGroups');
+        buildersPagination(builder, getPosts, 'getPosts');
     }
 });
 
 export const {
     clearGroup,
-    addUserGroups
+    addUserGroups,
+    appendPostsInGroupPage,
 } = groupsReducer.actions;
 
 export default groupsReducer.reducer;
