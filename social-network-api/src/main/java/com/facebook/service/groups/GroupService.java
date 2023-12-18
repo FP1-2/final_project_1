@@ -424,6 +424,12 @@ public class GroupService {
         }
     }
 
+    @Transactional
+    public boolean updatePostStatus(Long postId, PostStatus status) {
+        int updatedRows = groupPostRepository.updatePostStatus(postId, status);
+        return updatedRows > 0;
+    }
+
     /** For gen */
     public List<Long> findMemberIdsByGroupId(Long id){
         return groupMembersRepository.findMemberIdsByGroupId(id);

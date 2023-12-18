@@ -6,6 +6,7 @@ import com.facebook.model.groups.PostStatus;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
@@ -125,6 +126,10 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
         List<GroupPostBase> findAllByGroupIdAndPostIds(@Param("groupId") Long groupId,
                                                        @Param("userId") Long userId,
                                                        @Param("postIds") Set<Long> postIds);
+
+    @Modifying
+    @Query("UPDATE GroupPost gp SET gp.status = :status WHERE gp.id = :postId")
+    int updatePostStatus(@Param("postId") Long postId, @Param("status") PostStatus status);
 
 }
 

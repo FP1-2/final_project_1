@@ -18,6 +18,7 @@ import com.facebook.model.chat.Chat;
 import com.facebook.model.chat.ContentType;
 import com.facebook.model.chat.Message;
 import com.facebook.model.chat.MessageStatus;
+import com.facebook.model.groups.PostStatus;
 import com.facebook.model.posts.Comment;
 import com.facebook.model.posts.Like;
 import com.facebook.repository.ChatRepository;
@@ -232,8 +233,9 @@ public class Gen {
 
                 GroupPostResponse postResponse = groupService.createGroupPost(postRequest, userId, (long) i);
                 Long postId = postResponse.getId();
+                boolean isStatusUpdated = groupService.updatePostStatus(postId, PostStatus.PUBLISHED);
 
-                if (MathUtils.random(1, 5) == 1) {
+                if (isStatusUpdated && MathUtils.random(1, 5) == 1) {
                     GroupRepostRequest repostRequest = new GroupRepostRequest();
                     repostRequest.setOriginalPostId(postId);
                     repostRequest.setImageUrl("https://source.unsplash.com/random?wallpapers");
