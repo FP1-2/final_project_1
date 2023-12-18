@@ -16,6 +16,9 @@ const profileReducer = createSlice({
         removeUser: (state) => {
             state.profileUser.obj = {};
         },
+        resetEditProfileState: (state) =>{
+            state.editUser = initialValue.editUser;
+        }
     },
     extraReducers:(builder)=>{
         builders(builder, editUser,'editUser');
@@ -23,6 +26,6 @@ const profileReducer = createSlice({
     }
 });
 
-export const {modalEditProfileState,removeUser} = profileReducer.actions;
+export const {modalEditProfileState,removeUser,resetEditProfileState} = profileReducer.actions;
 
 export default profileReducer.reducer;

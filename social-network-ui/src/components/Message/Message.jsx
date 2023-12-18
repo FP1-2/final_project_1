@@ -46,7 +46,7 @@ export default function Message({
         {checkSentStatus(status) ? <div className={styles.messageStatus__unread}>Sent</div>
           : (checkFailedStatus(status) ? <div className={styles.messageStatus__error}>Error</div>
             : <div className={styles.messageStatus__read}>
-              <Avatar photo={readerPhoto} name={readerName}/>
+              <Avatar photo={readerPhoto ? readerPhoto : "/img/default-avatar.jpg"} name={readerName}/>
             </div>)
         }
       </div>
