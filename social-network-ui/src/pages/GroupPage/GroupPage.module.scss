@@ -106,7 +106,6 @@ $width-imageContainer: 60vw;
       flex-direction: column;
       justify-content: space-between;
 
-
       .upperBlock {
         display: flex;
         justify-content: space-between;
@@ -188,41 +187,31 @@ $width-imageContainer: 60vw;
     }
 
     .contentContainer {
-      @include absolute-translateX-center(relative);
+      @include absolute-translateX-center;
       width: 100%;
+      top: calc($Header-height + 2rem);
+      display: flex;
+      justify-content: space-between;
 
       .tripleMenu {
         position: absolute;
         top: -1rem;
-        left: 12.5rem;
+        left: 10rem;
         z-index: 1;
       }
 
       .content {
-        @include absolute-translateX-center;
-        width: 99%;
-
+        width: 100%;
         margin-right: 0;
-        margin-top: 2rem;
-        height: 100rem;
 
-        border: 1px solid rgb(199, 206, 224);
-        border-radius: 0.5rem;
-        background-color: #fff;
       }
 
       .sidebarRight {
         display: none;
         position: sticky;
         top: 0;
-        margin-left: 35vw;
-        width: $width-sidebar-Right;
-        min-height: 10rem;
-        padding: 1rem;
+        width: calc($width-sidebar-Right);
 
-        border: 1px solid rgb(199, 206, 224);
-        border-radius: 0.5rem;
-        background-color: #fff;
       }
     }
   }
@@ -247,12 +236,13 @@ $width-imageContainer: 60vw;
       .content {
         left: 0;
         transform: none;
-        width: 34vw;
-        margin-right: 5rem;
+        width: 35vw;
+        margin-right: 1rem;
       }
 
       .sidebarRight {
-        display: block;
+        display: flex;
+        flex-direction: column;
       }
     }
   }

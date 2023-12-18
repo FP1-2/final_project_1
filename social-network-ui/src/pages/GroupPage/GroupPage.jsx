@@ -23,7 +23,7 @@ export default function GroupPage() {
     dispatch(clearGroup());
     dispatch(getGroup({id}));
   }, [dispatch]);
-  
+
   const {obj: group, status, error} = useSelector(s => s.groups.getGroup);
   const {obj: user} = useSelector(state => state.auth.user);
 
@@ -161,9 +161,9 @@ export default function GroupPage() {
   switch (status) {
   case "rejected":
     return <GroupError type={error.type} message={error.message}/>;
-    
+
   case "pending":
-    return <Loader />;
+    return <Loader/>;
 
   default:
 
@@ -248,6 +248,7 @@ export default function GroupPage() {
             </div>
           </div>
           <div className={style.contentContainer}>
+
             {hideAdmMenu && <TripleMenu
               className={style.tripleMenu}
               one={DRAFT}
@@ -258,8 +259,14 @@ export default function GroupPage() {
               onThree={getRejected}
               activeTab={getActiveTab(tab)}
             />}
+
             <div className={style.content}>
-              <GroupPost/>
+              <GroupPost adm={adm}/>
+              <GroupPost adm={adm}/>
+              <GroupPost adm={adm}/>
+              <GroupPost adm={adm}/>
+            </div>
+            <div>
               <aside className={style.sidebarRight}>
                 <GroupDetails group={group}/>
               </aside>
