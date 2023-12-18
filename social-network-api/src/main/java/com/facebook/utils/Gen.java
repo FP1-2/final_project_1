@@ -2,6 +2,9 @@ package com.facebook.utils;
 
 import com.facebook.dto.appuser.AppUserResponse;
 import com.facebook.dto.appuser.GenAppUser;
+import com.facebook.dto.groups.GroupPostRequest;
+import com.facebook.dto.groups.GroupPostResponse;
+import com.facebook.dto.groups.GroupRepostRequest;
 import com.facebook.dto.groups.GroupRequest;
 import com.facebook.dto.post.CommentRequest;
 import com.facebook.dto.post.PostRequest;
@@ -40,6 +43,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -116,6 +120,7 @@ public class Gen {
         genGrops();
         genGropsMemmbers();
         addedMemmbersToGrops();
+        addedPostToGroups();
         this.chats = genChats();
         this.messages = genMessages();
     }
@@ -196,6 +201,54 @@ public class Gen {
             }
         }
     }
+
+    private void addedPostToGroups() {
+        Faker faker = new Faker(new Locale("en"));
+        int totalPosts = 50;
+        int numberOfGroups = 4;
+        int postsPerGroup = totalPosts / numberOfGroups;
+        int extraPosts = totalPosts % numberOfGroups;
+
+        for (int i = 1; i <= numberOfGroups; i++) {
+            List<Long> mem = groupService.findMemberIdsByGroupId((long) i);
+            int totalPostsForCurrentGroup = postsPerGroup + (i <= extraPosts ? 1 : 0);
+
+            for (int j = 0; j < totalPostsForCurrentGroup; j++) {
+                List<Long> preferredMembers = mem.stream()
+                        .filter(id -> id >= 1 && id <= 15)
+                        .collect(Collectors.toList());
+
+                Long userId;
+                if (!preferredMembers.isEmpty() && MathUtils.random(1, 100) <= 90) {
+                    userId = preferredMembers.get(MathUtils.random(0, preferredMembers.size() - 1));
+                } else {
+                    userId = mem.get(MathUtils.random(0, mem.size() - 1));
+                }
+
+                GroupPostRequest postRequest = new GroupPostRequest();
+                postRequest.setTitle(faker.book().title()); // Генерация названия книги как заголовка
+                postRequest.setBody(faker.chuckNorris().fact()); // Использование "фактов о Чаке Норрисе" для тела поста
+                postRequest.setImageUrl("https://source.unsplash.com/random?wallpapers");
+
+                GroupPostResponse postResponse = groupService.createGroupPost(postRequest, userId, (long) i);
+                Long postId = postResponse.getId();
+
+                if (MathUtils.random(1, 5) == 1) {
+                    GroupRepostRequest repostRequest = new GroupRepostRequest();
+                    repostRequest.setOriginalPostId(postId);
+                    repostRequest.setImageUrl("https://source.unsplash.com/random?wallpapers");
+                    repostRequest.setTitle("Repost: " + faker.company().catchPhrase()); // Генерация лозунга компании как заголовка репоста
+                    repostRequest.setBody(faker.lorem().paragraph()); // Генерация абзаца Lorem Ipsum для тела репоста
+
+                    Long repostUserId = mem.get(MathUtils.random(0, mem.size() - 1));
+                    groupService.createGroupRepost(repostRequest, repostUserId, (long) i);
+                }
+            }
+        }
+    }
+
+
+
 
     private static int determineGroupCount() {
         int chance = MathUtils.random(1, 100);

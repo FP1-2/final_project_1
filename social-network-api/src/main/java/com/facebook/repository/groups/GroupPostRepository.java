@@ -89,6 +89,7 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
             JOIN gp.group g
             WHERE gp.group.id = :groupId
               AND (:user IS NULL OR gp.user.id = :user)
+              AND (1=1 OR :userId IS NULL)
               AND ( (:draft = null AND :published = null AND :archived = null AND :rejected = null)
                                 OR (:draft != null AND gp.status = :draft)
                                 OR (:published != null AND gp.status = :published)

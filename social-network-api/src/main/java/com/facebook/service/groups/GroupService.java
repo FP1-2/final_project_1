@@ -424,4 +424,8 @@ public class GroupService {
         }
     }
 
+    /** For gen */
+    public List<Long> findMemberIdsByGroupId(Long id){
+        return groupMembersRepository.findMemberIdsByGroupId(id);
+    }
 }
