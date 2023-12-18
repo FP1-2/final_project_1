@@ -9,8 +9,11 @@ import com.facebook.dto.groups.GroupResponse;
 import com.facebook.dto.groups.GroupRoleRequest;
 import com.facebook.dto.groups.PostStatusRequest;
 import com.facebook.dto.post.ActionResponse;
+import com.facebook.dto.post.CommentRequest;
+import com.facebook.dto.post.CommentResponse;
 import com.facebook.exception.AlreadyMemberException;
 import com.facebook.exception.BannedMemberException;
+import com.facebook.exception.GroupNotFoundException;
 import com.facebook.exception.NotFoundException;
 import com.facebook.model.groups.GroupRole;
 import com.facebook.model.groups.PostStatus;
@@ -38,6 +41,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Контролер для управління групами в соціальній мережі.
@@ -250,6 +254,21 @@ public class GroupController {
         return postService.likePost(userId, postId)
                 .map(ResponseEntity::ok)
                 .orElse(ResponseEntity.notFound().build());
+    }
+
+    @PostMapping("/comment")
+    public ResponseEntity<CommentResponse> addComment(@Validated
+                                                      @RequestBody
+                                                      CommentRequest commentRequest) {
+        Long userId = currentUserService.getCurrentUserId();
+        groupService.checkMembership(userId, Optional.ofNullable(commentRequest.getGroupId())
+
+                .orElseThrow(() -> new GroupNotFoundException("Group ID is required")));
+        postService.checkPostType(commentRequest.getPostId(), "GroupPost");
+
+        return postService.addComment(userId, commentRequest)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.badRequest().build());
     }
 
     /**

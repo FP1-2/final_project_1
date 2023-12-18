@@ -28,4 +28,6 @@ public class CommentRequest {
     @NotBlank(message = "Comment content cannot be empty.")
     private String content;
 
+    private Long groupId;
+
 }

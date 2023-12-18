@@ -37,7 +37,9 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
                 ),
                 gp.createdDate,
                 gp.lastModifiedDate,
-                gp.imageUrl,
+                gp.imageUrl AS postImageUrl,
+                g.imageUrl AS groupImageUrl,
+                g.name AS groupName,
                 gp.title,
                 gp.body,
                 gp.type,
@@ -60,6 +62,7 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
     @Query(GROUP_POST_DETAILS_SELECT + """
             FROM GroupPost gp
             JOIN gp.user u
+            JOIN gp.group g
             WHERE gp.id = :postId AND gp.group.id = :groupId
             """)
     Optional<GroupPostBase> findGroupPostDetailsById(@Param("postId") Long postId,
@@ -83,6 +86,7 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
     @Query(GROUP_POST_DETAILS_SELECT + """
             FROM GroupPost gp
             JOIN gp.user u
+            JOIN gp.group g
             WHERE gp.group.id = :groupId
               AND (:user IS NULL OR gp.user.id = :user)
               AND ( (:draft = null AND :published = null AND :archived = null AND :rejected = null)
@@ -113,6 +117,7 @@ public interface GroupPostRepository extends JpaRepository<GroupPost, Long> {
         @Query(GROUP_POST_DETAILS_SELECT + """
            FROM GroupPost gp
            JOIN gp.user u
+           JOIN gp.group g
            WHERE gp.group.id = :groupId
              AND gp.id IN :postIds
            """)

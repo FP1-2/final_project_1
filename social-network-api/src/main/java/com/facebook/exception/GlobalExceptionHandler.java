@@ -124,6 +124,14 @@ public class GlobalExceptionHandler {
         return new ResponseEntity<>(body, HttpStatus.NOT_ACCEPTABLE);
     }
 
+    @ExceptionHandler(GroupNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleGroupNotFoundException(GroupNotFoundException ex) {
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("type", "Group Not Found");
+        body.put("message", ex.getMessage());
+        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(AlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>>
     handleAlreadyExistsException(AlreadyExistsException ex) {
