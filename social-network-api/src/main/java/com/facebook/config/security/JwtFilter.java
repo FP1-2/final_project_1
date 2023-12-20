@@ -69,6 +69,7 @@ public class JwtFilter extends OncePerRequestFilter {
                     "/api/users/update-password/**",
                     "/api-docs/**",
                     "/swagger*/**",
+                    "/actuator*/**",
                     "/error",
                     "/ws/**",
                     "/h2" -> false;

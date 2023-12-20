@@ -71,6 +71,7 @@ public class SecurityConfig {
                                 AntPathRequestMatcher.antMatcher("/api/users/update-password/**"),
                                 AntPathRequestMatcher.antMatcher("/api-docs/**"),
                                 AntPathRequestMatcher.antMatcher("/swagger*/**"),
+                                AntPathRequestMatcher.antMatcher("/actuator*/**"),
                                 AntPathRequestMatcher.antMatcher("/error")
                         ).permitAll()
                         .anyRequest().authenticated()
